@@ -204,7 +204,7 @@ public class WalkersScreen extends Screen {
                 7,
                 20,
                 20);
-        helpWidget.setTooltip(Tooltip.of(Text.translatable("identity.help")));
+        helpWidget.setTooltip(Tooltip.of(Text.translatable("walkers.help")));
         return helpWidget;
     }
 
