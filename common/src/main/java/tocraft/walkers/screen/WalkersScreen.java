@@ -2,27 +2,23 @@ package tocraft.walkers.screen;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import tocraft.walkers.Walkers;
-import tocraft.walkers.api.PlayerShapeChanger;
 import tocraft.walkers.api.variant.ShapeType;
 import tocraft.walkers.mixin.accessor.ScreenAccessor;
 import tocraft.walkers.screen.widget.EntityWidget;
 import tocraft.walkers.screen.widget.HelpWidget;
 import tocraft.walkers.screen.widget.SearchWidget;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.Selectable;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.tooltip.Tooltip;
 import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.client.gui.widget.PressableWidget;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.util.Window;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.text.Text;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,7 +27,7 @@ import java.util.stream.Collectors;
 public class WalkersScreen extends Screen {
 
     private final List<ShapeType<?>> rendered = new ArrayList<>();
-    private final Map<ShapeType<?>, LivingEntity> renderEntities = new LinkedHashMap<>();
+    private final Map<ShapeType<?>, MobEntity> renderEntities = new LinkedHashMap<>();
     private final List<EntityWidget> entityWidgets = new ArrayList<>();
     private final SearchWidget searchBar = createSearchBar();
     private final ButtonWidget helpButton = createHelpButton();
@@ -170,7 +166,7 @@ public class WalkersScreen extends Screen {
             List<ShapeType<?>> types = ShapeType.getAllTypes(MinecraftClient.getInstance().world);
             for (ShapeType<?> type : types) {
                 Entity entity = type.create(MinecraftClient.getInstance().world);
-                if(entity instanceof LivingEntity living) {
+                if(entity instanceof MobEntity living) {
                     renderEntities.put(type, living);
                 }
             }
