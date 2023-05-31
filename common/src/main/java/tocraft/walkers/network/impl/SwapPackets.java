@@ -3,7 +3,6 @@ package tocraft.walkers.network.impl;
 import dev.architectury.networking.NetworkManager;
 import tocraft.walkers.api.PlayerShapeChanger;
 import tocraft.walkers.api.PlayerShape;
-import tocraft.walkers.api.platform.WalkersConfig;
 import tocraft.walkers.api.variant.ShapeType;
 import tocraft.walkers.network.ClientNetworking;
 import tocraft.walkers.network.NetworkHandler;

@@ -4,8 +4,6 @@ import tocraft.walkers.api.variant.ShapeType;
 import net.minecraft.entity.LivingEntity;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Set;
-
 public interface PlayerDataProvider {
 
     ShapeType<?> get2ndShape();

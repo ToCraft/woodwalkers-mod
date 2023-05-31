@@ -3,7 +3,6 @@ package tocraft.walkers.impl.variant;
 import com.google.common.collect.ImmutableMap;
 import tocraft.walkers.api.variant.TypeProvider;
 import net.minecraft.entity.EntityType;
-import net.minecraft.entity.passive.CatEntity;
 import net.minecraft.entity.passive.FrogEntity;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;

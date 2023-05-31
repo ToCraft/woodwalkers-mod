@@ -7,7 +7,6 @@ import net.minecraft.item.Item;
 import net.minecraft.item.Items;
 import net.minecraft.world.World;
 import net.minecraft.world.World.ExplosionSourceType;
-import net.minecraft.world.explosion.Explosion;
 
 public class CreeperAbility extends WalkersAbility<CreeperEntity> {
 

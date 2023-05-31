@@ -24,8 +24,6 @@ import net.minecraft.util.Identifier;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.Registries;
 
-import java.util.Set;
-
 import org.jetbrains.annotations.Nullable;
 
 public class WalkersCommand {

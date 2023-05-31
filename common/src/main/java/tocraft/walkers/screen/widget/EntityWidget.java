@@ -1,20 +1,14 @@
 package tocraft.walkers.screen.widget;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import tocraft.walkers.api.variant.ShapeType;
 import tocraft.walkers.network.impl.SwapPackets;
 import tocraft.walkers.screen.WalkersScreen;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.ingame.InventoryScreen;
 import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
-import net.minecraft.client.gui.tooltip.Tooltip;
 import net.minecraft.client.gui.widget.PressableWidget;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.text.Text;
-
-import java.util.Collections;
 
 public class EntityWidget<T extends LivingEntity> extends PressableWidget {
 

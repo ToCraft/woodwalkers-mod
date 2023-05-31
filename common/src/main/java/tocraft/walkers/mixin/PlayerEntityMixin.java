@@ -10,7 +10,6 @@ import net.fabricmc.api.Environment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.*;
 import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.entity.damage.DamageSources;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.mob.RavagerEntity;
 import net.minecraft.entity.mob.WardenEntity;
@@ -107,8 +106,6 @@ public abstract class PlayerEntityMixin extends LivingEntityMixin {
 
     @Inject(method = "getActiveEyeHeight", at = @At("HEAD"), cancellable = true)
     private void walkers_getActiveEyeHeight(EntityPose pose, EntityDimensions dimensions, CallbackInfoReturnable<Float> cir) {
-        PlayerEntity playerEntity = (PlayerEntity) (Object) this;
-
         // cursed
         try {
             LivingEntity walkers = PlayerShape.getCurrentShape((PlayerEntity) (Object) this);

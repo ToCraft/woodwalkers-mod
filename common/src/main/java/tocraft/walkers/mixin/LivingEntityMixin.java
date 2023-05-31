@@ -2,7 +2,6 @@ package tocraft.walkers.mixin;
 
 import tocraft.walkers.Walkers;
 import tocraft.walkers.api.PlayerShape;
-import tocraft.walkers.api.variant.ShapeType;
 import tocraft.walkers.impl.NearbySongAccessor;
 import tocraft.walkers.mixin.accessor.LivingEntityAccessor;
 import tocraft.walkers.registry.WalkersEntityTags;
@@ -22,7 +21,6 @@ import net.minecraft.fluid.FluidState;
 import net.minecraft.registry.tag.FluidTags;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
