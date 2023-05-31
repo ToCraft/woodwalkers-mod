@@ -4,7 +4,6 @@ import tocraft.walkers.Walkers;
 import net.minecraft.util.Identifier;
 
 public interface NetworkHandler {
-    Identifier CAN_OPEN_MENU = Walkers.id("can_open_menu");
     Identifier WALKERS_REQUEST = Walkers.id("request");
     Identifier USE_ABILITY = Walkers.id("use_ability");
     Identifier WALKERS_SYNC = Walkers.id("walkers_sync");
