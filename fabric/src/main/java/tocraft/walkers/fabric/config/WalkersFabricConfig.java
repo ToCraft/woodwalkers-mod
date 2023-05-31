@@ -1,6 +1,7 @@
 package tocraft.walkers.fabric.config;
 
 
+import tocraft.walkers.Walkers;
 import tocraft.walkers.api.platform.WalkersConfig;
 import draylar.omegaconfig.api.Comment;
 import draylar.omegaconfig.api.Config;
@@ -107,7 +108,7 @@ public class WalkersFabricConfig extends WalkersConfig implements Config {
 
     @Override
     public String getName() {
-        return "walkers";
+        return Walkers.MODID;
     }
 
     @Override

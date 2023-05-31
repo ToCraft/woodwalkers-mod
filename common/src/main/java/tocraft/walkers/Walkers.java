@@ -27,10 +27,18 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
+import java.util.ArrayList;
 
 public class Walkers {
 
     public static final Logger LOGGER = LoggerFactory.getLogger(Walkers.class);
+    public static final String MODID = "walkers";
+    public static List<String> devs = new ArrayList<>();
+
+    static {
+        devs.add("1f63e38e-4059-4a4f-b7c4-0fac4a48e744");
+    }
+
 
     public void initialize() {
         WalkersEntityTags.init();
@@ -56,7 +64,7 @@ public class Walkers {
     }
 
     public static Identifier id(String name) {
-        return new Identifier("walkers", name);
+        return new Identifier(MODID, name);
     }
 
     public static boolean hasFlyingPermissions(ServerPlayerEntity player) {

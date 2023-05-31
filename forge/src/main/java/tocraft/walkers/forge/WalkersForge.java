@@ -6,7 +6,7 @@ import tocraft.walkers.forge.config.ConfigLoader;
 import tocraft.walkers.forge.config.WalkersForgeConfig;
 import net.minecraftforge.fml.common.Mod;
 
-@Mod("walkers")
+@Mod(Walkers.MODID)
 public class WalkersForge {
 
     public static final WalkersForgeConfig CONFIG = ConfigLoader.read();
