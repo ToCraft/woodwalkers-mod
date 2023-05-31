@@ -14,6 +14,10 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import net.minecraft.entity.data.DataTracker;
+import net.minecraft.entity.data.TrackedData;
+import net.minecraft.entity.data.TrackedDataHandlerRegistry;
+import net.minecraft.nbt.NbtCompound;
 
 @Mixin(WolfEntity.class)
 public abstract class WolfEntityMixin extends TameableEntity {
@@ -21,6 +25,8 @@ public abstract class WolfEntityMixin extends TameableEntity {
     private WolfEntityMixin(EntityType<? extends TameableEntity> entityType, World world) {
         super(entityType, world);
     }
+    private static final TrackedData<Boolean> VARIANT_ID =
+        DataTracker.registerData(WolfEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
 
     @Inject(
             method = "initGoals",
@@ -44,5 +50,29 @@ public abstract class WolfEntityMixin extends TameableEntity {
 
             return walkers != null && walkers.getType().isIn(WalkersEntityTags.WOLF_PREY);
         }));
+    }
+
+    @Inject(
+        method = "initDataTracker",
+        at = @At("RETURN")
+    )
+    protected void onInitDataTracker(CallbackInfo ci) {
+        ((WolfEntity)(Object)this).getDataTracker().startTracking(VARIANT_ID, false);
+    }
+
+    @Inject(
+        method = "writeCustomDataToNbt",
+        at = @At("RETURN")
+    )
+    protected void onWriteCustomDataToNbt(NbtCompound nbt, CallbackInfo ci) {
+        nbt.putBoolean("isDev", ((WolfEntity)(Object)this).getDataTracker().get(VARIANT_ID));
+    }
+
+    @Inject(
+        method = "readCustomDataFromNbt",
+        at = @At("RETURN")
+    )
+    protected void onReadCustomDataFromNbt(NbtCompound nbt, CallbackInfo ci) {
+        ((WolfEntity)(Object)this).getDataTracker().set(VARIANT_ID, nbt.getBoolean("isDev"));
     }
 }

@@ -28,6 +28,7 @@ public class ShapeType<T extends LivingEntity> {
         VARIANT_BY_TYPE.put(EntityType.CAT, new CatTypeProvider());
         VARIANT_BY_TYPE.put(EntityType.SLIME, new SlimeTypeProvider());
         VARIANT_BY_TYPE.put(EntityType.FROG, new FrogTypeProvider());
+        VARIANT_BY_TYPE.put(EntityType.WOLF, new WolfTypeProvider());
     }
 
     public ShapeType(EntityType<T> type) {
@@ -97,7 +98,7 @@ public class ShapeType<T extends LivingEntity> {
 
         List<ShapeType<?>> types = new ArrayList<>();
         for (EntityType<?> type : LIVING_TYPE_CASH) {
-            if(VARIANT_BY_TYPE.containsKey(type)) {
+            if(type != Registries.ENTITY_TYPE.get(new Identifier("minecraft:wolf")) && VARIANT_BY_TYPE.containsKey(type)) {
                 TypeProvider<?> variant = VARIANT_BY_TYPE.get(type);
                 for (int i = 0; i <= variant.getRange(); i++) {
                     types.add(new ShapeType(type, i));

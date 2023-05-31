@@ -92,6 +92,9 @@ public class WalkersFabricConfig extends WalkersConfig implements Config {
     @Comment(value = "If true, players with the Warden Walkers will blind other nearby players.")
     public boolean wardenBlindsNearby = true;
 
+    @Comment(value = "If true, Devs will have a third shape, if false, devs will only have two variants of their second shape.")
+    public boolean devShapeIsThirdShape = false;
+
     public Map<String, Integer> abilityCooldownMap = new HashMap<>() {
         {
             put("minecraft:ghast", 60);
@@ -249,5 +252,10 @@ public class WalkersFabricConfig extends WalkersConfig implements Config {
     @Override
     public boolean wardenBlindsNearby() {
         return wardenBlindsNearby;
+    }
+
+    @Override
+    public boolean devShapeIsThirdShape() {
+        return devShapeIsThirdShape;
     }
 }

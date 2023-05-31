@@ -53,6 +53,7 @@
     "PlayerEntityRendererMixin",
     "ShadowMixin",
     "StrayOverlayMixin",
+    "WolfRendererMixin",
     "accessor.BlazeEntityModelAccessor",
     "accessor.EntityShadowAccessor",
     "accessor.IllagerEntityModelAccessor",

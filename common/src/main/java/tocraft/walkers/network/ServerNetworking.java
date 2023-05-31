@@ -3,20 +3,19 @@ package tocraft.walkers.network;
 import dev.architectury.networking.NetworkManager;
 import tocraft.walkers.ability.AbilityRegistry;
 import tocraft.walkers.api.PlayerShape;
-import tocraft.walkers.api.platform.WalkersConfig;
 import tocraft.walkers.api.PlayerAbilities;
+import tocraft.walkers.network.impl.DevSwapPackets;
 import tocraft.walkers.network.impl.SwapPackets;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.registry.Registries;
 
 public class ServerNetworking implements NetworkHandler {
 
     public static void initialize() {
         SwapPackets.registerWalkersRequestPacketHandler();
-        SwapPackets.registerWalkersRequestPacketHandler();
+        DevSwapPackets.registerDevRequestPacketHandler();
     }
 
     public static void registerUseAbilityPacketHandler() {
