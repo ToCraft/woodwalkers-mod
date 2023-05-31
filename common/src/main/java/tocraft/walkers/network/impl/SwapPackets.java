@@ -23,6 +23,7 @@ public class SwapPackets {
             if(validType) {
                 EntityType<?> entityType = Registries.ENTITY_TYPE.get(buf.readIdentifier());
                 int variant = buf.readInt();
+                boolean unlock = buf.readBoolean();
 
                 context.getPlayer().getServer().execute(() -> {
                     // player type shouldn't be sent, but we still check regardless
@@ -32,7 +33,7 @@ public class SwapPackets {
                         @Nullable ShapeType<LivingEntity> type = ShapeType.from(entityType, variant);
                         if(type != null) {
                             // unlock walker
-                            PlayerShapeChanger.changeShape((ServerPlayerEntity) context.getPlayer(), type);
+                            if (unlock) PlayerShapeChanger.changeShape((ServerPlayerEntity) context.getPlayer(), type);
                             // update Player
                             PlayerShape.updateShapes((ServerPlayerEntity) context.getPlayer(), type, type.create(context.getPlayer().getWorld()));
                         }
@@ -52,13 +53,14 @@ public class SwapPackets {
         });
     }
 
-    public static void sendSwapRequest(@Nullable ShapeType<?> type) {
+    public static void sendSwapRequest(@Nullable ShapeType<?> type, boolean unlock) {
         PacketByteBuf packet = new PacketByteBuf(Unpooled.buffer());
 
         packet.writeBoolean(type != null);
         if(type != null) {
             packet.writeIdentifier(Registries.ENTITY_TYPE.getId(type.getEntityType()));
             packet.writeInt(type.getVariantData());
+            packet.writeBoolean(unlock);
         }
 
         NetworkManager.sendToServer(ClientNetworking.WALKERS_REQUEST, packet);

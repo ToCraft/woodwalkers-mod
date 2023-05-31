@@ -43,6 +43,7 @@ public class WalkersClient {
 
     public void initialize() {
         KeyMappingRegistry.register(ABILITY_KEY);
+        KeyMappingRegistry.register(MENU_KEY);
         KeyMappingRegistry.register(TRANSFORM_KEY);
 
         // Register client-side event handlers
