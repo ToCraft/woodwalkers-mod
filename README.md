@@ -1,19 +1,10 @@
-# Walkers
+# Woodwalkers
 
-*Walkers* is a mod inspired by [Morph](https://www.curseforge.com/minecraft/mc-mods/morph), built for the Fabric mod loader (and recently ported to Forge).
-
-**WARNING:** the 1.17.1 Architectury version of Walkers (2.0.0+), which supports Forge & Fabric, is in a heavy beta state. Back up your worlds often and expect things to break.
+*Woodwalkers* is a mod lore-wise based on the book [Woodwalkers](https://www.katja-brandis.de/2016/05/11/woodwalkers/), and technically-based on [Identity](https://www.curseforge.com/minecraft/mc-mods/identity).
 
 ---
 
-**Versions**:
-
-|        | Fabric | Forge |
-| ----------- | ----------- | ----------- |
-| 1.16      | ✅    | ❌   |
-| 1.17   | ✅   | ✅    |
-
-**Required Libraries (1.17.1+):**
+**Woodwalkers Requires Architectury API**
 
 Fabric => [Architectury API (Fabric)](https://www.curseforge.com/minecraft/mc-mods/architectury-fabric)
 
@@ -21,12 +12,33 @@ Forge => [Architectury API (Forge)](https://www.curseforge.com/minecraft/mc-mods
 
 ---
 
-With *Walkers*, you can become anything you want, friend or foe, hot or cold, fluffy or rough.
+**Become your favourite mob!**
 
-### Getting Started
+This mod allows you to choose a second shape, you can transform into at any time you want by just pressing a key!
 
-Once you first joined a world, a menu will ask you to choose your second shape. You can switch to it by pressing "G". Choose carefully! This choice is forever! (Still, there's a creative-only command...)
+Walk over lava as a strider, discovery the caves as a bat or let your foes base explode as a ghast!
+**Nearly every mob has some nice abilities!**
+
+Even your hearts and your size will be changed to the one of the mob and your nametag will stop rendering, so no one could tell which one is the mob and which one is the player! Trick your friends!
+
+![](https://i.imgur.com/k4SNsQe.png)
+
+![](https://i.imgur.com/VjKwAeM.png)
+
+![](https://i.imgur.com/OPBOSdt.png)
+
+
+## Getting Started
+
+Once you first joined a world, a menu will ask you to choose your second shape. You can switch to it by pressing "G". Choose carefully! This choice is forever! Once chosen, you can't change it again! (But still, there's an OP-command and a config-option to reset your second shape after death...)
+
+## How can I support this project?
+
+I'm always happy about someone who translates this mod to other languages or tells me about bugs/issues.
+Everyone who supplies a concept, bug-fix, translation or generally helps a lot with dev-work will get a new texture as wolf which is enabled by sneaking while pressing the MENU_KEY.
+
+![](https://i.imgur.com/r7duGsi.png)
 
 ### License
 
-Walkers is licensed under MIT. 
+Woodwalkers is licensed under MIT. 
