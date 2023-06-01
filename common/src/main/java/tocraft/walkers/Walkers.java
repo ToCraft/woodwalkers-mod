@@ -17,6 +17,7 @@ import net.minecraft.advancement.Advancement;
 import net.minecraft.advancement.AdvancementProgress;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.mob.FlyingEntity;
 import net.minecraft.entity.mob.GuardianEntity;
 import net.minecraft.entity.mob.WaterCreatureEntity;
 import net.minecraft.network.PacketByteBuf;
@@ -70,7 +71,7 @@ public class Walkers {
     public static boolean hasFlyingPermissions(ServerPlayerEntity player) {
         LivingEntity walkers = PlayerShape.getCurrentShape(player);
 
-        if(walkers != null && WalkersConfig.getInstance().enableFlight() && walkers.getType().isIn(WalkersEntityTags.FLYING)) {
+        if(walkers != null && WalkersConfig.getInstance().enableFlight() && (walkers.getType().isIn(WalkersEntityTags.FLYING) || walkers instanceof FlyingEntity)) {
             List<String> requiredAdvancements = WalkersConfig.getInstance().advancementsRequiredForFlight();
 
             // requires at least 1 advancement, check if player has them
