@@ -50,7 +50,7 @@ public abstract class ServerPlayerEntityMixin extends PlayerEntity {
                 if(WalkersConfig.getInstance().overlay2ndShapesRevokes()) {
                     sendMessage(
                             Text.translatable(
-                                    "walkers.revoke_entity",
+                                    "walkers.remove_entity",
                                     type.getTranslationKey()
                             ), true
                     );

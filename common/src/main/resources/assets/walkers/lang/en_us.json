@@ -6,7 +6,7 @@
   "walkers.already_has": "%s already has the %s walkers!",
   "walkers.does_not_have": "%s does not have second shapes!",
   "walkers.equip_success": "Set the current shape of %s to %s.",
-  "walkers.unequip_success": "Removed the second shape of %s.",
+  "walkers.unequip_success": "%s is now using the first shape.",
   "walkers.show2ndShapeNot_positive": "%s is disguised as a %s.",
   "walkers.show2ndShapeNot_failed": "%s doesn't have a second shape.",
   "walkers.help": "Open Woodwalkers help menu",
