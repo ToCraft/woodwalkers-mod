@@ -36,6 +36,29 @@ public class WalkersCommand {
                     .build();
 
             /*
+            Used to remove the second shape of the specified Player.
+             */
+            LiteralCommandNode<ServerCommandSource> remove2ndShape = CommandManager
+            .literal("remove2ndShape")
+            .then(CommandManager.argument("player", EntityArgumentType.players())
+                        .executes(context -> {
+                            remove2ndShape(
+                                    context.getSource().getPlayer(),
+                                    EntityArgumentType.getPlayer(context, "player")
+                            );
+                            return 1;
+                        })
+            )
+            .executes(context -> {
+                remove2ndShape(
+                        context.getSource().getPlayer(),
+                        context.getSource().getPlayer()
+                );
+                return 1;
+            })
+            .build();
+
+            /*
             Used to give the specified shape to the specified Player.
              */
             LiteralCommandNode<ServerCommandSource> change2ndShape = CommandManager
@@ -169,6 +192,7 @@ public class WalkersCommand {
                     )
                     .build();
 
+            rootNode.addChild(remove2ndShape);
             rootNode.addChild(change2ndShape);
             rootNode.addChild(equip);
             rootNode.addChild(show2ndShape);
@@ -193,6 +217,16 @@ public class WalkersCommand {
         return 0;
     }
 
+    private static void remove2ndShape(ServerPlayerEntity source, ServerPlayerEntity player) {
+
+        boolean result = PlayerShapeChanger.changeShape(player, null);
+
+        if(result && WalkersConfig.getInstance().logCommands()) {
+            player.sendMessage(Text.translatable("walkers.remove_entity"), true);
+            source.sendMessage(Text.translatable("walkers.deletion_success", player.getDisplayName()), true);
+        }
+    };
+
     private static void change2ndShape(ServerPlayerEntity source, ServerPlayerEntity player, Identifier id, @Nullable NbtCompound nbt) {
         ShapeType<LivingEntity> type = new ShapeType(Registries.ENTITY_TYPE.get(id));
         Text name = Text.translatable(type.getEntityType().getTranslationKey());
@@ -210,7 +244,6 @@ public class WalkersCommand {
         }
 
         if(((PlayerDataProvider) player).get2ndShape() != type) {
-            PlayerShapeChanger.changeShape(player, null);
             boolean result = PlayerShapeChanger.changeShape(player, type);
 
             if(result && WalkersConfig.getInstance().logCommands()) {

@@ -1,4 +1,6 @@
 {
+  "walkers.remove_entity": "Deine zweite Gestalt wurde gelöscht.",
+  "walkers.deletion_success": "Die zweite Gestalt von %s wurde gelöscht.",
   "walkers.unlock_entity": "Änderte deine zweite Gestalt zu %s.",
   "walkers.grant_success": "Nun nun an ist %s die zweite Gestalt von %s.",
   "walkers.already_has": "%s hat bereits %s als zweite Gestalt!",
@@ -20,7 +22,7 @@
   "walkers.help.config_description": "Öffne die Config-Datei /config/walkers.json5 um die Elemente des Mods zu kontrollieren.",
   "walkers.help.credits_label": "Credits",
   "walkers.help.credits_general": "General: Draylar, x64architecture, Pyrofab, AllanChain, James103, lawleagle",
-  "walkers.help.credits_translators": "Übersetzter: Aktuell nur ich (To_Craft), du kannst gerne mithelfen, um erwähnt zu werden!",
+  "walkers.help.credits_translators": "Übersetzter: Aktuell nur ich (To_Craft), du kannst gerne mithelfen, um erwähnt zu werden! Es gibt sogar eine besondere Textur für devs o.O",
   "walkers.help.return": "Drücke eine beliebige Taste.",
   "key.categories.walkers": "Woodwalkers",
   "key.walkers": "Verwandle dich",
