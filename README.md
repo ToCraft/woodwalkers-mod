@@ -30,7 +30,7 @@ Even your hearts and your size will be changed to the one of the mob and your na
 
 ## Getting Started
 
-Once you first joined a world, a menu will ask you to choose your second shape. You can switch to it by pressing "G". Choose carefully! This choice is forever! Once chosen, you can't change it again! (But still, there's an OP-command and a config-option to reset your second shape after death...)
+Open the menu to select your second shape by pressing the MENU_KEY (by default ' ^ '). You can switch your shape by pressing the TRANSFORM_KEY (by default 'G'). Choose carefully! This choice is forever! Once chosen, you can't change it again! (But still, there's an OP-command and a config-option to reset your second shape after death...) 
 
 ## How can I support this project?
 
