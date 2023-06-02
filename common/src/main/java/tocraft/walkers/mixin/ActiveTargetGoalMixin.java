@@ -10,6 +10,7 @@ import net.minecraft.entity.ai.goal.ActiveTargetGoal;
 import net.minecraft.entity.boss.WitherEntity;
 import net.minecraft.entity.mob.CreeperEntity;
 import net.minecraft.entity.mob.Monster;
+import net.minecraft.entity.mob.SkeletonEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -40,6 +41,12 @@ public abstract class ActiveTargetGoalMixin extends TrackTargetGoalMixin {
                 if (!hasHostility) {
                     // creepers should ignore cats
                     if (this.mob instanceof CreeperEntity && walkers.getType().equals(EntityType.OCELOT)) {
+                        this.stop();
+                        ci.cancel();
+                    }
+
+                    // skeletons should ignore wolfs
+                    if (this.mob instanceof SkeletonEntity && walkers.getType().equals(EntityType.WOLF)) {
                         this.stop();
                         ci.cancel();
                     }
