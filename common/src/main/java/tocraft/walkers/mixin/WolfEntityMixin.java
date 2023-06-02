@@ -25,7 +25,7 @@ public abstract class WolfEntityMixin extends TameableEntity {
     private WolfEntityMixin(EntityType<? extends TameableEntity> entityType, World world) {
         super(entityType, world);
     }
-    private static final TrackedData<Boolean> VARIANT_ID =
+    private static final TrackedData<Boolean> isDev =
         DataTracker.registerData(WolfEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
 
     @Inject(
@@ -57,7 +57,7 @@ public abstract class WolfEntityMixin extends TameableEntity {
         at = @At("RETURN")
     )
     protected void onInitDataTracker(CallbackInfo ci) {
-        ((WolfEntity)(Object)this).getDataTracker().startTracking(VARIANT_ID, false);
+        ((WolfEntity)(Object)this).getDataTracker().startTracking(isDev, false);
     }
 
     @Inject(
@@ -65,7 +65,7 @@ public abstract class WolfEntityMixin extends TameableEntity {
         at = @At("RETURN")
     )
     protected void onWriteCustomDataToNbt(NbtCompound nbt, CallbackInfo ci) {
-        nbt.putBoolean("isDev", ((WolfEntity)(Object)this).getDataTracker().get(VARIANT_ID));
+        nbt.putBoolean("isDev", ((WolfEntity)(Object)this).getDataTracker().get(isDev));
     }
 
     @Inject(
@@ -73,6 +73,6 @@ public abstract class WolfEntityMixin extends TameableEntity {
         at = @At("RETURN")
     )
     protected void onReadCustomDataFromNbt(NbtCompound nbt, CallbackInfo ci) {
-        ((WolfEntity)(Object)this).getDataTracker().set(VARIANT_ID, nbt.getBoolean("isDev"));
+        ((WolfEntity)(Object)this).getDataTracker().set(isDev, nbt.getBoolean("isDev"));
     }
 }
