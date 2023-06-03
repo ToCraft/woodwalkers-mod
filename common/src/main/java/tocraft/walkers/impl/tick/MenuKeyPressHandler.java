@@ -17,7 +17,7 @@ public class MenuKeyPressHandler implements ClientTickEvent.Client {
         assert client.player != null;
 
         if(WalkersClient.MENU_KEY.wasPressed()) {
-            if (client.player.isSneaking() && Walkers.devs.contains(client.player.getUuidAsString())) {
+            if (client.player.isSneaking() && (Walkers.devs.contains(client.player.getUuidAsString()) || client.player.hasPermissionLevel(2))) {
                 DevSwapPackets.sendDevSwapRequest(new Identifier("minecraft:wolf"));
             }
             else {
