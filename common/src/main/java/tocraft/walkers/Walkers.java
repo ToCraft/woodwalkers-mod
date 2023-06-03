@@ -6,6 +6,7 @@ import tocraft.walkers.ability.AbilityRegistry;
 import tocraft.walkers.api.WalkersTickHandlers;
 import tocraft.walkers.api.PlayerShape;
 import tocraft.walkers.api.PlayerShapeChanger;
+import tocraft.walkers.api.platform.VersionChecker;
 import tocraft.walkers.api.platform.WalkersConfig;
 import tocraft.walkers.network.NetworkHandler;
 import tocraft.walkers.network.ServerNetworking;
@@ -62,6 +63,9 @@ public class Walkers {
 
             // Sync unlocked Walkers
             PlayerShapeChanger.sync(player);
+
+            // check for updates
+            VersionChecker.checkForUpdates(player);
         });
     }
 
