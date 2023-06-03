@@ -31,6 +31,8 @@ public class WalkersForgeConfig extends WalkersConfig {
     public boolean scalingHealth = true;
     public boolean percentScalingHealth = true;
     public int maxHealth = 40;
+    public Boolean scalingAttackDamage = true;
+    public Double maxAttackDamage = 4D;
     public int endermanAbilityTeleportDistance = 32;
     public boolean showPlayerNametag = false;
     public boolean logCommands = true;
@@ -126,6 +128,16 @@ public class WalkersForgeConfig extends WalkersConfig {
     @Override
     public int maxHealth() {
         return maxHealth;
+    }
+
+    @Override
+    public Boolean scalingAttackDamage() {
+        return scalingAttackDamage;
+    }
+
+    @Override
+    public Double maxAttackDamage() {
+        return maxAttackDamage;
     }
 
     @Override

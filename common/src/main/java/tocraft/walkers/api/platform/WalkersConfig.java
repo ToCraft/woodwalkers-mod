@@ -40,6 +40,10 @@ public abstract class WalkersConfig {
 
     public abstract int maxHealth();
 
+    public abstract Boolean scalingAttackDamage();
+
+    public abstract Double maxAttackDamage();
+
     public abstract boolean shapesEquipItems();
 
     public abstract boolean shapesEquipArmor();

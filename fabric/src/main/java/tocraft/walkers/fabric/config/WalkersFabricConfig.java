@@ -74,6 +74,12 @@ public class WalkersFabricConfig extends WalkersConfig implements Config {
     @Comment(value = "The maximum value of scaling health. Useful for not giving players 300 HP when they turn into a wither.")
     public int maxHealth = 40;
 
+    @Comment(value = "Whether Shapes modify your attack damage value based on their attack damage value.")
+    public Boolean scalingAttackDamage  = true;
+
+    @Comment(value = "The maximum value of scaling attack damage. Useful for not giving players 300 ATK when they turn into a boss.")
+    public Double maxAttackDamage = 4D;
+
     @Comment(value = "In blocks, how far can the Enderman ability teleport?")
     public int endermanAbilityTeleportDistance = 32;
 
@@ -188,6 +194,16 @@ public class WalkersFabricConfig extends WalkersConfig implements Config {
     @Override
     public int maxHealth() {
         return maxHealth;
+    }
+
+    @Override
+    public Boolean scalingAttackDamage() {
+        return scalingAttackDamage;
+    }
+
+    @Override
+    public Double maxAttackDamage() {
+        return maxAttackDamage;
     }
 
     @Override

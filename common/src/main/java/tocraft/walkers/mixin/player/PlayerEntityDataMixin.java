@@ -199,14 +199,26 @@ public abstract class PlayerEntityDataMixin extends LivingEntity implements Play
         ((DimensionsRefresher) player).walkers_refreshDimensions();
 
         // Walkers is valid and scaling health is on; set entity's max health and current health to reflect walkers.
-        if(walkers != null && WalkersConfig.getInstance().scalingHealth()) {
-            if (WalkersConfig.getInstance().percentScalingHealth()) {
-                float currentHealthPercent = player.getHealth() / player.getMaxHealth();
-                player.setHealth(Math.min(currentHealthPercent * walkers.getMaxHealth(), walkers.getMaxHealth()));
+        if(walkers != null) {
+            if (WalkersConfig.getInstance().scalingHealth()) {
+                if (WalkersConfig.getInstance().percentScalingHealth()) {
+                    float currentHealthPercent = player.getHealth() / player.getMaxHealth();
+                    player.setHealth(Math.min(currentHealthPercent * walkers.getMaxHealth(), walkers.getMaxHealth()));
+                }
+                else
+                    player.setHealth(Math.min(player.getHealth(), walkers.getMaxHealth()));
+                player.getAttributeInstance(EntityAttributes.GENERIC_MAX_HEALTH).setBaseValue(Math.min(WalkersConfig.getInstance().maxHealth(), walkers.getMaxHealth()));
             }
-            else
-                player.setHealth(Math.min(player.getHealth(), walkers.getMaxHealth()));
-            player.getAttributeInstance(EntityAttributes.GENERIC_MAX_HEALTH).setBaseValue(Math.min(WalkersConfig.getInstance().maxHealth(), walkers.getMaxHealth()));
+            if (WalkersConfig.getInstance().scalingAttackDamage()) {
+                // get shape attack damage, return 1D if value is lower or not existing
+                Double walkersAttackDamage = 1D;
+                try {
+                    walkersAttackDamage = Math.max(walkers.getAttributeInstance(EntityAttributes.GENERIC_ATTACK_DAMAGE).getBaseValue(), walkersAttackDamage);
+                }
+                catch(Exception ignored) {
+                }
+                player.getAttributeInstance(EntityAttributes.GENERIC_ATTACK_DAMAGE).setBaseValue(Math.min(WalkersConfig.getInstance().maxAttackDamage(), walkersAttackDamage));
+            }
         }
 
         // If the walkers is null (going back to player), set the player's base health value to 20 (default) to clear old changes.
@@ -215,6 +227,10 @@ public abstract class PlayerEntityDataMixin extends LivingEntity implements Play
 
             if(WalkersConfig.getInstance().scalingHealth()) {
                 player.getAttributeInstance(EntityAttributes.GENERIC_MAX_HEALTH).setBaseValue(20);
+            }
+
+            if(WalkersConfig.getInstance().scalingAttackDamage()) {
+                player.getAttributeInstance(EntityAttributes.GENERIC_ATTACK_DAMAGE).setBaseValue(1D);
             }
 
             // Clear health value if needed

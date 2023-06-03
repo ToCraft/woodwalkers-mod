@@ -35,16 +35,32 @@ public class PlayerManagerMixin {
         // refresh entity hitbox dimensions after death
         ((DimensionsRefresher) player).walkers_refreshDimensions();
 
-        // Re-sync max health for walkers
-        if(shape != null && WalkersConfig.getInstance().scalingHealth()) {
-            if (WalkersConfig.getInstance().percentScalingHealth()) {
-                float currentHealthPercent = player.getHealth() / player.getMaxHealth();
-                player.setHealth(Math.min(currentHealthPercent * shape.getMaxHealth(), shape.getMaxHealth()));
+        if(shape != null) {
+            // Re-sync max health for walkers
+            if (WalkersConfig.getInstance().scalingHealth()) {
+                if (WalkersConfig.getInstance().percentScalingHealth()) {
+                    float currentHealthPercent = player.getHealth() / player.getMaxHealth();
+                    player.setHealth(Math.min(currentHealthPercent * shape.getMaxHealth(), shape.getMaxHealth()));
+                }
+                else
+                    player.setHealth(Math.min(player.getHealth(), shape.getMaxHealth()));
+                player.getAttributeInstance(EntityAttributes.GENERIC_MAX_HEALTH).setBaseValue(Math.min(WalkersConfig.getInstance().maxHealth(), shape.getMaxHealth()));
             }
-            else
-                player.setHealth(Math.min(player.getHealth(), shape.getMaxHealth()));
-            player.getAttributeInstance(EntityAttributes.GENERIC_MAX_HEALTH).setBaseValue(Math.min(WalkersConfig.getInstance().maxHealth(), shape.getMaxHealth()));
-            player.networkHandler.sendPacket(new EntityAttributesS2CPacket(player.getId(), player.getAttributes().getAttributesToSend()));
+            // Re-sync attack damage for walkers
+            if (WalkersConfig.getInstance().scalingAttackDamage()) {
+                // get shape attack damage, return 1D if value is lower or not existing
+                Double shapeAttackDamage = 1D;
+                try {
+                    shapeAttackDamage = Math.max(shape.getAttributeInstance(EntityAttributes.GENERIC_ATTACK_DAMAGE).getBaseValue(), shapeAttackDamage);
+                }
+                catch(Exception ignored) {
+                }
+                player.getAttributeInstance(EntityAttributes.GENERIC_ATTACK_DAMAGE).setBaseValue(Math.min(WalkersConfig.getInstance().maxAttackDamage(), shapeAttackDamage));
+            }
+            // sync max health & attack damage with clients
+            if (WalkersConfig.getInstance().scalingHealth() || WalkersConfig.getInstance().scalingAttackDamage()) {
+                player.networkHandler.sendPacket(new EntityAttributesS2CPacket(player.getId(), player.getAttributes().getAttributesToSend()));
+            }
         }
     }
 }
