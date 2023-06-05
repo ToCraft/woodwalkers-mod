@@ -13,7 +13,7 @@ public class WalkersForgeConfig extends WalkersConfig {
 
     public boolean overlayShapesUnlocks = true;
     public boolean overlay2ndShapesRevokes = true;
-    public boolean revoke2ndShapesOnDeath = false;
+    public boolean revoke2ndShapeOnDeath = false;
     public boolean shapesEquipItems = true;
     public boolean shapesEquipArmor = true;
     public boolean hostilesIgnoreHostileShapedPlayer = true;
@@ -101,8 +101,8 @@ public class WalkersForgeConfig extends WalkersConfig {
     }
 
     @Override
-    public boolean revoke2ndShapesOnDeath() {
-        return revoke2ndShapesOnDeath;
+    public boolean revoke2ndShapeOnDeath() {
+        return revoke2ndShapeOnDeath;
     }
 
     @Override

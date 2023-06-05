@@ -28,7 +28,7 @@ public abstract class WalkersConfig {
 
     public abstract boolean villagersRunFrom2ndShapes();
 
-    public abstract boolean revoke2ndShapesOnDeath();
+    public abstract boolean revoke2ndShapeOnDeath();
 
     public abstract boolean overlay2ndShapesRevokes();
 

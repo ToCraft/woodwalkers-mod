@@ -21,7 +21,7 @@ public class WalkersFabricConfig extends WalkersConfig implements Config {
     public boolean overlay2ndShapesRevokes = true;
 
     @Comment(value = "Whether a player's equipped walkers is revoked on death.")
-    public boolean revoke2ndShapesOnDeath = false;
+    public boolean revoke2ndShapeOnDeath = false;
 
     @Comment(value = "Whether shapes equip the items (swords, items, tools) held by the underlying player.")
     public boolean shapesEquipItems = true;
@@ -167,8 +167,8 @@ public class WalkersFabricConfig extends WalkersConfig implements Config {
     }
 
     @Override
-    public boolean revoke2ndShapesOnDeath() {
-        return revoke2ndShapesOnDeath;
+    public boolean revoke2ndShapeOnDeath() {
+        return revoke2ndShapeOnDeath;
     }
 
     @Override

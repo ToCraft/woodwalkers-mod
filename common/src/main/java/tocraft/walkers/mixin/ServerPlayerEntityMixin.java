@@ -2,12 +2,9 @@ package tocraft.walkers.mixin;
 
 import com.mojang.authlib.GameProfile;
 import tocraft.walkers.Walkers;
-import tocraft.walkers.api.PlayerShape;
 import tocraft.walkers.api.PlayerShapeChanger;
 import tocraft.walkers.api.FlightHelper;
 import tocraft.walkers.api.platform.WalkersConfig;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -35,27 +32,9 @@ public abstract class ServerPlayerEntityMixin extends PlayerEntity {
             method = "onDeath",
             at = @At("HEAD")
     )
-    private void revoke2ndShapesOnDeath(DamageSource source, CallbackInfo ci) {
-        if(WalkersConfig.getInstance().revoke2ndShapesOnDeath() && !this.isCreative() && !this.isSpectator()) {
-            LivingEntity entity = PlayerShape.getCurrentShape(this);
-
-            // revoke the walkers current equipped by the player
-            if(entity != null) {
-                EntityType<?> type = entity.getType();
-                PlayerShapeChanger.changeShape((ServerPlayerEntity) (Object) this, null);
-                PlayerShape.updateShapes((ServerPlayerEntity) (Object) this, null,null);
-
-                // todo: this option might be server-only given that this method isn't[?] called on the client
-                // send revoke message to player if they aren't in creative and the config option is on
-                if(WalkersConfig.getInstance().overlay2ndShapesRevokes()) {
-                    sendMessage(
-                            Text.translatable(
-                                    "walkers.remove_entity",
-                                    type.getTranslationKey()
-                            ), true
-                    );
-                }
-            }
+    private void revoke2ndShapeOnDeath(DamageSource source, CallbackInfo ci) {
+        if(WalkersConfig.getInstance().revoke2ndShapeOnDeath() && !this.isCreative() && !this.isSpectator()) {
+            PlayerShapeChanger.changeShape((ServerPlayerEntity) (Object) this, null);
         }
     }
 
