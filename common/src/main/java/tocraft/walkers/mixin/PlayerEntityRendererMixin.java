@@ -5,6 +5,7 @@ import tocraft.walkers.api.model.ArmRenderingManipulator;
 import tocraft.walkers.api.model.EntityArms;
 import tocraft.walkers.api.model.EntityUpdater;
 import tocraft.walkers.api.model.EntityUpdaters;
+import tocraft.walkers.api.platform.SyncedVars;
 import tocraft.walkers.api.platform.WalkersConfig;
 import tocraft.walkers.mixin.accessor.EntityAccessor;
 import tocraft.walkers.mixin.accessor.LimbAnimatorAccessor;
@@ -134,7 +135,7 @@ public abstract class PlayerEntityRendererMixin extends LivingEntityRenderer<Abs
             walkersRenderer.render(walkers, f, g, matrixStack, vertexConsumerProvider, i);
 
             // Only render nametags if the server option is true and the entity being rendered is NOT this player/client
-            if(WalkersConfig.getInstance().showPlayerNametag() && player != MinecraftClient.getInstance().player) {
+            if(SyncedVars.getShowPlayerNametag() && player != MinecraftClient.getInstance().player) {
                 renderLabelIfPresent((AbstractClientPlayerEntity) player, player.getDisplayName(), matrixStack, vertexConsumerProvider, i);
             }
         } else {

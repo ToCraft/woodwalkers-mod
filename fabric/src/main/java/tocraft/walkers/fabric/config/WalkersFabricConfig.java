@@ -5,7 +5,6 @@ import tocraft.walkers.Walkers;
 import tocraft.walkers.api.platform.WalkersConfig;
 import draylar.omegaconfig.api.Comment;
 import draylar.omegaconfig.api.Config;
-import draylar.omegaconfig.api.Syncing;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -83,7 +82,6 @@ public class WalkersFabricConfig extends WalkersConfig implements Config {
     @Comment(value = "In blocks, how far can the Enderman ability teleport?")
     public int endermanAbilityTeleportDistance = 32;
 
-    @Syncing
     @Comment(value = "Should player nametags render above players disguised with an walkers? Note that the server is the authority for this config option.")
     public boolean showPlayerNametag = false;
 
