@@ -83,6 +83,11 @@ public abstract class ActiveTargetGoalMixin extends TrackTargetGoalMixin {
                         cir.setReturnValue(false);
                     }
 
+                    // skeletons should ignore wolfs
+                    if (this.mob instanceof SkeletonEntity && walkers.getType().equals(EntityType.WOLF)) {
+                        cir.setReturnValue(false);
+                    }
+
                     // withers should ignore undead
                     else if (this.mob instanceof WitherEntity && walkers.getGroup().equals(EntityGroup.UNDEAD)) {
                         cir.setReturnValue(false);

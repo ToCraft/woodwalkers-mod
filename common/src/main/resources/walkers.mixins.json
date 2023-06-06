@@ -20,6 +20,7 @@
     "PlayerSonicBoomMixin",
     "PlayerSwimmingMixin",
     "RavagerEntityMixin",
+    "AbstractSkeletonEntityMixin",
     "ServerPlayerEntityMixin",
     "SweetBerryBushBlockMixin",
     "ThreadedAnvilChunkStorageAccessor",
