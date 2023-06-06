@@ -4,6 +4,7 @@ public class SyncedVars {
     public static boolean showPlayerNametag;
     public static boolean enableUnlockSystem;
     public static float unlockTimer;
+    public static boolean unlockOveridesCurrentShape;
 
     public static void setShowPlayerNametag(boolean NewShowPlayerNametag) {
         showPlayerNametag = NewShowPlayerNametag;
@@ -27,5 +28,14 @@ public class SyncedVars {
 
     public static float getUnlockTimer() {
         return unlockTimer;
+    }
+
+    
+    public static void setUnlockOveridesCurrentShape(boolean NewUnlockOveridesCurrentShape) {
+        unlockOveridesCurrentShape = NewUnlockOveridesCurrentShape;
+    }
+
+    public static boolean getUnlockOveridesCurrentShape() {
+        return unlockOveridesCurrentShape;
     }
 }

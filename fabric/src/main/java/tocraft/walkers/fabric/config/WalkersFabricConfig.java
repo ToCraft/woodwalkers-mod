@@ -101,6 +101,9 @@ public class WalkersFabricConfig extends WalkersConfig implements Config {
     @Comment(value = "If true, players must unlock shapes first. If false, there will be a menu.")
     public boolean enableUnlockSystem = true;
 
+    @Comment(value = "If true, unlocking a shape will ignore current second shapes.")
+    public boolean unlockOveridesCurrentShape = false;
+
     @Comment(value = "Requieres enableUnlockSystem to be true- timer in ticks how long the unlock key shall be pressed.")
     public float unlockTimer = 100f;
 
@@ -285,6 +288,11 @@ public class WalkersFabricConfig extends WalkersConfig implements Config {
     @Override
     public float unlockTimer() {
         return unlockTimer;
+    }
+
+    @Override
+    public boolean unlockOveridesCurrentShape() {
+        return unlockOveridesCurrentShape;
     }
 
     @Override

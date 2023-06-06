@@ -74,5 +74,7 @@ public abstract class WalkersConfig {
 
     public abstract float unlockTimer();
 
+    public abstract boolean unlockOveridesCurrentShape();
+
     public abstract boolean devShapeIsThirdShape();
 }

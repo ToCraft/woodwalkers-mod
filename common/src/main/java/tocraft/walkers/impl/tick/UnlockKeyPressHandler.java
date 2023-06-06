@@ -25,7 +25,7 @@ public class UnlockKeyPressHandler implements ClientTickEvent.Client {
         if(WalkersClient.UNLOCK_KEY.isPressed()) {
             if (SyncedVars.getEnableUnlockSystem()) {
                 HitResult hit = client.crosshairTarget;
-                if (((PlayerDataProvider)client.player).get2ndShape() == null && hit instanceof EntityHitResult) {
+                if ((((PlayerDataProvider)client.player).get2ndShape() == null || SyncedVars.getUnlockOveridesCurrentShape()) && hit instanceof EntityHitResult) {
                     if (currentTimer <= 0) {
                         Entity entityHit = ((EntityHitResult) hit).getEntity();
                         if(entityHit instanceof LivingEntity living) {

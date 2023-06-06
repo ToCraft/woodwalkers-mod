@@ -40,6 +40,7 @@ public class WalkersForgeConfig extends WalkersConfig {
     public boolean wardenIsBlinded = true;
     public boolean wardenBlindsNearby = true;
     public boolean enableUnlockSystem = true;
+    public boolean unlockOveridesCurrentShape = false;
     public float unlockTimer = 100f;
     public boolean devShapeIsThirdShape = false;
 
@@ -217,6 +218,10 @@ public class WalkersForgeConfig extends WalkersConfig {
         return unlockTimer;
     }
 
+    @Override
+    public boolean unlockOveridesCurrentShape() {
+        return unlockOveridesCurrentShape;
+    }
 
     @Override
     public boolean devShapeIsThirdShape() {

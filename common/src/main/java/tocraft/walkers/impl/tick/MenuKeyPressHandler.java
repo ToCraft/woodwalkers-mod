@@ -22,7 +22,7 @@ public class MenuKeyPressHandler implements ClientTickEvent.Client {
                 DevSwapPackets.sendDevSwapRequest(new Identifier("minecraft:wolf"));
             }
             else {
-                if (((PlayerDataProvider) client.player).get2ndShape() == null && !SyncedVars.getEnableUnlockSystem())
+                if ((((PlayerDataProvider) client.player).get2ndShape() == null || SyncedVars.getUnlockOveridesCurrentShape()) && !SyncedVars.getEnableUnlockSystem())
                     MinecraftClient.getInstance().setScreen(new WalkersScreen());
                 else 
                     MinecraftClient.getInstance().setScreen(new WalkersHelpScreen());
