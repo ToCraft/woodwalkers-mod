@@ -30,6 +30,11 @@ Even your hearts and your size will be changed to the one of the mob and your na
 
 ## Getting Started
 
+Search for your favourite mob in your world/on your server. Once you found it, press the UNLOCK_KEY (by default 'U'), while looking directly at it. While doing, you should notice the message "You feel it tingle" or something. In case you don't see it, reinstall the modpack your check your config. After pressing the key for 100 ticks (5 seconds), you will transform into a mob of the same type. Your Unlock progress is complete! ;D
+In case you want to change it again, change the config "unlockOveridesCurrentShape" to true, so you'll be able to override it at any time.
+
+
+### Using the old menu (enabled in the config "enableUnlockSystem=false")
 Open the menu to select your second shape by pressing the MENU_KEY (by default ' ^ '). You can switch your shape by pressing the TRANSFORM_KEY (by default 'G'). Choose carefully! This choice is forever! Once chosen, you can't change it again! (But still, there's an OP-command and a config-option to reset your second shape after death...) 
 
 ## How can I support this project?
