@@ -3,6 +3,7 @@ package tocraft.walkers.impl.tick;
 import dev.architectury.event.events.client.ClientTickEvent;
 import tocraft.walkers.Walkers;
 import tocraft.walkers.WalkersClient;
+import tocraft.walkers.api.platform.SyncedVars;
 import tocraft.walkers.impl.PlayerDataProvider;
 import tocraft.walkers.screen.WalkersHelpScreen;
 import tocraft.walkers.screen.WalkersScreen;
@@ -21,7 +22,7 @@ public class MenuKeyPressHandler implements ClientTickEvent.Client {
                 DevSwapPackets.sendDevSwapRequest(new Identifier("minecraft:wolf"));
             }
             else {
-                if (((PlayerDataProvider) client.player).get2ndShape() == null)
+                if (((PlayerDataProvider) client.player).get2ndShape() == null && !SyncedVars.getEnableUnlockSystem())
                     MinecraftClient.getInstance().setScreen(new WalkersScreen());
                 else 
                     MinecraftClient.getInstance().setScreen(new WalkersHelpScreen());
