@@ -98,6 +98,12 @@ public class WalkersFabricConfig extends WalkersConfig implements Config {
     @Comment(value = "If true, players with the Warden Walkers will blind other nearby players.")
     public boolean wardenBlindsNearby = true;
 
+    @Comment(value = "If true, players must unlock shapes first. If false, there will be a menu.")
+    public boolean enableUnlockSystem = true;
+
+    @Comment(value = "Requieres enableUnlockSystem to be true- timer in ticks how long the unlock key shall be pressed.")
+    public float unlockTimer = 100f;
+
     @Comment(value = "If true, Devs will have a third shape, if false, devs will only have two variants of their second shape.")
     public boolean devShapeIsThirdShape = false;
 
@@ -269,6 +275,16 @@ public class WalkersFabricConfig extends WalkersConfig implements Config {
     @Override
     public boolean wardenBlindsNearby() {
         return wardenBlindsNearby;
+    }
+
+    @Override
+    public boolean enableUnlockSystem() {
+        return enableUnlockSystem;
+    }
+
+    @Override
+    public float unlockTimer() {
+        return unlockTimer;
     }
 
     @Override

@@ -59,6 +59,8 @@ public class Walkers {
             // Send config sync packet
             PacketByteBuf packet = new PacketByteBuf(Unpooled.buffer());
             packet.writeBoolean(WalkersConfig.getInstance().showPlayerNametag());
+            packet.writeBoolean(WalkersConfig.getInstance().enableUnlockSystem());
+            packet.writeFloat(WalkersConfig.getInstance().unlockTimer());
             NetworkManager.sendToPlayer(player, NetworkHandler.CONFIG_SYNC, packet);
 
             // Sync unlocked Walkers

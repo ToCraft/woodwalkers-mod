@@ -39,6 +39,8 @@ public class WalkersForgeConfig extends WalkersConfig {
     public float flySpeed = 0.05f;
     public boolean wardenIsBlinded = true;
     public boolean wardenBlindsNearby = true;
+    public boolean enableUnlockSystem = true;
+    public float unlockTimer = 100f;
     public boolean devShapeIsThirdShape = false;
 
     public Map<String, Integer> abilityCooldownMap = new HashMap<>() {
@@ -204,6 +206,17 @@ public class WalkersForgeConfig extends WalkersConfig {
     public boolean wardenBlindsNearby() {
         return wardenBlindsNearby;
     }
+
+    @Override
+    public boolean enableUnlockSystem() {
+        return enableUnlockSystem;
+    }
+
+    @Override
+    public float unlockTimer() {
+        return unlockTimer;
+    }
+
 
     @Override
     public boolean devShapeIsThirdShape() {

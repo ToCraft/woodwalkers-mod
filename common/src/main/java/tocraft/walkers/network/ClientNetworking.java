@@ -3,6 +3,7 @@ package tocraft.walkers.network;
 import dev.architectury.networking.NetworkManager;
 import tocraft.walkers.WalkersClient;
 import tocraft.walkers.api.ApplicablePacket;
+import tocraft.walkers.api.platform.SyncedVars;
 import tocraft.walkers.impl.DimensionsRefresher;
 import tocraft.walkers.impl.PlayerDataProvider;
 import tocraft.walkers.network.impl.UnlockPackets;
@@ -88,13 +89,11 @@ public class ClientNetworking implements NetworkHandler {
 
     public static void handleConfigurationSyncPacket(PacketByteBuf packet, NetworkManager.PacketContext context) {
         boolean showPlayerNametag = packet.readBoolean();
+        boolean enableUnlockSystem = packet.readBoolean();
+        float unlockTimer = packet.readFloat();
 
-        // TODO: re-handle sync packet
-//        WalkersConfig.getInstance().showPlayerNametag() = showPlayerNametag;
-        // TODO: UNDO THIS WHEN THE PLAYER LEAVES - OMEGA CONFIG HANDLES THIS, BUT OUR BUDGET FORGE IMPLEMENTATION DOES NOT
-    }
-
-    private ClientNetworking() {
-        // NO-OP
+        SyncedVars.setShowPlayerNametag(showPlayerNametag);
+        SyncedVars.setEnableUnlockSystem(enableUnlockSystem);
+        SyncedVars.setUnlockTimer(unlockTimer);
     }
 }

@@ -1,7 +1,8 @@
 {
   "walkers.remove_entity": "Deine zweite Gestalt wurde entfernt.",
   "walkers.deletion_success": "Die zweite Gestalt von %s wurde entfernt.",
-  "walkers.unlock_entity": "Änderte deine zweite Gestalt zu %s.",
+  "walkers.unlock_entity": "Schaltete &s als deine zweite Gestalt frei.",
+  "walkers.unlock_progress": "Du spürst es kribbeln.",
   "walkers.grant_success": "Nun nun an ist %s die zweite Gestalt von %s.",
   "walkers.already_has": "%s hat bereits %s als zweite Gestalt!",
   "walkers.does_not_have": "%s hat keine zweite Gestalt!",
@@ -27,6 +28,7 @@
   "walkers.update": "Eine neue Version von Woodwalkers ist verfügbar: %s",
   "key.categories.walkers": "Woodwalkers",
   "key.walkers": "Verwandle dich",
+  "key.walkers_unlock": "Scanne einen Mob",
   "key.walkers_menu": "Öffne das Auswahlmenü",
   "key.walkers_ability": "Verwende eine Fähigkeit"
 }

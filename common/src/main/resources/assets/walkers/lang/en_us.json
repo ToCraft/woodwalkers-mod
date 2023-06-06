@@ -1,7 +1,8 @@
 {
   "walkers.remove_entity": "Your second shape was removed.",
   "walkers.deletion_success": "Removed the second shape of %s.",
-  "walkers.unlock_entity": "Changed your second shape to %s.",
+  "walkers.unlock_entity": "Unlocked %s as second shape.",
+  "walkers.unlock_progress": "You feel it tingling.",
   "walkers.grant_success": "Successfully changed %s to be the second shape of %s.",
   "walkers.already_has": "%s already has %s as shape!",
   "walkers.does_not_have": "%s does not have second shapes!",
@@ -27,6 +28,7 @@
   "walkers.update": "A new version of woodwalkers is available: %s",
   "key.categories.walkers": "Woodwalkers",
   "key.walkers": "Transform to your other shape",
+  "key.walkers_unlock": "Scann a mob",
   "key.walkers_menu": "Open menu to choose second shape",
   "key.walkers_ability": "Use an Shape Ability"
 }

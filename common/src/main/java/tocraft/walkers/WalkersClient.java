@@ -11,6 +11,7 @@ import tocraft.walkers.impl.join.ClientPlayerJoinHandler;
 import tocraft.walkers.impl.tick.AbilityKeyPressHandler;
 import tocraft.walkers.impl.tick.MenuKeyPressHandler;
 import tocraft.walkers.impl.tick.TransformKeyPressHandler;
+import tocraft.walkers.impl.tick.UnlockKeyPressHandler;
 import tocraft.walkers.network.ClientNetworking;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
@@ -20,6 +21,12 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class WalkersClient {
+    public static final KeyBinding UNLOCK_KEY =
+    new KeyBinding(
+        "key.walkers_unlock",
+        InputUtil.Type.KEYSYM,
+        GLFW.GLFW_KEY_U,
+        "key.categories.walkers");
     public static final KeyBinding TRANSFORM_KEY =
         new KeyBinding(
             "key.walkers",
@@ -45,6 +52,7 @@ public class WalkersClient {
         KeyMappingRegistry.register(ABILITY_KEY);
         KeyMappingRegistry.register(MENU_KEY);
         KeyMappingRegistry.register(TRANSFORM_KEY);
+        KeyMappingRegistry.register(UNLOCK_KEY);
 
         // Register client-side event handlers
         EntityUpdaters.init();
@@ -54,6 +62,7 @@ public class WalkersClient {
         // Register event handlers
         ClientTickEvent.CLIENT_PRE.register(new AbilityKeyPressHandler());
         ClientTickEvent.CLIENT_PRE.register(new TransformKeyPressHandler());
+        ClientTickEvent.CLIENT_PRE.register(new UnlockKeyPressHandler());
         ClientTickEvent.CLIENT_PRE.register(new MenuKeyPressHandler());
         ClientNetworking.registerPacketHandlers();
         ClientPlayerEvent.CLIENT_PLAYER_JOIN.register(new ClientPlayerJoinHandler());

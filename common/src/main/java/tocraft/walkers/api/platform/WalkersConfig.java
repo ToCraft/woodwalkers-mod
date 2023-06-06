@@ -70,5 +70,9 @@ public abstract class WalkersConfig {
 
     public abstract boolean wardenBlindsNearby();
 
+    public abstract boolean enableUnlockSystem();
+
+    public abstract float unlockTimer();
+
     public abstract boolean devShapeIsThirdShape();
 }
