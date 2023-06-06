@@ -21,11 +21,11 @@ Walk over lava as a strider, discovery the caves as a bat or let your foes base 
 
 Even your hearts and your size will be changed to the one of the mob and your nametag will stop rendering, so no one could tell which one is the mob and which one is the player! Trick your friends!
 
-![](https://i.imgur.com/k4SNsQe.png)
+![](https://raw.githubusercontent.com/ToCraft/woodwalkers-mod/arch-1.19.4/assets/every_mob_is_possible.png)
 
-![](https://i.imgur.com/VjKwAeM.png)
+![](https://raw.githubusercontent.com/ToCraft/woodwalkers-mod/arch-1.19.4/assets/use_abilities.png)
 
-![](https://i.imgur.com/OPBOSdt.png)
+![](https://raw.githubusercontent.com/ToCraft/woodwalkers-mod/arch-1.19.4/assets/hide_everywhere_dont_die_with_less_lives.png)
 
 
 ## Getting Started
@@ -37,7 +37,7 @@ Open the menu to select your second shape by pressing the MENU_KEY (by default '
 I'm always happy about someone who translates this mod to other languages or tells me about bugs/issues.
 Everyone who supplies a concept, bug-fix, translation or generally helps a lot with dev-work will get a new texture as wolf which is enabled by sneaking while pressing the MENU_KEY.
 
-![](https://i.imgur.com/r7duGsi.png)
+![](https://raw.githubusercontent.com/ToCraft/woodwalkers-mod/arch-1.19.4/assets/dark_dev_wolf_vs_normal_wolf.png)
 
 ### License
 
