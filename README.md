@@ -2,13 +2,19 @@
 
 *Woodwalkers* is a mod lore-wise based on the book [Woodwalkers](https://www.katja-brandis.de/2016/05/11/woodwalkers/), and technically-based on [Identity](https://www.curseforge.com/minecraft/mc-mods/identity).
 
+## Download
+
+[CurseForge](https://curseforge.com/minecraft/mc-mods/woodwalkers)
+
+[Modrinth](https://modrinth.com/mod/woodwalkers)
+
 ---
 
 **Woodwalkers Requires Architectury API**
 
-Fabric => [Architectury API (Fabric)](https://www.curseforge.com/minecraft/mc-mods/architectury-fabric)
+[Architectury API (CurseForge)](https://www.curseforge.com/minecraft/mc-mods/architectury-api)
 
-Forge => [Architectury API (Forge)](https://www.curseforge.com/minecraft/mc-mods/architectury-forge)
+[Architectury API (Modrinth)](https://modrinth.com/mod/architectury-api)
 
 ---
 
