@@ -19,9 +19,4 @@ public class WardenAbility extends WalkersAbility<WardenEntity> {
     public Item getIcon() {
         return Items.ECHO_SHARD;
     }
-
-    @Override
-    public int getCooldown(WardenEntity entity) {
-        return 20 * 10;
-    }
 }
