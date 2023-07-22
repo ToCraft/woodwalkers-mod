@@ -121,6 +121,7 @@ public class WalkersFabricConfig extends WalkersConfig implements Config {
             put("minecraft:evoker", 10);
             put("minecraft:wolf", 20);
             put("minecraft:warden", 200);
+            put("minecraft:sheep", 20);
         }
     };
 
