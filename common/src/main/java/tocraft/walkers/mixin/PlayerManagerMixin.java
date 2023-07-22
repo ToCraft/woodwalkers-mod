@@ -52,8 +52,18 @@ public class PlayerManagerMixin {
                 }
                 player.getAttributeInstance(EntityAttributes.GENERIC_ATTACK_DAMAGE).setBaseValue(Math.min(WalkersConfig.getInstance().maxAttackDamage(), shapeAttackDamage));
             }
+            if (WalkersConfig.getInstance().scalingAttackDamage()) {
+                // get shape attack damage, return 1D if value is lower then max or not existing
+                Double shapeAttackDamage = 1D;
+                try {
+                    shapeAttackDamage = Math.max(shape.getAttributeInstance(EntityAttributes.GENERIC_ATTACK_DAMAGE).getBaseValue(), shapeAttackDamage);
+                }
+                catch(Exception ignored) {
+                }
+                player.getAttributeInstance(EntityAttributes.GENERIC_ATTACK_DAMAGE).setBaseValue(Math.min(WalkersConfig.getInstance().maxAttackDamage(), shapeAttackDamage));
+            }
             // sync max health & attack damage with clients
-            if (WalkersConfig.getInstance().scalingHealth() || WalkersConfig.getInstance().scalingAttackDamage()) {
+            if ((WalkersConfig.getInstance().scalingHealth() || WalkersConfig.getInstance().scalingAttackDamage()) || WalkersConfig.getInstance().scalingAttackDamage()) {
                 player.networkHandler.sendPacket(new EntityAttributesS2CPacket(player.getId(), player.getAttributes().getAttributesToSend()));
             }
         }
