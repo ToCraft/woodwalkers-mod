@@ -38,14 +38,9 @@ public class PlayerManagerMixin {
         if(shape != null) {
             // Re-sync max health for walkers
             if (WalkersConfig.getInstance().scalingHealth()) {
-                if (WalkersConfig.getInstance().percentScalingHealth()) {
-                    float currentHealthPercent = player.getHealth() / player.getMaxHealth();
-                    player.setHealth(Math.min(currentHealthPercent * shape.getMaxHealth(), shape.getMaxHealth()));
-                }
-                else
-                    player.setHealth(Math.min(player.getHealth(), shape.getMaxHealth()));
                 player.getAttributeInstance(EntityAttributes.GENERIC_MAX_HEALTH).setBaseValue(Math.min(WalkersConfig.getInstance().maxHealth(), shape.getMaxHealth()));
-            }
+                player.setHealth(player.getMaxHealth());
+                }
             // Re-sync attack damage for walkers
             if (WalkersConfig.getInstance().scalingAttackDamage()) {
                 // get shape attack damage, return 1D if value is lower or not existing

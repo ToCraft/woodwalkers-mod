@@ -201,13 +201,16 @@ public abstract class PlayerEntityDataMixin extends LivingEntity implements Play
         // Walkers is valid and scaling health is on; set entity's max health and current health to reflect walkers.
         if(walkers != null) {
             if (WalkersConfig.getInstance().scalingHealth()) {
-                if (WalkersConfig.getInstance().percentScalingHealth()) {
-                    float currentHealthPercent = player.getHealth() / player.getMaxHealth();
-                    player.setHealth(Math.min(currentHealthPercent * walkers.getMaxHealth(), walkers.getMaxHealth()));
-                }
-                else
-                    player.setHealth(Math.min(player.getHealth(), walkers.getMaxHealth()));
+                // calculate the current health in percentage, used later
+                float currentHealthPercent = player.getHealth() / player.getMaxHealth();
+
                 player.getAttributeInstance(EntityAttributes.GENERIC_MAX_HEALTH).setBaseValue(Math.min(WalkersConfig.getInstance().maxHealth(), walkers.getMaxHealth()));
+            
+                // set health
+                if (WalkersConfig.getInstance().percentScalingHealth())
+                    player.setHealth(Math.min(currentHealthPercent * player.getMaxHealth(), player.getMaxHealth()));
+                else
+                    player.setHealth(Math.min(player.getHealth(), player.getMaxHealth()));
             }
             if (WalkersConfig.getInstance().scalingAttackDamage()) {
                 // get shape attack damage, return 1D if value is lower or not existing
