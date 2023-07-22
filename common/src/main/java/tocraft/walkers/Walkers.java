@@ -35,7 +35,7 @@ public class Walkers {
 
     public static final Logger LOGGER = LoggerFactory.getLogger(Walkers.class);
     public static final String MODID = "walkers";
-    public static final String VERSION = "1.5";
+    public static final String VERSION = "1.6";
     public static List<String> devs = new ArrayList<>();
 
     static {
