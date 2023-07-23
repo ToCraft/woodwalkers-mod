@@ -35,7 +35,7 @@ public class Walkers {
 
     public static final Logger LOGGER = LoggerFactory.getLogger(Walkers.class);
     public static final String MODID = "walkers";
-    public static final String VERSION = "1.6";
+    private static String VERSION = "";
     public static List<String> devs = new ArrayList<>();
 
     static {
@@ -112,5 +112,13 @@ public class Walkers {
     public static int getCooldown(EntityType<?> type) {
         String id = Registries.ENTITY_TYPE.getId(type).toString();
         return WalkersConfig.getInstance().getAbilityCooldownMap().getOrDefault(id, 20);
+    }
+
+    public static void setVersion(String version) {
+        VERSION = version;
+    }
+
+    public static String getVersion() {
+        return VERSION;
     }
 }

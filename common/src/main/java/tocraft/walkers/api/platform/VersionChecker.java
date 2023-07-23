@@ -19,7 +19,7 @@ public class VersionChecker {
 				String line;
 				URL url = new URL(versionURL);
 				BufferedReader updateReader = new BufferedReader(new InputStreamReader(url.openStream(), StandardCharsets.UTF_8));
-				String updateVersion = Walkers.VERSION;
+				String updateVersion = Walkers.getVersion();
 				while ((line = updateReader.readLine()) != null) {
 					if (line.startsWith("mod_version=")) {
 						updateVersion = line.split("mod_version=")[1];
@@ -27,7 +27,7 @@ public class VersionChecker {
 					}
 				}
 				updateReader.close();
-				if (!updateVersion.equals(Walkers.VERSION)) {
+				if (!updateVersion.equals(Walkers.getVersion())) {
 					player.sendMessage(Text.translatable("walkers.update", updateVersion));
 				}
 			}
