@@ -6,7 +6,7 @@
   "walkers.grant_success": "Nun nun an ist %s die zweite Gestalt von %s.",
   "walkers.already_has": "%s hat bereits %s als zweite Gestalt!",
   "walkers.does_not_have": "%s hat keine zweite Gestalt!",
-  "walkers.equip_success": "Die aktuelle Gestalt von %s ist jetzt %s.",
+  "walkers.switchShape_success": "Die aktuelle Gestalt von %s ist jetzt %s.",
   "walkers.unequip_success": "%s ist wieder in der ersten Gestalt.",
   "walkers.show2ndShapeNot_positive": "%s ist kein %s.",
   "walkers.show2ndShapeNot_failed": "%s hat keine zweite Gestlat.",
