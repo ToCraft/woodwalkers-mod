@@ -1,10 +1,10 @@
 package tocraft.walkers.api.platform;
 
 public class SyncedVars {
-    public static boolean showPlayerNametag;
-    public static boolean enableUnlockSystem;
-    public static float unlockTimer;
-    public static boolean unlockOveridesCurrentShape;
+    private static boolean showPlayerNametag;
+    private static boolean enableUnlockSystem;
+    private static float unlockTimer;
+    private static boolean unlockOveridesCurrentShape;
 
     public static void setShowPlayerNametag(boolean NewShowPlayerNametag) {
         showPlayerNametag = NewShowPlayerNametag;
