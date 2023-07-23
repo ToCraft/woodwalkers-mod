@@ -110,18 +110,21 @@ public class WalkersFabricConfig extends WalkersConfig implements Config {
 
     public Map<String, Integer> abilityCooldownMap = new HashMap<>() {
         {
-            put("minecraft:ghast", 60);
             put("minecraft:blaze", 20);
+            put("minecraft:cow", 20);
+            put("minecraft:creeper", 100);
             put("minecraft:ender_dragon", 20);
             put("minecraft:enderman", 100);
-            put("minecraft:creeper", 100);
-            put("minecraft:wither", 200);
-            put("minecraft:snow_golem", 10);
-            put("minecraft:witch", 200);
+            put("minecraft:endermite", 20);
             put("minecraft:evoker", 10);
-            put("minecraft:wolf", 20);
-            put("minecraft:warden", 200);
+            put("minecraft:ghast", 60);
+            put("minecraft:llama", 20);
             put("minecraft:sheep", 20);
+            put("minecraft:snow_golem", 10);
+            put("minecraft:warden", 200);
+            put("minecraft:witch", 200);
+            put("minecraft:wither", 200);
+            put("minecraft:wolf", 20);
         }
     };
 
