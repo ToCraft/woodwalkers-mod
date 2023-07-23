@@ -13,7 +13,7 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-public class GrassEaterAbility extends WalkersAbility<SheepEntity> {
+public class SheepAbility extends WalkersAbility<SheepEntity> {
 
     @Override
     public void onUse(PlayerEntity player, SheepEntity shape, World world) {
