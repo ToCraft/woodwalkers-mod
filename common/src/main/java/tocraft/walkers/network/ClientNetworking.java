@@ -92,10 +92,12 @@ public class ClientNetworking implements NetworkHandler {
         boolean enableUnlockSystem = packet.readBoolean();
         float unlockTimer = packet.readFloat();
         boolean unlockOveridesCurrentShape = packet.readBoolean();
+        String NewShapeBlacklistString = packet.readString();
 
         SyncedVars.setShowPlayerNametag(showPlayerNametag);
         SyncedVars.setEnableUnlockSystem(enableUnlockSystem);
         SyncedVars.setUnlockTimer(unlockTimer);
         SyncedVars.setUnlockOveridesCurrentShape(unlockOveridesCurrentShape);
+        SyncedVars.setShapeBlacklist(NewShapeBlacklistString);
     }
 }

@@ -10,6 +10,7 @@ import tocraft.walkers.impl.PlayerDataProvider;
 import tocraft.walkers.network.impl.SwapPackets;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.text.Text;
 import net.minecraft.util.hit.EntityHitResult;
@@ -26,29 +27,37 @@ public class UnlockKeyPressHandler implements ClientTickEvent.Client {
             if (SyncedVars.getEnableUnlockSystem()) {
                 HitResult hit = client.crosshairTarget;
                 if ((((PlayerDataProvider)client.player).get2ndShape() == null || SyncedVars.getUnlockOveridesCurrentShape()) && hit instanceof EntityHitResult) {
-                    if (currentTimer <= 0) {
-                        Entity entityHit = ((EntityHitResult) hit).getEntity();
-                        if(entityHit instanceof LivingEntity living) {
-                            @Nullable ShapeType<?> type = ShapeType.from(living);
-                            // unlock shape
-                            SwapPackets.sendSwapRequest(type, true);
-                            // send unlock message
-                            Text name = Text.translatable(type.getEntityType().getTranslationKey());
-                            client.player.sendMessage(Text.translatable("walkers.unlock_entity", name), true);
+                    Entity entityHit = ((EntityHitResult) hit).getEntity();
+                    if(entityHit instanceof LivingEntity living) {
+                        @Nullable ShapeType<?> type = ShapeType.from(living);
 
+                        // Ensures, the mob isn't on the blacklist
+                        if (!SyncedVars.getShapeBlacklist().isEmpty() && SyncedVars.getShapeBlacklist().contains(EntityType.getId(type.getEntityType()).toString()))
+                            client.player.sendMessage(Text.translatable("walkers.unlock_entity_blacklisted"), true);
+                        else {
+                            if (currentTimer <= 0) {
+                                // unlock shape
+                                SwapPackets.sendSwapRequest(type, true);
+                                // send unlock message
+                                Text name = Text.translatable(type.getEntityType().getTranslationKey());
+                                client.player.sendMessage(Text.translatable("walkers.unlock_entity", name), true);
+                                currentTimer = SyncedVars.getUnlockTimer();
+                                return;
+                            }
+                            else {
+                                client.player.sendMessage(Text.translatable("walkers.unlock_progress"), true);
+                                currentTimer -= 1;
+                            }
                         }
-                        currentTimer = SyncedVars.getUnlockTimer();
-                    }
-                    else {
-                        client.player.sendMessage(Text.translatable("walkers.unlock_progress"), true);
-                        currentTimer -= 1;
                     }
                 }
                 else
                     currentTimer = SyncedVars.getUnlockTimer();
+                    return;
             }
         }
         else if (currentTimer != SyncedVars.getUnlockTimer())
             currentTimer = SyncedVars.getUnlockTimer();
+            return;
     }
 }

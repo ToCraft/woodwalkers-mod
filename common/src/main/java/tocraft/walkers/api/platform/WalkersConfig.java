@@ -77,4 +77,6 @@ public abstract class WalkersConfig {
     public abstract boolean unlockOveridesCurrentShape();
 
     public abstract boolean devShapeIsThirdShape();
+
+    public abstract List<String> shapeBlacklist();
 }

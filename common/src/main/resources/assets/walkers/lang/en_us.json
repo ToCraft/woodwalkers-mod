@@ -2,6 +2,7 @@
   "walkers.remove_entity": "Your second shape was removed.",
   "walkers.deletion_success": "Removed the second shape of %s.",
   "walkers.unlock_entity": "Unlocked %s as second shape.",
+  "walkers.unlock_entity_blacklisted": "This Entity is not available for you.",
   "walkers.unlock_progress": "You feel it tingling.",
   "walkers.grant_success": "Successfully changed %s to be the second shape of %s.",
   "walkers.already_has": "%s already has %s as shape!",

@@ -128,6 +128,13 @@ public class WalkersFabricConfig extends WalkersConfig implements Config {
         }
     };
 
+    public List<String> shapeBlacklist = new ArrayList<>() {
+        {
+            add("minecraft:ender_dragon");
+            add("minecraft:wither");
+        }
+    };
+
     @Override
     public String getName() {
         return Walkers.MODID;
@@ -301,5 +308,10 @@ public class WalkersFabricConfig extends WalkersConfig implements Config {
     @Override
     public boolean devShapeIsThirdShape() {
         return devShapeIsThirdShape;
+    }
+
+    @Override
+    public List<String> shapeBlacklist() {
+        return shapeBlacklist;
     }
 }

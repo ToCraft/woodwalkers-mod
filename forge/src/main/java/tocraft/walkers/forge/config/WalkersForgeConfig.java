@@ -64,6 +64,13 @@ public class WalkersForgeConfig extends WalkersConfig {
         }
     };
 
+    public List<String> shapeBlacklist = new ArrayList<>() {
+        {
+            add("minecraft:ender_dragon");
+            add("minecraft:wither");
+        }
+    };
+
     public static WalkersConfig getInstance() {
         return WalkersForge.CONFIG;
     }
@@ -231,5 +238,10 @@ public class WalkersForgeConfig extends WalkersConfig {
     @Override
     public boolean devShapeIsThirdShape() {
         return devShapeIsThirdShape;
+    }
+
+    @Override
+    public List<String> shapeBlacklist() {
+        return shapeBlacklist;
     }
 }
