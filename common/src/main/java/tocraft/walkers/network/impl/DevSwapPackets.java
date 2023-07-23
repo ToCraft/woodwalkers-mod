@@ -35,7 +35,7 @@ public class DevSwapPackets {
                     @Nullable ShapeType<?> defaultType = ShapeType.from(living);
         
                     if(defaultType != null) {
-                        if(defaultType.getEntityType() == ((PlayerDataProvider)context.getPlayer()).get2ndShape().getEntityType())
+                        if(((PlayerDataProvider)context.getPlayer()).get2ndShape() != null && defaultType.getEntityType() == ((PlayerDataProvider)context.getPlayer()).get2ndShape().getEntityType())
                             PlayerShape.updateShapes((ServerPlayerEntity) context.getPlayer(), defaultType, (LivingEntity) created);
                         else if (WalkersConfig.getInstance().devShapeIsThirdShape())
                             PlayerShape.updateShapes((ServerPlayerEntity) context.getPlayer(), defaultType, (LivingEntity) created);
