@@ -33,7 +33,7 @@ public class ServerNetworking implements NetworkHandler {
 
                         // Check cooldown
                         if(PlayerAbilities.canUseAbility(player)) {
-                            AbilityRegistry.get(shapeType).onUse(player, walkers, context.getPlayer().world);
+                            AbilityRegistry.get(shapeType).onUse(player, walkers, context.getPlayer().getWorld());
                             PlayerAbilities.setCooldown(player, AbilityRegistry.get(shapeType).getCooldown(walkers));
                             PlayerAbilities.sync((ServerPlayerEntity) player);
                         }

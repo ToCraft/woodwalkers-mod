@@ -66,7 +66,7 @@ public class ClientNetworking implements NetworkHandler {
 
                         // ensure entity data exists
                         if(walkers == null || !type.get().equals(walkers.getType())) {
-                            walkers = (LivingEntity) type.get().create(syncTarget.world);
+                            walkers = (LivingEntity) type.get().create(syncTarget.getWorld());
                             data.setCurrentShape(walkers);
 
                             // refresh player dimensions/hitbox on client

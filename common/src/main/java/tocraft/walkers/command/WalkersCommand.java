@@ -235,7 +235,7 @@ public class WalkersCommand {
         if(nbt != null) {
             NbtCompound copy = nbt.copy();
             copy.putString("id", id.toString());
-            ServerWorld serverWorld = source.getWorld();
+            ServerWorld serverWorld = source.getServerWorld();
             Entity loaded = EntityType.loadEntityWithPassengers(copy, serverWorld, it -> it);
             if(loaded instanceof LivingEntity living) {
                 type = new ShapeType<>(living);
@@ -263,11 +263,11 @@ public class WalkersCommand {
         if(nbt != null) {
             NbtCompound copy = nbt.copy();
             copy.putString("id", walkers.toString());
-            ServerWorld serverWorld = source.getWorld();
+            ServerWorld serverWorld = source.getServerWorld();
             created = EntityType.loadEntityWithPassengers(copy, serverWorld, it -> it);
         } else {
             EntityType<?> entity = Registries.ENTITY_TYPE.get(walkers);
-            created = entity.create(player.world);
+            created = entity.create(player.getWorld());
         }
 
         if(created instanceof LivingEntity living) {

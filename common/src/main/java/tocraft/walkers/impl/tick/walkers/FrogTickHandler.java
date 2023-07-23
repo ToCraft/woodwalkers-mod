@@ -10,7 +10,7 @@ public class FrogTickHandler implements WalkersTickHandler<FrogEntity> {
 
     @Override
     public void tick(PlayerEntity player, FrogEntity frog) {
-        if(player.world.isClient) {
+        if(player.getWorld().isClient) {
             boolean walk = player.isOnGround() && player.getVelocity().horizontalLengthSquared() > 1.0E-6 && !player.isInsideWaterOrBubbleColumn();
             boolean swim = player.getVelocity().horizontalLengthSquared() > 1.0E-6 && player.isInsideWaterOrBubbleColumn();
 
@@ -31,7 +31,7 @@ public class FrogTickHandler implements WalkersTickHandler<FrogEntity> {
             }
 
             // Random croaking
-            if(player.world.random.nextDouble() <= 0.001) {
+            if(player.getWorld().random.nextDouble() <= 0.001) {
                 frog.croakingAnimationState.start(player.age);
             }
 

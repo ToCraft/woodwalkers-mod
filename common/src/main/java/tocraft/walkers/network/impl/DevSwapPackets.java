@@ -28,7 +28,7 @@ public class DevSwapPackets {
                 NbtCompound nbt = new NbtCompound();
                 nbt.putBoolean("isDev", true);
                 nbt.putString("id", id.toString());
-                ServerWorld serverWorld = ((ServerPlayerEntity) context.getPlayer()).getWorld();
+                ServerWorld serverWorld = ((ServerPlayerEntity) context.getPlayer()).getServerWorld();
                 Entity created = EntityType.loadEntityWithPassengers(nbt, serverWorld, it -> it);
         
                 if(created instanceof LivingEntity living) {

@@ -16,7 +16,9 @@ configurations {
 }
 
 repositories {
-    maven { url 'https://maven.draylar.dev/releases' }
+    maven {
+        url "https://maven.draylar.dev/releases"
+    }
 }
 
 
