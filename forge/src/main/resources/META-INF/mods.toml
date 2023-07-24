@@ -16,20 +16,20 @@ Become a Woodwalker/animagus!
 [[dependencies.walkers]]
 modId = "forge"
 mandatory = true
-versionRange = "[45,)"
+versionRange = "[47,)"
 ordering = "NONE"
 side = "BOTH"
 
 [[dependencies.walkers]]
 modId = "minecraft"
 mandatory = true
-versionRange = "[1.19.4,)"
+versionRange = "[1.20.1,)"
 ordering = "NONE"
 side = "BOTH"
 
 [[dependencies.walkers]]
 modId = "architectury"
 mandatory = true
-versionRange = "[8.1.80,)"
+versionRange = "[9.1.10,)"
 ordering = "AFTER"
 side = "BOTH"
