@@ -11,7 +11,7 @@ import net.minecraft.world.World.ExplosionSourceType;
 public class CreeperAbility extends WalkersAbility<CreeperEntity> {
 
     @Override
-    public void onUse(PlayerEntity player, CreeperEntity walkers, World world) {
+    public void onUse(PlayerEntity player, CreeperEntity shape, World world) {
         world.createExplosion(player, player.getX(), player.getY(), player.getZ(), 3.0f, ExplosionSourceType.NONE);
     }
 

@@ -11,8 +11,8 @@ import net.minecraft.world.World;
 public class WardenAbility extends WalkersAbility<WardenEntity> {
 
     @Override
-    public void onUse(PlayerEntity player, WardenEntity walkers, World world) {
-        ((SonicBoomUser) player).walkers$ability_startSonicBoom();
+    public void onUse(PlayerEntity player, WardenEntity shape, World world) {
+        ((SonicBoomUser) player).shape$ability_startSonicBoom();
     }
 
     @Override

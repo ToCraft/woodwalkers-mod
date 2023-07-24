@@ -19,8 +19,8 @@ import java.util.Map;
 /**
  * Registry class for {@link EntityUpdater} instances.
  *
- * <p>{@link EntityUpdater}s are used to apply changes to walkers entity instances on the client using information from the player.
- * As an example, an {@link EntityUpdater} can be used to tell a walkers bat to "stop roosting," which triggers the flight animation.
+ * <p>{@link EntityUpdater}s are used to apply changes to shape entity instances on the client using information from the player.
+ * As an example, an {@link EntityUpdater} can be used to tell a shape bat to "stop roosting," which triggers the flight animation.
  * {@link EntityUpdater}s are called once every render tick {@link net.minecraft.client.render.entity.EntityRenderer#render(Entity, float, float, MatrixStack, VertexConsumerProvider, int)}.
  */
 @Environment(EnvType.CLIENT)
@@ -67,7 +67,7 @@ public class EntityUpdaters {
         });
 
         EntityUpdaters.register(EntityType.PARROT, (player, parrot) -> {
-            if (player.isOnGround() && ((NearbySongAccessor) player).walkers_isNearbySongPlaying()) {
+            if (player.isOnGround() && ((NearbySongAccessor) player).shape_isNearbySongPlaying()) {
                 parrot.setNearbySongPlaying(player.getBlockPos(), true);
                 parrot.setSitting(true);
                 parrot.setOnGround(true);

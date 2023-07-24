@@ -21,7 +21,7 @@ import java.util.UUID;
 public class ClientNetworking implements NetworkHandler {
 
     public static void registerPacketHandlers() {
-        NetworkManager.registerReceiver(NetworkManager.Side.S2C, NetworkHandler.WALKERS_SYNC, ClientNetworking::handleWalkersSyncPacket);
+        NetworkManager.registerReceiver(NetworkManager.Side.S2C, NetworkHandler.SHAPE_SYNC, ClientNetworking::handleWalkersSyncPacket);
         NetworkManager.registerReceiver(NetworkManager.Side.S2C, NetworkHandler.ABILITY_SYNC, ClientNetworking::handleAbilitySyncPacket);
         NetworkManager.registerReceiver(NetworkManager.Side.S2C, NetworkHandler.UNLOCK_SYNC, UnlockPackets::handleUnlockSyncPacket);
         NetworkManager.registerReceiver(NetworkManager.Side.S2C, NetworkHandler.CONFIG_SYNC, ClientNetworking::handleConfigurationSyncPacket);
@@ -50,10 +50,10 @@ public class ClientNetworking implements NetworkHandler {
             if(syncTarget != null) {
                 PlayerDataProvider data = (PlayerDataProvider) syncTarget;
 
-                // set walkers to null (no walkers) if the entity id is "minecraft:empty"
+                // set shape to null (no shape) if the entity id is "minecraft:empty"
                 if(id.equals("minecraft:empty")) {
                     data.setCurrentShape(null);
-                    ((DimensionsRefresher) syncTarget).walkers_refreshDimensions();
+                    ((DimensionsRefresher) syncTarget).shape_refreshDimensions();
                     return;
                 }
 
@@ -62,19 +62,19 @@ public class ClientNetworking implements NetworkHandler {
                     entityNbt.putString("id", id);
                     Optional<EntityType<?>> type = EntityType.fromNbt(entityNbt);
                     if(type.isPresent()) {
-                        LivingEntity walkers = data.getCurrentShape();
+                        LivingEntity shape = data.getCurrentShape();
 
                         // ensure entity data exists
-                        if(walkers == null || !type.get().equals(walkers.getType())) {
-                            walkers = (LivingEntity) type.get().create(syncTarget.getWorld());
-                            data.setCurrentShape(walkers);
+                        if(shape == null || !type.get().equals(shape.getType())) {
+                            shape = (LivingEntity) type.get().create(syncTarget.getWorld());
+                            data.setCurrentShape(shape);
 
                             // refresh player dimensions/hitbox on client
-                            ((DimensionsRefresher) syncTarget).walkers_refreshDimensions();
+                            ((DimensionsRefresher) syncTarget).shape_refreshDimensions();
                         }
 
-                        if(walkers != null) {
-                            walkers.readNbt(entityNbt);
+                        if(shape != null) {
+                            shape.readNbt(entityNbt);
                         }
                     }
                 }

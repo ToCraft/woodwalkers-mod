@@ -16,7 +16,7 @@ public abstract class TrackTargetGoalMixin {
     @Shadow public abstract void stop();
 
     @Inject(method = "shouldContinue", at = @At("RETURN"), cancellable = true)
-    protected void walkers_shouldContinue(CallbackInfoReturnable<Boolean> cir) {
+    protected void shape_shouldContinue(CallbackInfoReturnable<Boolean> cir) {
         // NO-OP
     }
 }

@@ -17,7 +17,7 @@ import org.jetbrains.annotations.Nullable;
 public class SwapPackets {
 
     public static void registerWalkersRequestPacketHandler() {
-        NetworkManager.registerReceiver(NetworkManager.Side.C2S, NetworkHandler.WALKERS_REQUEST, (buf, context) -> {
+        NetworkManager.registerReceiver(NetworkManager.Side.C2S, NetworkHandler.SHAPE_REQUEST, (buf, context) -> {
             boolean validType = buf.readBoolean();
             if(validType) {
                 EntityType<?> entityType = Registries.ENTITY_TYPE.get(buf.readIdentifier());
@@ -62,6 +62,6 @@ public class SwapPackets {
             packet.writeBoolean(unlock);
         }
 
-        NetworkManager.sendToServer(ClientNetworking.WALKERS_REQUEST, packet);
+        NetworkManager.sendToServer(ClientNetworking.SHAPE_REQUEST, packet);
     }
 }

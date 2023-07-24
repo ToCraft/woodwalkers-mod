@@ -13,7 +13,7 @@ import net.minecraft.world.World;
 public class GhastAbility extends WalkersAbility<GhastEntity> {
 
     @Override
-    public void onUse(PlayerEntity player, GhastEntity walkers, World world) {
+    public void onUse(PlayerEntity player, GhastEntity shape, World world) {
         FireballEntity fireball = new FireballEntity(
                 world,
                 player,

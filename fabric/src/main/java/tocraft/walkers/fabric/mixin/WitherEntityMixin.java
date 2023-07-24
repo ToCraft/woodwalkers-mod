@@ -33,10 +33,10 @@ public abstract class WitherEntityMixin extends HostileEntity {
 
         list.forEach(entity -> {
             if(entity instanceof PlayerEntity player) {
-                LivingEntity walkers = PlayerShape.getCurrentShape(player);
+                LivingEntity shape = PlayerShape.getCurrentShape(player);
 
                 // potentially ignore undead walkers players
-                if(walkers != null && walkers.isUndead()) {
+                if(shape != null && shape.isUndead()) {
                     if(this.getTarget() != null) {
                         // if this wither's target is not equal to the current entity
                         if(!this.getTarget().getUuid().equals(entity.getUuid())) {

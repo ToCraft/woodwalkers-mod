@@ -18,7 +18,7 @@ public class WalkersFabric implements ModInitializer {
     }
 
     public void getModVersion() {
-        ModContainer modContainer = FabricLoader.getInstance().getModContainer("walkers").get();
+        ModContainer modContainer = FabricLoader.getInstance().getModContainer(Walkers.MODID).get();
         Walkers.setVersion(modContainer.getMetadata().getVersion().getFriendlyString());
     }
 }

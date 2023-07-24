@@ -15,11 +15,11 @@ import net.minecraft.registry.Registries;
 public class PlayerShape {
 
     /**
-     * Returns the walkers associated with the {@link PlayerEntity} this component is attached to.
+     * Returns the shape associated with the {@link PlayerEntity} this component is attached to.
      *
-     * <p>Note that this method may return null, which represents "no walkers."
+     * <p>Note that this method may return null, which represents "no shape."
      *
-     * @return the current {@link LivingEntity} walkers associated with this component's player owner, or null if they have no walkers equipped
+     * @return the current {@link LivingEntity} shape associated with this component's player owner, or null if they have no shape equipped
      */
     public static LivingEntity getCurrentShape(PlayerEntity player) {
         return ((PlayerDataProvider) player).getCurrentShape();
@@ -30,12 +30,12 @@ public class PlayerShape {
     }
 
     /**
-     * Sets the walkers of the specified player.
+     * Sets the shape of the specified player.
      *
-     * <p>Setting a walkers refreshes the player's dimensions/hitbox, and toggles flight capabilities depending on the entity.
-     * To clear this component's walkers, pass null.
+     * <p>Setting a shape refreshes the player's dimensions/hitbox, and toggles flight capabilities depending on the entity.
+     * To clear this component's shape, pass null.
      *
-     * @param entity {@link LivingEntity} new walkers for this component, or null to clear
+     * @param entity {@link LivingEntity} new shape for this component, or null to clear
      */
     public static boolean updateShapes(ServerPlayerEntity player, ShapeType<?> type, LivingEntity entity) {
         return ((PlayerDataProvider) player).updateShapes(entity);
@@ -49,16 +49,16 @@ public class PlayerShape {
         PacketByteBuf packet = new PacketByteBuf(Unpooled.buffer());
         NbtCompound entityTag = new NbtCompound();
 
-        // serialize current walkers data to tag if it exists
-        LivingEntity walkers = getCurrentShape(changed);
-        if(walkers != null) {
-            walkers.writeNbt(entityTag);
+        // serialize current shape data to tag if it exists
+        LivingEntity shape = getCurrentShape(changed);
+        if(shape != null) {
+            shape.writeNbt(entityTag);
         }
 
-        // put entity type ID under the key "id", or "minecraft:empty" if no walkers is equipped (or the walkers entity type is invalid)
+        // put entity type ID under the key "id", or "minecraft:empty" if no shape is equipped (or the shape entity type is invalid)
         packet.writeUuid(changed.getUuid());
-        packet.writeString(walkers == null ? "minecraft:empty" : Registries.ENTITY_TYPE.getId(walkers.getType()).toString());
+        packet.writeString(shape == null ? "minecraft:empty" : Registries.ENTITY_TYPE.getId(shape.getType()).toString());
         packet.writeNbt(entityTag);
-        NetworkManager.sendToPlayer(packetTarget, NetworkHandler.WALKERS_SYNC, packet);
+        NetworkManager.sendToPlayer(packetTarget, NetworkHandler.SHAPE_SYNC, packet);
     }
 }

@@ -23,7 +23,7 @@ public class WalkersForge {
     }
 
     public void getModVersion() {
-        ModContainer modContainer = ModList.get().getModContainerById("walkers").get();
+        ModContainer modContainer = ModList.get().getModContainerById(Walkers.MODID).get();
         Walkers.setVersion(modContainer.getModInfo().getVersion().toString());
     }
 }

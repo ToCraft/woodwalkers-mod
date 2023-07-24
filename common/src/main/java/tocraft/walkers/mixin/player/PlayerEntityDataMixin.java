@@ -42,7 +42,7 @@ public abstract class PlayerEntityDataMixin extends LivingEntity implements Play
     @Unique private ShapeType<?> unlocked;
     @Unique private int remainingTime = 0;
     @Unique private int abilityCooldown = 0;
-    @Unique private LivingEntity walkers = null;
+    @Unique private LivingEntity shape = null;
     @Unique private ShapeType<?> shapeType = null;
 
     private PlayerEntityDataMixin(EntityType<? extends LivingEntity> type, World world) {
@@ -89,16 +89,16 @@ public abstract class PlayerEntityDataMixin extends LivingEntity implements Play
     private NbtCompound writeCurrentShape(NbtCompound tag) {
         NbtCompound entityTag = new NbtCompound();
 
-        // serialize current walkers data to tag if it exists
-        if(walkers != null) {
-            walkers.writeNbt(entityTag);
+        // serialize current shapeAttackDamage data to tag if it exists
+        if(shape != null) {
+            shape.writeNbt(entityTag);
             if(shapeType != null) {
                 shapeType.writeEntityNbt(entityTag);
             }
         }
 
-        // put entity type ID under the key "id", or "minecraft:empty" if no walkers is equipped (or the walkers entity type is invalid)
-        tag.putString("id", walkers == null ? "minecraft:empty" : Registries.ENTITY_TYPE.getId(walkers.getType()).toString());
+        // put entity type ID under the key "id", or "minecraft:empty" if no shape is equipped (or the shape entity type is invalid)
+        tag.putString("id", shape == null ? "minecraft:empty" : Registries.ENTITY_TYPE.getId(shape.getType()).toString());
         tag.put("EntityData", entityTag);
         return tag;
     }
@@ -107,10 +107,10 @@ public abstract class PlayerEntityDataMixin extends LivingEntity implements Play
     public void readCurrentShape(NbtCompound tag) {
         Optional<EntityType<?>> type = EntityType.fromNbt(tag);
 
-        // set walkers to null (no walkers) if the entity id is "minecraft:empty"
+        // set shape to null (no shape) if the entity id is "minecraft:empty"
         if(tag.getString("id").equals("minecraft:empty")) {
-            this.walkers = null;
-            ((DimensionsRefresher) this).walkers_refreshDimensions();
+            this.shape = null;
+            ((DimensionsRefresher) this).shape_refreshDimensions();
         }
 
         // if entity type was valid, deserialize entity data from tag
@@ -119,14 +119,14 @@ public abstract class PlayerEntityDataMixin extends LivingEntity implements Play
 
             // ensure entity data exists
             if(entityTag != null) {
-                if(walkers == null || !type.get().equals(walkers.getType())) {
-                    walkers = (LivingEntity) type.get().create(getWorld());
+                if(shape == null || !type.get().equals(shape.getType())) {
+                    shape = (LivingEntity) type.get().create(getWorld());
 
                     // refresh player dimensions/hitbox on client
-                    ((DimensionsRefresher) this).walkers_refreshDimensions();
+                    ((DimensionsRefresher) this).shape_refreshDimensions();
                 }
 
-                walkers.readNbt(entityTag);
+                shape.readNbt(entityTag);
                 shapeType = ShapeType.fromEntityNbt(tag);
             }
         }
@@ -170,7 +170,7 @@ public abstract class PlayerEntityDataMixin extends LivingEntity implements Play
     @Unique
     @Override
     public LivingEntity getCurrentShape() {
-        return walkers;
+        return shape;
     }
 
     @Override
@@ -180,31 +180,31 @@ public abstract class PlayerEntityDataMixin extends LivingEntity implements Play
 
     @Unique
     @Override
-    public void setCurrentShape(LivingEntity walkers) {
-        this.walkers = walkers;
+    public void setCurrentShape(LivingEntity shape) {
+        this.shape = shape;
     }
 
     @Unique
     @Override
-    public boolean updateShapes(@Nullable LivingEntity walkers) {
+    public boolean updateShapes(@Nullable LivingEntity shape) {
         PlayerEntity player = (PlayerEntity) (Object) this;
-        EventResult result = WalkersSwapCallback.EVENT.invoker().swap((ServerPlayerEntity) player, walkers);
+        EventResult result = WalkersSwapCallback.EVENT.invoker().swap((ServerPlayerEntity) player, shape);
         if(result.isFalse()) {
             return false;
         }
 
-        this.walkers = walkers;
+        this.shape = shape;
 
         // refresh entity hitbox dimensions
-        ((DimensionsRefresher) player).walkers_refreshDimensions();
+        ((DimensionsRefresher) player).shape_refreshDimensions();
 
-        // Walkers is valid and scaling health is on; set entity's max health and current health to reflect walkers.
-        if(walkers != null) {
+        // Walkers is valid and scaling health is on; set entity's max health and current health to reflect shape.
+        if(shape != null) {
             if (WalkersConfig.getInstance().scalingHealth()) {
                 // calculate the current health in percentage, used later
                 float currentHealthPercent = player.getHealth() / player.getMaxHealth();
 
-                player.getAttributeInstance(EntityAttributes.GENERIC_MAX_HEALTH).setBaseValue(Math.min(WalkersConfig.getInstance().maxHealth(), walkers.getMaxHealth()));
+                player.getAttributeInstance(EntityAttributes.GENERIC_MAX_HEALTH).setBaseValue(Math.min(WalkersConfig.getInstance().maxHealth(), shape.getMaxHealth()));
             
                 // set health
                 if (WalkersConfig.getInstance().percentScalingHealth())
@@ -214,18 +214,18 @@ public abstract class PlayerEntityDataMixin extends LivingEntity implements Play
             }
             if (WalkersConfig.getInstance().scalingAttackDamage()) {
                 // get shape attack damage, return 1D if value is lower or not existing
-                Double walkersAttackDamage = 1D;
+                Double shapeAttackDamage = 1D;
                 try {
-                    walkersAttackDamage = Math.max(walkers.getAttributeInstance(EntityAttributes.GENERIC_ATTACK_DAMAGE).getBaseValue(), walkersAttackDamage);
+                    shapeAttackDamage = Math.max(shape.getAttributeInstance(EntityAttributes.GENERIC_ATTACK_DAMAGE).getBaseValue(), shapeAttackDamage);
                 }
                 catch(Exception ignored) {
                 }
-                player.getAttributeInstance(EntityAttributes.GENERIC_ATTACK_DAMAGE).setBaseValue(Math.min(WalkersConfig.getInstance().maxAttackDamage(), walkersAttackDamage));
+                player.getAttributeInstance(EntityAttributes.GENERIC_ATTACK_DAMAGE).setBaseValue(Math.min(WalkersConfig.getInstance().maxAttackDamage(), shapeAttackDamage));
             }
         }
 
-        // If the walkers is null (going back to player), set the player's base health value to 20 (default) to clear old changes.
-        if(walkers == null) {
+        // If the shape is null (going back to player), set the player's base health value to 20 (default) to clear old changes.
+        if(shape == null) {
             float currentHealthPercent = player.getHealth() / player.getMaxHealth();
 
             if(WalkersConfig.getInstance().scalingHealth()) {
@@ -243,7 +243,7 @@ public abstract class PlayerEntityDataMixin extends LivingEntity implements Play
                 player.setHealth(Math.min(player.getHealth(), player.getMaxHealth()));
         }
 
-        // update flight properties on player depending on walkers
+        // update flight properties on player depending on shape
         ServerPlayerEntity serverPlayerEntity = (ServerPlayerEntity) player;
         if(Walkers.hasFlyingPermissions((ServerPlayerEntity) player)) {
             FlightHelper.grantFlightTo(serverPlayerEntity);
@@ -256,7 +256,7 @@ public abstract class PlayerEntityDataMixin extends LivingEntity implements Play
         }
 
         // If the player is riding a Ravager and changes into an Walkers that cannot ride Ravagers, kick them off.
-        if(player.getVehicle() instanceof RavagerEntity && (walkers == null || !walkers.getType().isIn(WalkersEntityTags.RAVAGER_RIDING))) {
+        if(player.getVehicle() instanceof RavagerEntity && (shape == null || !shape.getType().isIn(WalkersEntityTags.RAVAGER_RIDING))) {
             player.stopRiding();
         }
 

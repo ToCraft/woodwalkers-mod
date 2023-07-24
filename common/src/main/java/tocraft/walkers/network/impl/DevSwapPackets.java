@@ -21,7 +21,7 @@ import org.jetbrains.annotations.Nullable;
 public class DevSwapPackets {
 
     public static void registerDevRequestPacketHandler() {
-        NetworkManager.registerReceiver(NetworkManager.Side.C2S, NetworkHandler.DEV_REQUEST, (buf, context) -> {
+        NetworkManager.registerReceiver(NetworkManager.Side.C2S, NetworkHandler.DEV_SHAPE_REQUEST, (buf, context) -> {
             Identifier id = buf.readIdentifier();
 
             context.getPlayer().getServer().execute(() -> {
@@ -53,6 +53,6 @@ public class DevSwapPackets {
 
         packet.writeIdentifier(id);
 
-        NetworkManager.sendToServer(ClientNetworking.DEV_REQUEST, packet);
+        NetworkManager.sendToServer(ClientNetworking.DEV_SHAPE_REQUEST, packet);
     }
 }

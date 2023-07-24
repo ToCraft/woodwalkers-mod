@@ -23,18 +23,18 @@ public class ServerNetworking implements NetworkHandler {
             PlayerEntity player = context.getPlayer();
 
             context.getPlayer().getServer().execute(() -> {
-                LivingEntity walkers = PlayerShape.getCurrentShape(player);
+                LivingEntity shape = PlayerShape.getCurrentShape(player);
 
-                // Verify we should use ability for the player's current walkers
-                if(walkers != null) {
-                    EntityType<?> shapeType = walkers.getType();
+                // Verify we should use ability for the player's current shape
+                if(shape != null) {
+                    EntityType<?> shapeType = shape.getType();
 
                     if(AbilityRegistry.has(shapeType)) {
 
                         // Check cooldown
                         if(PlayerAbilities.canUseAbility(player)) {
-                            AbilityRegistry.get(shapeType).onUse(player, walkers, context.getPlayer().getWorld());
-                            PlayerAbilities.setCooldown(player, AbilityRegistry.get(shapeType).getCooldown(walkers));
+                            AbilityRegistry.get(shapeType).onUse(player, shape, context.getPlayer().getWorld());
+                            PlayerAbilities.setCooldown(player, AbilityRegistry.get(shapeType).getCooldown(shape));
                             PlayerAbilities.sync((ServerPlayerEntity) player);
                         }
                     }

@@ -50,11 +50,11 @@ public class KeyPressHandler implements ClientTickEvent.Client {
 
     private void handleAbilityKey(MinecraftClient client) {
         // TODO: maybe the check should be on the server to allow for ability extension mods?
-        // Only send the ability packet if the walkers equipped by the player has one
-        LivingEntity walkers = PlayerShape.getCurrentShape(client.player);
+        // Only send the ability packet if the shape equipped by the player has one
+        LivingEntity shape = PlayerShape.getCurrentShape(client.player);
 
-        if(walkers != null) {
-            if(AbilityRegistry.has(walkers.getType())) {
+        if(shape != null) {
+            if(AbilityRegistry.has(shape.getType())) {
                 ClientNetworking.sendAbilityRequest();
             }
         }

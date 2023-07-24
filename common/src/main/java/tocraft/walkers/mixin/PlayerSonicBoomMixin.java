@@ -34,18 +34,18 @@ import java.util.Set;
 public abstract class PlayerSonicBoomMixin extends LivingEntity implements SonicBoomUser {
 
     @Unique
-    private int walkers$ability_wardenBoomDelay = -1;
+    private int shape$ability_wardenBoomDelay = -1;
 
     private PlayerSonicBoomMixin(EntityType<? extends LivingEntity> type, World world) {
         super(type, world);
     }
 
     @Override
-    public void walkers$ability_startSonicBoom() {
-        @Nullable LivingEntity walkers = PlayerShape.getCurrentShape((PlayerEntity) (Object) this);
-        if(walkers instanceof WardenEntity) {
+    public void shape$ability_startSonicBoom() {
+        @Nullable LivingEntity shape = PlayerShape.getCurrentShape((PlayerEntity) (Object) this);
+        if(shape instanceof WardenEntity) {
             getWorld().sendEntityStatus(this, EntityStatuses.SONIC_BOOM);
-            walkers$ability_wardenBoomDelay = 40;
+            shape$ability_wardenBoomDelay = 40;
 
             // SFX
             getWorld().playSound(null, getX(), getY(), getZ(), SoundEvents.ENTITY_WARDEN_SONIC_CHARGE, SoundCategory.PLAYERS, 3.0f, 1.0f);
@@ -55,8 +55,8 @@ public abstract class PlayerSonicBoomMixin extends LivingEntity implements Sonic
     @Inject(method = "tick", at = @At("HEAD"))
     private void tickSonicBoom(CallbackInfo ci) {
         if(!getWorld().isClient) {
-            walkers$ability_wardenBoomDelay = Math.max(-1, walkers$ability_wardenBoomDelay - 1);
-            if(walkers$ability_wardenBoomDelay == 0) {
+            shape$ability_wardenBoomDelay = Math.max(-1, shape$ability_wardenBoomDelay - 1);
+            if(shape$ability_wardenBoomDelay == 0) {
 
                 // SFX
                 getWorld().playSound(null, getX(), getY(), getZ(), SoundEvents.ENTITY_WARDEN_SONIC_BOOM, SoundCategory.PLAYERS, 3.0f, 1.0f);

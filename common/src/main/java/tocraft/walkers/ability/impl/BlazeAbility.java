@@ -13,7 +13,7 @@ import net.minecraft.world.World;
 public class BlazeAbility extends WalkersAbility<BlazeEntity> {
 
     @Override
-    public void onUse(PlayerEntity player, BlazeEntity walkers, World world) {
+    public void onUse(PlayerEntity player, BlazeEntity shape, World world) {
         SmallFireballEntity smallFireball = new SmallFireballEntity(
                 world,
                 player.getX(),

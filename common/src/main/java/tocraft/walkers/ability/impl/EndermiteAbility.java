@@ -14,7 +14,7 @@ import net.minecraft.world.World;
 public class EndermiteAbility extends WalkersAbility<EndermiteEntity> {
     
     @Override
-    public void onUse(PlayerEntity player, EndermiteEntity walkers, World world) {
+    public void onUse(PlayerEntity player, EndermiteEntity shape, World world) {
         double x = player.getX();
         double y = player.getY();
         double z = player.getZ();

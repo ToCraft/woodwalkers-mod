@@ -15,7 +15,7 @@ import net.minecraft.world.World;
 public class EvokerAbility extends WalkersAbility<EvokerEntity> {
 
     @Override
-    public void onUse(PlayerEntity player, EvokerEntity walkers, World world) {
+    public void onUse(PlayerEntity player, EvokerEntity shape, World world) {
         // Spawn 8 Evoker Fangs out from the player.
         Vec3d origin = player.getPos();
         Vec3d facing = player.getRotationVector().multiply(1, 0, 1); // fangs should not go up/down based on pitch

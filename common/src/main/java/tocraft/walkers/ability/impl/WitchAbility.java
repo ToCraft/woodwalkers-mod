@@ -22,7 +22,7 @@ public class WitchAbility extends WalkersAbility<WitchEntity> {
     public static final List<Potion> VALID_POTIONS = Arrays.asList(Potions.HARMING, Potions.POISON, Potions.SLOWNESS, Potions.WEAKNESS);
 
     @Override
-    public void onUse(PlayerEntity player, WitchEntity walkers, World world) {
+    public void onUse(PlayerEntity player, WitchEntity shape, World world) {
         PotionEntity potionEntity = new PotionEntity(world, player);
         potionEntity.setItem(PotionUtil.setPotion(new ItemStack(Items.SPLASH_POTION), VALID_POTIONS.get(world.random.nextInt(VALID_POTIONS.size()))));
         potionEntity.setPitch(-20.0F);

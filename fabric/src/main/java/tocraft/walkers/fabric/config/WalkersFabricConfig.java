@@ -13,13 +13,13 @@ import java.util.Map;
 
 public class WalkersFabricConfig extends WalkersConfig implements Config {
 
-    @Comment(value = "Whether an overlay message appears above the hotbar when a new walkers is unlocked.")
+    @Comment(value = "Whether an overlay message appears above the hotbar when a new second shape is unlocked.")
     public boolean overlayShapesUnlocks = true;
 
-    @Comment(value = "Whether an overlay message appears above the hotbar when a new walkers is revoked.")
+    @Comment(value = "Whether an overlay message appears above the hotbar when a second shape is revoked.")
     public boolean overlay2ndShapesRevokes = true;
 
-    @Comment(value = "Whether a player's equipped walkers is revoked on death.")
+    @Comment(value = "Whether a player's current shape is revoked on death.")
     public boolean revoke2ndShapeOnDeath = false;
 
     @Comment(value = "Whether shapes equip the items (swords, items, tools) held by the underlying player.")
@@ -31,19 +31,19 @@ public class WalkersFabricConfig extends WalkersConfig implements Config {
     @Comment(value = "Whether hostile mobs ignore players with hostile mob shapes.")
     public boolean hostilesIgnoreHostileShapedPlayer = true;
 
-    @Comment(value = "Whether a hostile mob will stop targeting you after switching to a hostile mob walkers.")
+    @Comment(value = "Whether a hostile mob will stop targeting you after switching to a hostile mob shape.")
     public boolean hostilesForgetNewHostileShapedPlayer = false;
 
-    @Comment(value = "Whether Wolves will attack Players with an walkers that the Wolf would normally hunt (Sheep, Fox, Skeleton).")
+    @Comment(value = "Whether Wolves will attack Players with an shape that the Wolf would normally hunt (Sheep, Fox, Skeleton).")
     public boolean wolvesAttack2ndShapedPrey = true;
 
-    @Comment(value = "Whether owned Wolves will attack Players with an walkers that the Wolf would normally hunt (Sheep, Fox, Skeleton).")
+    @Comment(value = "Whether owned Wolves will attack Players with an shape that the Wolf would normally hunt (Sheep, Fox, Skeleton).")
     public boolean ownedwolvesAttack2ndShapedPrey = false;
 
     @Comment(value = "Whether Villagers will run from Players morphed as shapes villagers normally run from (Zombies).")
     public boolean villagersRunFrom2ndShapes = true;
 
-    @Comment(value = "Whether Foxes will attack Players with an walkers that the Fox would normally hunt (Fish, Chicken).")
+    @Comment(value = "Whether Foxes will attack Players with an shape that the Fox would normally hunt (Fish, Chicken).")
     public boolean foxesAttack2ndShapedPrey = true;
 
     @Comment(value = "Whether Walkers sounds take priority over Player Sounds (eg. Blaze hurt sound when hit).")
@@ -82,7 +82,7 @@ public class WalkersFabricConfig extends WalkersConfig implements Config {
     @Comment(value = "In blocks, how far can the Enderman ability teleport?")
     public int endermanAbilityTeleportDistance = 32;
 
-    @Comment(value = "Should player nametags render above players disguised with an walkers? Note that the server is the authority for this config option.")
+    @Comment(value = "Should player nametags render above players disguised with an shape? Note that the server is the authority for this config option.")
     public boolean showPlayerNametag = false;
 
     @Comment(value = "If true, /walkers commands will send feedback in the action bar.")

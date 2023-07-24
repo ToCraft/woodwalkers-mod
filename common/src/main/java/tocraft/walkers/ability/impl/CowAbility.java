@@ -12,7 +12,7 @@ import net.minecraft.world.World;
 public class CowAbility extends WalkersAbility<CowEntity> {
 
     @Override
-    public void onUse(PlayerEntity player, CowEntity walkers, World world) {
+    public void onUse(PlayerEntity player, CowEntity shape, World world) {
         player.clearStatusEffects();
         world.playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.ENTITY_GENERIC_DRINK, SoundCategory.PLAYERS, 1.0F, 1.0F);
     }

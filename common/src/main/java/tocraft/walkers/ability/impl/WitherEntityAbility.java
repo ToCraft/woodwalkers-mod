@@ -14,7 +14,7 @@ import net.minecraft.world.World;
 public class WitherEntityAbility extends WalkersAbility<WitherEntity> {
 
     @Override
-    public void onUse(PlayerEntity player, WitherEntity walkers, World world) {
+    public void onUse(PlayerEntity player, WitherEntity shape, World world) {
         world.playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.ENTITY_WITHER_SHOOT, SoundCategory.NEUTRAL, 0.5F, 0.4F / (world.random.nextFloat() * 0.4F + 0.8F));
 
         if (!world.isClient) {

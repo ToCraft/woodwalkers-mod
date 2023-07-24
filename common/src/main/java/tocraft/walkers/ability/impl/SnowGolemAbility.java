@@ -14,7 +14,7 @@ import net.minecraft.world.World;
 public class SnowGolemAbility extends WalkersAbility<SnowGolemEntity> {
 
     @Override
-    public void onUse(PlayerEntity player, SnowGolemEntity walkers, World world) {
+    public void onUse(PlayerEntity player, SnowGolemEntity shape, World world) {
         world.playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.ENTITY_SNOWBALL_THROW, SoundCategory.NEUTRAL, 0.5F, 0.4F / (world.random.nextFloat() * 0.4F + 0.8F));
 
         if (!world.isClient) {

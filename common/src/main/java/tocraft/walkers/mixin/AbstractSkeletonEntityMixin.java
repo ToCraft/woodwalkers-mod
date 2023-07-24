@@ -30,8 +30,8 @@ public abstract class AbstractSkeletonEntityMixin extends HostileEntity {
                 PlayerEntity.class,
                 entity -> {
                     if (entity instanceof PlayerEntity player) {
-                        LivingEntity walkers = PlayerShape.getCurrentShape(player);
-                        return walkers != null && walkers.getType().equals(EntityType.WOLF);
+                        LivingEntity shape = PlayerShape.getCurrentShape(player);
+                        return shape != null && shape.getType().equals(EntityType.WOLF);
                     }
 
                     return true;

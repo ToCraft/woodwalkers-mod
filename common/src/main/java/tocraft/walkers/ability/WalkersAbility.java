@@ -11,10 +11,10 @@ public abstract class WalkersAbility<E extends LivingEntity> {
      * Defines the use action of this ability. Implementers can assume the ability checks, such as cool-downs, have successfully passed.
      *
      * @param player   player using the ability
-     * @param walkers current walkers of the player
+     * @param shape current shape of the player
      * @param world    world the player is residing in
      */
-    abstract public void onUse(PlayerEntity player, E walkers, World world);
+    abstract public void onUse(PlayerEntity player, E shape, World world);
 
     /**
      * @return cooldown of this ability, in ticks, after it is used.

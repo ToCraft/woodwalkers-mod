@@ -14,7 +14,7 @@ import net.minecraft.world.World;
 public class EndermanAbility extends WalkersAbility<EndermanEntity> {
 
     @Override
-    public void onUse(PlayerEntity player, EndermanEntity walkers, World world) {
+    public void onUse(PlayerEntity player, EndermanEntity shape, World world) {
         HitResult lookingAt = player.raycast(WalkersConfig.getInstance().endermanAbilityTeleportDistance(), 0, true);
         player.requestTeleport(lookingAt.getPos().x, lookingAt.getPos().y, lookingAt.getPos().z);
         player.playSound(SoundEvents.ENTITY_ENDERMAN_TELEPORT, SoundCategory.PLAYERS, 1, 1);

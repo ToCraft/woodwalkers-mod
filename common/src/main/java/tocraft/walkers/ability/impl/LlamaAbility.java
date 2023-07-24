@@ -14,7 +14,7 @@ import net.minecraft.world.World;
 public class LlamaAbility <T extends LlamaEntity> extends WalkersAbility<T> {
 
     @Override
-    public void onUse(PlayerEntity player, LlamaEntity walkers, World world) {
+    public void onUse(PlayerEntity player, LlamaEntity shape, World world) {
         LlamaSpitEntity spit = new LlamaSpitEntity(EntityType.LLAMA_SPIT, world);
         spit.setOwner(player);
         Vec3d rotation = player.getRotationVector();

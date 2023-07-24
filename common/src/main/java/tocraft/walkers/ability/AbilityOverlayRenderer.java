@@ -22,15 +22,15 @@ public class AbilityOverlayRenderer {
         ClientGuiEvent.RENDER_HUD.register((matrices, delta) -> {
             MinecraftClient client = MinecraftClient.getInstance();
             ClientPlayerEntity player = client.player;
-            LivingEntity walkers = PlayerShape.getCurrentShape(player);
+            LivingEntity shape = PlayerShape.getCurrentShape(player);
 
-            if(walkers == null) {
+            if(shape == null) {
                 return;
             }
 
-            WalkersAbility<? extends LivingEntity> walkersAbility = AbilityRegistry.get(walkers.getType());
+            WalkersAbility<? extends LivingEntity> shapeAbility = AbilityRegistry.get(shape.getType());
 
-            if(walkersAbility == null) {
+            if(shapeAbility == null) {
                 return;
             }
 
@@ -40,7 +40,7 @@ public class AbilityOverlayRenderer {
 
             double d = client.getWindow().getScaleFactor();
             int cd = PlayerAbilities.getCooldown(player);
-            int max = AbilityRegistry.get(walkers.getType()).getCooldown(walkers);
+            int max = AbilityRegistry.get(shape.getType()).getCooldown(shape);
             float cooldownScale = 1 - cd / (float) max;
 
             // CD has NOT updated since last tick. It is most likely full.
@@ -89,8 +89,8 @@ public class AbilityOverlayRenderer {
                 }
 
                 // TODO: cache ability stack?
-//                MinecraftClient.getInstance().getItemRenderer().renderGuiItemIcon(new ItemStack(walkersAbility.getIcon()), (int) (width * .95f), (int) (height * .92f));
-                ItemStack stack = new ItemStack(walkersAbility.getIcon());
+//                MinecraftClient.getInstance().getItemRenderer().renderGuiItemIcon(new ItemStack(shapeAbility.getIcon()), (int) (width * .95f), (int) (height * .92f));
+                ItemStack stack = new ItemStack(shapeAbility.getIcon());
 //                BakedModel heldItemModel = MinecraftClient.getInstance().getItemRenderer().getHeldItemModel(stack, client.world, player);
 //                renderGuiItemModel(matrices, stack, (int) (width * .95f), (int) (height * .92f), heldItemModel);
                 matrices.drawItem(stack, (int) (width * .95f), (int) (height * .92f));

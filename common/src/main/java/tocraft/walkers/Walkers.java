@@ -78,9 +78,9 @@ public class Walkers {
     }
 
     public static boolean hasFlyingPermissions(ServerPlayerEntity player) {
-        LivingEntity walkers = PlayerShape.getCurrentShape(player);
+        LivingEntity shape = PlayerShape.getCurrentShape(player);
 
-        if(walkers != null && WalkersConfig.getInstance().enableFlight() && (walkers.getType().isIn(WalkersEntityTags.FLYING) || walkers instanceof FlyingEntity)) {
+        if(shape != null && WalkersConfig.getInstance().enableFlight() && (shape.getType().isIn(WalkersEntityTags.FLYING) || shape instanceof FlyingEntity)) {
             List<String> requiredAdvancements = WalkersConfig.getInstance().advancementsRequiredForFlight();
 
             // requires at least 1 advancement, check if player has them

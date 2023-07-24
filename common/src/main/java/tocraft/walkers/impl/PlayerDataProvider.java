@@ -16,8 +16,8 @@ public interface PlayerDataProvider {
     void setAbilityCooldown(int cooldown);
 
     LivingEntity getCurrentShape();
-    void setCurrentShape(@Nullable LivingEntity walkers);
-    boolean updateShapes(@Nullable LivingEntity walkers);
+    void setCurrentShape(@Nullable LivingEntity shape);
+    boolean updateShapes(@Nullable LivingEntity shape);
 
     ShapeType<?> getCurrentShapeType();
 }

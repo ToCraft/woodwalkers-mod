@@ -11,7 +11,7 @@ import net.minecraft.world.World;
 public class EnderDragonAbility extends WalkersAbility<EnderDragonEntity> {
 
     @Override
-    public void onUse(PlayerEntity player, EnderDragonEntity walkers, World world) {
+    public void onUse(PlayerEntity player, EnderDragonEntity shape, World world) {
         DragonFireballEntity dragonFireball = new DragonFireballEntity(
                 world,
                 player,

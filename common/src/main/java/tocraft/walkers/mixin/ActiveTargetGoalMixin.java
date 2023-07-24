@@ -32,33 +32,33 @@ public abstract class ActiveTargetGoalMixin extends TrackTargetGoalMixin {
     private void ignoreShapedPlayers(CallbackInfo ci) {
         if (WalkersConfig.getInstance().hostilesIgnoreHostileShapedPlayer() && this.mob instanceof Monster && this.targetEntity instanceof PlayerEntity) {
             PlayerEntity player = (PlayerEntity) this.targetEntity;
-            LivingEntity walkers = PlayerShape.getCurrentShape(player);
+            LivingEntity shape = PlayerShape.getCurrentShape(player);
 
-            if(walkers != null) {
+            if(shape != null) {
                 boolean hasHostility = PlayerHostility.hasHostility(player);
 
                 // only cancel if the player does not have hostility
                 if (!hasHostility) {
                     // creepers should ignore cats
-                    if (this.mob instanceof CreeperEntity && walkers.getType().equals(EntityType.OCELOT)) {
+                    if (this.mob instanceof CreeperEntity && shape.getType().equals(EntityType.OCELOT)) {
                         this.stop();
                         ci.cancel();
                     }
 
                     // skeletons should ignore wolfs
-                    if (this.mob instanceof SkeletonEntity && walkers.getType().equals(EntityType.WOLF)) {
+                    if (this.mob instanceof SkeletonEntity && shape.getType().equals(EntityType.WOLF)) {
                         this.stop();
                         ci.cancel();
                     }
 
                     // withers should ignore undead
-                    else if (this.mob instanceof WitherEntity && walkers.getGroup().equals(EntityGroup.UNDEAD)) {
+                    else if (this.mob instanceof WitherEntity && shape.getGroup().equals(EntityGroup.UNDEAD)) {
                         this.stop();
                         ci.cancel();
                     }
 
                     // hostile mobs (besides wither) should not target players morphed as hostile mobs
-                    else if (!(this.mob instanceof WitherEntity) && walkers instanceof Monster) {
+                    else if (!(this.mob instanceof WitherEntity) && shape instanceof Monster) {
                         this.stop();
                         ci.cancel();
                     }
@@ -68,33 +68,33 @@ public abstract class ActiveTargetGoalMixin extends TrackTargetGoalMixin {
     }
 
     @Override
-    protected void walkers_shouldContinue(CallbackInfoReturnable<Boolean> cir) {
+    protected void shape_shouldContinue(CallbackInfoReturnable<Boolean> cir) {
         // check cancelling for hostiles
         if(WalkersConfig.getInstance().hostilesIgnoreHostileShapedPlayer() && WalkersConfig.getInstance().hostilesForgetNewHostileShapedPlayer() && this.mob instanceof Monster && this.targetEntity instanceof PlayerEntity player) {
-            LivingEntity walkers = PlayerShape.getCurrentShape(player);
+            LivingEntity shape = PlayerShape.getCurrentShape(player);
 
-            if (walkers != null) {
+            if (shape != null) {
                 boolean hasHostility = PlayerHostility.hasHostility(player);
 
                 // only cancel if the player does not have hostility
                 if (!hasHostility) {
                     // creepers should ignore cats
-                    if (this.mob instanceof CreeperEntity && walkers.getType().equals(EntityType.OCELOT)) {
+                    if (this.mob instanceof CreeperEntity && shape.getType().equals(EntityType.OCELOT)) {
                         cir.setReturnValue(false);
                     }
 
                     // skeletons should ignore wolfs
-                    if (this.mob instanceof SkeletonEntity && walkers.getType().equals(EntityType.WOLF)) {
+                    if (this.mob instanceof SkeletonEntity && shape.getType().equals(EntityType.WOLF)) {
                         cir.setReturnValue(false);
                     }
 
                     // withers should ignore undead
-                    else if (this.mob instanceof WitherEntity && walkers.getGroup().equals(EntityGroup.UNDEAD)) {
+                    else if (this.mob instanceof WitherEntity && shape.getGroup().equals(EntityGroup.UNDEAD)) {
                         cir.setReturnValue(false);
                     }
 
                     // hostile mobs (besides wither) should not target players morphed as hostile mobs
-                    else if (!(this.mob instanceof WitherEntity) && walkers instanceof Monster) {
+                    else if (!(this.mob instanceof WitherEntity) && shape instanceof Monster) {
                         cir.setReturnValue(false);
                     }
                 }

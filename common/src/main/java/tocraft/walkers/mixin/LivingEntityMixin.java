@@ -206,7 +206,7 @@ public abstract class LivingEntityMixin extends Entity implements NearbySongAcce
     }
 
     @Override
-    public boolean walkers_isNearbySongPlaying() {
+    public boolean shape_isNearbySongPlaying() {
         return nearbySongPlaying;
     }
 

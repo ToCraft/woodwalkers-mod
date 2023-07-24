@@ -33,7 +33,7 @@ public class PlayerManagerMixin {
         LivingEntity shape = PlayerShape.getCurrentShape(player);
 
         // refresh entity hitbox dimensions after death
-        ((DimensionsRefresher) player).walkers_refreshDimensions();
+        ((DimensionsRefresher) player).shape_refreshDimensions();
 
         if(shape != null) {
             // Re-sync max health for walkers
