@@ -43,16 +43,6 @@ public class PlayerManagerMixin {
                 }
             // Re-sync attack damage for walkers
             if (WalkersConfig.getInstance().scalingAttackDamage()) {
-                // get shape attack damage, return 1D if value is lower or not existing
-                Double shapeAttackDamage = 1D;
-                try {
-                    shapeAttackDamage = Math.max(shape.getAttributeInstance(EntityAttributes.GENERIC_ATTACK_DAMAGE).getBaseValue(), shapeAttackDamage);
-                }
-                catch(Exception ignored) {
-                }
-                player.getAttributeInstance(EntityAttributes.GENERIC_ATTACK_DAMAGE).setBaseValue(Math.min(WalkersConfig.getInstance().maxAttackDamage(), shapeAttackDamage));
-            }
-            if (WalkersConfig.getInstance().scalingAttackDamage()) {
                 // get shape attack damage, return 1D if value is lower then max or not existing
                 Double shapeAttackDamage = 1D;
                 try {
