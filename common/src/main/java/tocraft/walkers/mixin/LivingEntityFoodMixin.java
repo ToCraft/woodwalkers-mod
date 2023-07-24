@@ -10,7 +10,6 @@ import net.minecraft.item.FoodComponent;
 import net.minecraft.item.FoodComponents;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.Lazy;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
@@ -19,6 +18,9 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
+import com.google.common.base.Supplier;
+import com.google.common.base.Suppliers;
+
 import java.util.Arrays;
 import java.util.List;
 
@@ -26,7 +28,7 @@ import java.util.List;
 public abstract class LivingEntityFoodMixin extends Entity {
 
     @Unique
-    private static final Lazy<List<FoodComponent>> WOLVES_IGNORE = new Lazy<>(() -> Arrays.asList(FoodComponents.CHICKEN, FoodComponents.PUFFERFISH, FoodComponents.ROTTEN_FLESH));
+    private static final Supplier<List<FoodComponent>> WOLVES_IGNORE = Suppliers.memoize(() -> Arrays.asList(FoodComponents.CHICKEN, FoodComponents.PUFFERFISH, FoodComponents.ROTTEN_FLESH));
 
     public LivingEntityFoodMixin(EntityType<?> type, World world) {
         super(type, world);

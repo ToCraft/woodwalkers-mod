@@ -7,10 +7,8 @@ import tocraft.walkers.api.PlayerShape;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ChatScreen;
 import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.client.util.Window;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.math.MathHelper;
 
 public class AbilityOverlayRenderer {
 
@@ -24,7 +22,6 @@ public class AbilityOverlayRenderer {
         ClientGuiEvent.RENDER_HUD.register((matrices, delta) -> {
             MinecraftClient client = MinecraftClient.getInstance();
             ClientPlayerEntity player = client.player;
-            Window window = client.getWindow();
             LivingEntity walkers = PlayerShape.getCurrentShape(player);
 
             if(walkers == null) {
@@ -71,21 +68,8 @@ public class AbilityOverlayRenderer {
             }
 
             if(player != null) {
-                int start = (int) (window.getWidth() / d * .804);
-                int end = (int) (window.getWidth() / d * .948);
-                int diff = end - start;
-
-//                DrawableHelper.fill(
-//                        matrices,
-//                        (int) (window.getWidth() / d * .8),
-//                        (int) (window.getHeight() / d * .93),
-//                        (int) (window.getWidth() / d * .95),
-//                        (int) (window.getHeight() / d * .97),
-//                        -1);
-
                 int width = MinecraftClient.getInstance().getWindow().getScaledWidth();
                 int height = MinecraftClient.getInstance().getWindow().getScaledHeight();
-                int top = 245;
 
                 matrices.getMatrices().push();
                 if(cooldownScale != 1) {

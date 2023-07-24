@@ -17,7 +17,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(MobEntityRenderer.class)
 public abstract class BipedEntityModelMixin extends LivingEntityRenderer {
 
-    private BipedEntityModelMixin(EntityRendererFactory.Context ctx, EntityModel model, float shadowRadius) {
+    private BipedEntityModelMixin(EntityRendererFactory.Context ctx, EntityModel<?> model, float shadowRadius) {
         super(ctx, model, shadowRadius);
     }
 
@@ -30,7 +30,7 @@ public abstract class BipedEntityModelMixin extends LivingEntityRenderer {
             return;
         }
 
-        BipedEntityModel<?> model = (BipedEntityModel) getModel();
+        BipedEntityModel<?> model = (BipedEntityModel<?>) getModel();
 
         if (model != null) {
             model.sneaking = mobEntity.isInSneakingPose();
