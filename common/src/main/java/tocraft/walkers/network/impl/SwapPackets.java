@@ -2,8 +2,10 @@ package tocraft.walkers.network.impl;
 
 import dev.architectury.networking.NetworkManager;
 import tocraft.walkers.api.PlayerShapeChanger;
+import tocraft.walkers.api.platform.SyncedVars;
 import tocraft.walkers.api.PlayerShape;
 import tocraft.walkers.api.variant.ShapeType;
+import tocraft.walkers.impl.PlayerDataProvider;
 import tocraft.walkers.network.ClientNetworking;
 import tocraft.walkers.network.NetworkHandler;
 import io.netty.buffer.Unpooled;
@@ -31,8 +33,14 @@ public class SwapPackets {
                     } else {
                         @Nullable ShapeType<LivingEntity> type = ShapeType.from(entityType, variant);
                         if(type != null) {
-                            // unlock walker
-                            if (unlock) PlayerShapeChanger.changeShape((ServerPlayerEntity) context.getPlayer(), type);
+                            // unlock walker, if requested
+                            if (unlock) {
+                                // tests, if unlocking is possible
+                                if (SyncedVars.getUnlockOveridesCurrentShape() || ((PlayerDataProvider)context.getPlayer()).get2ndShape() == null)
+                                    // Ensures the mob isn't blacklisted
+                                    if (!SyncedVars.getShapeBlacklist().isEmpty() && SyncedVars.getShapeBlacklist().contains(EntityType.getId(type.getEntityType()).toString()))
+                                        PlayerShapeChanger.changeShape((ServerPlayerEntity) context.getPlayer(), type);
+                            }
                             // update Player
                             PlayerShape.updateShapes((ServerPlayerEntity) context.getPlayer(), type, type.create(context.getPlayer().getWorld()));
                         }
