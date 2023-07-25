@@ -38,7 +38,7 @@ public class SwapPackets {
                                 // tests, if unlocking is possible
                                 if (SyncedVars.getUnlockOveridesCurrentShape() || ((PlayerDataProvider)context.getPlayer()).get2ndShape() == null)
                                     // Ensures the mob isn't blacklisted
-                                    if (!SyncedVars.getShapeBlacklist().isEmpty() && SyncedVars.getShapeBlacklist().contains(EntityType.getId(type.getEntityType()).toString()))
+                                    if (!SyncedVars.getShapeBlacklist().isEmpty() || SyncedVars.getShapeBlacklist().contains(EntityType.getId(type.getEntityType()).toString()))
                                         PlayerShapeChanger.changeShape((ServerPlayerEntity) context.getPlayer(), type);
                             }
                             // update Player

@@ -7,6 +7,7 @@ import tocraft.walkers.mixin.accessor.ScreenAccessor;
 import tocraft.walkers.screen.widget.EntityWidget;
 import tocraft.walkers.screen.widget.HelpWidget;
 import tocraft.walkers.screen.widget.SearchWidget;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.tooltip.Tooltip;
@@ -34,7 +35,7 @@ public class WalkersScreen extends Screen {
 
     public WalkersScreen() {
         super(Text.literal(""));
-        super.init(client, client.getWindow().getScaledWidth(), client.getWindow().getScaledHeight());
+        super.init(MinecraftClient.getInstance(), MinecraftClient.getInstance().getWindow().getScaledWidth(), MinecraftClient.getInstance().getWindow().getScaledHeight());
 
         // don't initialize if the player is null
         if(client.player == null) {
@@ -127,18 +128,18 @@ public class WalkersScreen extends Screen {
         return false;
     }
 
-    private void populateEntityWidgets(ClientPlayerEntity player, List<ShapeType<?>> unlocked) {
-        // add widget for each unlocked entity
+    private void populateEntityWidgets(ClientPlayerEntity player, List<ShapeType<?>> rendered) {
+        // add widget for each entity to be rendered
         int x = 15;
         int y = 35;
-        int rows = (int) Math.ceil(unlocked.size() / 7f);
+        int rows = (int) Math.ceil(rendered.size() / 7f);
 
         for (int yIndex = 0; yIndex <= rows; yIndex++) {
             for (int xIndex = 0; xIndex < 7; xIndex++) {
                 int listIndex = yIndex * 7 + xIndex;
 
-                if(listIndex < unlocked.size()) {
-                    ShapeType<?> type = unlocked.get(listIndex);
+                if(listIndex < rendered.size()) {
+                    ShapeType<?> type = rendered.get(listIndex);
 
                     // TODO: only render selected type, this will show all eg. sheep
                     EntityWidget<?> entityWidget = new EntityWidget(
@@ -162,9 +163,9 @@ public class WalkersScreen extends Screen {
 
     private void populateRenderEntities() {
         if(renderEntities.isEmpty()) {
-            List<ShapeType<?>> types = ShapeType.getAllTypes(client.world);
+            List<ShapeType<?>> types = ShapeType.getAllTypes(MinecraftClient.getInstance().world);
             for (ShapeType<?> type : types) {
-                Entity entity = type.create(client.world);
+                Entity entity = type.create(MinecraftClient.getInstance().world);
                 if(entity instanceof MobEntity living) {
                     renderEntities.put(type, living);
                 }
@@ -204,7 +205,7 @@ public class WalkersScreen extends Screen {
     }
 
     public Window getWindow() {
-        return client.getWindow();
+        return MinecraftClient.getInstance().getWindow();
     }
 
     public void disableAll() {
