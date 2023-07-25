@@ -120,6 +120,7 @@ public class WalkersFabricConfig extends WalkersConfig implements Config {
             put("minecraft:ghast", 60);
             put("minecraft:llama", 20);
             put("minecraft:sheep", 20);
+            put("minecraft:sniffer", 9600);
             put("minecraft:snow_golem", 10);
             put("minecraft:warden", 200);
             put("minecraft:witch", 200);
