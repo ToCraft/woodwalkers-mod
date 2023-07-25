@@ -99,7 +99,7 @@ public class ShapeType<T extends LivingEntity> {
 
         List<ShapeType<?>> types = new ArrayList<>();
         for (EntityType<?> type : LIVING_TYPE_CASH) {
-            if((type != Registries.ENTITY_TYPE.get(new Identifier("minecraft:wolf")) || (!SyncedVars.getShapeBlacklist().isEmpty() || SyncedVars.getShapeBlacklist().contains(EntityType.getId(type).toString()))) && VARIANT_BY_TYPE.containsKey(type)) {
+            if((type != EntityType.WOLF || (!SyncedVars.getShapeBlacklist().isEmpty() || SyncedVars.getShapeBlacklist().contains(EntityType.getId(type).toString()))) && VARIANT_BY_TYPE.containsKey(type)) {
                 TypeProvider<?> variant = VARIANT_BY_TYPE.get(type);
                 for (int i = 0; i <= variant.getRange(); i++) {
                     types.add(new ShapeType(type, i));
