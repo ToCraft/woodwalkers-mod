@@ -71,7 +71,7 @@ public class AbilityOverlayRenderer {
                 int width = MinecraftClient.getInstance().getWindow().getScaledWidth();
                 int height = MinecraftClient.getInstance().getWindow().getScaledHeight();
 
-                matrices.getMatrices().push();
+                matrices.push();
                 if(cooldownScale != 1) {
                     RenderSystem.enableScissor(
                             (int) ((double) 0 * d),
@@ -85,7 +85,7 @@ public class AbilityOverlayRenderer {
                     float fadeScalar = fadingProgress / 50f; // 0f -> 1f, 0 is start, 1 is end
                     float scale = 1f + (float) Math.sin(fadeScalar * 1.5 * Math.PI) - .25f;
                     scale = Math.max(scale, 0);
-                    matrices.getMatrices().scale(scale, scale, scale);
+                    matrices.scale(scale, scale, scale);
                 }
 
                 // TODO: cache ability stack?
@@ -93,10 +93,11 @@ public class AbilityOverlayRenderer {
                 ItemStack stack = new ItemStack(shapeAbility.getIcon());
 //                BakedModel heldItemModel = MinecraftClient.getInstance().getItemRenderer().getHeldItemModel(stack, client.world, player);
 //                renderGuiItemModel(matrices, stack, (int) (width * .95f), (int) (height * .92f), heldItemModel);
-                matrices.drawItem(stack, (int) (width * .95f), (int) (height * .92f));
+                MinecraftClient.getInstance().getItemRenderer()
+                        .renderGuiItemIcon(matrices, stack, (int) (width * .95f), (int) (height * .92f));
 
                 RenderSystem.disableScissor();
-                matrices.getMatrices().pop();
+                matrices.pop();
             }
         });
     }

@@ -8,12 +8,12 @@ import tocraft.walkers.screen.widget.EntityWidget;
 import tocraft.walkers.screen.widget.HelpWidget;
 import tocraft.walkers.screen.widget.SearchWidget;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.tooltip.Tooltip;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.util.Window;
+import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.text.Text;
@@ -80,19 +80,19 @@ public class WalkersScreen extends Screen {
     }
 
     @Override
-    public void render(DrawContext context, int mouseX, int mouseY, float delta) {
-        renderBackground(context);
+    public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
+        renderBackground(matrices);
 
-        searchBar.render(context, mouseX, mouseY, delta);
-        helpButton.render(context, mouseX, mouseY, delta);
-        renderEntityWidgets(context, mouseX, mouseY, delta);
+        searchBar.render(matrices, mouseX, mouseY, delta);
+        helpButton.render(matrices, mouseX, mouseY, delta);
+        renderEntityWidgets(matrices, mouseX, mouseY, delta);
     }
 
-    public void renderEntityWidgets(DrawContext context, int mouseX, int mouseY, float delta) {
+    public void renderEntityWidgets(MatrixStack matrices, int mouseX, int mouseY, float delta) {
         double scaledFactor = this.client.getWindow().getScaleFactor();
         int top = 35;
 
-        context.getMatrices().push();
+        matrices.push();
         RenderSystem.enableScissor(
                 (int) ((double) 0 * scaledFactor),
                 (int) ((double) 0 * scaledFactor),
@@ -100,12 +100,12 @@ public class WalkersScreen extends Screen {
                 (int) ((double) (this.height - top) * scaledFactor));
 
         entityWidgets.forEach(widget -> {
-            widget.render(context, mouseX, mouseY, delta);
+            widget.render(matrices, mouseX, mouseY, delta);
         });
 
         RenderSystem.disableScissor();
 
-        context.getMatrices().pop();
+        matrices.pop();
     }
 
     @Override

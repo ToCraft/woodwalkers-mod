@@ -10,7 +10,6 @@
     "EntityTrackerAccessor",
     "FoxEntityMixin",
     "HoglinBrainMixin",
-    "LimbAnimatorAccessor",
     "LivingEntityFoodMixin",
     "LivingEntityMixin",
     "PiglinBrainMixin",

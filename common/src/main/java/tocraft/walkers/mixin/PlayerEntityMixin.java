@@ -95,7 +95,7 @@ public abstract class PlayerEntityMixin extends LivingEntityMixin {
                     // Air has ran out, start drowning
                     if(this.getAir() == -20) {
                         this.setAir(0);
-                        this.damage(getDamageSources().fall(), 2.0F);
+                        this.damage(world.getDamageSources().drown(), 2.0F);
                     }
                 } else {
                     this.setAir(300);
@@ -154,7 +154,7 @@ public abstract class PlayerEntityMixin extends LivingEntityMixin {
     private void tickAmbientSounds(CallbackInfo ci) {
         LivingEntity walkers = PlayerShape.getCurrentShape((PlayerEntity) (Object) this);
 
-        if(!getWorld().isClient && WalkersConfig.getInstance().playAmbientSounds() && walkers instanceof MobEntity) {
+        if(!world.isClient && WalkersConfig.getInstance().playAmbientSounds() && walkers instanceof MobEntity) {
             MobEntity mobWalkers = (MobEntity) walkers;
 
             if(this.isAlive() && this.random.nextInt(1000) < this.walkers_ambientSoundChance++) {
@@ -170,9 +170,9 @@ public abstract class PlayerEntityMixin extends LivingEntityMixin {
                     // By default, players can not hear their own ambient noises.
                     // This is because ambient noises can be very annoying.
                     if(WalkersConfig.getInstance().hearSelfAmbient()) {
-                        this.getWorld().playSound(null, this.getX(), this.getY(), this.getZ(), sound, this.getSoundCategory(), volume, pitch);
+                        this.world.playSound(null, this.getX(), this.getY(), this.getZ(), sound, this.getSoundCategory(), volume, pitch);
                     } else {
-                        this.getWorld().playSound((PlayerEntity) (Object) this, this.getX(), this.getY(), this.getZ(), sound, this.getSoundCategory(), volume, pitch);
+                        this.world.playSound((PlayerEntity) (Object) this, this.getX(), this.getY(), this.getZ(), sound, this.getSoundCategory(), volume, pitch);
                     }
                 }
             }
@@ -266,7 +266,7 @@ public abstract class PlayerEntityMixin extends LivingEntityMixin {
         PlayerEntity player = (PlayerEntity) (Object) this;
         LivingEntity walkers = PlayerShape.getCurrentShape(player);
 
-        if(!player.getWorld().isClient && !player.isCreative() && !player.isSpectator()) {
+        if(!player.world.isClient && !player.isCreative() && !player.isSpectator()) {
             // check if the player is walkers
             if(walkers != null) {
                 EntityType<?> type = walkers.getType();
@@ -277,7 +277,7 @@ public abstract class PlayerEntityMixin extends LivingEntityMixin {
                     if(bl) {
 
                         // Can't burn in the rain
-                        if(player.getWorld().isRaining()) {
+                        if(player.world.isRaining()) {
                             return;
                         }
 
@@ -309,7 +309,7 @@ public abstract class PlayerEntityMixin extends LivingEntityMixin {
 
     @Unique
     private boolean isInDaylight() {
-        if(getWorld().isDay() && !getWorld().isClient) {
+        if(world.isDay() && !world.isClient) {
             float brightnessAtEyes = getBrightnessAtEyes();
             BlockPos daylightTestPosition = BlockPos.ofFloored(getX(), (double) Math.round(getY()), getZ());
 
@@ -318,7 +318,7 @@ public abstract class PlayerEntityMixin extends LivingEntityMixin {
                 daylightTestPosition = daylightTestPosition.up();
             }
 
-            return brightnessAtEyes > 0.5F && random.nextFloat() * 30.0F < (brightnessAtEyes - 0.4F) * 2.0F && getWorld().isSkyVisible(daylightTestPosition);
+            return brightnessAtEyes > 0.5F && random.nextFloat() * 30.0F < (brightnessAtEyes - 0.4F) * 2.0F && world.isSkyVisible(daylightTestPosition);
         }
 
         return false;
@@ -336,9 +336,9 @@ public abstract class PlayerEntityMixin extends LivingEntityMixin {
 
                 // damage player if they are an walkers that gets hurt by high temps (eg. snow golem in nether)
                 if(type.isIn(WalkersEntityTags.HURT_BY_HIGH_TEMPERATURE)) {
-                    Biome biome = getWorld().getBiome(getBlockPos()).value();
+                    Biome biome = world.getBiome(getBlockPos()).value();
                     if (!biome.isCold(getBlockPos())) {
-                        player.damage(getWorld().getDamageSources().onFire(), 1.0f);
+                        player.damage(world.getDamageSources().onFire(), 1.0f);
                     }
                 }
             }
@@ -347,7 +347,7 @@ public abstract class PlayerEntityMixin extends LivingEntityMixin {
 
     @Inject(method = "tick", at = @At("HEAD"))
     private void tickWalkers(CallbackInfo ci) {
-        if(!getWorld().isClient) {
+        if(!world.isClient) {
             PlayerEntity player = (PlayerEntity) (Object) this;
             LivingEntity walkers = PlayerShape.getCurrentShape(player);
 

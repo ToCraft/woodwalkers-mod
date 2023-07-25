@@ -66,7 +66,7 @@ public class ClientNetworking implements NetworkHandler {
 
                         // ensure entity data exists
                         if(shape == null || !type.get().equals(shape.getType())) {
-                            shape = (LivingEntity) type.get().create(syncTarget.getWorld());
+                            shape = (LivingEntity) type.get().create(syncTarget.world);
                             data.setCurrentShape(shape);
 
                             // refresh player dimensions/hitbox on client

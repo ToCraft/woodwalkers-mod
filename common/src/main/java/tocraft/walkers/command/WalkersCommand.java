@@ -267,7 +267,7 @@ public class WalkersCommand {
             created = EntityType.loadEntityWithPassengers(copy, serverWorld, it -> it);
         } else {
             EntityType<?> entity = Registries.ENTITY_TYPE.get(walkers);
-            created = entity.create(player.getWorld());
+            created = entity.create(player.world);
         }
 
         if(created instanceof LivingEntity living) {

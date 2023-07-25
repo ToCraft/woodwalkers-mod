@@ -1,7 +1,6 @@
 package tocraft.walkers.screen;
 
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
@@ -15,35 +14,34 @@ public class WalkersHelpScreen extends Screen {
     }
 
     @Override
-    public void render(DrawContext context, int mouseX, int mouseY, float delta) {
-        renderBackground(context);
+    public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
+        renderBackground(matrices);
 
-        MatrixStack matrices = context.getMatrices();
         matrices.push();
         matrices.scale(0.75f, 0.75f, 0.75f);
-        context.drawText( MinecraftClient.getInstance().textRenderer, Text.translatable("walkers.help.welcome"), 15, 15, 0xffffff, true);
-        context.drawText( MinecraftClient.getInstance().textRenderer, Text.translatable("walkers.help.credits"), 15, 30, 0xffffff, true);
+        MinecraftClient.getInstance().textRenderer.drawWithShadow(matrices, Text.translatable("walkers.help.welcome"), 15, 15, 0xffffff);
+        MinecraftClient.getInstance().textRenderer.drawWithShadow(matrices, Text.translatable("walkers.help.credits"), 15, 30, 0xffffff);
 
-        context.drawText( MinecraftClient.getInstance().textRenderer, Text.translatable("walkers.help.support_label").formatted(Formatting.BOLD), 15, 60, 0xffffff, true);
-        context.drawText( MinecraftClient.getInstance().textRenderer, Text.translatable("walkers.help.support_description"), 15, 75, 0xffffff, true);
+        MinecraftClient.getInstance().textRenderer.drawWithShadow(matrices, Text.translatable("walkers.help.support_label").formatted(Formatting.BOLD), 15, 60, 0xffffff);
+        MinecraftClient.getInstance().textRenderer.drawWithShadow(matrices, Text.translatable("walkers.help.support_description"), 15, 75, 0xffffff);
 
-        context.drawText( MinecraftClient.getInstance().textRenderer, Text.translatable("walkers.help.ability_label").formatted(Formatting.BOLD), 15, 100, 0xffffff, true);
-        context.drawText( MinecraftClient.getInstance().textRenderer, Text.translatable("walkers.help.ability_description_1"), 15, 115, 0xffffff, true);
-        context.drawText( MinecraftClient.getInstance().textRenderer, Text.translatable("walkers.help.ability_description_2"), 15, 130, 0xffffff, true);
-        context.drawText( MinecraftClient.getInstance().textRenderer, Text.translatable("walkers.help.ability_description_3"), 15, 145, 0xffffff, true);
+        MinecraftClient.getInstance().textRenderer.drawWithShadow(matrices, Text.translatable("walkers.help.ability_label").formatted(Formatting.BOLD), 15, 100, 0xffffff);
+        MinecraftClient.getInstance().textRenderer.drawWithShadow(matrices, Text.translatable("walkers.help.ability_description_1"), 15, 115, 0xffffff);
+        MinecraftClient.getInstance().textRenderer.drawWithShadow(matrices, Text.translatable("walkers.help.ability_description_2"), 15, 130, 0xffffff);
+        MinecraftClient.getInstance().textRenderer.drawWithShadow(matrices, Text.translatable("walkers.help.ability_description_3"), 15, 145, 0xffffff);
 
-        context.drawText( MinecraftClient.getInstance().textRenderer, Text.translatable("walkers.help.config_label").formatted(Formatting.BOLD), 15, 175, 0xffffff, true);
-        context.drawText( MinecraftClient.getInstance().textRenderer, Text.translatable("walkers.help.config_description"), 15, 190, 0xffffff, true);
+        MinecraftClient.getInstance().textRenderer.drawWithShadow(matrices, Text.translatable("walkers.help.config_label").formatted(Formatting.BOLD), 15, 175, 0xffffff);
+        MinecraftClient.getInstance().textRenderer.drawWithShadow(matrices, Text.translatable("walkers.help.config_description"), 15, 190, 0xffffff);
 
-        context.drawText( MinecraftClient.getInstance().textRenderer, Text.translatable("walkers.help.credits_label").formatted(Formatting.BOLD), 15, 220, 0xffffff, true);
-        context.drawText( MinecraftClient.getInstance().textRenderer, Text.translatable("walkers.help.credits_general"), 15, 235, 0xffffff, true);
-        context.drawText( MinecraftClient.getInstance().textRenderer, Text.translatable("walkers.help.credits_translators"), 15, 250, 0xffffff, true);
+        MinecraftClient.getInstance().textRenderer.drawWithShadow(matrices, Text.translatable("walkers.help.credits_label").formatted(Formatting.BOLD), 15, 220, 0xffffff);
+        MinecraftClient.getInstance().textRenderer.drawWithShadow(matrices, Text.translatable("walkers.help.credits_general"), 15, 235, 0xffffff);
+        MinecraftClient.getInstance().textRenderer.drawWithShadow(matrices, Text.translatable("walkers.help.credits_translators"), 15, 250, 0xffffff);
 
-        context.drawText( MinecraftClient.getInstance().textRenderer, Text.translatable("walkers.help.return").formatted(Formatting.ITALIC), 15, height + 60, 0xffffff, true);
+        MinecraftClient.getInstance().textRenderer.drawWithShadow(matrices, Text.translatable("walkers.help.return").formatted(Formatting.ITALIC), 15, height + 60, 0xffffff);
 
         matrices.pop();
 
-        super.render(context, mouseX, mouseY, delta);
+        super.render(matrices, mouseX, mouseY, delta);
     }
 
     @Override
