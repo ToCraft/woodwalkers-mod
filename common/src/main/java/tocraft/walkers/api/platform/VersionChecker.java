@@ -11,7 +11,7 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 
 public class VersionChecker {
-	public static String versionURL = "https://raw.githubusercontent.com/ToCraft/woodwalkers-mod/arch-1.20.1/gradle.properties";
+	public static String versionURL = "https://raw.githubusercontent.com/ToCraft/woodwalkers-mod/arch-1.19.4/gradle.properties";
 	public static boolean checkedUpdate = false;
 
     public static void checkForUpdates(ServerPlayerEntity player) {
