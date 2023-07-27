@@ -61,7 +61,7 @@ public abstract class PlayerEntityMixin extends LivingEntityMixin {
     }
 
     /**
-     * When a player turns into an Aquatic walkers, they lose breath outside water.
+     * When a player turns into an Aquatic shape, they lose breath outside water.
      *
      * @param ci mixin callback info
      */
@@ -70,10 +70,10 @@ public abstract class PlayerEntityMixin extends LivingEntityMixin {
             at = @At("HEAD")
     )
     private void tickAquaticBreathingOutsideWater(CallbackInfo ci) {
-        LivingEntity walkers = PlayerShape.getCurrentShape((PlayerEntity) (Object) this);
+        LivingEntity shape = PlayerShape.getCurrentShape((PlayerEntity) (Object) this);
 
-        if(walkers != null) {
-            if(Walkers.isAquatic(walkers)) {
+        if(shape != null) {
+            if(Walkers.isAquatic(shape)) {
                 int air = this.getAir();
 
                 // copy of WaterCreatureEntity#tickWaterBreathingAir
@@ -105,13 +105,13 @@ public abstract class PlayerEntityMixin extends LivingEntityMixin {
     }
 
     @Inject(method = "getActiveEyeHeight", at = @At("HEAD"), cancellable = true)
-    private void walkers_getActiveEyeHeight(EntityPose pose, EntityDimensions dimensions, CallbackInfoReturnable<Float> cir) {
+    private void shape_getActiveEyeHeight(EntityPose pose, EntityDimensions dimensions, CallbackInfoReturnable<Float> cir) {
         // cursed
         try {
-            LivingEntity walkers = PlayerShape.getCurrentShape((PlayerEntity) (Object) this);
+            LivingEntity shape = PlayerShape.getCurrentShape((PlayerEntity) (Object) this);
 
-            if(walkers != null) {
-                cir.setReturnValue(((LivingEntityAccessor) walkers).callGetActiveEyeHeight(getPose(), getDimensions(getPose())));
+            if(shape != null) {
+                cir.setReturnValue(((LivingEntityAccessor) shape).callGetActiveEyeHeight(getPose(), getDimensions(getPose())));
             }
         } catch (Exception ignored) {
 
@@ -121,10 +121,10 @@ public abstract class PlayerEntityMixin extends LivingEntityMixin {
     @Environment(EnvType.CLIENT)
     @Override
     public float getEyeHeight(EntityPose pose) {
-        LivingEntity walkers = PlayerShape.getCurrentShape((PlayerEntity) (Object) this);
+        LivingEntity shape = PlayerShape.getCurrentShape((PlayerEntity) (Object) this);
 
-        if(walkers != null) {
-            return walkers.getEyeHeight(pose);
+        if(shape != null) {
+            return shape.getEyeHeight(pose);
         } else {
             return this.getEyeHeight(pose, this.getDimensions(pose));
         }
@@ -136,30 +136,30 @@ public abstract class PlayerEntityMixin extends LivingEntityMixin {
             cancellable = true
     )
     private void getHurtSound(DamageSource source, CallbackInfoReturnable<SoundEvent> cir) {
-        LivingEntity walkers = PlayerShape.getCurrentShape((PlayerEntity) (Object) this);
+        LivingEntity shape = PlayerShape.getCurrentShape((PlayerEntity) (Object) this);
 
-        if(WalkersConfig.getInstance().useShapeSounds() && walkers != null) {
-            cir.setReturnValue(((LivingEntityAccessor) walkers).callGetHurtSound(source));
+        if(WalkersConfig.getInstance().useShapeSounds() && shape != null) {
+            cir.setReturnValue(((LivingEntityAccessor) shape).callGetHurtSound(source));
         }
     }
 
 
     // todo: separate mixin for ambient sounds
-    private int walkers_ambientSoundChance = 0;
+    private int shape_ambientSoundChance = 0;
 
     @Inject(
             method = "tick",
             at = @At("HEAD")
     )
     private void tickAmbientSounds(CallbackInfo ci) {
-        LivingEntity walkers = PlayerShape.getCurrentShape((PlayerEntity) (Object) this);
+        LivingEntity shape = PlayerShape.getCurrentShape((PlayerEntity) (Object) this);
 
-        if(!getWorld().isClient && WalkersConfig.getInstance().playAmbientSounds() && walkers instanceof MobEntity) {
-            MobEntity mobWalkers = (MobEntity) walkers;
+        if(!getWorld().isClient && WalkersConfig.getInstance().playAmbientSounds() && shape instanceof MobEntity) {
+            MobEntity mobWalkers = (MobEntity) shape;
 
-            if(this.isAlive() && this.random.nextInt(1000) < this.walkers_ambientSoundChance++) {
+            if(this.isAlive() && this.random.nextInt(1000) < this.shape_ambientSoundChance++) {
                 // reset sound delay
-                this.walkers_ambientSoundChance = -mobWalkers.getMinAmbientSoundDelay();
+                this.shape_ambientSoundChance = -mobWalkers.getMinAmbientSoundDelay();
 
                 // play ambient sound
                 SoundEvent sound = ((MobEntityAccessor) mobWalkers).callGetAmbientSound();
@@ -185,10 +185,10 @@ public abstract class PlayerEntityMixin extends LivingEntityMixin {
             cancellable = true
     )
     private void getDeathSound(CallbackInfoReturnable<SoundEvent> cir) {
-        LivingEntity walkers = PlayerShape.getCurrentShape((PlayerEntity) (Object) this);
+        LivingEntity shape = PlayerShape.getCurrentShape((PlayerEntity) (Object) this);
 
-        if(WalkersConfig.getInstance().useShapeSounds() && walkers != null) {
-            cir.setReturnValue(((LivingEntityAccessor) walkers).callGetDeathSound());
+        if(WalkersConfig.getInstance().useShapeSounds() && shape != null) {
+            cir.setReturnValue(((LivingEntityAccessor) shape).callGetDeathSound());
         }
     }
 
@@ -198,35 +198,35 @@ public abstract class PlayerEntityMixin extends LivingEntityMixin {
             cancellable = true
     )
     private void getFallSounds(CallbackInfoReturnable<LivingEntity.FallSounds> cir) {
-        LivingEntity walkers = PlayerShape.getCurrentShape((PlayerEntity) (Object) this);
+        LivingEntity shape = PlayerShape.getCurrentShape((PlayerEntity) (Object) this);
 
-        if(WalkersConfig.getInstance().useShapeSounds() && walkers != null) {
-            cir.setReturnValue(walkers.getFallSounds());
+        if(WalkersConfig.getInstance().useShapeSounds() && shape != null) {
+            cir.setReturnValue(shape.getFallSounds());
         }
     }
 
     @Inject(method = "attack", at = @At("HEAD"))
-    protected void walkers_tryAttack(Entity target, CallbackInfo ci) {
-        LivingEntity walkers = PlayerShape.getCurrentShape((PlayerEntity) (Object) this);
+    protected void shape_tryAttack(Entity target, CallbackInfo ci) {
+        LivingEntity shape = PlayerShape.getCurrentShape((PlayerEntity) (Object) this);
 
-        if(walkers instanceof IronGolemEntity golem) {
+        if(shape instanceof IronGolemEntity golem) {
             ((IronGolemEntityAccessor) golem).setAttackTicksLeft(10);
         }
 
-        if(walkers instanceof WardenEntity warden) {
+        if(shape instanceof WardenEntity warden) {
             warden.attackingAnimationState.start(age);
         }
 
-        if(walkers instanceof RavagerEntity ravager) {
+        if(shape instanceof RavagerEntity ravager) {
             ((RavagerEntityAccessor) ravager).setAttackTick(10);
         }
     }
 
     @Inject(method = "tick", at = @At("HEAD"))
     private void tickGolemAttackTicks(CallbackInfo ci) {
-        LivingEntity walkers = PlayerShape.getCurrentShape((PlayerEntity) (Object) this);
+        LivingEntity shape = PlayerShape.getCurrentShape((PlayerEntity) (Object) this);
 
-        if(walkers instanceof IronGolemEntity golem) {
+        if(shape instanceof IronGolemEntity golem) {
             IronGolemEntityAccessor accessor = (IronGolemEntityAccessor) golem;
             if(accessor.getAttackTicksLeft() > 0) {
                 accessor.setAttackTicksLeft(accessor.getAttackTicksLeft() - 1);
@@ -236,9 +236,9 @@ public abstract class PlayerEntityMixin extends LivingEntityMixin {
 
     @Inject(method = "tick", at = @At("HEAD"))
     private void tickRavagerAttackTicks(CallbackInfo ci) {
-        LivingEntity walkers = PlayerShape.getCurrentShape((PlayerEntity) (Object) this);
+        LivingEntity shape = PlayerShape.getCurrentShape((PlayerEntity) (Object) this);
 
-        if(walkers instanceof RavagerEntity ravager) {
+        if(shape instanceof RavagerEntity ravager) {
             RavagerEntityAccessor accessor = (RavagerEntityAccessor) ravager;
             if(accessor.getAttackTick() > 0) {
                 accessor.setAttackTick(accessor.getAttackTick() - 1);
@@ -248,9 +248,9 @@ public abstract class PlayerEntityMixin extends LivingEntityMixin {
 
     @Inject(method = "tick", at = @At("HEAD"))
     private void tickWardenSneakingAnimation(CallbackInfo ci) {
-        LivingEntity walkers = PlayerShape.getCurrentShape((PlayerEntity) (Object) this);
+        LivingEntity shape = PlayerShape.getCurrentShape((PlayerEntity) (Object) this);
 
-        if(walkers instanceof WardenEntity warden) {
+        if(shape instanceof WardenEntity warden) {
             if(isSneaking()) {
                 if(!warden.sniffingAnimationState.isRunning()) {
                     warden.sniffingAnimationState.start(age);
@@ -264,14 +264,14 @@ public abstract class PlayerEntityMixin extends LivingEntityMixin {
     @Inject(method = "tick", at = @At("HEAD"))
     private void tickFire(CallbackInfo ci) {
         PlayerEntity player = (PlayerEntity) (Object) this;
-        LivingEntity walkers = PlayerShape.getCurrentShape(player);
+        LivingEntity shape = PlayerShape.getCurrentShape(player);
 
         if(!player.getWorld().isClient && !player.isCreative() && !player.isSpectator()) {
-            // check if the player is walkers
-            if(walkers != null) {
-                EntityType<?> type = walkers.getType();
+            // check if the player is shape
+            if(shape != null) {
+                EntityType<?> type = shape.getType();
 
-                // check if the player's current walkers burns in sunlight
+                // check if the player's current shape burns in sunlight
                 if(type.isIn(WalkersEntityTags.BURNS_IN_DAYLIGHT)) {
                     boolean bl = this.isInDaylight();
                     if(bl) {
@@ -327,14 +327,14 @@ public abstract class PlayerEntityMixin extends LivingEntityMixin {
     @Inject(method = "tick", at = @At("HEAD"))
     private void tickTemperature(CallbackInfo ci) {
         PlayerEntity player = (PlayerEntity) (Object) this;
-        LivingEntity walkers = PlayerShape.getCurrentShape(player);
+        LivingEntity shape = PlayerShape.getCurrentShape(player);
 
         if(!player.isCreative() && !player.isSpectator()) {
-            // check if the player is walkers
-            if(walkers != null) {
-                EntityType<?> type = walkers.getType();
+            // check if the player is shape
+            if(shape != null) {
+                EntityType<?> type = shape.getType();
 
-                // damage player if they are an walkers that gets hurt by high temps (eg. snow golem in nether)
+                // damage player if they are an shape that gets hurt by high temps (eg. snow golem in nether)
                 if(type.isIn(WalkersEntityTags.HURT_BY_HIGH_TEMPERATURE)) {
                     Biome biome = getWorld().getBiome(getBlockPos()).value();
                     if (!biome.isCold(getBlockPos())) {
@@ -349,30 +349,30 @@ public abstract class PlayerEntityMixin extends LivingEntityMixin {
     private void tickWalkers(CallbackInfo ci) {
         if(!getWorld().isClient) {
             PlayerEntity player = (PlayerEntity) (Object) this;
-            LivingEntity walkers = PlayerShape.getCurrentShape(player);
+            LivingEntity shape = PlayerShape.getCurrentShape(player);
 
             // assign basic data to entity from player on server; most data transferring occurs on client
-            if(walkers != null) {
-                walkers.setPos(player.getX(), player.getY(), player.getZ());
-                walkers.setHeadYaw(player.getHeadYaw());
-                walkers.setJumping(((LivingEntityAccessor) player).isJumping());
-                walkers.setSprinting(player.isSprinting());
-                walkers.setStuckArrowCount(player.getStuckArrowCount());
-                walkers.setInvulnerable(true);
-                walkers.setNoGravity(true);
-                walkers.setSneaking(player.isSneaking());
-                walkers.setSwimming(player.isSwimming());
-                walkers.setCurrentHand(player.getActiveHand());
-                walkers.setPose(player.getPose());
+            if(shape != null) {
+                shape.setPos(player.getX(), player.getY(), player.getZ());
+                shape.setHeadYaw(player.getHeadYaw());
+                shape.setJumping(((LivingEntityAccessor) player).isJumping());
+                shape.setSprinting(player.isSprinting());
+                shape.setStuckArrowCount(player.getStuckArrowCount());
+                shape.setInvulnerable(true);
+                shape.setNoGravity(true);
+                shape.setSneaking(player.isSneaking());
+                shape.setSwimming(player.isSwimming());
+                shape.setCurrentHand(player.getActiveHand());
+                shape.setPose(player.getPose());
 
-                if(walkers instanceof TameableEntity) {
-                    ((TameableEntity) walkers).setInSittingPose(player.isSneaking());
-                    ((TameableEntity) walkers).setSitting(player.isSneaking());
+                if(shape instanceof TameableEntity) {
+                    ((TameableEntity) shape).setInSittingPose(player.isSneaking());
+                    ((TameableEntity) shape).setSitting(player.isSneaking());
                 }
 
-                ((EntityAccessor) walkers).walkers_callSetFlag(7, player.isFallFlying());
+                ((EntityAccessor) shape).shape_callSetFlag(7, player.isFallFlying());
 
-                ((LivingEntityAccessor) walkers).callTickActiveItemStack();
+                ((LivingEntityAccessor) shape).callTickActiveItemStack();
                 PlayerShape.sync((ServerPlayerEntity) player); // safe cast - context is server world
             }
         }

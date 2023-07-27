@@ -14,5 +14,5 @@ public interface EntityAccessor {
     void setVehicle(Entity vehicle);
 
     @Invoker("setFlag")
-    void walkers_callSetFlag(int index, boolean value);
+    void shape_callSetFlag(int index, boolean value);
 }

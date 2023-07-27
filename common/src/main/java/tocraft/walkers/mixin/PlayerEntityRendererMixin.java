@@ -57,82 +57,82 @@ public abstract class PlayerEntityRendererMixin extends LivingEntityRenderer<Abs
             at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/entity/LivingEntityRenderer;render(Lnet/minecraft/entity/LivingEntity;FFLnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/VertexConsumerProvider;I)V")
     )
     private void redirectRender(LivingEntityRenderer renderer, LivingEntity player, float f, float g, MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int i) {
-        LivingEntity walkers = PlayerShape.getCurrentShape((PlayerEntity) player);
+        LivingEntity shape = PlayerShape.getCurrentShape((PlayerEntity) player);
 
-        // sync player data to walkers walkers
-        if(walkers != null) {
-            ((LimbAnimatorAccessor)walkers.limbAnimator).setPrevSpeed(((LimbAnimatorAccessor)player.limbAnimator).getPrevSpeed());
-            walkers.limbAnimator.setSpeed(player.limbAnimator.getSpeed());
-            ((LimbAnimatorAccessor)walkers.limbAnimator).setPos(player.limbAnimator.getPos());
-            walkers.handSwinging = player.handSwinging;
-            walkers.handSwingTicks = player.handSwingTicks;
-            walkers.lastHandSwingProgress = player.lastHandSwingProgress;
-            walkers.handSwingProgress = player.handSwingProgress;
-            walkers.bodyYaw = player.bodyYaw;
-            walkers.prevBodyYaw = player.prevBodyYaw;
-            walkers.headYaw = player.headYaw;
-            walkers.prevHeadYaw = player.prevHeadYaw;
-            walkers.age = player.age;
-            walkers.preferredHand = player.preferredHand;
-            walkers.setOnGround(player.isOnGround());
-            walkers.setVelocity(player.getVelocity());
+        // sync player data to shape
+        if(shape != null) {
+            ((LimbAnimatorAccessor)shape.limbAnimator).setPrevSpeed(((LimbAnimatorAccessor)player.limbAnimator).getPrevSpeed());
+            shape.limbAnimator.setSpeed(player.limbAnimator.getSpeed());
+            ((LimbAnimatorAccessor)shape.limbAnimator).setPos(player.limbAnimator.getPos());
+            shape.handSwinging = player.handSwinging;
+            shape.handSwingTicks = player.handSwingTicks;
+            shape.lastHandSwingProgress = player.lastHandSwingProgress;
+            shape.handSwingProgress = player.handSwingProgress;
+            shape.bodyYaw = player.bodyYaw;
+            shape.prevBodyYaw = player.prevBodyYaw;
+            shape.headYaw = player.headYaw;
+            shape.prevHeadYaw = player.prevHeadYaw;
+            shape.age = player.age;
+            shape.preferredHand = player.preferredHand;
+            shape.setOnGround(player.isOnGround());
+            shape.setVelocity(player.getVelocity());
 
-            ((EntityAccessor) walkers).setVehicle(player.getVehicle());
-            ((EntityAccessor) walkers).setTouchingWater(player.isTouchingWater());
+            ((EntityAccessor) shape).setVehicle(player.getVehicle());
+            ((EntityAccessor) shape).setTouchingWater(player.isTouchingWater());
 
             // phantoms' pitch is inverse for whatever reason
-            if(walkers instanceof PhantomEntity) {
-                walkers.setPitch(-player.getPitch());
-                walkers.prevPitch = -player.prevPitch;
+            if(shape instanceof PhantomEntity) {
+                shape.setPitch(-player.getPitch());
+                shape.prevPitch = -player.prevPitch;
             } else {
-                walkers.setPitch(player.getPitch());
-                walkers.prevPitch = player.prevPitch;
+                shape.setPitch(player.getPitch());
+                shape.prevPitch = player.prevPitch;
             }
 
-            // equip held items on walkers
+            // equip held items on shape
             if(WalkersConfig.getInstance().shapesEquipItems()) {
-                walkers.equipStack(EquipmentSlot.MAINHAND, player.getEquippedStack(EquipmentSlot.MAINHAND));
-                walkers.equipStack(EquipmentSlot.OFFHAND, player.getEquippedStack(EquipmentSlot.OFFHAND));
+                shape.equipStack(EquipmentSlot.MAINHAND, player.getEquippedStack(EquipmentSlot.MAINHAND));
+                shape.equipStack(EquipmentSlot.OFFHAND, player.getEquippedStack(EquipmentSlot.OFFHAND));
             }
 
-            // equip armor items on walkers
+            // equip armor items on shape
             if(WalkersConfig.getInstance().shapesEquipArmor()) {
-                walkers.equipStack(EquipmentSlot.HEAD, player.getEquippedStack(EquipmentSlot.HEAD));
-                walkers.equipStack(EquipmentSlot.CHEST, player.getEquippedStack(EquipmentSlot.CHEST));
-                walkers.equipStack(EquipmentSlot.LEGS, player.getEquippedStack(EquipmentSlot.LEGS));
-                walkers.equipStack(EquipmentSlot.FEET, player.getEquippedStack(EquipmentSlot.FEET));
+                shape.equipStack(EquipmentSlot.HEAD, player.getEquippedStack(EquipmentSlot.HEAD));
+                shape.equipStack(EquipmentSlot.CHEST, player.getEquippedStack(EquipmentSlot.CHEST));
+                shape.equipStack(EquipmentSlot.LEGS, player.getEquippedStack(EquipmentSlot.LEGS));
+                shape.equipStack(EquipmentSlot.FEET, player.getEquippedStack(EquipmentSlot.FEET));
             }
 
-            if (walkers instanceof MobEntity) {
-                ((MobEntity) walkers).setAttacking(player.isUsingItem());
+            if (shape instanceof MobEntity) {
+                ((MobEntity) shape).setAttacking(player.isUsingItem());
             }
 
             // Assign pose
-            walkers.setPose(player.getPose());
+            shape.setPose(player.getPose());
 
             // set active hand after configuring held items
-            walkers.setCurrentHand(player.getActiveHand() == null ? Hand.MAIN_HAND : player.getActiveHand());
-            ((LivingEntityAccessor) walkers).callSetLivingFlag(1, player.isUsingItem());
-            walkers.getItemUseTime();
-            ((LivingEntityAccessor) walkers).callTickActiveItemStack();
-            walkers.hurtTime = player.hurtTime; // FIX: https://github.com/Draylar/identity/issues/424
+            shape.setCurrentHand(player.getActiveHand() == null ? Hand.MAIN_HAND : player.getActiveHand());
+            ((LivingEntityAccessor) shape).callSetLivingFlag(1, player.isUsingItem());
+            shape.getItemUseTime();
+            ((LivingEntityAccessor) shape).callTickActiveItemStack();
+            shape.hurtTime = player.hurtTime; // FIX: https://github.com/Draylar/identity/issues/424
 
-            // update walkers specific properties
-            EntityUpdater entityUpdater = EntityUpdaters.getUpdater((EntityType<? extends LivingEntity>) walkers.getType());
+            // update shape specific properties
+            EntityUpdater entityUpdater = EntityUpdaters.getUpdater((EntityType<? extends LivingEntity>) shape.getType());
             if(entityUpdater != null) {
-                entityUpdater.update((PlayerEntity) player, walkers);
+                entityUpdater.update((PlayerEntity) player, shape);
             }
         }
 
-        if(walkers != null) {
-            EntityRenderer walkersRenderer = MinecraftClient.getInstance().getEntityRenderDispatcher().getRenderer(walkers);
+        if(shape != null) {
+            EntityRenderer shapeRenderer = MinecraftClient.getInstance().getEntityRenderDispatcher().getRenderer(shape);
 
             // Sync biped information for stuff like bow drawing animation
-            if(walkersRenderer instanceof BipedEntityRenderer) {
-                walkers_setBipedWalkersModelPose((AbstractClientPlayerEntity) player, walkers, (BipedEntityRenderer) walkersRenderer);
+            if(shapeRenderer instanceof BipedEntityRenderer) {
+                shape_setBipedShapeModelPose((AbstractClientPlayerEntity) player, shape, (BipedEntityRenderer) shapeRenderer);
             }
 
-            walkersRenderer.render(walkers, f, g, matrixStack, vertexConsumerProvider, i);
+            shapeRenderer.render(shape, f, g, matrixStack, vertexConsumerProvider, i);
 
             // Only render nametags if the server option is true and the entity being rendered is NOT this player/client
             if(SyncedVars.getShowPlayerNametag() && player != MinecraftClient.getInstance().player) {
@@ -143,31 +143,31 @@ public abstract class PlayerEntityRendererMixin extends LivingEntityRenderer<Abs
         }
     }
 
-    private void walkers_setBipedWalkersModelPose(AbstractClientPlayerEntity player, LivingEntity walkers, LivingEntityRenderer walkersRenderer) {
-        BipedEntityModel<?> walkersBipedModel = (BipedEntityModel) walkersRenderer.getModel();
+    private void shape_setBipedShapeModelPose(AbstractClientPlayerEntity player, LivingEntity shape, LivingEntityRenderer shapeRenderer) {
+        BipedEntityModel<?> shapeBipedModel = (BipedEntityModel) shapeRenderer.getModel();
 
-        if (walkers.isSpectator()) {
-            walkersBipedModel.setVisible(false);
-            walkersBipedModel.head.visible = true;
-            walkersBipedModel.hat.visible = true;
+        if (shape.isSpectator()) {
+            shapeBipedModel.setVisible(false);
+            shapeBipedModel.head.visible = true;
+            shapeBipedModel.hat.visible = true;
         } else {
-            walkersBipedModel.setVisible(true);
-            walkersBipedModel.hat.visible = player.isPartVisible(PlayerModelPart.HAT);
-            walkersBipedModel.sneaking = walkers.isInSneakingPose();
+            shapeBipedModel.setVisible(true);
+            shapeBipedModel.hat.visible = player.isPartVisible(PlayerModelPart.HAT);
+            shapeBipedModel.sneaking = shape.isInSneakingPose();
 
             BipedEntityModel.ArmPose mainHandPose = getArmPose(player, Hand.MAIN_HAND);
             BipedEntityModel.ArmPose offHandPose = getArmPose(player, Hand.OFF_HAND);
 
             if (mainHandPose.isTwoHanded()) {
-                offHandPose = walkers.getOffHandStack().isEmpty() ? BipedEntityModel.ArmPose.EMPTY : BipedEntityModel.ArmPose.ITEM;
+                offHandPose = shape.getOffHandStack().isEmpty() ? BipedEntityModel.ArmPose.EMPTY : BipedEntityModel.ArmPose.ITEM;
             }
 
-            if (walkers.getMainArm() == Arm.RIGHT) {
-                walkersBipedModel.rightArmPose = mainHandPose;
-                walkersBipedModel.leftArmPose = offHandPose;
+            if (shape.getMainArm() == Arm.RIGHT) {
+                shapeBipedModel.rightArmPose = mainHandPose;
+                shapeBipedModel.leftArmPose = offHandPose;
             } else {
-                walkersBipedModel.rightArmPose = offHandPose;
-                walkersBipedModel.leftArmPose = mainHandPose;
+                shapeBipedModel.rightArmPose = offHandPose;
+                shapeBipedModel.leftArmPose = mainHandPose;
             }
         }
     }
@@ -178,10 +178,10 @@ public abstract class PlayerEntityRendererMixin extends LivingEntityRenderer<Abs
             cancellable = true
     )
     private void modifyPositionOffset(AbstractClientPlayerEntity player, float f, CallbackInfoReturnable<Vec3d> cir) {
-        LivingEntity walkers = PlayerShape.getCurrentShape(player);
+        LivingEntity shape = PlayerShape.getCurrentShape(player);
 
-        if(walkers != null) {
-            if(walkers instanceof TameableEntity) {
+        if(shape != null) {
+            if(shape instanceof TameableEntity) {
                 cir.setReturnValue(super.getPositionOffset(player, f));
             }
         }
@@ -191,11 +191,11 @@ public abstract class PlayerEntityRendererMixin extends LivingEntityRenderer<Abs
             method = "renderArm",
             at = @At("HEAD"), cancellable = true)
     private void onRenderArm(MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, AbstractClientPlayerEntity player, ModelPart arm, ModelPart sleeve, CallbackInfo ci) {
-        LivingEntity walkers = PlayerShape.getCurrentShape(player);
+        LivingEntity shape = PlayerShape.getCurrentShape(player);
 
-        // sync player data to walkers walkers
-        if(walkers != null) {
-            EntityRenderer<?> renderer = MinecraftClient.getInstance().getEntityRenderDispatcher().getRenderer(walkers);
+        // sync player data to shape
+        if(shape != null) {
+            EntityRenderer<?> renderer = MinecraftClient.getInstance().getEntityRenderDispatcher().getRenderer(shape);
 
             if(renderer instanceof LivingEntityRenderer) {
                 LivingEntityRenderer<LivingEntity, ?> rendererCasted = (LivingEntityRenderer<LivingEntity, ?>) renderer;
@@ -212,7 +212,7 @@ public abstract class PlayerEntityRendererMixin extends LivingEntityRenderer<Abs
                     arm = ((BipedEntityModel) model).rightArm;
                     sleeve = null;
                 } else {
-                    Pair<ModelPart, ArmRenderingManipulator<EntityModel>> pair = EntityArms.get(walkers, model);
+                    Pair<ModelPart, ArmRenderingManipulator<EntityModel>> pair = EntityArms.get(shape, model);
                     if(pair != null) {
                         arm = pair.getLeft();
                         pair.getRight().run(matrices, model);
@@ -224,17 +224,17 @@ public abstract class PlayerEntityRendererMixin extends LivingEntityRenderer<Abs
                 model.handSwingProgress = 0.0F;
 //                model.sneaking = false;
 //                model.leaningPitch = 0.0F;
-                model.setAngles(walkers, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F);
+                model.setAngles(shape, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F);
 
                 // render
                 if(arm != null) {
                     arm.pitch = 0.0F;
-                    arm.render(matrices, vertexConsumers.getBuffer(((LivingEntityRendererAccessor) rendererCasted).callGetRenderLayer(walkers, true, false, true)), light, OverlayTexture.DEFAULT_UV);
+                    arm.render(matrices, vertexConsumers.getBuffer(((LivingEntityRendererAccessor) rendererCasted).callGetRenderLayer(shape, true, false, true)), light, OverlayTexture.DEFAULT_UV);
                 }
 
                 if(sleeve != null) {
                     sleeve.pitch = 0.0F;
-                    sleeve.render(matrices, vertexConsumers.getBuffer(((LivingEntityRendererAccessor) rendererCasted).callGetRenderLayer(walkers, true, false, true)), light, OverlayTexture.DEFAULT_UV);
+                    sleeve.render(matrices, vertexConsumers.getBuffer(((LivingEntityRendererAccessor) rendererCasted).callGetRenderLayer(shape, true, false, true)), light, OverlayTexture.DEFAULT_UV);
                 }
 
                 ci.cancel();
