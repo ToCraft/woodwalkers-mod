@@ -152,8 +152,6 @@ public class WalkersScreen extends Screen {
                             this
                     );
 
-                    entityWidget.setTooltip(Tooltip.of(Text.translatable(renderEntities.get(type).getType().getTranslationKey())));
-
                     addDrawableChild(entityWidget);
                     entityWidgets.add(entityWidget);
                 }
