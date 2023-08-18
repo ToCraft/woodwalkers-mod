@@ -31,7 +31,6 @@ public class AbilityRegistry {
         register(EntityType.EVOKER, new EvokerAbility());
         register(EntityType.WARDEN, new WardenAbility());
         register(EntityType.SHEEP, new SheepAbility());
-        register(EntityType.SNIFFER, new SnifferAbility());
     }
 
     public static WalkersAbility get(EntityType<?> type) {
