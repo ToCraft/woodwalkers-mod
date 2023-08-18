@@ -10,7 +10,7 @@ import net.minecraft.util.ActionResult;
 
 public class PlayerShapeChanger {
 
-    public static boolean changeShape(ServerPlayerEntity player, ShapeType newShape) {
+    public static boolean change2ndShape(ServerPlayerEntity player, ShapeType newShape) {
         PlayerDataProvider provider = (PlayerDataProvider) player;
         EventResult unlock = UnlockWalkersCallback.EVENT.invoker().unlock(player, newShape);
 

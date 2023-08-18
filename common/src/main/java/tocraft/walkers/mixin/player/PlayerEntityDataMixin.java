@@ -198,7 +198,7 @@ public abstract class PlayerEntityDataMixin extends LivingEntity implements Play
         // refresh entity hitbox dimensions
         ((DimensionsRefresher) player).shape_refreshDimensions();
 
-        // Walkers is valid and scaling health is on; set entity's max health and current health to reflect shape.
+        // shape is valid and scaling health is on; set entity's max health and current health to reflect shape.
         if(shape != null) {
             if (WalkersConfig.getInstance().scalingHealth()) {
                 // calculate the current health in percentage, used later

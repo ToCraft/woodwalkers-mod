@@ -219,7 +219,7 @@ public class WalkersCommand {
 
     private static void remove2ndShape(ServerCommandSource source, ServerPlayerEntity player) {
 
-        boolean result = PlayerShapeChanger.changeShape(player, null);
+        boolean result = PlayerShapeChanger.change2ndShape(player, null);
 
         if(result && WalkersConfig.getInstance().logCommands()) {
             player.sendMessage(Text.translatable("walkers.remove_entity"), true);
@@ -244,7 +244,7 @@ public class WalkersCommand {
         }
 
         if(((PlayerDataProvider) player).get2ndShape() != type) {
-            boolean result = PlayerShapeChanger.changeShape(player, type);
+            boolean result = PlayerShapeChanger.change2ndShape(player, type);
 
             if(result && WalkersConfig.getInstance().logCommands()) {
                 player.sendMessage(Text.translatable("walkers.unlock_entity", name));

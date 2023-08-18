@@ -34,7 +34,7 @@ public abstract class ServerPlayerEntityMixin extends PlayerEntity {
     )
     private void revoke2ndShapeOnDeath(DamageSource source, CallbackInfo ci) {
         if(WalkersConfig.getInstance().revoke2ndShapeOnDeath() && !this.isCreative() && !this.isSpectator()) {
-            PlayerShapeChanger.changeShape((ServerPlayerEntity) (Object) this, null);
+            PlayerShapeChanger.change2ndShape((ServerPlayerEntity) (Object) this, null);
         }
     }
 

@@ -9,6 +9,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ingame.InventoryScreen;
 import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
+import net.minecraft.client.gui.tooltip.Tooltip;
 import net.minecraft.client.gui.widget.PressableWidget;
 import net.minecraft.client.render.DiffuseLighting;
 import net.minecraft.client.render.VertexConsumerProvider;
@@ -32,6 +33,7 @@ public class EntityWidget<T extends LivingEntity> extends PressableWidget {
         size = (int) (25 * (1 / (Math.max(entity.getHeight(), entity.getWidth()))));
         entity.setGlowing(true);
         this.parent = parent;
+        setTooltip(Tooltip.of(type.createTooltipText(entity)));
     }
 
     @Override

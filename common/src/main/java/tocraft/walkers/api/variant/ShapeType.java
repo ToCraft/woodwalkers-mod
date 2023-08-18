@@ -99,13 +99,17 @@ public class ShapeType<T extends LivingEntity> {
 
         List<ShapeType<?>> types = new ArrayList<>();
         for (EntityType<?> type : LIVING_TYPE_CASH) {
-            if((type != EntityType.WOLF || (!SyncedVars.getShapeBlacklist().isEmpty() || SyncedVars.getShapeBlacklist().contains(EntityType.getId(type).toString()))) && VARIANT_BY_TYPE.containsKey(type)) {
-                TypeProvider<?> variant = VARIANT_BY_TYPE.get(type);
-                for (int i = 0; i <= variant.getRange(); i++) {
-                    types.add(new ShapeType(type, i));
+            // check blacklist
+            if (!SyncedVars.getShapeBlacklist().contains(EntityType.getId(type).toString())) {
+                // hide dev_wolf & check other variants
+                if(type != EntityType.WOLF && VARIANT_BY_TYPE.containsKey(type)) {
+                    TypeProvider<?> variant = VARIANT_BY_TYPE.get(type);
+                    for (int i = 0; i <= variant.getRange(); i++) {
+                        types.add(new ShapeType(type, i));
+                    }
+                } else {
+                    types.add(new ShapeType(type));
                 }
-            } else {
-                types.add(new ShapeType(type));
             }
         }
 
