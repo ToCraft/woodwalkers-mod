@@ -37,16 +37,16 @@ public abstract class FoxEntityMixin extends AnimalEntity {
     // Hopefully nobody else needs to modify fox fleeing behavior.
     static {
         NOTICEABLE_PLAYER_FILTER = entity -> {
-            boolean isWalkersPlayer = false;
+            boolean isShapedPlayer = false;
 
             if(entity instanceof PlayerEntity player) {
-                LivingEntity walkers = PlayerShape.getCurrentShape(player);
-                if(walkers instanceof FoxEntity) {
-                    isWalkersPlayer = true;
+                LivingEntity shape = PlayerShape.getCurrentShape(player);
+                if(shape instanceof FoxEntity) {
+                    isShapedPlayer = true;
                 }
             }
 
-            return !entity.isSneaky() && EntityPredicates.EXCEPT_CREATIVE_OR_SPECTATOR.test(entity) && !isWalkersPlayer;
+            return !entity.isSneaky() && EntityPredicates.EXCEPT_CREATIVE_OR_SPECTATOR.test(entity) && !isShapedPlayer;
         };
     }
 
@@ -56,15 +56,15 @@ public abstract class FoxEntityMixin extends AnimalEntity {
     )
     private void addPlayerTarget(CallbackInfo ci) {
         this.targetSelector.add(7, new ActiveTargetGoal<>(this, PlayerEntity.class, 10, false, false, player -> {
-            // ensure foxes can attack players with an walkers similar to their normal prey
+            // ensure foxes can attack players with an shape similar to their normal prey
             if(!WalkersConfig.getInstance().foxesAttack2ndShapedPrey()) {
                 return false;
             }
 
-            // foxes can target players if their walkers is in the fox_prey tag, or if they are an entity that extends FishEntity
+            // foxes can target players if their shape is in the fox_prey tag, or if they are an entity that extends FishEntity
             // todo: add baby turtle targeting
-            LivingEntity walkers = PlayerShape.getCurrentShape((PlayerEntity) player);
-            return walkers != null && walkers.getType().isIn(WalkersEntityTags.FOX_PREY) || walkers instanceof FishEntity;
+            LivingEntity shape = PlayerShape.getCurrentShape((PlayerEntity) player);
+            return shape != null && shape.getType().isIn(WalkersEntityTags.FOX_PREY) || shape instanceof FishEntity;
         }));
     }
 }

@@ -155,17 +155,17 @@ public abstract class PlayerEntityMixin extends LivingEntityMixin {
         LivingEntity shape = PlayerShape.getCurrentShape((PlayerEntity) (Object) this);
 
         if(!getWorld().isClient && WalkersConfig.getInstance().playAmbientSounds() && shape instanceof MobEntity) {
-            MobEntity mobWalkers = (MobEntity) shape;
+            MobEntity mobShape = (MobEntity) shape;
 
             if(this.isAlive() && this.random.nextInt(1000) < this.shape_ambientSoundChance++) {
                 // reset sound delay
-                this.shape_ambientSoundChance = -mobWalkers.getMinAmbientSoundDelay();
+                this.shape_ambientSoundChance = -mobShape.getMinAmbientSoundDelay();
 
                 // play ambient sound
-                SoundEvent sound = ((MobEntityAccessor) mobWalkers).callGetAmbientSound();
+                SoundEvent sound = ((MobEntityAccessor) mobShape).callGetAmbientSound();
                 if(sound != null) {
-                    float volume = ((LivingEntityAccessor) mobWalkers).callGetSoundVolume();
-                    float pitch = ((LivingEntityAccessor) mobWalkers).callGetSoundPitch();
+                    float volume = ((LivingEntityAccessor) mobShape).callGetSoundVolume();
+                    float pitch = ((LivingEntityAccessor) mobShape).callGetSoundPitch();
 
                     // By default, players can not hear their own ambient noises.
                     // This is because ambient noises can be very annoying.

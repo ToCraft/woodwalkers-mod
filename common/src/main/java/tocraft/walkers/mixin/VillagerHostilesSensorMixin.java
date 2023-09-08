@@ -28,10 +28,10 @@ public class VillagerHostilesSensorMixin {
         if(entity instanceof PlayerEntity player) {
             // check if we should be performing this from config
             if(WalkersConfig.getInstance().villagersRunFrom2ndShapes()) {
-                LivingEntity walkers = PlayerShape.getCurrentShape(player);
+                LivingEntity shape = PlayerShape.getCurrentShape(player);
 
-                // check if walkers is valid & if it is a type villagers run from
-                if (walkers != null && SQUARED_DISTANCES_FOR_DANGER.containsKey(walkers.getType())) {
+                // check if shape is valid & if it is a type villagers run from
+                if (shape != null && SQUARED_DISTANCES_FOR_DANGER.containsKey(shape.getType())) {
                     cir.setReturnValue(true);
                 }
             }
@@ -46,11 +46,11 @@ public class VillagerHostilesSensorMixin {
     private void checkPlayerDanger(LivingEntity villager, LivingEntity potentialPlayer, CallbackInfoReturnable<Boolean> cir) {
         // should only be called if the above mixin passes, so we can assume the config option is true
         if(potentialPlayer instanceof PlayerEntity player) {
-            LivingEntity walkers = PlayerShape.getCurrentShape(player);
+            LivingEntity shape = PlayerShape.getCurrentShape(player);
 
-            // check if walkers is valid & if it is a type villagers run from
-            if (walkers != null && SQUARED_DISTANCES_FOR_DANGER.containsKey(walkers.getType())) {
-                float f = SQUARED_DISTANCES_FOR_DANGER.get(walkers.getType());
+            // check if shape is valid & if it is a type villagers run from
+            if (shape != null && SQUARED_DISTANCES_FOR_DANGER.containsKey(shape.getType())) {
+                float f = SQUARED_DISTANCES_FOR_DANGER.get(shape.getType());
                 cir.setReturnValue(potentialPlayer.squaredDistanceTo(villager) <= (double) (f * f));
             } else {
                 cir.setReturnValue(false);

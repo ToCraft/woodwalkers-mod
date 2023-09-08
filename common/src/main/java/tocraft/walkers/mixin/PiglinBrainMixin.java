@@ -22,22 +22,22 @@ public class PiglinBrainMixin {
             at = @At("RETURN"),
             cancellable = true
     )
-    private static void shouldAttackWalkers(PiglinEntity piglin, LivingEntity target, CallbackInfoReturnable<Boolean> cir) {
+    private static void shouldAttackShape(PiglinEntity piglin, LivingEntity target, CallbackInfoReturnable<Boolean> cir) {
         boolean shouldAttack = cir.getReturnValue();
 
         if(shouldAttack && target instanceof PlayerEntity player) {
-            LivingEntity walkers = PlayerShape.getCurrentShape(player);
+            LivingEntity shape = PlayerShape.getCurrentShape(player);
             boolean hasHostility = PlayerHostility.hasHostility(player);
 
-            if(walkers != null) {
+            if(shape != null) {
                 // Piglins should not attack Piglins or Piglin Brutes, unless they have hostility
-                if (walkers.getType().isIn(WalkersEntityTags.PIGLIN_FRIENDLY)) {
+                if (shape.getType().isIn(WalkersEntityTags.PIGLIN_FRIENDLY)) {
                     cir.setReturnValue(false);
                 }
 
-                // Player has an Walkers but is not a piglin, check config for what to do
+                // Player has an shape but is not a piglin, check config for what to do
                 else {
-                    if (WalkersConfig.getInstance().hostilesIgnoreHostileShapedPlayer() && walkers instanceof Monster) {
+                    if (WalkersConfig.getInstance().hostilesIgnoreHostileShapedPlayer() && shape instanceof Monster) {
 
                         // Check hostility for aggro on non-piglin hostiles
                         if(!hasHostility) {

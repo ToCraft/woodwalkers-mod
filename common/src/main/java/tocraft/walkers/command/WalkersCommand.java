@@ -257,16 +257,16 @@ public class WalkersCommand {
         }
     };
 
-    private static void switchShape(ServerCommandSource source, ServerPlayerEntity player, Identifier walkers, @Nullable NbtCompound nbt) {
+    private static void switchShape(ServerCommandSource source, ServerPlayerEntity player, Identifier shape, @Nullable NbtCompound nbt) {
         Entity created;
 
         if(nbt != null) {
             NbtCompound copy = nbt.copy();
-            copy.putString("id", walkers.toString());
+            copy.putString("id", shape.toString());
             ServerWorld serverWorld = source.getWorld();
             created = EntityType.loadEntityWithPassengers(copy, serverWorld, it -> it);
         } else {
-            EntityType<?> entity = Registries.ENTITY_TYPE.get(walkers);
+            EntityType<?> entity = Registries.ENTITY_TYPE.get(shape);
             created = entity.create(player.getWorld());
         }
 

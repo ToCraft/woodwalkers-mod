@@ -25,10 +25,10 @@ public abstract class InGameHudMixin {
     )
     private TagKey<Fluid> shouldRenderBreath(TagKey<Fluid> tag) {
         PlayerEntity player = this.getCameraPlayer();
-        LivingEntity walkers = PlayerShape.getCurrentShape(player);
+        LivingEntity shape = PlayerShape.getCurrentShape(player);
 
-        if(walkers != null) {
-            if(Walkers.isAquatic(walkers) || walkers.getType().isIn(WalkersEntityTags.UNDROWNABLE) && player.isSubmergedIn(FluidTags.WATER)) {
+        if(shape != null) {
+            if(Walkers.isAquatic(shape) || shape.getType().isIn(WalkersEntityTags.UNDROWNABLE) && player.isSubmergedIn(FluidTags.WATER)) {
                 return FluidTags.LAVA;    // will cause isSubmergedIn to return false, preventing air render
             }
         }
