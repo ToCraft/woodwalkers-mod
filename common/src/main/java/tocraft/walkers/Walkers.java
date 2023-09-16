@@ -8,12 +8,15 @@ import tocraft.walkers.api.PlayerShape;
 import tocraft.walkers.api.PlayerShapeChanger;
 import tocraft.walkers.api.platform.VersionChecker;
 import tocraft.walkers.api.platform.WalkersConfig;
+import tocraft.walkers.mixin.EntityTrackerAccessor;
+import tocraft.walkers.mixin.ThreadedAnvilChunkStorageAccessor;
 import tocraft.walkers.network.NetworkHandler;
 import tocraft.walkers.network.ServerNetworking;
 import tocraft.walkers.registry.WalkersCommands;
 import tocraft.walkers.registry.WalkersEntityTags;
 import tocraft.walkers.registry.WalkersEventHandlers;
 import io.netty.buffer.Unpooled;
+import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import net.minecraft.advancement.Advancement;
 import net.minecraft.advancement.AdvancementProgress;
 import net.minecraft.entity.EntityType;
@@ -23,6 +26,7 @@ import net.minecraft.entity.mob.GuardianEntity;
 import net.minecraft.entity.mob.WaterCreatureEntity;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Identifier;
 import net.minecraft.registry.Registries;
 import org.slf4j.Logger;
@@ -70,6 +74,15 @@ public class Walkers {
 
             // check for updates
             VersionChecker.checkForUpdates(player);
+
+            Int2ObjectMap<Object> trackers = ((ThreadedAnvilChunkStorageAccessor) ((ServerWorld) player.getWorld()).getChunkManager().threadedAnvilChunkStorage).getEntityTrackers();
+            trackers.forEach((entityid, tracking) -> {
+                if (((ServerWorld) player.getWorld()).getEntityById(entityid) instanceof ServerPlayerEntity)
+                    ((EntityTrackerAccessor) tracking).getListeners().forEach(listener -> {
+                        PlayerShape.sync(((ServerPlayerEntity) ((ServerWorld) player.getWorld()).getEntityById(entityid)), listener.getPlayer());
+                        //SwapPackets.sendSwapRequest(((PlayerDataProvider)((ServerPlayerEntity) ((ServerWorld) player.getWorld()).getEntityById(entityid))).getCurrentShapeType(), false);
+                });
+            });            
         });
     }
 
