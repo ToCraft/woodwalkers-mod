@@ -13,6 +13,7 @@
     "LivingEntityFoodMixin",
     "LivingEntityMixin",
     "PiglinBrainMixin",
+    "PiglinBruteBrainMixin",
     "PlayerAdvancementTrackerMixin",
     "PlayerByteStatusMixin",
     "PlayerEntityMixin",

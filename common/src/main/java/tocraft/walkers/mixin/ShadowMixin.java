@@ -22,26 +22,26 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public abstract class ShadowMixin {
 
     @Unique
-    private static Entity walkers_shadowEntity;
+    private static Entity shape_shadowEntity;
 
     @Inject(
             method = "renderShadow",
             at = @At("HEAD"))
     private static void storeContext(MatrixStack matrices, VertexConsumerProvider vertexConsumers, Entity entity, float opacity, float tickDelta, WorldView world, float radius, CallbackInfo ci) {
-        walkers_shadowEntity = entity;
+        shape_shadowEntity = entity;
     }
 
     @ModifyVariable(
             method = "renderShadow",
             at = @At(value = "INVOKE", target = "Lnet/minecraft/util/math/MathHelper;lerp(DDD)D", ordinal = 0), index = 7)
     private static float adjustShadowSize(float originalSize) {
-        if(walkers_shadowEntity instanceof PlayerEntity player) {
-            LivingEntity walkers = PlayerShape.getCurrentShape(player);
+        if(shape_shadowEntity instanceof PlayerEntity player) {
+            LivingEntity shape = PlayerShape.getCurrentShape(player);
 
-            if(walkers != null) {
-                EntityRenderer<?> r = MinecraftClient.getInstance().getEntityRenderDispatcher().getRenderer(walkers);
+            if(shape != null) {
+                EntityRenderer<?> r = MinecraftClient.getInstance().getEntityRenderDispatcher().getRenderer(shape);
                 float shadowRadius = ((EntityShadowAccessor) r).getShadowRadius();
-                float mod = walkers.isBaby() ? .5f : 1;
+                float mod = shape.isBaby() ? .5f : 1;
                 return shadowRadius * mod;
             }
         }

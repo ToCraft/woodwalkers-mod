@@ -48,10 +48,10 @@ public abstract class EntityMixin implements DimensionsRefresher {
     )
     private void getWidth(CallbackInfoReturnable<Float> cir) {
         if((Object) this instanceof PlayerEntity player) {
-            LivingEntity Walkers = PlayerShape.getCurrentShape(player);
+            LivingEntity shape = PlayerShape.getCurrentShape(player);
 
-            if(Walkers != null) {
-                cir.setReturnValue(Walkers.getWidth());
+            if(shape != null) {
+                cir.setReturnValue(shape.getWidth());
             }
         }
     }
@@ -63,10 +63,10 @@ public abstract class EntityMixin implements DimensionsRefresher {
     )
     private void getHeight(CallbackInfoReturnable<Float> cir) {
         if((Object) this instanceof PlayerEntity player) {
-            LivingEntity Walkers = PlayerShape.getCurrentShape(player);
+            LivingEntity shape = PlayerShape.getCurrentShape(player);
 
-            if(Walkers != null) {
-                cir.setReturnValue(Walkers.getHeight());
+            if(shape != null) {
+                cir.setReturnValue(shape.getHeight());
             }
         }
     }
@@ -92,10 +92,10 @@ public abstract class EntityMixin implements DimensionsRefresher {
     @Inject(at = @At("HEAD"), method = "getStandingEyeHeight", cancellable = true)
     public void getStandingEyeHeight(CallbackInfoReturnable<Float> cir) {
         if((Entity) (Object) this instanceof PlayerEntity player) {
-            LivingEntity walkers = PlayerShape.getCurrentShape(player);
+            LivingEntity shape = PlayerShape.getCurrentShape(player);
 
-            if(walkers != null) {
-                cir.setReturnValue(walkers.getStandingEyeHeight());
+            if(shape != null) {
+                cir.setReturnValue(shape.getStandingEyeHeight());
             }
         }
     }
@@ -107,10 +107,10 @@ public abstract class EntityMixin implements DimensionsRefresher {
     )
     private void isFireImmune(CallbackInfoReturnable<Boolean> cir) {
         if((Object) this instanceof PlayerEntity player) {
-            LivingEntity Walkers = PlayerShape.getCurrentShape(player);
+            LivingEntity shape = PlayerShape.getCurrentShape(player);
 
-            if(Walkers != null) {
-                cir.setReturnValue(Walkers.getType().isFireImmune());
+            if(shape != null) {
+                cir.setReturnValue(shape.getType().isFireImmune());
             }
         }
     }

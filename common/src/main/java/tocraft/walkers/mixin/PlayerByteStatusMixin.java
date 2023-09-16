@@ -13,12 +13,12 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(PlayerEntity.class)
 public class PlayerByteStatusMixin {
 
-    // When a player receives a handleStatus byte, pass it on to their Walkers.
+    // When a player receives a handleStatus byte, pass it on to their shape.
     @Inject(method = "handleStatus", at = @At("RETURN"))
-    private void walkers$passByteStatus(byte status, CallbackInfo ci) {
-        @Nullable LivingEntity walkers = PlayerShape.getCurrentShape((PlayerEntity) (Object) this);
-        if(walkers != null) {
-            walkers.handleStatus(status);
+    private void shape$passByteStatus(byte status, CallbackInfo ci) {
+        @Nullable LivingEntity shape = PlayerShape.getCurrentShape((PlayerEntity) (Object) this);
+        if(shape != null) {
+            shape.handleStatus(status);
         }
     }
 }

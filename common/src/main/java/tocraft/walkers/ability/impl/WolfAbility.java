@@ -12,13 +12,17 @@ import tocraft.walkers.mixin.ThreadedAnvilChunkStorageAccessor;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvents;
 
 public class WolfAbility extends WalkersAbility<WolfEntity> {
 
     @Override
     public void onUse(PlayerEntity player, WolfEntity shape, World world) {
-        if (shape.hasAngerTime())
+        if (shape.hasAngerTime()) {
             shape.stopAnger();
+            world.playSoundFromEntity(null, player, SoundEvents.ENTITY_WOLF_PANT, SoundCategory.PLAYERS, 1.0F, (world.random.nextFloat() - world.random.nextFloat()) * 0.2F + 1.0F);
+        }
         else
             shape.chooseRandomAngerTime();
 
@@ -28,6 +32,7 @@ public class WolfAbility extends WalkersAbility<WolfEntity> {
             ((EntityTrackerAccessor) tracking).getListeners().forEach(listener -> {
                 PlayerShape.sync((ServerPlayerEntity) player, listener.getPlayer());
             });
+            world.playSoundFromEntity(null, player, SoundEvents.ENTITY_WOLF_GROWL, SoundCategory.PLAYERS, 1.0F, (world.random.nextFloat() - world.random.nextFloat()) * 0.2F + 1.0F);
         }
     }
 

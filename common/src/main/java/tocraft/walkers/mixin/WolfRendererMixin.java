@@ -13,9 +13,9 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(WolfEntityRenderer.class)
 public class WolfRendererMixin {
-    private static final Identifier DEV_WILD = new Identifier(Walkers.MODID, "textures/entity/wolf/dev_wild.png");
-    private static final Identifier DEV_TAMED = new Identifier(Walkers.MODID, "textures/entity/wolf/dev_tame.png");
-    private static final Identifier DEV_ANGRY = new Identifier(Walkers.MODID, "textures/entity/wolf/dev_angry.png");
+    private static final Identifier DEV_WILD = Walkers.id("textures/entity/wolf/dev_wild.png");
+    private static final Identifier DEV_TAMED = Walkers.id("textures/entity/wolf/dev_tame.png");
+    private static final Identifier DEV_ANGRY = Walkers.id("textures/entity/wolf/dev_angry.png");
 
     @Inject(method = "getTexture", at = @At("HEAD"), cancellable = true)
     private void onGetTexture(WolfEntity wolfEntity, CallbackInfoReturnable<Identifier> ci) {

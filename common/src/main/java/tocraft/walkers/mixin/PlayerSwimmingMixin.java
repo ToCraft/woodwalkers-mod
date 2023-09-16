@@ -19,9 +19,9 @@ public class PlayerSwimmingMixin {
     private void onGolemSwimUp(TagKey<Fluid> fluid, CallbackInfo ci) {
         LivingEntity thisEntity = (LivingEntity) (Object) this;
         if(thisEntity instanceof PlayerEntity player) {
-            LivingEntity walkers = PlayerShape.getCurrentShape(player);
+            LivingEntity shape = PlayerShape.getCurrentShape(player);
 
-            if(walkers != null && walkers.getType().isIn(WalkersEntityTags.CANT_SWIM)) {
+            if(shape != null && shape.getType().isIn(WalkersEntityTags.CANT_SWIM)) {
                 ci.cancel();
             }
         }

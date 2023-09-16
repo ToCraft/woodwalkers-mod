@@ -34,12 +34,12 @@ public abstract class WolfEntityMixin extends TameableEntity {
     )
     private void addPlayerTarget(CallbackInfo ci) {
         this.targetSelector.add(7, new ActiveTargetGoal<>(this, PlayerEntity.class, 10, false, false, player -> {
-            // ensure wolves can attack players with an walkers similar to their normal prey
+            // ensure wolves can attack players with a shape similar to their normal prey
             if(!WalkersConfig.getInstance().wolvesAttack2ndShapedPrey()) {
                 return false;
             }
 
-            LivingEntity walkers = PlayerShape.getCurrentShape((PlayerEntity) player);
+            LivingEntity shape = PlayerShape.getCurrentShape((PlayerEntity) player);
 
             // wolves should ignore players that look like their prey if they have an owner,
             // unless the config option is turned to true
@@ -48,7 +48,7 @@ public abstract class WolfEntityMixin extends TameableEntity {
                 return false;
             }
 
-            return walkers != null && walkers.getType().isIn(WalkersEntityTags.WOLF_PREY);
+            return shape != null && shape.getType().isIn(WalkersEntityTags.WOLF_PREY);
         }));
     }
 

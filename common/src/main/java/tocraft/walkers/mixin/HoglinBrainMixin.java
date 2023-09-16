@@ -26,11 +26,11 @@ public class HoglinBrainMixin {
 
             // Check if Hoglin target is player
             if(target instanceof PlayerEntity player) {
-                LivingEntity walkers = PlayerShape.getCurrentShape(player);
+                LivingEntity shape = PlayerShape.getCurrentShape(player);
 
-                // Ensure player walkers is valid
-                if(walkers != null) {
-                    if(walkers instanceof HoglinEntity) {
+                // Ensure player shape is valid
+                if(shape != null) {
+                    if(shape instanceof HoglinEntity) {
                         cir.setReturnValue(Optional.empty());
                     }
                 }
