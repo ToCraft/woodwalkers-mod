@@ -1,6 +1,7 @@
 plugins {
     id "com.github.johnrengelman.shadow" version "8.1.1"
     id "com.modrinth.minotaur" version "2.+"
+    id 'net.darkhax.curseforgegradle' version '1.1.15'
 }
 
 architectury {
@@ -87,4 +88,15 @@ modrinth {
         required.project "fabric-api"
         required.version "architectury-api", rootProject.architectury_version + "+" + project.name
     }
+}
+
+task curseforge(type: net.darkhax.curseforgegradle.TaskPublishCurseForge) {
+    apiToken = System.getenv("CURSEFORGE_TOKEN")
+    
+    // The main file to upload
+    def mainFile = upload(868922, remapJar)
+    mainFile.displayName = rootProject.minecraft_version + "-" + project.name + "-" + rootProject.mod_version
+    mainFile.releaseType = 'release'
+    mainFile.addModLoader(project.name)
+    mainFile.addRequirement("architectury-api")
 }
