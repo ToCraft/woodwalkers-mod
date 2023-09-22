@@ -76,6 +76,7 @@ modrinth {
     uploadFile = remapJar
     gameVersions = [rootProject.minecraft_version]
     loaders = [project.name]
+    changelog = "https://github.com/ToCraft/woodwalkers-mod/releases/tag/" + rootProject.mod_version + "-" + rootProject.minecraft_version
     dependencies {
         required.version "architectury-api", rootProject.architectury_version + "+" + project.name
     }
@@ -90,4 +91,5 @@ task curseforge(type: net.darkhax.curseforgegradle.TaskPublishCurseForge) {
     mainFile.releaseType = 'release'
     mainFile.addModLoader(project.name)
     mainFile.addRequirement("architectury-api")
+    mainFile.changelog = "https://github.com/ToCraft/woodwalkers-mod/releases/tag/" + rootProject.mod_version + "-" + rootProject.minecraft_version
 }
