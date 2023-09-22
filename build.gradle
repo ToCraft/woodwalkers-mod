@@ -37,7 +37,7 @@ allprojects {
         // You should only use this when depending on other mods because
         // Loom adds the essential maven repositories to download Minecraft and libraries from automatically.
         // See https://docs.gradle.org/current/userguide/declaring_repositories.html
-        // for more information about repositories.
+        // for more information about repositories.      
     }
 
     tasks.withType(JavaCompile) {
@@ -47,5 +47,27 @@ allprojects {
 
     java {
         withSourcesJar()
+    }
+
+    publishing {
+        publications {
+            maven(MavenPublication) {
+                groupId = rootProject.maven_group
+                artifactId = rootProject.archives_base_name
+                version = rootProject.minecraft_version + "-" + project.name + "-" + rootProject.mod_version
+                from components.java
+            }
+        }
+        repositories {
+            maven {
+                name "tocraftMavenReleases"
+                url "https://tocraft.ddns.net/maven/releases"
+
+                credentials {
+                    username = System.getenv("TOCRAFTMAVEN_USERNAME")
+                    password = System.getenv("TOCRAFTMAVEN_TOKEN")
+                }
+            }
+        }
     }
 }

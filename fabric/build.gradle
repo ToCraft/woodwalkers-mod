@@ -1,5 +1,7 @@
 plugins {
     id "com.github.johnrengelman.shadow" version "8.1.1"
+    id "com.modrinth.minotaur" version "2.+"
+    id 'net.darkhax.curseforgegradle' version '1.1.15'
 }
 
 architectury {
@@ -74,16 +76,29 @@ components.java {
     }
 }
 
-publishing {
-    publications {
-        mavenFabric(MavenPublication) {
-            artifactId = rootProject.archives_base_name + "-" + project.name
-            from components.java
-        }
+modrinth {
+    token = System.getenv("MODRINTH_TOKEN")
+    projectId = "woodwalkers"
+    versionNumber = rootProject.minecraft_version + "-" + project.name + "-" + rootProject.mod_version
+    versionType = "release"
+    uploadFile = remapJar
+    gameVersions = [rootProject.minecraft_version]
+    loaders = [project.name]
+    changelog = "https://github.com/ToCraft/woodwalkers-mod/releases/tag/" + rootProject.mod_version + "-" + rootProject.minecraft_version
+    dependencies {
+        required.project "fabric-api"
+        required.version "architectury-api", rootProject.architectury_version + "+" + project.name
     }
+}
 
-    // See https://docs.gradle.org/current/userguide/publishing_maven.html for information on how to set up publishing.
-    repositories {
-        // Add repositories to publish to here.
-    }
+task curseforge(type: net.darkhax.curseforgegradle.TaskPublishCurseForge) {
+    apiToken = System.getenv("CURSEFORGE_TOKEN")
+    
+    // The main file to upload
+    def mainFile = upload(868922, remapJar)
+    mainFile.displayName = rootProject.minecraft_version + "-" + project.name + "-" + rootProject.mod_version
+    mainFile.releaseType = 'release'
+    mainFile.addModLoader(project.name)
+    mainFile.addRequirement("architectury-api")
+    mainFile.changelog = "https://github.com/ToCraft/woodwalkers-mod/releases/tag/" + rootProject.mod_version + "-" + rootProject.minecraft_version
 }

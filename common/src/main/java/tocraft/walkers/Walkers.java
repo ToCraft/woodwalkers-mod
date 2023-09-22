@@ -8,7 +8,6 @@ import tocraft.walkers.api.PlayerShape;
 import tocraft.walkers.api.PlayerShapeChanger;
 import tocraft.walkers.api.platform.VersionChecker;
 import tocraft.walkers.api.platform.WalkersConfig;
-import tocraft.walkers.mixin.EntityTrackerAccessor;
 import tocraft.walkers.mixin.ThreadedAnvilChunkStorageAccessor;
 import tocraft.walkers.network.NetworkHandler;
 import tocraft.walkers.network.ServerNetworking;
@@ -78,10 +77,7 @@ public class Walkers {
             Int2ObjectMap<Object> trackers = ((ThreadedAnvilChunkStorageAccessor) ((ServerWorld) player.getWorld()).getChunkManager().threadedAnvilChunkStorage).getEntityTrackers();
             trackers.forEach((entityid, tracking) -> {
                 if (((ServerWorld) player.getWorld()).getEntityById(entityid) instanceof ServerPlayerEntity)
-                    ((EntityTrackerAccessor) tracking).getListeners().forEach(listener -> {
-                        PlayerShape.sync(((ServerPlayerEntity) ((ServerWorld) player.getWorld()).getEntityById(entityid)), listener.getPlayer());
-                        //SwapPackets.sendSwapRequest(((PlayerDataProvider)((ServerPlayerEntity) ((ServerWorld) player.getWorld()).getEntityById(entityid))).getCurrentShapeType(), false);
-                });
+                    PlayerShape.sync(((ServerPlayerEntity) ((ServerWorld) player.getWorld()).getEntityById(entityid)), player);
             });            
         });
     }
