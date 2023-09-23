@@ -19,12 +19,6 @@ public class WalkersEntityTags {
     public static final TagKey<EntityType<?>> CANT_SWIM = register("cant_swim");
     public static final TagKey<EntityType<?>> UNDROWNABLE = register("undrownable");
 
-    private WalkersEntityTags() { }
-
-    public static void init() {
-        // NO-OP
-    }
-
     private static TagKey<EntityType<?>> register(String id) {
         return TagKey.of(RegistryKeys.ENTITY_TYPE, Walkers.id(id));
     }

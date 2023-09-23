@@ -47,7 +47,6 @@ public class Walkers {
 
 
     public void initialize() {
-        WalkersEntityTags.init();
         AbilityRegistry.init();
         WalkersEventHandlers.initialize();
         WalkersCommands.init();

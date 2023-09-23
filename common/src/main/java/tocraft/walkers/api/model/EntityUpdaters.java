@@ -52,10 +52,6 @@ public class EntityUpdaters {
         map.put(type, entityUpdater);
     }
 
-    private EntityUpdaters() {
-        // NO-OP
-    }
-
     public static void init() {
         // register specific entity animation handling
         EntityUpdaters.register(EntityType.BAT, (player, bat) -> {

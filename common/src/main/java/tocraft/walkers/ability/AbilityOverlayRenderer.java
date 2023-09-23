@@ -100,8 +100,4 @@ public class AbilityOverlayRenderer {
             }
         });
     }
-
-    private AbilityOverlayRenderer() {
-        // NO-OP
-    }
 }

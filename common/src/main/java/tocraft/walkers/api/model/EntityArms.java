@@ -105,8 +105,4 @@ public class EntityArms {
             stack.translate(0, .5, -.3);
         });
     }
-
-    private EntityArms() {
-        // NO-OP
-    }
 }
