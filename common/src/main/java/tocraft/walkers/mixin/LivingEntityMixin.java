@@ -166,7 +166,7 @@ public abstract class LivingEntityMixin extends Entity implements NearbySongAcce
                 LivingEntity shape = PlayerShape.getCurrentShape(player);
 
                 if(shape != null) {
-                    cir.setReturnValue(((LivingEntityAccessor) shape).callGetEyeHeight(pose, dimensions));
+                    cir.setReturnValue(shape.getEyeHeight(pose));
                 }
             } catch (Exception ignored) {}
         }

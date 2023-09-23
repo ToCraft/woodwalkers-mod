@@ -40,7 +40,4 @@ public interface LivingEntityAccessor {
 
     @Invoker
     void callSetLivingFlag(int mask, boolean value);
-
-    @Invoker
-    float callGetEyeHeight(EntityPose pose, EntityDimensions dimensions);
 }
