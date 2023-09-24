@@ -1,27 +1,28 @@
 package tocraft.walkers.mixin;
 
-import net.minecraft.entity.LimbAnimator;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Accessor;
 
-@Mixin(LimbAnimator.class)
+import net.minecraft.world.entity.WalkAnimationState;
+
+@Mixin(WalkAnimationState.class)
 public interface LimbAnimatorAccessor {
 
-    @Accessor
-    float getPrevSpeed();
+	@Accessor("speedOld")
+	float getPrevSpeed();
 
-    @Accessor
-    void setPrevSpeed(float prevSpeed);
+	@Accessor("speedOld")
+	void setPrevSpeed(float prevSpeed);
 
-    @Accessor
-    float getSpeed();
+	@Accessor("speed")
+	float getSpeed();
 
-    @Accessor
-    void setSpeed(float speed);
+	@Accessor("speed")
+	void setSpeed(float speed);
 
-    @Accessor
-    float getPos();
+	@Accessor("position")
+	float getPos();
 
-    @Accessor
-    void setPos(float pos);
+	@Accessor("position")
+	void setPos(float pos);
 }

@@ -2,17 +2,17 @@ package tocraft.walkers.api.variant;
 
 import tocraft.walkers.api.platform.SyncedVars;
 import tocraft.walkers.impl.variant.*;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
-import net.minecraft.registry.Registries;
-import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.level.Level;
 
 public class ShapeType<T extends LivingEntity> {
 
@@ -78,18 +78,18 @@ public class ShapeType<T extends LivingEntity> {
     }
 
     @Nullable
-    public static ShapeType<?> from(NbtCompound compound) {
-        Identifier id = new Identifier(compound.getString("EntityID"));
-        if(!Registries.ENTITY_TYPE.containsId(id)) {
+    public static ShapeType<?> from(CompoundTag compound) {
+        ResourceLocation id = new ResourceLocation(compound.getString("EntityID"));
+        if(!BuiltInRegistries.ENTITY_TYPE.containsKey(id)) {
             return null;
         }
 
-        return new ShapeType(Registries.ENTITY_TYPE.get(id), compound.contains("Variant") ? compound.getInt("Variant") : -1);
+        return new ShapeType(BuiltInRegistries.ENTITY_TYPE.get(id), compound.contains("Variant") ? compound.getInt("Variant") : -1);
     }
 
-    public static List<ShapeType<?>> getAllTypes(World world) {
+    public static List<ShapeType<?>> getAllTypes(Level world) {
         if(LIVING_TYPE_CASH.isEmpty()) {
-            for (EntityType<?> type : Registries.ENTITY_TYPE) {
+            for (EntityType<?> type : BuiltInRegistries.ENTITY_TYPE) {
                 Entity instance = type.create(world);
                 if(instance instanceof LivingEntity) {
                     LIVING_TYPE_CASH.add((EntityType<? extends LivingEntity>) type);
@@ -100,7 +100,7 @@ public class ShapeType<T extends LivingEntity> {
         List<ShapeType<?>> types = new ArrayList<>();
         for (EntityType<?> type : LIVING_TYPE_CASH) {
             // check blacklist
-            if (!SyncedVars.getShapeBlacklist().contains(EntityType.getId(type).toString())) {
+            if (!SyncedVars.getShapeBlacklist().contains(EntityType.getKey(type).toString())) {
                 // hide dev_wolf & check other variants
                 if(type != EntityType.WOLF && VARIANT_BY_TYPE.containsKey(type)) {
                     TypeProvider<?> variant = VARIANT_BY_TYPE.get(type);
@@ -128,9 +128,9 @@ public class ShapeType<T extends LivingEntity> {
         return new ShapeType<>((EntityType<Z>) entityType, variant);
     }
 
-    public NbtCompound writeCompound() {
-        NbtCompound compound = new NbtCompound();
-        compound.putString("EntityID", Registries.ENTITY_TYPE.getId(type).toString());
+    public CompoundTag writeCompound() {
+        CompoundTag compound = new CompoundTag();
+        compound.putString("EntityID", BuiltInRegistries.ENTITY_TYPE.getKey(type).toString());
         compound.putInt("Variant", variantData);
         return compound;
     }
@@ -139,7 +139,7 @@ public class ShapeType<T extends LivingEntity> {
         return type;
     }
 
-    public T create(World world) {
+    public T create(Level world) {
         TypeProvider<T> typeProvider = (TypeProvider<T>) VARIANT_BY_TYPE.get(type);
         if(typeProvider != null) {
             return typeProvider.create(type, world, variantData);
@@ -165,21 +165,21 @@ public class ShapeType<T extends LivingEntity> {
         return Objects.hash(type, variantData);
     }
 
-    public void writeEntityNbt(NbtCompound tag) {
-        NbtCompound inner = writeCompound();
+    public void writeEntityNbt(CompoundTag tag) {
+        CompoundTag inner = writeCompound();
         tag.put("ShapeType", inner);
     }
 
-    public static ShapeType<?> fromEntityNbt(NbtCompound tag) {
+    public static ShapeType<?> fromEntityNbt(CompoundTag tag) {
         return from(tag.getCompound("ShapeType"));
     }
 
-    public Text createTooltipText(T entity) {
+    public Component createTooltipText(T entity) {
         TypeProvider<T> provider = (TypeProvider<T>) VARIANT_BY_TYPE.get(type);
         if(provider != null) {
-            return provider.modifyText(entity, Text.translatable(type.getTranslationKey()));
+            return provider.modifyText(entity, Component.translatable(type.getDescriptionId()));
         }
 
-        return Text.translatable(type.getTranslationKey());
+        return Component.translatable(type.getDescriptionId());
     }
 }

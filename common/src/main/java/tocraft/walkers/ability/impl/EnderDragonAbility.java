@@ -1,27 +1,27 @@
 package tocraft.walkers.ability.impl;
 
+import net.minecraft.world.entity.boss.enderdragon.EnderDragon;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.DragonFireball;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.Level;
 import tocraft.walkers.ability.WalkersAbility;
-import net.minecraft.entity.boss.dragon.EnderDragonEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.projectile.DragonFireballEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.Items;
-import net.minecraft.world.World;
 
-public class EnderDragonAbility extends WalkersAbility<EnderDragonEntity> {
+public class EnderDragonAbility extends WalkersAbility<EnderDragon> {
 
     @Override
-    public void onUse(PlayerEntity player, EnderDragonEntity shape, World world) {
-        DragonFireballEntity dragonFireball = new DragonFireballEntity(
+    public void onUse(Player player, EnderDragon shape, Level world) {
+        DragonFireball dragonFireball = new DragonFireball(
                 world,
                 player,
-                player.getRotationVector().x,
-                player.getRotationVector().y,
-                player.getRotationVector().z
+                player.getLookAngle().x,
+                player.getLookAngle().y,
+                player.getLookAngle().z
         );
 
         dragonFireball.setOwner(player);
-        world.spawnEntity(dragonFireball);
+        world.addFreshEntity(dragonFireball);
     }
 
     @Override

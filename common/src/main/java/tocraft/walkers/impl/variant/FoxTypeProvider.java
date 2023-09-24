@@ -1,39 +1,39 @@
 package tocraft.walkers.impl.variant;
 
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.animal.Fox;
+import net.minecraft.world.level.Level;
 import tocraft.walkers.api.variant.TypeProvider;
 import tocraft.walkers.mixin.accessor.FoxEntityAccessor;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.passive.FoxEntity;
-import net.minecraft.text.MutableText;
-import net.minecraft.text.Text;
-import net.minecraft.world.World;
 
-public class FoxTypeProvider extends TypeProvider<FoxEntity> {
+public class FoxTypeProvider extends TypeProvider<Fox> {
 
     @Override
-    public int getVariantData(FoxEntity entity) {
+    public int getVariantData(Fox entity) {
         return entity.getVariant().getId();
     }
 
     @Override
-    public FoxEntity create(EntityType<FoxEntity> type, World world, int data) {
-        FoxEntity fox = new FoxEntity(type, world);
-        ((FoxEntityAccessor) fox).callSetVariant(FoxEntity.Type.fromId(data));
+    public Fox create(EntityType<Fox> type, Level world, int data) {
+        Fox fox = new Fox(type, world);
+        ((FoxEntityAccessor) fox).callSetVariant(Fox.Type.byId(data));
         return fox;
     }
 
     @Override
     public int getFallbackData() {
-        return FoxEntity.Type.RED.getId();
+        return Fox.Type.RED.getId();
     }
 
     @Override
     public int getRange() {
-        return FoxEntity.Type.values().length - 1;
+        return Fox.Type.values().length - 1;
     }
 
     @Override
-    public Text modifyText(FoxEntity entity, MutableText text) {
-        return Text.literal(formatTypePrefix(FoxEntity.Type.fromId(getVariantData(entity)).name()) + " ").append(text);
+    public Component modifyText(Fox entity, MutableComponent text) {
+        return Component.literal(formatTypePrefix(Fox.Type.byId(getVariantData(entity)).name()) + " ").append(text);
     }
 }

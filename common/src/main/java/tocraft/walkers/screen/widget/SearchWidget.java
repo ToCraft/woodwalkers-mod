@@ -1,12 +1,12 @@
 package tocraft.walkers.screen.widget;
 
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.widget.TextFieldWidget;
-import net.minecraft.text.Text;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.components.EditBox;
+import net.minecraft.network.chat.Component;
 
-public class SearchWidget extends TextFieldWidget {
+public class SearchWidget extends EditBox {
 
     public SearchWidget(float x, float y, float width, float height) {
-        super(MinecraftClient.getInstance().textRenderer, (int) x, (int) y, (int) width, (int) height, Text.of(""));
+        super(Minecraft.getInstance().font, (int) x, (int) y, (int) width, (int) height, Component.nullToEmpty(""));
     }
 }

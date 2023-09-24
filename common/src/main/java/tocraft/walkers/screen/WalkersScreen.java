@@ -1,5 +1,6 @@
 package tocraft.walkers.screen;
 
+import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.systems.RenderSystem;
 import tocraft.walkers.Walkers;
 import tocraft.walkers.api.variant.ShapeType;
@@ -7,54 +8,52 @@ import tocraft.walkers.mixin.accessor.ScreenAccessor;
 import tocraft.walkers.screen.widget.EntityWidget;
 import tocraft.walkers.screen.widget.HelpWidget;
 import tocraft.walkers.screen.widget.SearchWidget;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.tooltip.Tooltip;
-import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.client.util.Window;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.mob.MobEntity;
-import net.minecraft.text.Text;
-
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.components.Tooltip;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.Mob;
 
 public class WalkersScreen extends Screen {
 
     private final List<ShapeType<?>> rendered = new ArrayList<>();
-    private final Map<ShapeType<?>, MobEntity> renderEntities = new LinkedHashMap<>();
+    private final Map<ShapeType<?>, Mob> renderEntities = new LinkedHashMap<>();
     private final List<EntityWidget<?>> entityWidgets = new ArrayList<>();
     private final SearchWidget searchBar = createSearchBar();
-    private final ButtonWidget helpButton = createHelpButton();
+    private final Button helpButton = createHelpButton();
     private String lastSearchContents = "";
 
     public WalkersScreen() {
-        super(Text.literal(""));
-        super.init(MinecraftClient.getInstance(), MinecraftClient.getInstance().getWindow().getScaledWidth(), MinecraftClient.getInstance().getWindow().getScaledHeight());
+        super(Component.literal(""));
+        super.init(Minecraft.getInstance(), Minecraft.getInstance().getWindow().getGuiScaledWidth(), Minecraft.getInstance().getWindow().getGuiScaledHeight());
 
         // don't initialize if the player is null
-        if(client.player == null) {
-            client.setScreen(null);
+        if(minecraft.player == null) {
+            minecraft.setScreen(null);
             return;
         }
 
         populateRenderEntities();
-        addDrawableChild(searchBar);
-        addDrawableChild(helpButton);
+        addRenderableWidget(searchBar);
+        addRenderableWidget(helpButton);
 
-        rendered.addAll(collectEntities(client.player));
+        rendered.addAll(collectEntities(minecraft.player));
 
         // add entity widgets
-        populateEntityWidgets(client.player, rendered);
+        populateEntityWidgets(minecraft.player, rendered);
 
         // implement search handler
-        searchBar.setChangedListener(text -> {
-            focusOn(searchBar);
+        searchBar.setResponder(text -> {
+            magicalSpecialHackyFocus(searchBar);
 
             // Only re-filter if the text contents changed
             if(!lastSearchContents.equals(text)) {
@@ -64,10 +63,10 @@ public class WalkersScreen extends Screen {
 
                 List<ShapeType<?>> filtered = rendered
                         .stream()
-                        .filter(type -> text.isEmpty() || type.getEntityType().getTranslationKey().contains(text))
+                        .filter(type -> text.isEmpty() || type.getEntityType().getDescriptionId().contains(text))
                         .collect(Collectors.toList());
 
-                populateEntityWidgets(client.player, filtered);
+                populateEntityWidgets(minecraft.player, filtered);
             }
 
             lastSearchContents = text;
@@ -75,12 +74,12 @@ public class WalkersScreen extends Screen {
     }
 
     @Override
-    public void clearChildren() {
+    public void clearWidgets() {
 
     }
 
     @Override
-    public void render(DrawContext context, int mouseX, int mouseY, float delta) {
+    public void render(GuiGraphics context, int mouseX, int mouseY, float delta) {
         renderBackground(context);
 
         searchBar.render(context, mouseX, mouseY, delta);
@@ -88,11 +87,11 @@ public class WalkersScreen extends Screen {
         renderEntityWidgets(context, mouseX, mouseY, delta);
     }
 
-    public void renderEntityWidgets(DrawContext context, int mouseX, int mouseY, float delta) {
-        double scaledFactor = this.client.getWindow().getScaleFactor();
+    public void renderEntityWidgets(GuiGraphics context, int mouseX, int mouseY, float delta) {
+        double scaledFactor = this.minecraft.getWindow().getGuiScale();
         int top = 35;
 
-        context.getMatrices().push();
+        context.pose().pushPose();
         RenderSystem.enableScissor(
                 (int) ((double) 0 * scaledFactor),
                 (int) ((double) 0 * scaledFactor),
@@ -105,7 +104,7 @@ public class WalkersScreen extends Screen {
 
         RenderSystem.disableScissor();
 
-        context.getMatrices().pop();
+        context.pose().popPose();
     }
 
     @Override
@@ -128,7 +127,7 @@ public class WalkersScreen extends Screen {
         return false;
     }
 
-    private void populateEntityWidgets(ClientPlayerEntity player, List<ShapeType<?>> rendered) {
+    private void populateEntityWidgets(LocalPlayer player, List<ShapeType<?>> rendered) {
         // add widget for each entity to be rendered
         int x = 15;
         int y = 35;
@@ -143,16 +142,16 @@ public class WalkersScreen extends Screen {
 
                     // TODO: only render selected type, this will show all eg. sheep
                     EntityWidget<?> entityWidget = new EntityWidget(
-                            (getWindow().getScaledWidth() - 27) / 7f * xIndex + x,
-                            getWindow().getScaledHeight() / 5f * yIndex + y,
-                            (getWindow().getScaledWidth() - 27) / 7f,
-                            getWindow().getScaledHeight() / 5f,
+                            (getWindow().getGuiScaledWidth() - 27) / 7f * xIndex + x,
+                            getWindow().getGuiScaledHeight() / 5f * yIndex + y,
+                            (getWindow().getGuiScaledWidth() - 27) / 7f,
+                            getWindow().getGuiScaledHeight() / 5f,
                             type,
                             renderEntities.get(type),
                             this
                     );
 
-                    addDrawableChild(entityWidget);
+                    addRenderableWidget(entityWidget);
                     entityWidgets.add(entityWidget);
                 }
             }
@@ -161,10 +160,10 @@ public class WalkersScreen extends Screen {
 
     private void populateRenderEntities() {
         if(renderEntities.isEmpty()) {
-            List<ShapeType<?>> types = ShapeType.getAllTypes(MinecraftClient.getInstance().world);
+            List<ShapeType<?>> types = ShapeType.getAllTypes(Minecraft.getInstance().level);
             for (ShapeType<?> type : types) {
-                Entity entity = type.create(MinecraftClient.getInstance().world);
-                if(entity instanceof MobEntity living) {
+                Entity entity = type.create(Minecraft.getInstance().level);
+                if(entity instanceof Mob living) {
                     renderEntities.put(type, living);
                 }
             }
@@ -173,7 +172,7 @@ public class WalkersScreen extends Screen {
         }
     }
 
-    private List<ShapeType<?>> collectEntities(ClientPlayerEntity player) {
+    private List<ShapeType<?>> collectEntities(LocalPlayer player) {
         List<ShapeType<?>> entities = new ArrayList<>();
 
         // collect current unlocked second shape
@@ -186,24 +185,24 @@ public class WalkersScreen extends Screen {
 
     private SearchWidget createSearchBar() {
         return new SearchWidget(
-                getWindow().getScaledWidth() / 2f - (getWindow().getScaledWidth() / 4f / 2) - 5,
+                getWindow().getGuiScaledWidth() / 2f - (getWindow().getGuiScaledWidth() / 4f / 2) - 5,
                 5,
-                getWindow().getScaledWidth() / 4f,
+                getWindow().getGuiScaledWidth() / 4f,
                 20f);
     }
 
-    private ButtonWidget createHelpButton() {
+    private Button createHelpButton() {
         HelpWidget helpWidget = new HelpWidget(
-                (int) (getWindow().getScaledWidth() / 2f + (getWindow().getScaledWidth() / 8f) + 5),
+                (int) (getWindow().getGuiScaledWidth() / 2f + (getWindow().getGuiScaledWidth() / 8f) + 5),
                 7,
                 20,
                 20);
-        helpWidget.setTooltip(Tooltip.of(Text.translatable("walkers.help")));
+        helpWidget.setTooltip(Tooltip.create(Component.translatable("walkers.help")));
         return helpWidget;
     }
 
     public Window getWindow() {
-        return MinecraftClient.getInstance().getWindow();
+        return Minecraft.getInstance().getWindow();
     }
 
     public void disableAll() {
@@ -211,7 +210,7 @@ public class WalkersScreen extends Screen {
     }
 
     @Override
-    public boolean shouldPause() {
+    public boolean isPauseScreen() {
         return false;
     }
 

@@ -6,18 +6,18 @@ import tocraft.walkers.impl.PlayerDataProvider;
 import tocraft.walkers.network.ClientNetworking;
 import tocraft.walkers.network.NetworkHandler;
 import io.netty.buffer.Unpooled;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.server.level.ServerPlayer;
 
 public class UnlockPackets {
 
     private static final String UNLOCK_KEY = "UnlockedShape";
 
-    public static void handleUnlockSyncPacket(PacketByteBuf packet, NetworkManager.PacketContext context) {
-        NbtCompound nbt = packet.readNbt();
+    public static void handleUnlockSyncPacket(FriendlyByteBuf packet, NetworkManager.PacketContext context) {
+        CompoundTag nbt = packet.readNbt();
         if(nbt != null) {
-            NbtCompound idTag = nbt.getCompound(UNLOCK_KEY);
+            CompoundTag idTag = nbt.getCompound(UNLOCK_KEY);
 
             ClientNetworking.runOrQueue(context, player -> {
                 if (idTag != null) ((PlayerDataProvider) player).set2ndShape(ShapeType.from(idTag));
@@ -25,12 +25,12 @@ public class UnlockPackets {
         }
     }
 
-    public static void sendSyncPacket(ServerPlayerEntity player) {
-        PacketByteBuf packet = new PacketByteBuf(Unpooled.buffer());
+    public static void sendSyncPacket(ServerPlayer player) {
+        FriendlyByteBuf packet = new FriendlyByteBuf(Unpooled.buffer());
 
         // Serialize unlocked to tag
-        NbtCompound compound = new NbtCompound();
-        NbtCompound id = new NbtCompound();
+        CompoundTag compound = new CompoundTag();
+        CompoundTag id = new CompoundTag();
         if (((PlayerDataProvider) player).get2ndShape() != null)
             id = ((PlayerDataProvider) player).get2ndShape().writeCompound();
         compound.put(UNLOCK_KEY, id);

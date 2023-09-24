@@ -2,16 +2,15 @@ package tocraft.walkers.impl.variant;
 
 import com.google.common.collect.ImmutableMap;
 import tocraft.walkers.api.variant.TypeProvider;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.passive.CatEntity;
-import net.minecraft.text.MutableText;
-import net.minecraft.text.Text;
-import net.minecraft.registry.Registries;
-import net.minecraft.world.World;
-
 import java.util.Map;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.animal.Cat;
+import net.minecraft.world.level.Level;
 
-public class CatTypeProvider extends TypeProvider<CatEntity> {
+public class CatTypeProvider extends TypeProvider<Cat> {
 
     private static final Map<Integer, String> PREFIX_BY_ID = ImmutableMap
             .<Integer, String>builder()
@@ -29,14 +28,14 @@ public class CatTypeProvider extends TypeProvider<CatEntity> {
             .build();
 
     @Override
-    public int getVariantData(CatEntity entity) {
-        return Registries.CAT_VARIANT.getRawId(entity.getVariant());
+    public int getVariantData(Cat entity) {
+        return BuiltInRegistries.CAT_VARIANT.getId(entity.getVariant());
     }
 
     @Override
-    public CatEntity create(EntityType<CatEntity> type, World world, int data) {
-        CatEntity cat = new CatEntity(type, world);
-        cat.setVariant(Registries.CAT_VARIANT.get(data));
+    public Cat create(EntityType<Cat> type, Level world, int data) {
+        Cat cat = new Cat(type, world);
+        cat.setVariant(BuiltInRegistries.CAT_VARIANT.byId(data));
         return cat;
     }
 
@@ -51,8 +50,8 @@ public class CatTypeProvider extends TypeProvider<CatEntity> {
     }
 
     @Override
-    public Text modifyText(CatEntity cat, MutableText text) {
+    public Component modifyText(Cat cat, MutableComponent text) {
         int variant = getVariantData(cat);
-        return Text.literal(PREFIX_BY_ID.containsKey(variant) ? PREFIX_BY_ID.get(variant) + " " : "").append(text);
+        return Component.literal(PREFIX_BY_ID.containsKey(variant) ? PREFIX_BY_ID.get(variant) + " " : "").append(text);
     }
 }

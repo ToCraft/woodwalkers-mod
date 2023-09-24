@@ -1,14 +1,15 @@
 package tocraft.walkers.mixin.accessor;
 
-import net.minecraft.client.gui.Selectable;
-import net.minecraft.client.gui.screen.Screen;
+import java.util.List;
+
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Accessor;
 
-import java.util.List;
+import net.minecraft.client.gui.narration.NarratableEntry;
+import net.minecraft.client.gui.screens.Screen;
 
 @Mixin(Screen.class)
 public interface ScreenAccessor {
-    @Accessor
-    List<Selectable> getSelectables();
+	@Accessor("narratables")
+	List<NarratableEntry> getSelectables();
 }

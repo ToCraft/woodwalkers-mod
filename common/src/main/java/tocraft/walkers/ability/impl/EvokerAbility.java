@@ -1,24 +1,24 @@
 package tocraft.walkers.ability.impl;
 
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.entity.monster.Evoker;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.EvokerFangs;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.Vec3;
 import tocraft.walkers.ability.WalkersAbility;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.mob.EvokerEntity;
-import net.minecraft.entity.mob.EvokerFangsEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.Items;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.World;
 
-public class EvokerAbility extends WalkersAbility<EvokerEntity> {
+public class EvokerAbility extends WalkersAbility<Evoker> {
 
     @Override
-    public void onUse(PlayerEntity player, EvokerEntity shape, World world) {
+    public void onUse(Player player, Evoker shape, Level world) {
         // Spawn 8 Evoker Fangs out from the player.
-        Vec3d origin = player.getPos();
-        Vec3d facing = player.getRotationVector().multiply(1, 0, 1); // fangs should not go up/down based on pitch
+        Vec3 origin = player.position();
+        Vec3 facing = player.getLookAngle().multiply(1, 0, 1); // fangs should not go up/down based on pitch
 
         // Iterate out 5 blocks
         for(int blockOut = 0; blockOut < 8; blockOut++) {
@@ -29,30 +29,30 @@ public class EvokerAbility extends WalkersAbility<EvokerEntity> {
             // If we cannot go up or down 1 block (or stay at the same level), the chain ends.
 
             // If the block underneath is solid, we are good to go.
-            EvokerFangsEntity fangs = new EvokerFangsEntity(world, origin.getX(), origin.getY(), origin.getZ(), player.getYaw(), blockOut * 2, player);
-            BlockPos underneathPosition = BlockPos.ofFloored(origin).down();
+            EvokerFangs fangs = new EvokerFangs(world, origin.x(), origin.y(), origin.z(), player.getYRot(), blockOut * 2, player);
+            BlockPos underneathPosition = BlockPos.containing(origin).below();
             BlockState underneath = world.getBlockState(underneathPosition);
-            if(underneath.isSideSolidFullSquare(world, underneathPosition, Direction.UP) && world.isAir(underneathPosition.up())) {
-                world.spawnEntity(fangs);
+            if(underneath.isFaceSturdy(world, underneathPosition, Direction.UP) && world.isEmptyBlock(underneathPosition.above())) {
+                world.addFreshEntity(fangs);
                 continue;
             }
 
             // Check underneath (2x down) again...
-            BlockPos underneath2Position = BlockPos.ofFloored(origin).down(2);
+            BlockPos underneath2Position = BlockPos.containing(origin).below(2);
             BlockState underneath2 = world.getBlockState(underneath2Position);
-            if(underneath2.isSideSolidFullSquare(world, underneath2Position, Direction.UP) && world.isAir(underneath2Position.up())) {
-                fangs.setPos(fangs.getX(), fangs.getY() - 1, fangs.getZ());
-                world.spawnEntity(fangs);
+            if(underneath2.isFaceSturdy(world, underneath2Position, Direction.UP) && world.isEmptyBlock(underneath2Position.above())) {
+                fangs.setPosRaw(fangs.getX(), fangs.getY() - 1, fangs.getZ());
+                world.addFreshEntity(fangs);
                 origin = origin.add(0, -1, 0);
                 continue;
             }
 
             // Check above (1x up)
-            BlockPos upPosition = BlockPos.ofFloored(origin).up();
+            BlockPos upPosition = BlockPos.containing(origin).above();
             BlockState up = world.getBlockState(underneath2Position);
-            if(up.isSideSolidFullSquare(world, upPosition, Direction.UP) && world.isAir(upPosition)) {
-                fangs.setPos(fangs.getX(), fangs.getY() + 1, fangs.getZ());
-                world.spawnEntity(fangs);
+            if(up.isFaceSturdy(world, upPosition, Direction.UP) && world.isEmptyBlock(upPosition)) {
+                fangs.setPosRaw(fangs.getX(), fangs.getY() + 1, fangs.getZ());
+                world.addFreshEntity(fangs);
                 origin = origin.add(0, 1, 0);
                 continue;
             }

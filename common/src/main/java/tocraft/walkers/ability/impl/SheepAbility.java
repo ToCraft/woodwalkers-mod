@@ -1,37 +1,37 @@
 package tocraft.walkers.ability.impl;
 
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.entity.animal.Sheep;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
 import tocraft.walkers.ability.WalkersAbility;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.passive.SheepEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.Items;
-import net.minecraft.registry.Registries;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
 
-public class SheepAbility extends WalkersAbility<SheepEntity> {
+public class SheepAbility extends WalkersAbility<Sheep> {
 
     @Override
-    public void onUse(PlayerEntity player, SheepEntity shape, World world) {
-        BlockPos playerPos = player.getBlockPos();
+    public void onUse(Player player, Sheep shape, Level world) {
+        BlockPos playerPos = player.blockPosition();
         BlockPos blockPos = new BlockPos(playerPos.getX(), playerPos.getY()-1, playerPos.getZ());
 
-        if ((world.getBlockState(playerPos).getBlock() == Registries.BLOCK.get(new Identifier("minecraft:grass")) || world.getBlockState(playerPos).getBlock() == Registries.BLOCK.get(new Identifier("minecraft:tall_grass")))) {
-            BlockState defaultAirBlockState =  Registries.BLOCK.get(new Identifier("minecraft:air")).getDefaultState();
-            world.setBlockState(playerPos, defaultAirBlockState);
-            player.getHungerManager().add(2, 0.1F);
+        if ((world.getBlockState(playerPos).getBlock() == BuiltInRegistries.BLOCK.get(new ResourceLocation("minecraft:grass")) || world.getBlockState(playerPos).getBlock() == BuiltInRegistries.BLOCK.get(new ResourceLocation("minecraft:tall_grass")))) {
+            BlockState defaultAirBlockState =  BuiltInRegistries.BLOCK.get(new ResourceLocation("minecraft:air")).defaultBlockState();
+            world.setBlockAndUpdate(playerPos, defaultAirBlockState);
+            player.getFoodData().eat(2, 0.1F);
         }
-        else if (world.getBlockState(blockPos).getBlock() == Registries.BLOCK.get(new Identifier("minecraft:grass_block"))) {
-            BlockState defaultDirtBlockState =  Registries.BLOCK.get(new Identifier("minecraft:dirt")).getDefaultState();
-            world.setBlockState(blockPos, defaultDirtBlockState);
-            player.getHungerManager().add(3, 0.1F);
+        else if (world.getBlockState(blockPos).getBlock() == BuiltInRegistries.BLOCK.get(new ResourceLocation("minecraft:grass_block"))) {
+            BlockState defaultDirtBlockState =  BuiltInRegistries.BLOCK.get(new ResourceLocation("minecraft:dirt")).defaultBlockState();
+            world.setBlockAndUpdate(blockPos, defaultDirtBlockState);
+            player.getFoodData().eat(3, 0.1F);
         }
 
-        world.playSoundFromEntity(null, player, SoundEvents.ENTITY_SHEEP_STEP, SoundCategory.PLAYERS, 1.0F, (world.random.nextFloat() - world.random.nextFloat()) * 0.2F + 1.0F);
+        world.playSound(null, player, SoundEvents.SHEEP_STEP, SoundSource.PLAYERS, 1.0F, (world.random.nextFloat() - world.random.nextFloat()) * 0.2F + 1.0F);
     }
 
     @Override

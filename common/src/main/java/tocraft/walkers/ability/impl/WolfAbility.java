@@ -1,43 +1,45 @@
 package tocraft.walkers.ability.impl;
 
+import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.entity.animal.Wolf;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.Level;
 import tocraft.walkers.ability.WalkersAbility;
-import net.minecraft.entity.passive.WolfEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.Items;
-import net.minecraft.world.World;
 import tocraft.walkers.api.PlayerShape;
 import tocraft.walkers.mixin.EntityTrackerAccessor;
 import tocraft.walkers.mixin.ThreadedAnvilChunkStorageAccessor;
-import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvents;
 
-public class WolfAbility extends WalkersAbility<WolfEntity> {
+public class WolfAbility extends WalkersAbility<Wolf> {
 
-    @Override
-    public void onUse(PlayerEntity player, WolfEntity shape, World world) {
-        if (shape.hasAngerTime()) {
-            shape.stopAnger();
-            world.playSoundFromEntity(null, player, SoundEvents.ENTITY_WOLF_PANT, SoundCategory.PLAYERS, 1.0F, (world.random.nextFloat() - world.random.nextFloat()) * 0.2F + 1.0F);
-        }
-        else
-            shape.chooseRandomAngerTime();
+	@Override
+	public void onUse(Player player, Wolf shape, Level world) {
+		if (shape.isAngry()) {
+			shape.stopBeingAngry();
+			world.playSound(null, player, SoundEvents.WOLF_PANT, SoundSource.PLAYERS, 1.0F,
+					(world.random.nextFloat() - world.random.nextFloat()) * 0.2F + 1.0F);
+		} else
+			shape.startPersistentAngerTimer();
 
-        if (!world.isClient()) {
-            Int2ObjectMap<Object> trackers = ((ThreadedAnvilChunkStorageAccessor) ((ServerWorld) world).getChunkManager().threadedAnvilChunkStorage).getEntityTrackers();
-            Object tracking = trackers.get(player.getId());
-            ((EntityTrackerAccessor) tracking).getListeners().forEach(listener -> {
-                PlayerShape.sync((ServerPlayerEntity) player, listener.getPlayer());
-            });
-            world.playSoundFromEntity(null, player, SoundEvents.ENTITY_WOLF_GROWL, SoundCategory.PLAYERS, 1.0F, (world.random.nextFloat() - world.random.nextFloat()) * 0.2F + 1.0F);
-        }
-    }
+		if (!world.isClientSide()) {
+			Int2ObjectMap<Object> trackers = ((ThreadedAnvilChunkStorageAccessor) ((ServerLevel) world)
+					.getChunkSource().chunkMap).getEntityMap();
+			Object tracking = trackers.get(player.getId());
+			((EntityTrackerAccessor) tracking).getSeenBy().forEach(listener -> {
+				PlayerShape.sync((ServerPlayer) player, listener.getPlayer());
+			});
+			world.playSound(null, player, SoundEvents.WOLF_GROWL, SoundSource.PLAYERS, 1.0F,
+					(world.random.nextFloat() - world.random.nextFloat()) * 0.2F + 1.0F);
+		}
+	}
 
-    @Override
-    public Item getIcon() {
-        return Items.RED_DYE;
-    }
+	@Override
+	public Item getIcon() {
+		return Items.RED_DYE;
+	}
 }

@@ -1,32 +1,32 @@
 package tocraft.walkers.ability.impl;
 
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.entity.monster.Blaze;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.SmallFireball;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.Level;
 import tocraft.walkers.ability.WalkersAbility;
-import net.minecraft.entity.mob.BlazeEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.projectile.SmallFireballEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.Items;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.world.World;
 
-public class BlazeAbility extends WalkersAbility<BlazeEntity> {
+public class BlazeAbility extends WalkersAbility<Blaze> {
 
     @Override
-    public void onUse(PlayerEntity player, BlazeEntity shape, World world) {
-        SmallFireballEntity smallFireball = new SmallFireballEntity(
+    public void onUse(Player player, Blaze shape, Level world) {
+        SmallFireball smallFireball = new SmallFireball(
                 world,
                 player.getX(),
                 player.getEyeY(),
                 player.getZ(),
-                player.getRotationVector().x,
-                player.getRotationVector().y,
-                player.getRotationVector().z
+                player.getLookAngle().x,
+                player.getLookAngle().y,
+                player.getLookAngle().z
         );
 
         smallFireball.setOwner(player);
-        world.spawnEntity(smallFireball);
-        world.playSoundFromEntity(null, player, SoundEvents.ENTITY_BLAZE_SHOOT, SoundCategory.HOSTILE, 2.0F, (world.random.nextFloat() - world.random.nextFloat()) * 0.2F + 1.0F);
+        world.addFreshEntity(smallFireball);
+        world.playSound(null, player, SoundEvents.BLAZE_SHOOT, SoundSource.HOSTILE, 2.0F, (world.random.nextFloat() - world.random.nextFloat()) * 0.2F + 1.0F);
     }
 
     @Override

@@ -8,50 +8,50 @@ import tocraft.walkers.impl.PlayerDataProvider;
 import tocraft.walkers.network.ClientNetworking;
 import tocraft.walkers.network.NetworkHandler;
 import io.netty.buffer.Unpooled;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.Identifier;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
 import org.jetbrains.annotations.Nullable;
 
 public class DevSwapPackets {
 
     public static void registerDevRequestPacketHandler() {
         NetworkManager.registerReceiver(NetworkManager.Side.C2S, NetworkHandler.DEV_SHAPE_REQUEST, (buf, context) -> {
-            Identifier id = buf.readIdentifier();
+            ResourceLocation id = buf.readResourceLocation();
 
             context.getPlayer().getServer().execute(() -> {
-                NbtCompound nbt = new NbtCompound();
+                CompoundTag nbt = new CompoundTag();
                 nbt.putBoolean("isDev", true);
                 nbt.putString("id", id.toString());
-                ServerWorld serverWorld = ((ServerPlayerEntity) context.getPlayer()).getServerWorld();
-                Entity created = EntityType.loadEntityWithPassengers(nbt, serverWorld, it -> it);
+                ServerLevel serverWorld = ((ServerPlayer) context.getPlayer()).serverLevel();
+                Entity created = EntityType.loadEntityRecursive(nbt, serverWorld, it -> it);
         
                 if(created instanceof LivingEntity living) {
                     @Nullable ShapeType<?> defaultType = ShapeType.from(living);
         
                     if(defaultType != null) {
                         if(((PlayerDataProvider)context.getPlayer()).get2ndShape() != null && defaultType.getEntityType() == ((PlayerDataProvider)context.getPlayer()).get2ndShape().getEntityType())
-                            PlayerShape.updateShapes((ServerPlayerEntity) context.getPlayer(), defaultType, (LivingEntity) created);
+                            PlayerShape.updateShapes((ServerPlayer) context.getPlayer(), defaultType, (LivingEntity) created);
                         else if (WalkersConfig.getInstance().devShapeIsThirdShape())
-                            PlayerShape.updateShapes((ServerPlayerEntity) context.getPlayer(), defaultType, (LivingEntity) created);
+                            PlayerShape.updateShapes((ServerPlayer) context.getPlayer(), defaultType, (LivingEntity) created);
                     }
                 }
                 
                 // Refresh player dimensions
-                context.getPlayer().calculateDimensions();
+                context.getPlayer().refreshDimensions();
             });
         });
     }
 
-    public static void sendDevSwapRequest(Identifier id) {
-        PacketByteBuf packet = new PacketByteBuf(Unpooled.buffer());
+    public static void sendDevSwapRequest(ResourceLocation id) {
+        FriendlyByteBuf packet = new FriendlyByteBuf(Unpooled.buffer());
 
-        packet.writeIdentifier(id);
+        packet.writeResourceLocation(id);
 
         NetworkManager.sendToServer(ClientNetworking.DEV_SHAPE_REQUEST, packet);
     }

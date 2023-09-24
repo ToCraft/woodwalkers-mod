@@ -1,14 +1,14 @@
 package tocraft.walkers.impl.variant;
 
 import com.google.common.collect.ImmutableMap;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.animal.Parrot;
+import net.minecraft.world.level.Level;
 import tocraft.walkers.api.variant.TypeProvider;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.passive.ParrotEntity;
-import net.minecraft.text.MutableText;
-import net.minecraft.text.Text;
-import net.minecraft.world.World;
 
-public class ParrotTypeProvider extends TypeProvider<ParrotEntity> {
+public class ParrotTypeProvider extends TypeProvider<Parrot> {
 
     private static final ImmutableMap<Integer, String> PREFIX_BY_ID = ImmutableMap
             .<Integer, String>builder()
@@ -20,14 +20,14 @@ public class ParrotTypeProvider extends TypeProvider<ParrotEntity> {
             .build();
 
     @Override
-    public int getVariantData(ParrotEntity entity) {
+    public int getVariantData(Parrot entity) {
         return entity.getVariant().getId();
     }
 
     @Override
-    public ParrotEntity create(EntityType<ParrotEntity> type, World world, int data) {
-        ParrotEntity parrot = new ParrotEntity(type, world);
-        parrot.setVariant(ParrotEntity.Variant.byIndex(data));
+    public Parrot create(EntityType<Parrot> type, Level world, int data) {
+        Parrot parrot = new Parrot(type, world);
+        parrot.setVariant(Parrot.Variant.byId(data));
         return parrot;
     }
 
@@ -42,8 +42,8 @@ public class ParrotTypeProvider extends TypeProvider<ParrotEntity> {
     }
 
     @Override
-    public Text modifyText(ParrotEntity parrot, MutableText text) {
+    public Component modifyText(Parrot parrot, MutableComponent text) {
         int variant = getVariantData(parrot);
-        return Text.literal(PREFIX_BY_ID.containsKey(variant) ? PREFIX_BY_ID.get(variant) + " " : "").append(text);
+        return Component.literal(PREFIX_BY_ID.containsKey(variant) ? PREFIX_BY_ID.get(variant) + " " : "").append(text);
     }
 }

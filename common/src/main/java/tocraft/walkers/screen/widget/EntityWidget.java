@@ -3,22 +3,20 @@ package tocraft.walkers.screen.widget;
 import tocraft.walkers.api.variant.ShapeType;
 import tocraft.walkers.network.impl.SwapPackets;
 import tocraft.walkers.screen.WalkersScreen;
-
+import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.systems.RenderSystem;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.AbstractButton;
+import net.minecraft.client.gui.components.Tooltip;
+import net.minecraft.client.gui.narration.NarrationElementOutput;
+import net.minecraft.client.gui.screens.inventory.InventoryScreen;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.LivingEntity;
 
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.screen.ingame.InventoryScreen;
-import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
-import net.minecraft.client.gui.tooltip.Tooltip;
-import net.minecraft.client.gui.widget.PressableWidget;
-import net.minecraft.client.render.DiffuseLighting;
-import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.render.entity.EntityRenderDispatcher;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.text.Text;
-
-public class EntityWidget<T extends LivingEntity> extends PressableWidget {
+public class EntityWidget<T extends LivingEntity> extends AbstractButton {
 
     private final ShapeType<T> type;
     private final T entity;
@@ -27,13 +25,13 @@ public class EntityWidget<T extends LivingEntity> extends PressableWidget {
     private boolean crashed;
 
     public EntityWidget(float x, float y, float width, float height, ShapeType<T> type, T entity, WalkersScreen parent) {
-        super((int) x, (int) y, (int) width, (int) height, Text.of("")); // int x, int y, int width, int height, message
+        super((int) x, (int) y, (int) width, (int) height, Component.nullToEmpty("")); // int x, int y, int width, int height, message
         this.type = type;
         this.entity = entity;
-        size = (int) (25 * (1 / (Math.max(entity.getHeight(), entity.getWidth()))));
-        entity.setGlowing(true);
+        size = (int) (25 * (1 / (Math.max(entity.getBbHeight(), entity.getBbWidth()))));
+        entity.setGlowingTag(true);
         this.parent = parent;
-        setTooltip(Tooltip.of(type.createTooltipText(entity)));
+        setTooltip(Tooltip.create(type.createTooltipText(entity)));
     }
 
     @Override
@@ -44,34 +42,34 @@ public class EntityWidget<T extends LivingEntity> extends PressableWidget {
             SwapPackets.sendSwapRequest(type, true);
             parent.disableAll();
             // close active screen handler
-            parent.close();
+            parent.onClose();
         }
         return super.mouseClicked(mouseX, mouseY, button);
     }
 
     @Override
-    public void render(DrawContext context, int mouseX, int mouseY, float delta) {
+    public void render(GuiGraphics context, int mouseX, int mouseY, float delta) {
         super.render(context, mouseX, mouseY, delta);
 
         if(!crashed) {
             // Some entities (namely Aether mobs) crash when rendered in a GUI.
             // Unsure as to the cause, but this try/catch should prevent the game from entirely dipping out.
             try {
-                InventoryScreen.drawEntity(context, this.getX() + this.getWidth() / 2, (int) (this.getY() + this.getHeight() * .75f), size, -10, -10, entity);
+                InventoryScreen.renderEntityInInventoryFollowsMouse(context, this.getX() + this.getWidth() / 2, (int) (this.getY() + this.getHeight() * .75f), size, -10, -10, entity);
             } catch (Exception ignored) {
                 crashed = true;
-                VertexConsumerProvider.Immediate immediate = MinecraftClient.getInstance().getBufferBuilders().getEntityVertexConsumers();
-                immediate.draw();
-                EntityRenderDispatcher entityRenderDispatcher = MinecraftClient.getInstance().getEntityRenderDispatcher();
-                entityRenderDispatcher.setRenderShadows(true);
-                RenderSystem.getModelViewStack().pop();
-                DiffuseLighting.enableGuiDepthLighting();
+                MultiBufferSource.BufferSource immediate = Minecraft.getInstance().renderBuffers().bufferSource();
+                immediate.endBatch();
+                EntityRenderDispatcher entityRenderDispatcher = Minecraft.getInstance().getEntityRenderDispatcher();
+                entityRenderDispatcher.setRenderShadow(true);
+                RenderSystem.getModelViewStack().popPose();
+                Lighting.setupFor3DItems();
             }
         }
     }
 
     @Override
-    public void renderButton(DrawContext context, int mouseX, int mouseY, float delta) {
+    public void renderWidget(GuiGraphics context, int mouseX, int mouseY, float delta) {
 
     }
 
@@ -85,7 +83,7 @@ public class EntityWidget<T extends LivingEntity> extends PressableWidget {
     }
 
     @Override
-public void appendClickableNarrations(NarrationMessageBuilder builder) {
+public void updateWidgetNarration(NarrationElementOutput builder) {
 
     }
 }

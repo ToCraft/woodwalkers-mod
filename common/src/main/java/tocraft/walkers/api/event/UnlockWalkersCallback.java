@@ -3,11 +3,11 @@ package tocraft.walkers.api.event;
 import dev.architectury.event.Event;
 import dev.architectury.event.EventFactory;
 import dev.architectury.event.EventResult;
+import net.minecraft.server.level.ServerPlayer;
 import tocraft.walkers.api.variant.ShapeType;
-import net.minecraft.server.network.ServerPlayerEntity;
 
 public interface UnlockWalkersCallback {
     Event<UnlockWalkersCallback> EVENT = EventFactory.createEventResult(UnlockWalkersCallback.class);
 
-    EventResult unlock(ServerPlayerEntity player, ShapeType type);
+    EventResult unlock(ServerPlayer player, ShapeType type);
 }

@@ -1,9 +1,9 @@
 package tocraft.walkers.registry;
 
+import net.minecraft.core.registries.Registries;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.entity.EntityType;
 import tocraft.walkers.Walkers;
-import net.minecraft.entity.EntityType;
-import net.minecraft.registry.tag.TagKey;
-import net.minecraft.registry.RegistryKeys;
 
 public class WalkersEntityTags {
 
@@ -20,6 +20,6 @@ public class WalkersEntityTags {
     public static final TagKey<EntityType<?>> UNDROWNABLE = register("undrownable");
 
     private static TagKey<EntityType<?>> register(String id) {
-        return TagKey.of(RegistryKeys.ENTITY_TYPE, Walkers.id(id));
+        return TagKey.create(Registries.ENTITY_TYPE, Walkers.id(id));
     }
 }

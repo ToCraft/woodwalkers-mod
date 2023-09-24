@@ -3,43 +3,43 @@ package tocraft.walkers.mixin;
 import tocraft.walkers.api.PlayerShape;
 import tocraft.walkers.api.platform.WalkersConfig;
 import tocraft.walkers.registry.WalkersEntityTags;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.ai.goal.ActiveTargetGoal;
-import net.minecraft.entity.passive.TameableEntity;
-import net.minecraft.entity.passive.WolfEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.world.World;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.TamableAnimal;
+import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
+import net.minecraft.world.entity.animal.Wolf;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import net.minecraft.entity.data.DataTracker;
-import net.minecraft.entity.data.TrackedData;
-import net.minecraft.entity.data.TrackedDataHandlerRegistry;
-import net.minecraft.nbt.NbtCompound;
 
-@Mixin(WolfEntity.class)
-public abstract class WolfEntityMixin extends TameableEntity {
+@Mixin(Wolf.class)
+public abstract class WolfEntityMixin extends TamableAnimal {
 
-    private WolfEntityMixin(EntityType<? extends TameableEntity> entityType, World world) {
+    private WolfEntityMixin(EntityType<? extends TamableAnimal> entityType, Level world) {
         super(entityType, world);
     }
-    private static final TrackedData<Boolean> isDev =
-        DataTracker.registerData(WolfEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
+    private static final EntityDataAccessor<Boolean> isDev =
+        SynchedEntityData.defineId(Wolf.class, EntityDataSerializers.BOOLEAN);
 
     @Inject(
-            method = "initGoals",
+            method = "registerGoals",
             at = @At("RETURN")
     )
     private void addPlayerTarget(CallbackInfo ci) {
-        this.targetSelector.add(7, new ActiveTargetGoal<>(this, PlayerEntity.class, 10, false, false, player -> {
+        this.targetSelector.addGoal(7, new NearestAttackableTargetGoal<>(this, Player.class, 10, false, false, player -> {
             // ensure wolves can attack players with a shape similar to their normal prey
             if(!WalkersConfig.getInstance().wolvesAttack2ndShapedPrey()) {
                 return false;
             }
 
-            LivingEntity shape = PlayerShape.getCurrentShape((PlayerEntity) player);
+            LivingEntity shape = PlayerShape.getCurrentShape((Player) player);
 
             // wolves should ignore players that look like their prey if they have an owner,
             // unless the config option is turned to true
@@ -48,31 +48,31 @@ public abstract class WolfEntityMixin extends TameableEntity {
                 return false;
             }
 
-            return shape != null && shape.getType().isIn(WalkersEntityTags.WOLF_PREY);
+            return shape != null && shape.getType().is(WalkersEntityTags.WOLF_PREY);
         }));
     }
 
     @Inject(
-        method = "initDataTracker",
+        method = "defineSynchedData",
         at = @At("RETURN")
     )
     protected void onInitDataTracker(CallbackInfo ci) {
-        ((WolfEntity)(Object)this).getDataTracker().startTracking(isDev, false);
+        ((Wolf)(Object)this).getEntityData().define(isDev, false);
     }
 
     @Inject(
-        method = "writeCustomDataToNbt",
+        method = "addAdditionalSaveData",
         at = @At("RETURN")
     )
-    protected void onWriteCustomDataToNbt(NbtCompound nbt, CallbackInfo ci) {
-        nbt.putBoolean("isDev", ((WolfEntity)(Object)this).getDataTracker().get(isDev));
+    protected void onWriteCustomDataToNbt(CompoundTag nbt, CallbackInfo ci) {
+        nbt.putBoolean("isDev", ((Wolf)(Object)this).getEntityData().get(isDev));
     }
 
     @Inject(
-        method = "readCustomDataFromNbt",
+        method = "readAdditionalSaveData",
         at = @At("RETURN")
     )
-    protected void onReadCustomDataFromNbt(NbtCompound nbt, CallbackInfo ci) {
-        ((WolfEntity)(Object)this).getDataTracker().set(isDev, nbt.getBoolean("isDev"));
+    protected void onReadCustomDataFromNbt(CompoundTag nbt, CallbackInfo ci) {
+        ((Wolf)(Object)this).getEntityData().set(isDev, nbt.getBoolean("isDev"));
     }
 }

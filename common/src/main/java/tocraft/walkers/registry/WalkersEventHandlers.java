@@ -2,12 +2,12 @@ package tocraft.walkers.registry;
 
 import dev.architectury.event.EventResult;
 import dev.architectury.event.events.common.InteractionEvent;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.monster.Monster;
+import net.minecraft.world.entity.monster.Ravager;
 import tocraft.walkers.api.PlayerHostility;
 import tocraft.walkers.api.PlayerShape;
 import tocraft.walkers.api.platform.WalkersConfig;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.mob.HostileEntity;
-import net.minecraft.entity.mob.RavagerEntity;
 
 public class WalkersEventHandlers {
 
@@ -18,7 +18,7 @@ public class WalkersEventHandlers {
 
     public static void registerHostilityUpdateHandler() {
         InteractionEvent.INTERACT_ENTITY.register((player, entity, hand) -> {
-            if(!player.getWorld().isClient && entity instanceof HostileEntity) {
+            if(!player.level().isClientSide && entity instanceof Monster) {
                 PlayerHostility.set(player, WalkersConfig.getInstance().hostilityTime());
             }
 
@@ -30,10 +30,10 @@ public class WalkersEventHandlers {
     //   be able to ride Ravagers.
     public static void registerRavagerRidingHandler() {
         InteractionEvent.INTERACT_ENTITY.register((player, entity, hand) -> {
-            if(entity instanceof RavagerEntity) {
+            if(entity instanceof Ravager) {
                 LivingEntity shape = PlayerShape.getCurrentShape(player);
                 if(shape != null) {
-                    if(shape.getType().isIn(WalkersEntityTags.RAVAGER_RIDING)) {
+                    if(shape.getType().is(WalkersEntityTags.RAVAGER_RIDING)) {
                         player.startRiding(entity);
                     }
                 }

@@ -8,15 +8,15 @@ import tocraft.walkers.impl.DimensionsRefresher;
 import tocraft.walkers.impl.PlayerDataProvider;
 import tocraft.walkers.network.impl.UnlockPackets;
 import io.netty.buffer.Unpooled;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.network.PacketByteBuf;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 import java.util.UUID;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
 
 public class ClientNetworking implements NetworkHandler {
 
@@ -36,16 +36,16 @@ public class ClientNetworking implements NetworkHandler {
     }
 
     public static void sendAbilityRequest() {
-        NetworkManager.sendToServer(USE_ABILITY, new PacketByteBuf(Unpooled.buffer()));
+        NetworkManager.sendToServer(USE_ABILITY, new FriendlyByteBuf(Unpooled.buffer()));
     }
 
-    public static void handleWalkersSyncPacket(PacketByteBuf packet, NetworkManager.PacketContext context) {
-        final UUID uuid = packet.readUuid();
-        final String id = packet.readString();
-        final NbtCompound entityNbt = packet.readNbt();
+    public static void handleWalkersSyncPacket(FriendlyByteBuf packet, NetworkManager.PacketContext context) {
+        final UUID uuid = packet.readUUID();
+        final String id = packet.readUtf();
+        final CompoundTag entityNbt = packet.readNbt();
 
         runOrQueue(context, player -> {
-            @Nullable PlayerEntity syncTarget = player.getEntityWorld().getPlayerByUuid(uuid);
+            @Nullable Player syncTarget = player.getCommandSenderWorld().getPlayerByUUID(uuid);
 
             if(syncTarget != null) {
                 PlayerDataProvider data = (PlayerDataProvider) syncTarget;
@@ -60,13 +60,13 @@ public class ClientNetworking implements NetworkHandler {
                 // If entity type was valid, deserialize entity data from tag/
                 if(entityNbt != null) {
                     entityNbt.putString("id", id);
-                    Optional<EntityType<?>> type = EntityType.fromNbt(entityNbt);
+                    Optional<EntityType<?>> type = EntityType.by(entityNbt);
                     if(type.isPresent()) {
                         LivingEntity shape = data.getCurrentShape();
 
                         // ensure entity data exists
                         if(shape == null || !type.get().equals(shape.getType())) {
-                            shape = (LivingEntity) type.get().create(syncTarget.getWorld());
+                            shape = (LivingEntity) type.get().create(syncTarget.level());
                             data.setCurrentShape(shape);
 
                             // refresh player dimensions/hitbox on client
@@ -74,7 +74,7 @@ public class ClientNetworking implements NetworkHandler {
                         }
 
                         if(shape != null) {
-                            shape.readNbt(entityNbt);
+                            shape.load(entityNbt);
                         }
                     }
                 }
@@ -82,17 +82,17 @@ public class ClientNetworking implements NetworkHandler {
         });
     }
 
-    public static void handleAbilitySyncPacket(PacketByteBuf packet, NetworkManager.PacketContext context) {
+    public static void handleAbilitySyncPacket(FriendlyByteBuf packet, NetworkManager.PacketContext context) {
         int cooldown = packet.readInt();
         runOrQueue(context, player -> ((PlayerDataProvider) player).setAbilityCooldown(cooldown));
     }
 
-    public static void handleConfigurationSyncPacket(PacketByteBuf packet, NetworkManager.PacketContext context) {
+    public static void handleConfigurationSyncPacket(FriendlyByteBuf packet, NetworkManager.PacketContext context) {
         boolean showPlayerNametag = packet.readBoolean();
         boolean enableUnlockSystem = packet.readBoolean();
         float unlockTimer = packet.readFloat();
         boolean unlockOveridesCurrentShape = packet.readBoolean();
-        String NewShapeBlacklistString = packet.readString();
+        String NewShapeBlacklistString = packet.readUtf();
 
         SyncedVars.setShowPlayerNametag(showPlayerNametag);
         SyncedVars.setEnableUnlockSystem(enableUnlockSystem);

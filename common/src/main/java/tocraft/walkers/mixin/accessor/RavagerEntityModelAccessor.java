@@ -1,11 +1,11 @@
 package tocraft.walkers.mixin.accessor;
 
-import net.minecraft.client.model.ModelPart;
-import net.minecraft.client.render.entity.model.RavagerEntityModel;
+import net.minecraft.client.model.RavagerModel;
+import net.minecraft.client.model.geom.ModelPart;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Accessor;
 
-@Mixin(RavagerEntityModel.class)
+@Mixin(RavagerModel.class)
 public interface RavagerEntityModelAccessor {
     @Accessor
     ModelPart getRightFrontLeg();

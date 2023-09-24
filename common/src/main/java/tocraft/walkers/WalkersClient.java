@@ -1,5 +1,6 @@
 package tocraft.walkers;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import dev.architectury.event.events.client.ClientPlayerEvent;
 import dev.architectury.event.events.client.ClientTickEvent;
 import dev.architectury.registry.client.keymappings.KeyMappingRegistry;
@@ -10,36 +11,35 @@ import tocraft.walkers.api.model.EntityUpdaters;
 import tocraft.walkers.impl.join.ClientPlayerJoinHandler;
 import tocraft.walkers.impl.tick.KeyPressHandler;
 import tocraft.walkers.network.ClientNetworking;
-import net.minecraft.client.option.KeyBinding;
-import net.minecraft.client.util.InputUtil;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.HashSet;
 import java.util.Set;
+import net.minecraft.client.KeyMapping;
 
 public class WalkersClient {
-    public static final KeyBinding UNLOCK_KEY =
-    new KeyBinding(
+    public static final KeyMapping UNLOCK_KEY =
+    new KeyMapping(
         "key.walkers_unlock",
-        InputUtil.Type.KEYSYM,
+        InputConstants.Type.KEYSYM,
         GLFW.GLFW_KEY_U,
         "key.categories.walkers");
-    public static final KeyBinding TRANSFORM_KEY =
-        new KeyBinding(
+    public static final KeyMapping TRANSFORM_KEY =
+        new KeyMapping(
             "key.walkers",
-            InputUtil.Type.KEYSYM,
+            InputConstants.Type.KEYSYM,
             GLFW.GLFW_KEY_G,
             "key.categories.walkers");
-    public static final KeyBinding MENU_KEY =
-        new KeyBinding(
+    public static final KeyMapping MENU_KEY =
+        new KeyMapping(
             "key.walkers_menu",
-            InputUtil.Type.KEYSYM,
+            InputConstants.Type.KEYSYM,
             GLFW.GLFW_KEY_GRAVE_ACCENT,
             "key.categories.walkers");
-    public static final KeyBinding ABILITY_KEY =
-        new KeyBinding(
+    public static final KeyMapping ABILITY_KEY =
+        new KeyMapping(
             "key.walkers_ability",
-            InputUtil.Type.KEYSYM,
+            InputConstants.Type.KEYSYM,
             GLFW.GLFW_KEY_R,
             "key.categories.walkers");
 

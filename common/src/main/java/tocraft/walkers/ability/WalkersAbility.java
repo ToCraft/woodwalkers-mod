@@ -1,10 +1,10 @@
 package tocraft.walkers.ability;
 
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.level.Level;
 import tocraft.walkers.Walkers;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.world.World;
 
 public abstract class WalkersAbility<E extends LivingEntity> {
     /**
@@ -14,7 +14,7 @@ public abstract class WalkersAbility<E extends LivingEntity> {
      * @param shape current shape of the player
      * @param world    world the player is residing in
      */
-    abstract public void onUse(PlayerEntity player, E shape, World world);
+    abstract public void onUse(Player player, E shape, Level world);
 
     /**
      * @return cooldown of this ability, in ticks, after it is used.

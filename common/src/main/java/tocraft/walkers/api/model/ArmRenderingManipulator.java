@@ -1,7 +1,7 @@
 package tocraft.walkers.api.model;
 
-import net.minecraft.client.util.math.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 
 public interface ArmRenderingManipulator<T> {
-    void run(MatrixStack stack, T model);
+    void run(PoseStack stack, T model);
 }
