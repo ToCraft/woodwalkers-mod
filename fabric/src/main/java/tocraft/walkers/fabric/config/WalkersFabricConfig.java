@@ -13,12 +13,6 @@ import java.util.Map;
 
 public class WalkersFabricConfig extends WalkersConfig implements Config {
 
-    @Comment(value = "Whether an overlay message appears above the hotbar when a new second shape is unlocked.")
-    public boolean overlayShapesUnlocks = true;
-
-    @Comment(value = "Whether an overlay message appears above the hotbar when a second shape is revoked.")
-    public boolean overlay2ndShapesRevokes = true;
-
     @Comment(value = "Whether a player's current shape is revoked on death.")
     public boolean revoke2ndShapeOnDeath = false;
 
@@ -162,11 +156,6 @@ public class WalkersFabricConfig extends WalkersConfig implements Config {
     }
 
     @Override
-    public boolean shouldOverlayShapesUnlocks() {
-        return overlayShapesUnlocks;
-    }
-
-    @Override
     public boolean logCommands() {
         return logCommands;
     }
@@ -189,11 +178,6 @@ public class WalkersFabricConfig extends WalkersConfig implements Config {
     @Override
     public boolean revoke2ndShapeOnDeath() {
         return revoke2ndShapeOnDeath;
-    }
-
-    @Override
-    public boolean overlay2ndShapesRevokes() {
-        return overlay2ndShapesRevokes;
     }
 
     @Override

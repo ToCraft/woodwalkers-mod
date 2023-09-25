@@ -18,8 +18,6 @@ public abstract class WalkersConfig {
 
     public abstract Map<String, Integer> getAbilityCooldownMap();
 
-    public abstract boolean shouldOverlayShapesUnlocks();
-
     public abstract boolean logCommands();
 
     public abstract boolean foxesAttack2ndShapedPrey();
@@ -29,8 +27,6 @@ public abstract class WalkersConfig {
     public abstract boolean villagersRunFrom2ndShapes();
 
     public abstract boolean revoke2ndShapeOnDeath();
-
-    public abstract boolean overlay2ndShapesRevokes();
 
     public abstract float flySpeed();
 
