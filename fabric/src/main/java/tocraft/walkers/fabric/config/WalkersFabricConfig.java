@@ -37,7 +37,7 @@ public class WalkersFabricConfig extends WalkersConfig {
 	public boolean wardenIsBlinded = true;
 	public boolean wardenBlindsNearby = true;
 	public boolean unlockOveridesCurrentShape = false;
-	public float unlockTimer = 100f;
+	public float unlockTimer = 60f;
 	public boolean devShapeIsThirdShape = false;
 
 	public Map<String, Integer> abilityCooldownMap = new HashMap<>() {
