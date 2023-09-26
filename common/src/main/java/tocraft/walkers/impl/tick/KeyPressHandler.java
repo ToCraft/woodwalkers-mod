@@ -21,93 +21,84 @@ import tocraft.walkers.impl.PlayerDataProvider;
 import tocraft.walkers.network.ClientNetworking;
 import tocraft.walkers.network.impl.DevSwapPackets;
 import tocraft.walkers.network.impl.SwapPackets;
-import tocraft.walkers.screen.WalkersHelpScreen;
-import tocraft.walkers.screen.WalkersScreen;
 
 public class KeyPressHandler implements ClientTickEvent.Client {
-    private float currentTimer = 0f;
+	private float currentTimer = 0f;
 
-    @Override
-    public void tick(Minecraft client) {
-        assert client.player != null;
+	@Override
+	public void tick(Minecraft client) {
+		assert client.player != null;
 
-        if(WalkersClient.ABILITY_KEY.consumeClick())
-            handleAbilityKey(client);
+		if (WalkersClient.ABILITY_KEY.consumeClick())
+			handleAbilityKey(client);
 
-        if(WalkersClient.MENU_KEY.consumeClick())
-            handleMenuKey(client);
+		if (WalkersClient.TRANSFORM_KEY.consumeClick()) {
+			handleTransformKey(client);
+		}
 
-        if(WalkersClient.TRANSFORM_KEY.consumeClick()) {
-            handleTransformKey(client);
-        }
+		if (WalkersClient.UNLOCK_KEY.isDown())
+			handleUnlockKey(client);
 
-        if(WalkersClient.UNLOCK_KEY.isDown()) {
-            handleUnlockKey(client);
-        }
-        else if (currentTimer != SyncedVars.getUnlockTimer())
-            currentTimer = SyncedVars.getUnlockTimer();
-    }
+		else if (currentTimer != SyncedVars.getUnlockTimer())
+			currentTimer = SyncedVars.getUnlockTimer();
+	}
 
-    private void handleAbilityKey(Minecraft client) {
-        // TODO: maybe the check should be on the server to allow for ability extension mods?
-        // Only send the ability packet if the shape equipped by the player has one
-        LivingEntity shape = PlayerShape.getCurrentShape(client.player);
+	private void handleAbilityKey(Minecraft client) {
+		// TODO: maybe the check should be on the server to allow for ability extension
+		// mods?
+		// Only send the ability packet if the shape equipped by the player has one
+		LivingEntity shape = PlayerShape.getCurrentShape(client.player);
 
-        if(shape != null) {
-            if(AbilityRegistry.has(shape.getType())) {
-                ClientNetworking.sendAbilityRequest();
-            }
-        }
-    }
+		if (shape != null) {
+			if (AbilityRegistry.has(shape.getType())) {
+				ClientNetworking.sendAbilityRequest();
+			}
+		}
+	}
 
-    private void handleMenuKey(Minecraft client) {
-        if (client.player.isShiftKeyDown() && (Walkers.devs.contains(client.player.getStringUUID()) || client.player.hasPermissions(2))) {
-            DevSwapPackets.sendDevSwapRequest(new ResourceLocation("minecraft:wolf"));
-        }
-        else {
-            if ((((PlayerDataProvider) client.player).get2ndShape() == null || SyncedVars.getUnlockOveridesCurrentShape()) && !SyncedVars.getEnableUnlockSystem())
-                Minecraft.getInstance().setScreen(new WalkersScreen());
-            else 
-                Minecraft.getInstance().setScreen(new WalkersHelpScreen());
-        }
-    }
+	private void handleTransformKey(Minecraft client) {
+		if (PlayerShape.getCurrentShape(client.player) == null)
+			SwapPackets.sendSwapRequest(((PlayerDataProvider) client.player).get2ndShape(), false);
+		else
+			SwapPackets.sendSwapRequest(null, false);
+	}
 
-    private void handleTransformKey(Minecraft client) {
-        if (PlayerShape.getCurrentShape(client.player) == null)
-            SwapPackets.sendSwapRequest(((PlayerDataProvider) client.player).get2ndShape(), false);
-        else
-            SwapPackets.sendSwapRequest(null, false);
-    }
+	private void handleUnlockKey(Minecraft client) {
+		// check dev wolf
+		if (((PlayerDataProvider) client.player).get2ndShape() != null && (client.player.isShiftKeyDown()
+				&& (Walkers.devs.contains(client.player.getStringUUID()) || client.player.hasPermissions(2)))) {
+			DevSwapPackets.sendDevSwapRequest(new ResourceLocation("minecraft:wolf"));
+			return;
+		}
 
-    private void handleUnlockKey(Minecraft client) {
-        if (SyncedVars.getEnableUnlockSystem()) {
-            HitResult hit = client.hitResult;
-            if ((((PlayerDataProvider)client.player).get2ndShape() == null || SyncedVars.getUnlockOveridesCurrentShape()) && hit instanceof EntityHitResult) {
-                Entity entityHit = ((EntityHitResult) hit).getEntity();
-                if(entityHit instanceof LivingEntity living) {
-                    @Nullable ShapeType<?> type = ShapeType.from(living);
+		HitResult hit = client.hitResult;
+		if ((((PlayerDataProvider) client.player).get2ndShape() == null || SyncedVars.getUnlockOveridesCurrentShape())
+				&& hit instanceof EntityHitResult) {
+			Entity entityHit = ((EntityHitResult) hit).getEntity();
+			if (entityHit instanceof LivingEntity living) {
+				@Nullable
+				ShapeType<?> type = ShapeType.from(living);
 
-                    // Ensures, the mob isn't on the blacklist
-                    if (!SyncedVars.getShapeBlacklist().isEmpty() && SyncedVars.getShapeBlacklist().contains(EntityType.getKey(type.getEntityType()).toString()))
-                        client.player.displayClientMessage(Component.translatable("walkers.unlock_entity_blacklisted"), true);
-                    else {
-                        if (currentTimer <= 0) {
-                            // unlock shape
-                            SwapPackets.sendSwapRequest(type, true);
-                            // send unlock message
-                            Component name = Component.translatable(type.getEntityType().getDescriptionId());
-                            client.player.displayClientMessage(Component.translatable("walkers.unlock_entity", name), true);
-                            currentTimer = SyncedVars.getUnlockTimer();
-                        }
-                        else {
-                            client.player.displayClientMessage(Component.translatable("walkers.unlock_progress"), true);
-                            currentTimer -= 1;
-                        }
-                    }
-                }
-            }
-            else
-                currentTimer = SyncedVars.getUnlockTimer();
-        }
-    }
+				// Ensures, the mob isn't on the blacklist
+				if (!SyncedVars.getShapeBlacklist().isEmpty()
+						&& SyncedVars.getShapeBlacklist().contains(EntityType.getKey(type.getEntityType()).toString()))
+					client.player.displayClientMessage(Component.translatable("walkers.unlock_entity_blacklisted"),
+							true);
+				else {
+					if (currentTimer <= 0) {
+						// unlock shape
+						SwapPackets.sendSwapRequest(type, true);
+						// send unlock message
+						Component name = Component.translatable(type.getEntityType().getDescriptionId());
+						client.player.displayClientMessage(Component.translatable("walkers.unlock_entity", name), true);
+						currentTimer = SyncedVars.getUnlockTimer();
+					} else {
+						client.player.displayClientMessage(Component.translatable("walkers.unlock_progress"), true);
+						currentTimer -= 1;
+					}
+				}
+			}
+		} else
+			currentTimer = SyncedVars.getUnlockTimer();
+	}
 }

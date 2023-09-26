@@ -61,7 +61,6 @@ public class Walkers {
 			// Send config sync packet
 			FriendlyByteBuf packet = new FriendlyByteBuf(Unpooled.buffer());
 			packet.writeBoolean(WalkersConfig.getInstance().showPlayerNametag());
-			packet.writeBoolean(WalkersConfig.getInstance().enableUnlockSystem());
 			packet.writeFloat(WalkersConfig.getInstance().unlockTimer());
 			packet.writeBoolean(WalkersConfig.getInstance().unlockOveridesCurrentShape());
 			packet.writeUtf(WalkersConfig.getInstance().shapeBlacklist().toString());

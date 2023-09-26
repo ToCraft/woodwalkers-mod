@@ -1,78 +1,76 @@
 package tocraft.walkers.api.platform;
 
-import dev.architectury.injectables.annotations.ExpectPlatform;
-
 import java.util.List;
 import java.util.Map;
 
+import dev.architectury.injectables.annotations.ExpectPlatform;
+
 public abstract class WalkersConfig {
 
-    @ExpectPlatform
-    public static WalkersConfig getInstance() {
-        throw new AssertionError();
-    }
+	@ExpectPlatform
+	public static WalkersConfig getInstance() {
+		throw new AssertionError();
+	}
 
-    public abstract boolean enableFlight();
+	public abstract boolean enableFlight();
 
-    public abstract List<String> advancementsRequiredForFlight();
+	public abstract List<String> advancementsRequiredForFlight();
 
-    public abstract Map<String, Integer> getAbilityCooldownMap();
+	public abstract Map<String, Integer> getAbilityCooldownMap();
 
-    public abstract boolean logCommands();
+	public abstract boolean logCommands();
 
-    public abstract boolean foxesAttack2ndShapedPrey();
+	public abstract boolean foxesAttack2ndShapedPrey();
 
-    public abstract boolean ownedwolvesAttack2ndShapedPrey();
+	public abstract boolean ownedwolvesAttack2ndShapedPrey();
 
-    public abstract boolean villagersRunFrom2ndShapes();
+	public abstract boolean villagersRunFrom2ndShapes();
 
-    public abstract boolean revoke2ndShapeOnDeath();
+	public abstract boolean revoke2ndShapeOnDeath();
 
-    public abstract float flySpeed();
+	public abstract float flySpeed();
 
-    public abstract boolean scalingHealth();
+	public abstract boolean scalingHealth();
 
-    public abstract boolean percentScalingHealth();
+	public abstract boolean percentScalingHealth();
 
-    public abstract int maxHealth();
+	public abstract int maxHealth();
 
-    public abstract Boolean scalingAttackDamage();
+	public abstract Boolean scalingAttackDamage();
 
-    public abstract Double maxAttackDamage();
+	public abstract Double maxAttackDamage();
 
-    public abstract boolean shapesEquipItems();
+	public abstract boolean shapesEquipItems();
 
-    public abstract boolean shapesEquipArmor();
+	public abstract boolean shapesEquipArmor();
 
-    public abstract boolean showPlayerNametag();
+	public abstract boolean showPlayerNametag();
 
-    public abstract boolean wolvesAttack2ndShapedPrey();
+	public abstract boolean wolvesAttack2ndShapedPrey();
 
-    public abstract boolean hostilesForgetNewHostileShapedPlayer();
+	public abstract boolean hostilesForgetNewHostileShapedPlayer();
 
-    public abstract boolean hostilesIgnoreHostileShapedPlayer();
+	public abstract boolean hostilesIgnoreHostileShapedPlayer();
 
-    public abstract boolean playAmbientSounds();
+	public abstract boolean playAmbientSounds();
 
-    public abstract boolean useShapeSounds();
+	public abstract boolean useShapeSounds();
 
-    public abstract boolean hearSelfAmbient();
+	public abstract boolean hearSelfAmbient();
 
-    public abstract double endermanAbilityTeleportDistance();
+	public abstract double endermanAbilityTeleportDistance();
 
-    public abstract int hostilityTime();
+	public abstract int hostilityTime();
 
-    public abstract boolean wardenIsBlinded();
+	public abstract boolean wardenIsBlinded();
 
-    public abstract boolean wardenBlindsNearby();
+	public abstract boolean wardenBlindsNearby();
 
-    public abstract boolean enableUnlockSystem();
+	public abstract float unlockTimer();
 
-    public abstract float unlockTimer();
+	public abstract boolean unlockOveridesCurrentShape();
 
-    public abstract boolean unlockOveridesCurrentShape();
+	public abstract boolean devShapeIsThirdShape();
 
-    public abstract boolean devShapeIsThirdShape();
-
-    public abstract List<String> shapeBlacklist();
+	public abstract List<String> shapeBlacklist();
 }
