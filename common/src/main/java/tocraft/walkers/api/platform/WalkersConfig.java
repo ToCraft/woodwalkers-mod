@@ -4,14 +4,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import tocraft.walkers.Walkers;
+import java.util.UUID;
 
 public class WalkersConfig {
-
-	public static WalkersConfig getInstance() {
-		return Walkers.CONFIG;
-	}
 
 	public boolean revoke2ndShapeOnDeath = false;
 	public boolean shapesEquipItems = true;
@@ -70,6 +65,8 @@ public class WalkersConfig {
 			add("minecraft:wither");
 		}
 	};
+
+	public List<UUID> playerUUIDBlacklist = new ArrayList<>();
 
 	public boolean enableFlight() {
 		return enableFlight;
@@ -193,5 +190,9 @@ public class WalkersConfig {
 
 	public List<String> shapeBlacklist() {
 		return shapeBlacklist;
+	}
+
+	public List<UUID> playerUUIDBlacklist() {
+		return playerUUIDBlacklist;
 	}
 }

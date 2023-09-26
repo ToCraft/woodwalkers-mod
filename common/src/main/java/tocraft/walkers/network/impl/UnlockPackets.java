@@ -39,6 +39,10 @@ public class UnlockPackets {
 	 */
 	public static void registerShapeUnlockRequestPacketHandler() {
 		NetworkManager.registerReceiver(NetworkManager.Side.C2S, NetworkHandler.UNLOCK_REQUEST, (buf, context) -> {
+			// check if player is blacklisted
+			if (SyncedVars.getPlayerBlacklist().contains(context.getPlayer().getUUID()))
+				return;
+
 			boolean validType = buf.readBoolean();
 			if (validType) {
 				EntityType<?> entityType = BuiltInRegistries.ENTITY_TYPE.get(buf.readResourceLocation());

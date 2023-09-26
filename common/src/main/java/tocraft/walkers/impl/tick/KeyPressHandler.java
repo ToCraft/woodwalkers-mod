@@ -58,6 +58,11 @@ public class KeyPressHandler implements ClientTickEvent.Client {
 	}
 
 	private void handleTransformKey(Minecraft client) {
+		// check if player is blacklisted
+		if (SyncedVars.getPlayerBlacklist().contains(client.player.getUUID())) {
+			client.player.displayClientMessage(Component.translatable("walkers.player_blacklisted"), true);
+			return;
+		}
 		if (PlayerShape.getCurrentShape(client.player) == null)
 			SwapPackets.sendSwapRequest(((PlayerDataProvider) client.player).get2ndShape());
 		else
@@ -65,6 +70,12 @@ public class KeyPressHandler implements ClientTickEvent.Client {
 	}
 
 	private void handleUnlockKey(Minecraft client) {
+		// check if player is blacklisted
+		if (SyncedVars.getPlayerBlacklist().contains(client.player.getUUID())) {
+			client.player.displayClientMessage(Component.translatable("walkers.player_blacklisted"), true);
+			return;
+		}
+
 		// check dev wolf
 		if (((PlayerDataProvider) client.player).get2ndShape() != null && (client.player.isShiftKeyDown()
 				&& (Walkers.devs.contains(client.player.getStringUUID()) || client.player.hasPermissions(2)))) {

@@ -3,6 +3,7 @@
   "walkers.deletion_success": "Die zweite Gestalt von %s wurde entfernt.",
   "walkers.unlock_entity": "Schaltete %s als deine zweite Gestalt frei.",
   "walkers.unlock_entity_blacklisted": "Diese Gestalt ist für dich nicht verfügbar.",
+  "walkers.player_blacklisted": "Gestaltwandeln ist für dich nicht verfügbar.",
   "walkers.unlock_progress": "Du spürst es kribbeln.",
   "walkers.grant_success": "Nun nun an ist %s die zweite Gestalt von %s.",
   "walkers.already_has": "%s hat bereits %s als zweite Gestalt!",
