@@ -5,97 +5,39 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import draylar.omegaconfig.api.Comment;
-import draylar.omegaconfig.api.Config;
-import tocraft.walkers.Walkers;
 import tocraft.walkers.api.platform.WalkersConfig;
+import tocraft.walkers.fabric.WalkersFabric;
 
-public class WalkersFabricConfig extends WalkersConfig implements Config {
+public class WalkersFabricConfig extends WalkersConfig {
 
-	@Comment(value = "Whether a player's current shape is revoked on death.")
 	public boolean revoke2ndShapeOnDeath = false;
-
-	@Comment(value = "Whether shapes equip the items (swords, items, tools) held by the underlying player.")
 	public boolean shapesEquipItems = true;
-
-	@Comment(value = "Whether shapes equip the armor (chestplate, leggings, elytra) worn by the underlying player.")
 	public boolean shapesEquipArmor = true;
-
-	@Comment(value = "Whether hostile mobs ignore players with hostile mob shapes.")
 	public boolean hostilesIgnoreHostileShapedPlayer = true;
-
-	@Comment(value = "Whether a hostile mob will stop targeting you after switching to a hostile mob shape.")
 	public boolean hostilesForgetNewHostileShapedPlayer = false;
-
-	@Comment(value = "Whether Wolves will attack Players with an shape that the Wolf would normally hunt (Sheep, Fox, Skeleton).")
 	public boolean wolvesAttack2ndShapedPrey = true;
-
-	@Comment(value = "Whether owned Wolves will attack Players with an shape that the Wolf would normally hunt (Sheep, Fox, Skeleton).")
 	public boolean ownedwolvesAttack2ndShapedPrey = false;
-
-	@Comment(value = "Whether Villagers will run from Players morphed as shapes villagers normally run from (Zombies).")
 	public boolean villagersRunFrom2ndShapes = true;
-
-	@Comment(value = "Whether Foxes will attack Players with an shape that the Fox would normally hunt (Fish, Chicken).")
 	public boolean foxesAttack2ndShapedPrey = true;
-
-	@Comment(value = "Whether Walkers sounds take priority over Player Sounds (eg. Blaze hurt sound when hit).")
 	public boolean useShapeSounds = true;
-
-	@Comment(value = "Whether disguised players should randomly emit the ambient sound of their Walkers.")
 	public boolean playAmbientSounds = true;
-
-	@Comment(value = "Whether disguised players should hear their own ambient sounds (only if playAmbientSounds is true).")
 	public boolean hearSelfAmbient = false;
-
-	@Comment(value = "Whether mobs in the flying entity tag can fly.")
 	public boolean enableFlight = true;
-
-	@Comment(value = "How long hostility lasts for players morphed as hostile mobs (think: Pigman aggression")
 	public int hostilityTime = 20 * 15;
-
-	@Comment(value = "A list of Advancements required before the player can fly using an Walkers.")
 	public List<String> advancementsRequiredForFlight = new ArrayList<>();
-
-	@Comment(value = "Whether Shapes modify your max health value based on their max health value.")
 	public boolean scalingHealth = true;
-
-	@Comment(value = "This gets the percentage of your current health and implements it into your new health. Only works with scalingHealth!")
 	public boolean percentScalingHealth = true;
-
-	@Comment(value = "The maximum value of scaling health. Useful for not giving players 300 HP when they turn into a wither.")
 	public int maxHealth = 40;
-
-	@Comment(value = "Whether Shapes modify your attack damage value based on their attack damage value.")
 	public Boolean scalingAttackDamage = true;
-
-	@Comment(value = "The maximum value of scaling attack damage. Useful for not giving players 300 ATK when they turn into a boss.")
 	public Double maxAttackDamage = 4D;
-
-	@Comment(value = "In blocks, how far can the Enderman ability teleport?")
 	public int endermanAbilityTeleportDistance = 32;
-
-	@Comment(value = "Should player nametags render above players disguised with an shape? Note that the server is the authority for this config option.")
 	public boolean showPlayerNametag = false;
-
-	@Comment(value = "If true, /walkers commands will send feedback in the action bar.")
 	public boolean logCommands = true;
-
 	public float flySpeed = 0.05f;
-
-	@Comment(value = "If true, players with the Warden Walkers will have a shorter view range with the darkness effect.")
 	public boolean wardenIsBlinded = true;
-
-	@Comment(value = "If true, players with the Warden Walkers will blind other nearby players.")
 	public boolean wardenBlindsNearby = true;
-
-	@Comment(value = "If true, unlocking a shape will ignore current second shapes.")
 	public boolean unlockOveridesCurrentShape = false;
-
-	@Comment(value = "Requieres enableUnlockSystem to be true- timer in ticks how long the unlock key shall be pressed.")
 	public float unlockTimer = 100f;
-
-	@Comment(value = "If true, Devs will have a third shape, if false, devs will only have two variants of their second shape.")
 	public boolean devShapeIsThirdShape = false;
 
 	public Map<String, Integer> abilityCooldownMap = new HashMap<>() {
@@ -126,14 +68,8 @@ public class WalkersFabricConfig extends WalkersConfig implements Config {
 		}
 	};
 
-	@Override
-	public String getName() {
-		return Walkers.MODID;
-	}
-
-	@Override
-	public String getExtension() {
-		return "json5";
+	public static WalkersConfig getInstance() {
+		return WalkersFabric.CONFIG;
 	}
 
 	@Override
@@ -157,8 +93,8 @@ public class WalkersFabricConfig extends WalkersConfig implements Config {
 	}
 
 	@Override
-	public boolean foxesAttack2ndShapedPrey() {
-		return foxesAttack2ndShapedPrey;
+	public boolean wolvesAttack2ndShapedPrey() {
+		return wolvesAttack2ndShapedPrey;
 	}
 
 	@Override
@@ -222,8 +158,8 @@ public class WalkersFabricConfig extends WalkersConfig implements Config {
 	}
 
 	@Override
-	public boolean wolvesAttack2ndShapedPrey() {
-		return wolvesAttack2ndShapedPrey;
+	public boolean foxesAttack2ndShapedPrey() {
+		return foxesAttack2ndShapedPrey;
 	}
 
 	@Override
