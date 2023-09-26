@@ -1,4 +1,4 @@
-package tocraft.walkers.fabric.config;
+package tocraft.walkers.api.platform;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -14,18 +14,18 @@ public class ConfigLoader {
 
 	private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 
-	public static WalkersFabricConfig read() {
+	public static WalkersConfig read() {
 		Path configFolder = Platform.getConfigFolder();
 		Path configFile = Paths.get(configFolder.toString(), "walkers.json");
 
 		// Write & return a new config file if it does not exist.
 		if (!Files.exists(configFile)) {
-			WalkersFabricConfig config = new WalkersFabricConfig();
+			WalkersConfig config = new WalkersConfig();
 			writeConfigFile(configFile, config);
 			return config;
 		} else {
 			try {
-				WalkersFabricConfig newConfig = GSON.fromJson(Files.readString(configFile), WalkersFabricConfig.class);
+				WalkersConfig newConfig = GSON.fromJson(Files.readString(configFile), WalkersConfig.class);
 
 				// At this point, the config has been read, but there is a chance the config
 				// class has new values which are not in the file.
@@ -36,15 +36,12 @@ public class ConfigLoader {
 				return newConfig;
 			} catch (IOException exception) {
 				exception.printStackTrace();
+				return new WalkersConfig();
 			}
 		}
-
-		// We should not get to this spot... might want to log something?
-		// TODO: log
-		return new WalkersFabricConfig();
 	}
 
-	private static void writeConfigFile(Path file, WalkersFabricConfig config) {
+	private static void writeConfigFile(Path file, WalkersConfig config) {
 		try {
 			if (!Files.exists(file)) {
 				Files.createFile(file);

@@ -35,13 +35,13 @@ import net.minecraft.world.entity.monster.Phantom;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.player.PlayerModelPart;
 import net.minecraft.world.phys.Vec3;
+import tocraft.walkers.Walkers;
 import tocraft.walkers.api.PlayerShape;
 import tocraft.walkers.api.model.ArmRenderingManipulator;
 import tocraft.walkers.api.model.EntityArms;
 import tocraft.walkers.api.model.EntityUpdater;
 import tocraft.walkers.api.model.EntityUpdaters;
 import tocraft.walkers.api.platform.SyncedVars;
-import tocraft.walkers.api.platform.WalkersConfig;
 import tocraft.walkers.mixin.accessor.EntityAccessor;
 import tocraft.walkers.mixin.accessor.LimbAnimatorAccessor;
 import tocraft.walkers.mixin.accessor.LivingEntityAccessor;
@@ -98,13 +98,13 @@ public abstract class PlayerEntityRendererMixin
 			}
 
 			// equip held items on shape
-			if (WalkersConfig.getInstance().shapesEquipItems()) {
+			if (Walkers.CONFIG.shapesEquipItems()) {
 				shape.setItemSlot(EquipmentSlot.MAINHAND, player.getItemBySlot(EquipmentSlot.MAINHAND));
 				shape.setItemSlot(EquipmentSlot.OFFHAND, player.getItemBySlot(EquipmentSlot.OFFHAND));
 			}
 
 			// equip armor items on shape
-			if (WalkersConfig.getInstance().shapesEquipArmor()) {
+			if (Walkers.CONFIG.shapesEquipArmor()) {
 				shape.setItemSlot(EquipmentSlot.HEAD, player.getItemBySlot(EquipmentSlot.HEAD));
 				shape.setItemSlot(EquipmentSlot.CHEST, player.getItemBySlot(EquipmentSlot.CHEST));
 				shape.setItemSlot(EquipmentSlot.LEGS, player.getItemBySlot(EquipmentSlot.LEGS));
@@ -147,8 +147,7 @@ public abstract class PlayerEntityRendererMixin
 			// Only render nametags if the server option is true and the entity being
 			// rendered is NOT this player/client
 			if (SyncedVars.getShowPlayerNametag() && player != Minecraft.getInstance().player) {
-				renderNameTag((AbstractClientPlayer) player, player.getDisplayName(), matrixStack,
-						buffer, i);
+				renderNameTag((AbstractClientPlayer) player, player.getDisplayName(), matrixStack, buffer, i);
 			}
 		} else {
 			super.render((AbstractClientPlayer) player, f, g, matrixStack, buffer, i);

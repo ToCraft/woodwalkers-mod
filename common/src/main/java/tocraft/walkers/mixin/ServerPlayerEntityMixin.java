@@ -37,7 +37,7 @@ public abstract class ServerPlayerEntityMixin extends Player {
 
 	@Inject(method = "die", at = @At("HEAD"))
 	private void revoke2ndShapeOnDeath(DamageSource source, CallbackInfo ci) {
-		if (WalkersConfig.getInstance().revoke2ndShapeOnDeath() && !this.isCreative() && !this.isSpectator()) {
+		if (Walkers.CONFIG.revoke2ndShapeOnDeath() && !this.isCreative() && !this.isSpectator()) {
 			PlayerShapeChanger.change2ndShape((ServerPlayer) (Object) this, null);
 		}
 	}
@@ -48,7 +48,7 @@ public abstract class ServerPlayerEntityMixin extends Player {
 		if (Walkers.hasFlyingPermissions(player)) {
 			if (!FlightHelper.hasFlight(player)) {
 				FlightHelper.grantFlightTo(player);
-				getAbilities().setFlyingSpeed(WalkersConfig.getInstance().flySpeed());
+				getAbilities().setFlyingSpeed(Walkers.CONFIG.flySpeed());
 				onUpdateAbilities();
 			}
 

@@ -13,8 +13,8 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.sensing.VillagerHostilesSensor;
 import net.minecraft.world.entity.player.Player;
+import tocraft.walkers.Walkers;
 import tocraft.walkers.api.PlayerShape;
-import tocraft.walkers.api.platform.WalkersConfig;
 
 @Mixin(VillagerHostilesSensor.class)
 public class VillagerHostilesSensorMixin {
@@ -28,7 +28,7 @@ public class VillagerHostilesSensorMixin {
 	private void checkHostileWalkers(LivingEntity entity, CallbackInfoReturnable<Boolean> cir) {
 		if (entity instanceof Player player) {
 			// check if we should be performing this from config
-			if (WalkersConfig.getInstance().villagersRunFrom2ndShapes()) {
+			if (Walkers.CONFIG.villagersRunFrom2ndShapes()) {
 				LivingEntity shape = PlayerShape.getCurrentShape(player);
 
 				// check if shape is valid & if it is a type villagers run from

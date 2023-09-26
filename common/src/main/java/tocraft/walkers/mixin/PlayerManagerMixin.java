@@ -13,9 +13,9 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.players.PlayerList;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import tocraft.walkers.Walkers;
 import tocraft.walkers.api.PlayerShape;
 import tocraft.walkers.api.event.PlayerJoinCallback;
-import tocraft.walkers.api.platform.WalkersConfig;
 import tocraft.walkers.impl.DimensionsRefresher;
 
 @Mixin(PlayerList.class)
@@ -35,13 +35,13 @@ public class PlayerManagerMixin {
 
 		if (shape != null) {
 			// Re-sync max health for shapes
-			if (WalkersConfig.getInstance().scalingHealth()) {
+			if (Walkers.CONFIG.scalingHealth()) {
 				player.getAttribute(Attributes.MAX_HEALTH)
-						.setBaseValue(Math.min(WalkersConfig.getInstance().maxHealth(), shape.getMaxHealth()));
+						.setBaseValue(Math.min(Walkers.CONFIG.maxHealth(), shape.getMaxHealth()));
 				player.setHealth(player.getMaxHealth());
 			}
 			// Re-sync attack damage for shapes
-			if (WalkersConfig.getInstance().scalingAttackDamage()) {
+			if (Walkers.CONFIG.scalingAttackDamage()) {
 				// get shape attack damage, return 1D if value is lower then max or not existing
 				Double shapeAttackDamage = 1D;
 				try {
@@ -50,11 +50,11 @@ public class PlayerManagerMixin {
 				} catch (Exception ignored) {
 				}
 				player.getAttribute(Attributes.ATTACK_DAMAGE)
-						.setBaseValue(Math.min(WalkersConfig.getInstance().maxAttackDamage(), shapeAttackDamage));
+						.setBaseValue(Math.min(Walkers.CONFIG.maxAttackDamage(), shapeAttackDamage));
 			}
 			// sync max health & attack damage with clients
-			if ((WalkersConfig.getInstance().scalingHealth() || WalkersConfig.getInstance().scalingAttackDamage())
-					|| WalkersConfig.getInstance().scalingAttackDamage()) {
+			if ((Walkers.CONFIG.scalingHealth() || Walkers.CONFIG.scalingAttackDamage())
+					|| Walkers.CONFIG.scalingAttackDamage()) {
 				player.connection.send(new ClientboundUpdateAttributesPacket(player.getId(),
 						player.getAttributes().getSyncableAttributes()));
 			}

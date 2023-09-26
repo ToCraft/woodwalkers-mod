@@ -20,8 +20,8 @@ import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.animal.Fox;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import tocraft.walkers.Walkers;
 import tocraft.walkers.api.PlayerShape;
-import tocraft.walkers.api.platform.WalkersConfig;
 import tocraft.walkers.registry.WalkersEntityTags;
 
 @Mixin(Fox.class)
@@ -59,7 +59,7 @@ public abstract class FoxEntityMixin extends Animal {
 		this.targetSelector.addGoal(7,
 				new NearestAttackableTargetGoal<>(this, Player.class, 10, false, false, player -> {
 					// ensure foxes can attack players with an shape similar to their normal prey
-					if (!WalkersConfig.getInstance().foxesAttack2ndShapedPrey()) {
+					if (!Walkers.CONFIG.foxesAttack2ndShapedPrey()) {
 						return false;
 					}
 

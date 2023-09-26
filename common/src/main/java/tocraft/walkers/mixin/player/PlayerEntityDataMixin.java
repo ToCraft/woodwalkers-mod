@@ -212,20 +212,20 @@ public abstract class PlayerEntityDataMixin extends LivingEntity implements Play
 		// shape is valid and scaling health is on; set entity's max health and current
 		// health to reflect shape.
 		if (shape != null) {
-			if (WalkersConfig.getInstance().scalingHealth()) {
+			if (Walkers.CONFIG.scalingHealth()) {
 				// calculate the current health in percentage, used later
 				float currentHealthPercent = player.getHealth() / player.getMaxHealth();
 
 				player.getAttribute(Attributes.MAX_HEALTH)
-						.setBaseValue(Math.min(WalkersConfig.getInstance().maxHealth(), shape.getMaxHealth()));
+						.setBaseValue(Math.min(Walkers.CONFIG.maxHealth(), shape.getMaxHealth()));
 
 				// set health
-				if (WalkersConfig.getInstance().percentScalingHealth())
+				if (Walkers.CONFIG.percentScalingHealth())
 					player.setHealth(Math.min(currentHealthPercent * player.getMaxHealth(), player.getMaxHealth()));
 				else
 					player.setHealth(Math.min(player.getHealth(), player.getMaxHealth()));
 			}
-			if (WalkersConfig.getInstance().scalingAttackDamage()) {
+			if (Walkers.CONFIG.scalingAttackDamage()) {
 				// get shape attack damage, return 1D if value is lower or not existing
 				Double shapeAttackDamage = 1D;
 				try {
@@ -234,7 +234,7 @@ public abstract class PlayerEntityDataMixin extends LivingEntity implements Play
 				} catch (Exception ignored) {
 				}
 				player.getAttribute(Attributes.ATTACK_DAMAGE)
-						.setBaseValue(Math.min(WalkersConfig.getInstance().maxAttackDamage(), shapeAttackDamage));
+						.setBaseValue(Math.min(Walkers.CONFIG.maxAttackDamage(), shapeAttackDamage));
 			}
 		}
 
@@ -243,16 +243,16 @@ public abstract class PlayerEntityDataMixin extends LivingEntity implements Play
 		if (shape == null) {
 			float currentHealthPercent = player.getHealth() / player.getMaxHealth();
 
-			if (WalkersConfig.getInstance().scalingHealth()) {
+			if (Walkers.CONFIG.scalingHealth()) {
 				player.getAttribute(Attributes.MAX_HEALTH).setBaseValue(20);
 			}
 
-			if (WalkersConfig.getInstance().scalingAttackDamage()) {
+			if (Walkers.CONFIG.scalingAttackDamage()) {
 				player.getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(1D);
 			}
 
 			// Clear health value if needed
-			if (WalkersConfig.getInstance().percentScalingHealth())
+			if (Walkers.CONFIG.percentScalingHealth())
 				player.setHealth(Math.min(currentHealthPercent * player.getMaxHealth(), player.getMaxHealth()));
 			else
 				player.setHealth(Math.min(player.getHealth(), player.getMaxHealth()));
@@ -262,7 +262,7 @@ public abstract class PlayerEntityDataMixin extends LivingEntity implements Play
 		ServerPlayer serverPlayer = (ServerPlayer) player;
 		if (Walkers.hasFlyingPermissions((ServerPlayer) player)) {
 			FlightHelper.grantFlightTo(serverPlayer);
-			player.getAbilities().setFlyingSpeed(WalkersConfig.getInstance().flySpeed());
+			player.getAbilities().setFlyingSpeed(Walkers.CONFIG.flySpeed());
 			player.onUpdateAbilities();
 		} else {
 			FlightHelper.revokeFlight(serverPlayer);

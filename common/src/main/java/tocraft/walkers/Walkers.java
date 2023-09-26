@@ -26,6 +26,7 @@ import tocraft.walkers.ability.AbilityRegistry;
 import tocraft.walkers.api.PlayerShape;
 import tocraft.walkers.api.PlayerShapeChanger;
 import tocraft.walkers.api.WalkersTickHandlers;
+import tocraft.walkers.api.platform.ConfigLoader;
 import tocraft.walkers.api.platform.VersionChecker;
 import tocraft.walkers.api.platform.WalkersConfig;
 import tocraft.walkers.mixin.ThreadedAnvilChunkStorageAccessor;
@@ -38,6 +39,7 @@ import tocraft.walkers.registry.WalkersEventHandlers;
 public class Walkers {
 
 	public static final Logger LOGGER = LoggerFactory.getLogger(Walkers.class);
+	public static final WalkersConfig CONFIG = ConfigLoader.read();
 	public static final String MODID = "walkers";
 	private static String VERSION = "";
 	public static List<String> devs = new ArrayList<>();
@@ -60,10 +62,10 @@ public class Walkers {
 		PlayerEvent.PLAYER_JOIN.register(player -> {
 			// Send config sync packet
 			FriendlyByteBuf packet = new FriendlyByteBuf(Unpooled.buffer());
-			packet.writeBoolean(WalkersConfig.getInstance().showPlayerNametag());
-			packet.writeFloat(WalkersConfig.getInstance().unlockTimer());
-			packet.writeBoolean(WalkersConfig.getInstance().unlockOveridesCurrentShape());
-			packet.writeUtf(WalkersConfig.getInstance().shapeBlacklist().toString());
+			packet.writeBoolean(Walkers.CONFIG.showPlayerNametag());
+			packet.writeFloat(Walkers.CONFIG.unlockTimer());
+			packet.writeBoolean(Walkers.CONFIG.unlockOveridesCurrentShape());
+			packet.writeUtf(Walkers.CONFIG.shapeBlacklist().toString());
 			NetworkManager.sendToPlayer(player, NetworkHandler.CONFIG_SYNC, packet);
 
 			// Sync unlocked Walkers
@@ -88,9 +90,9 @@ public class Walkers {
 	public static boolean hasFlyingPermissions(ServerPlayer player) {
 		LivingEntity shape = PlayerShape.getCurrentShape(player);
 
-		if (shape != null && WalkersConfig.getInstance().enableFlight()
+		if (shape != null && Walkers.CONFIG.enableFlight()
 				&& (shape.getType().is(WalkersEntityTags.FLYING) || shape instanceof FlyingMob)) {
-			List<String> requiredAdvancements = WalkersConfig.getInstance().advancementsRequiredForFlight();
+			List<String> requiredAdvancements = Walkers.CONFIG.advancementsRequiredForFlight();
 
 			// requires at least 1 advancement, check if player has them
 			if (!requiredAdvancements.isEmpty()) {
@@ -121,7 +123,7 @@ public class Walkers {
 
 	public static int getCooldown(EntityType<?> type) {
 		String id = BuiltInRegistries.ENTITY_TYPE.getKey(type).toString();
-		return WalkersConfig.getInstance().getAbilityCooldownMap().getOrDefault(id, 20);
+		return Walkers.CONFIG.getAbilityCooldownMap().getOrDefault(id, 20);
 	}
 
 	public static void setVersion(String version) {

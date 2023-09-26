@@ -138,7 +138,7 @@ public abstract class PlayerEntityMixin extends LivingEntityMixin {
 	private void getHurtSound(DamageSource source, CallbackInfoReturnable<SoundEvent> cir) {
 		LivingEntity shape = PlayerShape.getCurrentShape((Player) (Object) this);
 
-		if (WalkersConfig.getInstance().useShapeSounds() && shape != null) {
+		if (Walkers.CONFIG.useShapeSounds() && shape != null) {
 			cir.setReturnValue(((LivingEntityAccessor) shape).callGetHurtSound(source));
 		}
 	}
@@ -150,7 +150,7 @@ public abstract class PlayerEntityMixin extends LivingEntityMixin {
 	private void tickAmbientSounds(CallbackInfo ci) {
 		LivingEntity shape = PlayerShape.getCurrentShape((Player) (Object) this);
 
-		if (!level().isClientSide && WalkersConfig.getInstance().playAmbientSounds() && shape instanceof Mob) {
+		if (!level().isClientSide && Walkers.CONFIG.playAmbientSounds() && shape instanceof Mob) {
 			Mob mobShape = (Mob) shape;
 
 			if (this.isAlive() && this.random.nextInt(1000) < this.shape_ambientSoundChance++) {
@@ -165,7 +165,7 @@ public abstract class PlayerEntityMixin extends LivingEntityMixin {
 
 					// By default, players can not hear their own ambient noises.
 					// This is because ambient noises can be very annoying.
-					if (WalkersConfig.getInstance().hearSelfAmbient()) {
+					if (Walkers.CONFIG.hearSelfAmbient()) {
 						this.level().playSound(null, this.getX(), this.getY(), this.getZ(), sound,
 								this.getSoundSource(), volume, pitch);
 					} else {
@@ -181,7 +181,7 @@ public abstract class PlayerEntityMixin extends LivingEntityMixin {
 	private void getDeathSound(CallbackInfoReturnable<SoundEvent> cir) {
 		LivingEntity shape = PlayerShape.getCurrentShape((Player) (Object) this);
 
-		if (WalkersConfig.getInstance().useShapeSounds() && shape != null) {
+		if (Walkers.CONFIG.useShapeSounds() && shape != null) {
 			cir.setReturnValue(((LivingEntityAccessor) shape).callGetDeathSound());
 		}
 	}
@@ -190,7 +190,7 @@ public abstract class PlayerEntityMixin extends LivingEntityMixin {
 	private void getFallSounds(CallbackInfoReturnable<LivingEntity.Fallsounds> cir) {
 		LivingEntity shape = PlayerShape.getCurrentShape((Player) (Object) this);
 
-		if (WalkersConfig.getInstance().useShapeSounds() && shape != null) {
+		if (Walkers.CONFIG.useShapeSounds() && shape != null) {
 			cir.setReturnValue(shape.getFallSounds());
 		}
 	}

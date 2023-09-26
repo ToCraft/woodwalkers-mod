@@ -24,7 +24,7 @@ public class PlayerAdvancementTrackerMixin {
     private void refreshFlight(Advancement advancement, String criterionName, CallbackInfoReturnable<Boolean> cir) {
         if(Walkers.hasFlyingPermissions(player)) {
             FlightHelper.grantFlightTo(player);
-            player.getAbilities().setFlyingSpeed(WalkersConfig.getInstance().flySpeed());
+            player.getAbilities().setFlyingSpeed(Walkers.CONFIG.flySpeed());
             player.onUpdateAbilities();
         }
     }

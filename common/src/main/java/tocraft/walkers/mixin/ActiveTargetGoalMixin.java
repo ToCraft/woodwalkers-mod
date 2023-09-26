@@ -16,9 +16,9 @@ import net.minecraft.world.entity.monster.Creeper;
 import net.minecraft.world.entity.monster.Enemy;
 import net.minecraft.world.entity.monster.Skeleton;
 import net.minecraft.world.entity.player.Player;
+import tocraft.walkers.Walkers;
 import tocraft.walkers.api.PlayerHostility;
 import tocraft.walkers.api.PlayerShape;
-import tocraft.walkers.api.platform.WalkersConfig;
 
 @Mixin(NearestAttackableTargetGoal.class)
 public abstract class ActiveTargetGoalMixin extends TrackTargetGoalMixin {
@@ -28,7 +28,7 @@ public abstract class ActiveTargetGoalMixin extends TrackTargetGoalMixin {
 
 	@Inject(method = "start", at = @At("HEAD"), cancellable = true)
 	private void ignoreShapedPlayers(CallbackInfo ci) {
-		if (WalkersConfig.getInstance().hostilesIgnoreHostileShapedPlayer() && this.mob instanceof Enemy
+		if (Walkers.CONFIG.hostilesIgnoreHostileShapedPlayer() && this.mob instanceof Enemy
 				&& this.target instanceof Player) {
 			Player player = (Player) this.target;
 			LivingEntity shape = PlayerShape.getCurrentShape(player);
@@ -70,9 +70,8 @@ public abstract class ActiveTargetGoalMixin extends TrackTargetGoalMixin {
 	@Override
 	protected void shape_shouldContinue(CallbackInfoReturnable<Boolean> cir) {
 		// check cancelling for hostiles
-		if (WalkersConfig.getInstance().hostilesIgnoreHostileShapedPlayer()
-				&& WalkersConfig.getInstance().hostilesForgetNewHostileShapedPlayer() && this.mob instanceof Enemy
-				&& this.target instanceof Player player) {
+		if (Walkers.CONFIG.hostilesIgnoreHostileShapedPlayer() && Walkers.CONFIG.hostilesForgetNewHostileShapedPlayer()
+				&& this.mob instanceof Enemy && this.target instanceof Player player) {
 			LivingEntity shape = PlayerShape.getCurrentShape(player);
 
 			if (shape != null) {
