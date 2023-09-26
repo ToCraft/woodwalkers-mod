@@ -21,6 +21,7 @@ import tocraft.walkers.impl.PlayerDataProvider;
 import tocraft.walkers.network.ClientNetworking;
 import tocraft.walkers.network.impl.DevSwapPackets;
 import tocraft.walkers.network.impl.SwapPackets;
+import tocraft.walkers.network.impl.UnlockPackets;
 
 public class KeyPressHandler implements ClientTickEvent.Client {
 	private float currentTimer = 0f;
@@ -58,9 +59,9 @@ public class KeyPressHandler implements ClientTickEvent.Client {
 
 	private void handleTransformKey(Minecraft client) {
 		if (PlayerShape.getCurrentShape(client.player) == null)
-			SwapPackets.sendSwapRequest(((PlayerDataProvider) client.player).get2ndShape(), false);
+			SwapPackets.sendSwapRequest(((PlayerDataProvider) client.player).get2ndShape());
 		else
-			SwapPackets.sendSwapRequest(null, false);
+			SwapPackets.sendSwapRequest(null);
 	}
 
 	private void handleUnlockKey(Minecraft client) {
@@ -87,7 +88,7 @@ public class KeyPressHandler implements ClientTickEvent.Client {
 				else {
 					if (currentTimer <= 0) {
 						// unlock shape
-						SwapPackets.sendSwapRequest(type, true);
+						UnlockPackets.sendUnlockRequest(type);
 						// send unlock message
 						Component name = Component.translatable(type.getEntityType().getDescriptionId());
 						client.player.displayClientMessage(Component.translatable("walkers.unlock_entity", name), true);
