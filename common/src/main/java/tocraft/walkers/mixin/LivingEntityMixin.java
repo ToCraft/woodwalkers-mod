@@ -30,7 +30,6 @@ import net.minecraft.world.entity.monster.Spider;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.material.FluidState;
-import tocraft.walkers.Walkers;
 import tocraft.walkers.api.PlayerShape;
 import tocraft.walkers.impl.NearbySongAccessor;
 import tocraft.walkers.mixin.accessor.LivingEntityAccessor;
@@ -47,22 +46,6 @@ public abstract class LivingEntityMixin extends Entity implements NearbySongAcce
 
 	protected LivingEntityMixin(EntityType<?> type, Level world) {
 		super(type, world);
-	}
-
-	@Redirect(method = "baseTick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;setAirSupply(I)V", ordinal = 2))
-	private void cancelAirIncrement(LivingEntity livingEntity, int air) {
-		// Aquatic creatures should not regenerate breath on land
-		if ((Object) this instanceof Player player) {
-			LivingEntity shape = PlayerShape.getCurrentShape(player);
-
-			if (shape != null) {
-				if (Walkers.isAquatic(shape)) {
-					return;
-				}
-			}
-		}
-
-		this.setAirSupply(this.increaseAirSupply(this.getAirSupply()));
 	}
 
 	@Redirect(method = "travel", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;hasEffect(Lnet/minecraft/world/effect/MobEffect;)Z", ordinal = 0))

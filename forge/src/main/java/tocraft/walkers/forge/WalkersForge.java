@@ -1,8 +1,6 @@
 package tocraft.walkers.forge;
 
 import dev.architectury.platform.Platform;
-import net.minecraftforge.event.entity.living.LivingBreatheEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.ModContainer;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.common.Mod;
@@ -18,11 +16,6 @@ public class WalkersForge {
 		if (Platform.getEnv().isClient()) {
 			new WalkersForgeClient();
 		}
-	}
-
-	@SubscribeEvent
-	public static void livingBreath(LivingBreatheEvent event) {
-
 	}
 
 	public void getModVersion() {
