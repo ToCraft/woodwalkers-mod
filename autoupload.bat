@@ -2,7 +2,7 @@
 set /p version=Please enter the version (needed for github, also check gradle.properties): 
 
 :: add mcversion here
-set mcversions="1.20.1";"1.19.4"
+set mcversions="1.20.1"
 :: add loader here
 set modloader="fabric";"forge"
 
