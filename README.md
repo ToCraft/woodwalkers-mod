@@ -41,12 +41,6 @@ In case you want to change it again, change the config "unlockOveridesCurrentSha
 
 You can switch your shape by pressing the TRANSFORM_KEY (by default 'G'). Choose carefully! This choice is forever! Once chosen, you can't change it again! (But still, there's an OP-command and a config-option to reset your second shape after death...) 
 
-### Using the old menu
-
-Disable "enableUnlockSystem" in the config.
-
-Open the menu to select your second shape by pressing the MENU_KEY (by default ' ^ ').
-
 ## How can I support this project?
 
 I'm always happy about someone who translates this mod to other languages or tells me about bugs/issues.
