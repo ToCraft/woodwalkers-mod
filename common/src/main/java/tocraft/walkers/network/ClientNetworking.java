@@ -97,11 +97,9 @@ public class ClientNetworking implements NetworkHandler {
 		boolean showPlayerNametag = packet.readBoolean();
 		float unlockTimer = packet.readFloat();
 		boolean unlockOveridesCurrentShape = packet.readBoolean();
-		String NewShapeBlacklistString = packet.readUtf();
 
 		SyncedVars.setShowPlayerNametag(showPlayerNametag);
 		SyncedVars.setUnlockTimer(unlockTimer);
 		SyncedVars.setUnlockOveridesCurrentShape(unlockOveridesCurrentShape);
-		SyncedVars.setShapeBlacklist(NewShapeBlacklistString);
 	}
 }

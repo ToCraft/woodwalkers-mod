@@ -17,6 +17,7 @@ import tocraft.walkers.api.variant.ShapeType;
 import tocraft.walkers.impl.PlayerDataProvider;
 import tocraft.walkers.network.ClientNetworking;
 import tocraft.walkers.network.NetworkHandler;
+import tocraft.walkers.registry.WalkersEntityTags;
 
 public class UnlockPackets {
 
@@ -51,9 +52,7 @@ public class UnlockPackets {
 				context.getPlayer().getServer().execute(() -> {
 					@Nullable
 					ShapeType<LivingEntity> type = ShapeType.from(entityType, variant);
-					if (type != null
-							&& !SyncedVars.getShapeBlacklist()
-									.contains(EntityType.getKey(type.getEntityType()).toString())
+					if (type != null && type.getEntityType().is(WalkersEntityTags.BLACKLISTED)
 							&& (SyncedVars.getUnlockOveridesCurrentShape()
 									|| ((PlayerDataProvider) context.getPlayer()).get2ndShape() == null)) {
 						// set 2nd shape

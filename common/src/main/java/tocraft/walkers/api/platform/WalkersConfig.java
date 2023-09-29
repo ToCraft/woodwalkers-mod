@@ -59,13 +59,6 @@ public class WalkersConfig {
 		}
 	};
 
-	public List<String> shapeBlacklist = new ArrayList<>() {
-		{
-			add("minecraft:ender_dragon");
-			add("minecraft:wither");
-		}
-	};
-
 	public List<UUID> playerUUIDBlacklist = new ArrayList<>();
 
 	public boolean enableFlight() {
@@ -186,10 +179,6 @@ public class WalkersConfig {
 
 	public boolean devShapeIsThirdShape() {
 		return devShapeIsThirdShape;
-	}
-
-	public List<String> shapeBlacklist() {
-		return shapeBlacklist;
 	}
 
 	public List<UUID> playerUUIDBlacklist() {

@@ -7,7 +7,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
@@ -22,6 +21,7 @@ import tocraft.walkers.network.ClientNetworking;
 import tocraft.walkers.network.impl.DevSwapPackets;
 import tocraft.walkers.network.impl.SwapPackets;
 import tocraft.walkers.network.impl.UnlockPackets;
+import tocraft.walkers.registry.WalkersEntityTags;
 
 public class KeyPressHandler implements ClientTickEvent.Client {
 	private float currentTimer = 0f;
@@ -92,8 +92,7 @@ public class KeyPressHandler implements ClientTickEvent.Client {
 				ShapeType<?> type = ShapeType.from(living);
 
 				// Ensures, the mob isn't on the blacklist
-				if (!SyncedVars.getShapeBlacklist().isEmpty()
-						&& SyncedVars.getShapeBlacklist().contains(EntityType.getKey(type.getEntityType()).toString()))
+				if (type.getEntityType().is(WalkersEntityTags.BLACKLISTED))
 					client.player.displayClientMessage(Component.translatable("walkers.unlock_entity_blacklisted"),
 							true);
 				else {

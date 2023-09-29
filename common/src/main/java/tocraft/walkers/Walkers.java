@@ -65,7 +65,6 @@ public class Walkers {
 			packet.writeBoolean(Walkers.CONFIG.showPlayerNametag());
 			packet.writeFloat(Walkers.CONFIG.unlockTimer());
 			packet.writeBoolean(Walkers.CONFIG.unlockOveridesCurrentShape());
-			packet.writeUtf(Walkers.CONFIG.shapeBlacklist().toString());
 			NetworkManager.sendToPlayer(player, NetworkHandler.CONFIG_SYNC, packet);
 
 			// Sync unlocked Walkers
