@@ -9,6 +9,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import dev.architectury.platform.Platform;
+import tocraft.walkers.Walkers;
 
 public class ConfigLoader {
 
@@ -16,7 +17,7 @@ public class ConfigLoader {
 
 	public static WalkersConfig read() {
 		Path configFolder = Platform.getConfigFolder();
-		Path configFile = Paths.get(configFolder.toString(), "walkers.json");
+		Path configFile = Paths.get(configFolder.toString(), Walkers.MODID + ".json");
 
 		// Write & return a new config file if it does not exist.
 		if (!Files.exists(configFile)) {
