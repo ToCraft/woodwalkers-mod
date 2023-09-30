@@ -77,7 +77,7 @@ public class Walkers {
 					.getChunkSource().chunkMap).getEntityMap();
 			trackers.forEach((entityid, tracking) -> {
 				if (((ServerLevel) player.level()).getEntity(entityid) instanceof ServerPlayer)
-					PlayerShape.sync(((ServerPlayer) ((ServerLevel) player.level()).getEntity(entityid)), player);
+					PlayerShape.sync(((ServerPlayer) player.serverLevel().getEntity(entityid)), player);
 			});
 		});
 	}
