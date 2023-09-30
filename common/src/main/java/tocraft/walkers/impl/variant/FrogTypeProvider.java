@@ -2,16 +2,15 @@ package tocraft.walkers.impl.variant;
 
 import com.google.common.collect.ImmutableMap;
 import tocraft.walkers.api.variant.TypeProvider;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.passive.FrogEntity;
-import net.minecraft.text.MutableText;
-import net.minecraft.text.Text;
-import net.minecraft.registry.Registries;
-import net.minecraft.world.World;
-
 import java.util.Map;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.animal.frog.Frog;
+import net.minecraft.world.level.Level;
 
-public class FrogTypeProvider extends TypeProvider<FrogEntity> {
+public class FrogTypeProvider extends TypeProvider<Frog> {
 
     private static final Map<Integer, String> PREFIX_BY_ID = ImmutableMap
             .<Integer, String>builder()
@@ -21,14 +20,14 @@ public class FrogTypeProvider extends TypeProvider<FrogEntity> {
             .build();
 
     @Override
-    public int getVariantData(FrogEntity entity) {
-        return Registries.FROG_VARIANT.getRawId(entity.getVariant());
+    public int getVariantData(Frog entity) {
+        return BuiltInRegistries.FROG_VARIANT.getId(entity.getVariant());
     }
 
     @Override
-    public FrogEntity create(EntityType<FrogEntity> type, World world, int data) {
-        FrogEntity frog = new FrogEntity(type, world);
-        frog.setVariant(Registries.FROG_VARIANT.get(data));
+    public Frog create(EntityType<Frog> type, Level world, int data) {
+        Frog frog = new Frog(type, world);
+        frog.setVariant(BuiltInRegistries.FROG_VARIANT.byId(data));
         return frog;
     }
 
@@ -43,8 +42,8 @@ public class FrogTypeProvider extends TypeProvider<FrogEntity> {
     }
 
     @Override
-    public Text modifyText(FrogEntity frog, MutableText text) {
+    public Component modifyText(Frog frog, MutableComponent text) {
         int variant = getVariantData(frog);
-        return Text.literal(PREFIX_BY_ID.containsKey(variant) ? PREFIX_BY_ID.get(variant) + " " : "").append(text);
+        return Component.literal(PREFIX_BY_ID.containsKey(variant) ? PREFIX_BY_ID.get(variant) + " " : "").append(text);
     }
 }

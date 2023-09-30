@@ -1,7 +1,7 @@
 package tocraft.walkers.api;
 
+import net.minecraft.world.entity.player.Player;
 import tocraft.walkers.impl.PlayerDataProvider;
-import net.minecraft.entity.player.PlayerEntity;
 
 public class PlayerHostility {
 
@@ -12,7 +12,7 @@ public class PlayerHostility {
      *
      * @return  whether this component's player will be targeted by hostile mobs, regardless of Walkers
      */
-    public static boolean hasHostility(PlayerEntity player) {
+    public static boolean hasHostility(Player player) {
         return ((PlayerDataProvider) player).getRemainingHostilityTime() > 0;
     }
 
@@ -21,7 +21,7 @@ public class PlayerHostility {
      *
      * @param hostilityTime  time, in ticks, to set hostility timer to
      */
-    public static void set(PlayerEntity player, int hostilityTime) {
+    public static void set(Player player, int hostilityTime) {
         ((PlayerDataProvider) player).setRemainingHostilityTime(hostilityTime);
     }
 }

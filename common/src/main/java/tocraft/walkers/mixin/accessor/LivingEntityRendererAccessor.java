@@ -1,13 +1,13 @@
 package tocraft.walkers.mixin.accessor;
 
-import net.minecraft.client.render.RenderLayer;
-import net.minecraft.client.render.entity.LivingEntityRenderer;
-import net.minecraft.entity.LivingEntity;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.entity.LivingEntityRenderer;
+import net.minecraft.world.entity.LivingEntity;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Invoker;
 
 @Mixin(LivingEntityRenderer.class)
 public interface LivingEntityRendererAccessor {
     @Invoker
-    RenderLayer callGetRenderLayer(LivingEntity entity, boolean showBody, boolean translucent, boolean showOutline);
+    RenderType callGetRenderType(LivingEntity entity, boolean showBody, boolean translucent, boolean showOutline);
 }

@@ -1,17 +1,17 @@
 package tocraft.walkers.ability.impl;
 
+import net.minecraft.world.entity.monster.warden.Warden;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.Level;
 import tocraft.walkers.ability.WalkersAbility;
 import tocraft.walkers.impl.SonicBoomUser;
-import net.minecraft.entity.mob.WardenEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.Items;
-import net.minecraft.world.World;
 
-public class WardenAbility extends WalkersAbility<WardenEntity> {
+public class WardenAbility extends WalkersAbility<Warden> {
 
     @Override
-    public void onUse(PlayerEntity player, WardenEntity shape, World world) {
+    public void onUse(Player player, Warden shape, Level world) {
         ((SonicBoomUser) player).shape$ability_startSonicBoom();
     }
 

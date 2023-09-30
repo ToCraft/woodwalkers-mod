@@ -1,23 +1,23 @@
 package tocraft.walkers.impl.variant;
 
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.animal.Sheep;
+import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.level.Level;
 import tocraft.walkers.api.variant.TypeProvider;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.passive.SheepEntity;
-import net.minecraft.text.MutableText;
-import net.minecraft.text.Text;
-import net.minecraft.util.DyeColor;
-import net.minecraft.world.World;
 
-public class SheepTypeProvider extends TypeProvider<SheepEntity> {
+public class SheepTypeProvider extends TypeProvider<Sheep> {
 
     @Override
-    public int getVariantData(SheepEntity entity) {
+    public int getVariantData(Sheep entity) {
         return entity.getColor().ordinal();
     }
 
     @Override
-    public SheepEntity create(EntityType<SheepEntity> type, World world, int data) {
-        SheepEntity sheep = new SheepEntity(type, world);
+    public Sheep create(EntityType<Sheep> type, Level world, int data) {
+        Sheep sheep = new Sheep(type, world);
         sheep.setColor(DyeColor.byId(data));
         return sheep;
     }
@@ -33,7 +33,7 @@ public class SheepTypeProvider extends TypeProvider<SheepEntity> {
     }
 
     @Override
-    public Text modifyText(SheepEntity sheep, MutableText text) {
-        return Text.literal(formatTypePrefix(DyeColor.byId(getVariantData(sheep)).getName()) + " ").append(text);
+    public Component modifyText(Sheep sheep, MutableComponent text) {
+        return Component.literal(formatTypePrefix(DyeColor.byId(getVariantData(sheep)).getName()) + " ").append(text);
     }
 }

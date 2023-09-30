@@ -1,33 +1,34 @@
 package tocraft.walkers.impl.tick.walkers;
 
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.ai.targeting.TargetingConditions;
+import net.minecraft.world.entity.monster.warden.Warden;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.phys.AABB;
+import tocraft.walkers.Walkers;
 import tocraft.walkers.api.WalkersTickHandler;
-import tocraft.walkers.api.platform.WalkersConfig;
-import net.minecraft.entity.ai.TargetPredicate;
-import net.minecraft.entity.effect.StatusEffectInstance;
-import net.minecraft.entity.effect.StatusEffects;
-import net.minecraft.entity.mob.WardenEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.math.Box;
 
-public class WardenTickHandler implements WalkersTickHandler<WardenEntity> {
+public class WardenTickHandler implements WalkersTickHandler<Warden> {
 
-    @Override
-    public void tick(PlayerEntity player, WardenEntity entity) {
-        if(!player.world.isClient) {
-            if(player.age % 20 == 0) {
+	@Override
+	public void tick(Player player, Warden entity) {
+		if (!player.level.isClientSide) {
+			if (player.tickCount % 20 == 0) {
 
-                // Blind the Warden Walkers player.
-                if(WalkersConfig.getInstance().wardenIsBlinded()) {
-                    player.addStatusEffect(new StatusEffectInstance(StatusEffects.DARKNESS, 20 * 3, 0, true, false));
-                }
+				// Blind the Warden Walkers player.
+				if (Walkers.CONFIG.wardenIsBlinded()) {
+					player.addEffect(new MobEffectInstance(MobEffects.DARKNESS, 20 * 3, 0, true, false));
+				}
 
-                // Blind other players near a player with the Warden Walkers.
-                if(WalkersConfig.getInstance().wardenBlindsNearby()) {
-                    for (PlayerEntity target : player.world.getPlayers(TargetPredicate.DEFAULT, player, new Box(player.getBlockPos()).expand(16))) {
-                        target.addStatusEffect(new StatusEffectInstance(StatusEffects.DARKNESS, 20 * 3, 0, true, false));
-                    }
-                }
-            }
-        }
-    }
+				// Blind other players near a player with the Warden Walkers.
+				if (Walkers.CONFIG.wardenBlindsNearby()) {
+					for (Player target : player.level.getNearbyPlayers(TargetingConditions.DEFAULT, player,
+							new AABB(player.blockPosition()).inflate(16))) {
+						target.addEffect(new MobEffectInstance(MobEffects.DARKNESS, 20 * 3, 0, true, false));
+					}
+				}
+			}
+		}
+	}
 }

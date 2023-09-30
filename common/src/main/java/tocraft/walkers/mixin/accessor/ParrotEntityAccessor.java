@@ -1,11 +1,11 @@
 package tocraft.walkers.mixin.accessor;
 
-import net.minecraft.entity.passive.ParrotEntity;
+import net.minecraft.world.entity.animal.Parrot;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Invoker;
 
-@Mixin(ParrotEntity.class)
+@Mixin(Parrot.class)
 public interface ParrotEntityAccessor {
     @Invoker
-    void callFlapWings();
+    void callCalculateFlapping();
 }

@@ -1,81 +1,65 @@
 package tocraft.walkers.network.impl;
 
+import org.jetbrains.annotations.Nullable;
+
 import dev.architectury.networking.NetworkManager;
-import tocraft.walkers.api.PlayerShapeChanger;
-import tocraft.walkers.api.platform.SyncedVars;
+import io.netty.buffer.Unpooled;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
 import tocraft.walkers.api.PlayerShape;
 import tocraft.walkers.api.variant.ShapeType;
-import tocraft.walkers.impl.PlayerDataProvider;
 import tocraft.walkers.network.ClientNetworking;
 import tocraft.walkers.network.NetworkHandler;
-import io.netty.buffer.Unpooled;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.registry.Registries;
-import org.jetbrains.annotations.Nullable;
 
 public class SwapPackets {
 
-    public static void registerWalkersRequestPacketHandler() {
-        NetworkManager.registerReceiver(NetworkManager.Side.C2S, NetworkHandler.SHAPE_REQUEST, (buf, context) -> {
-            boolean validType = buf.readBoolean();
-            if(validType) {
-                EntityType<?> entityType = Registries.ENTITY_TYPE.get(buf.readIdentifier());
-                int variant = buf.readInt();
-                boolean unlock = buf.readBoolean();
+	public static void registerWalkersRequestPacketHandler() {
+		NetworkManager.registerReceiver(NetworkManager.Side.C2S, NetworkHandler.SHAPE_REQUEST, (buf, context) -> {
+			boolean validType = buf.readBoolean();
+			if (validType) {
+				EntityType<?> entityType = BuiltInRegistries.ENTITY_TYPE.get(buf.readResourceLocation());
+				int variant = buf.readInt();
 
-                context.getPlayer().getServer().execute(() -> {
-                    // player type shouldn't be sent, but we still check regardless
-                    if(entityType.equals(EntityType.PLAYER)) {
-                        PlayerShape.updateShapes((ServerPlayerEntity) context.getPlayer(), null, null);
-                    } else {
-                        @Nullable ShapeType<LivingEntity> type = ShapeType.from(entityType, variant);
-                        if(type != null) {
-                            // unlock walker, if requested
-                            if (unlock) {
-                                // tests, if unlocking is possible
-                                if (SyncedVars.getUnlockOveridesCurrentShape() || ((PlayerDataProvider)context.getPlayer()).get2ndShape() == null)
-                                    // Ensures the mob isn't blacklisted
-                                    if (!SyncedVars.getShapeBlacklist().contains(EntityType.getId(type.getEntityType()).toString())) {
-                                        // set 2nd shape
-                                        PlayerShapeChanger.change2ndShape((ServerPlayerEntity) context.getPlayer(), type);
-                                        // update Player
-                                        PlayerShape.updateShapes((ServerPlayerEntity) context.getPlayer(), type, type.create(context.getPlayer().getWorld()));
-                                    }
-                            }
-                            else {
-                                // update Player
-                                PlayerShape.updateShapes((ServerPlayerEntity) context.getPlayer(), type, type.create(context.getPlayer().getWorld()));
-                            }
-                        }
-                    }
-                    
-                    // Refresh player dimensions
-                    context.getPlayer().calculateDimensions();
-                });
-            } else {
-                // Swap back to player if server allows it
-                context.getPlayer().getServer().execute(() -> {
-                    PlayerShape.updateShapes((ServerPlayerEntity) context.getPlayer(), null, null);
+				context.getPlayer().getServer().execute(() -> {
+					// player type shouldn't be sent, but we still check regardless
+					if (entityType.equals(EntityType.PLAYER)) {
+						PlayerShape.updateShapes((ServerPlayer) context.getPlayer(), null, null);
+					} else {
+						@Nullable
+						ShapeType<LivingEntity> type = ShapeType.from(entityType, variant);
+						if (type != null) {
+							// update Player
+							PlayerShape.updateShapes((ServerPlayer) context.getPlayer(), type,
+									type.create(context.getPlayer().level));
+						}
+					}
 
-                    context.getPlayer().calculateDimensions();
-                });
-            }
-        });
-    }
+					// Refresh player dimensions
+					context.getPlayer().refreshDimensions();
+				});
+			} else {
+				// Swap back to player if server allows it
+				context.getPlayer().getServer().execute(() -> {
+					PlayerShape.updateShapes((ServerPlayer) context.getPlayer(), null, null);
 
-    public static void sendSwapRequest(@Nullable ShapeType<?> type, boolean unlock) {
-        PacketByteBuf packet = new PacketByteBuf(Unpooled.buffer());
+					context.getPlayer().refreshDimensions();
+				});
+			}
+		});
+	}
 
-        packet.writeBoolean(type != null);
-        if(type != null) {
-            packet.writeIdentifier(Registries.ENTITY_TYPE.getId(type.getEntityType()));
-            packet.writeInt(type.getVariantData());
-            packet.writeBoolean(unlock);
-        }
+	public static void sendSwapRequest(@Nullable ShapeType<?> type) {
+		FriendlyByteBuf packet = new FriendlyByteBuf(Unpooled.buffer());
 
-        NetworkManager.sendToServer(ClientNetworking.SHAPE_REQUEST, packet);
-    }
+		packet.writeBoolean(type != null);
+		if (type != null) {
+			packet.writeResourceLocation(BuiltInRegistries.ENTITY_TYPE.getKey(type.getEntityType()));
+			packet.writeInt(type.getVariantData());
+		}
+
+		NetworkManager.sendToServer(ClientNetworking.SHAPE_REQUEST, packet);
+	}
 }

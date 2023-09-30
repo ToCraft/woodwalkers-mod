@@ -1,12 +1,12 @@
 package tocraft.walkers.mixin;
 
-import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.render.entity.feature.DrownedOverlayFeatureRenderer;
-import net.minecraft.client.render.entity.feature.FeatureRenderer;
-import net.minecraft.client.render.entity.feature.FeatureRendererContext;
-import net.minecraft.client.render.entity.model.DrownedEntityModel;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.entity.mob.DrownedEntity;
+import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.model.DrownedModel;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.entity.RenderLayerParent;
+import net.minecraft.client.renderer.entity.layers.DrownedOuterLayer;
+import net.minecraft.client.renderer.entity.layers.RenderLayer;
+import net.minecraft.world.entity.monster.Drowned;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -14,24 +14,24 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(DrownedOverlayFeatureRenderer.class)
-public abstract class DrownedOverlayMixin extends FeatureRenderer<DrownedEntity, DrownedEntityModel<DrownedEntity>> {
+@Mixin(DrownedOuterLayer.class)
+public abstract class DrownedOverlayMixin extends RenderLayer<Drowned, DrownedModel<Drowned>> {
 
-    @Shadow @Final private DrownedEntityModel<DrownedEntity> model;
+    @Shadow @Final private DrownedModel<Drowned> model;
 
-    public DrownedOverlayMixin(FeatureRendererContext<DrownedEntity, DrownedEntityModel<DrownedEntity>> context) {
+    public DrownedOverlayMixin(RenderLayerParent<Drowned, DrownedModel<Drowned>> context) {
         super(context);
     }
 
     @Inject(
             method = "render",
             at = @At("HEAD"))
-    private void onRender(MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int i, DrownedEntity drownedEntity, float f, float g, float h, float j, float k, float l, CallbackInfo ci) {
-        DrownedEntityModel<DrownedEntity> model = getContextModel();
+    private void onRender(PoseStack matrixStack, MultiBufferSource buffer, int i, Drowned drownedEntity, float f, float g, float h, float j, float k, float l, CallbackInfo ci) {
+        DrownedModel<Drowned> model = getParentModel();
 
         if (model != null) {
-            this.model.copyBipedStateTo(model);
-            model.sneaking = drownedEntity.isSneaking();
+            this.model.copyPropertiesTo(model);
+            model.crouching = drownedEntity.isShiftKeyDown();
         }
     }
 }

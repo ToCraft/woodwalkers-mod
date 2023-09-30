@@ -1,82 +1,187 @@
 package tocraft.walkers.api.platform;
 
-import dev.architectury.injectables.annotations.ExpectPlatform;
-
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
-public abstract class WalkersConfig {
+public class WalkersConfig {
 
-    @ExpectPlatform
-    public static WalkersConfig getInstance() {
-        throw new AssertionError();
-    }
+	public boolean revoke2ndShapeOnDeath = false;
+	public boolean shapesEquipItems = true;
+	public boolean shapesEquipArmor = true;
+	public boolean hostilesIgnoreHostileShapedPlayer = true;
+	public boolean hostilesForgetNewHostileShapedPlayer = false;
+	public boolean wolvesAttack2ndShapedPrey = true;
+	public boolean ownedwolvesAttack2ndShapedPrey = false;
+	public boolean villagersRunFrom2ndShapes = true;
+	public boolean foxesAttack2ndShapedPrey = true;
+	public boolean useShapeSounds = true;
+	public boolean playAmbientSounds = true;
+	public boolean hearSelfAmbient = false;
+	public boolean enableFlight = true;
+	public int hostilityTime = 20 * 15;
+	public List<String> advancementsRequiredForFlight = new ArrayList<>();
+	public boolean scalingHealth = true;
+	public boolean percentScalingHealth = true;
+	public int maxHealth = 40;
+	public Boolean scalingAttackDamage = true;
+	public Double maxAttackDamage = 4D;
+	public int endermanAbilityTeleportDistance = 32;
+	public boolean showPlayerNametag = false;
+	public boolean logCommands = true;
+	public float flySpeed = 0.05f;
+	public boolean wardenIsBlinded = true;
+	public boolean wardenBlindsNearby = true;
+	public boolean unlockOveridesCurrentShape = false;
+	public float unlockTimer = 60f;
+	public boolean devShapeIsThirdShape = false;
 
-    public abstract boolean enableFlight();
+	public Map<String, Integer> abilityCooldownMap = new HashMap<>() {
+		{
+			put("minecraft:blaze", 20);
+			put("minecraft:cow", 20);
+			put("minecraft:creeper", 100);
+			put("minecraft:ender_dragon", 20);
+			put("minecraft:enderman", 100);
+			put("minecraft:endermite", 20);
+			put("minecraft:evoker", 10);
+			put("minecraft:ghast", 60);
+			put("minecraft:llama", 20);
+			put("minecraft:sheep", 20);
+			put("minecraft:sniffer", 9600);
+			put("minecraft:snow_golem", 10);
+			put("minecraft:warden", 200);
+			put("minecraft:witch", 200);
+			put("minecraft:wither", 200);
+			put("minecraft:wolf", 20);
+		}
+	};
 
-    public abstract List<String> advancementsRequiredForFlight();
+	public List<UUID> playerUUIDBlacklist = new ArrayList<>();
 
-    public abstract Map<String, Integer> getAbilityCooldownMap();
+	public boolean enableFlight() {
+		return enableFlight;
+	}
 
-    public abstract boolean shouldOverlayShapesUnlocks();
+	public List<String> advancementsRequiredForFlight() {
+		return advancementsRequiredForFlight;
+	}
 
-    public abstract boolean logCommands();
+	public Map<String, Integer> getAbilityCooldownMap() {
+		return abilityCooldownMap;
+	}
 
-    public abstract boolean foxesAttack2ndShapedPrey();
+	public boolean logCommands() {
+		return logCommands;
+	}
 
-    public abstract boolean ownedwolvesAttack2ndShapedPrey();
+	public boolean wolvesAttack2ndShapedPrey() {
+		return wolvesAttack2ndShapedPrey;
+	}
 
-    public abstract boolean villagersRunFrom2ndShapes();
+	public boolean ownedwolvesAttack2ndShapedPrey() {
+		return ownedwolvesAttack2ndShapedPrey;
+	}
 
-    public abstract boolean revoke2ndShapeOnDeath();
+	public boolean villagersRunFrom2ndShapes() {
+		return villagersRunFrom2ndShapes;
+	}
 
-    public abstract boolean overlay2ndShapesRevokes();
+	public boolean revoke2ndShapeOnDeath() {
+		return revoke2ndShapeOnDeath;
+	}
 
-    public abstract float flySpeed();
+	public float flySpeed() {
+		return flySpeed;
+	}
 
-    public abstract boolean scalingHealth();
+	public boolean scalingHealth() {
+		return scalingHealth;
+	}
 
-    public abstract boolean percentScalingHealth();
+	public boolean percentScalingHealth() {
+		return percentScalingHealth;
+	}
 
-    public abstract int maxHealth();
+	public int maxHealth() {
+		return maxHealth;
+	}
 
-    public abstract Boolean scalingAttackDamage();
+	public Boolean scalingAttackDamage() {
+		return scalingAttackDamage;
+	}
 
-    public abstract Double maxAttackDamage();
+	public Double maxAttackDamage() {
+		return maxAttackDamage;
+	}
 
-    public abstract boolean shapesEquipItems();
+	public boolean shapesEquipItems() {
+		return shapesEquipItems;
+	}
 
-    public abstract boolean shapesEquipArmor();
+	public boolean shapesEquipArmor() {
+		return shapesEquipArmor;
+	}
 
-    public abstract boolean showPlayerNametag();
+	public boolean showPlayerNametag() {
+		return showPlayerNametag;
+	}
 
-    public abstract boolean wolvesAttack2ndShapedPrey();
+	public boolean foxesAttack2ndShapedPrey() {
+		return foxesAttack2ndShapedPrey;
+	}
 
-    public abstract boolean hostilesForgetNewHostileShapedPlayer();
+	public boolean hostilesForgetNewHostileShapedPlayer() {
+		return hostilesForgetNewHostileShapedPlayer;
+	}
 
-    public abstract boolean hostilesIgnoreHostileShapedPlayer();
+	public boolean hostilesIgnoreHostileShapedPlayer() {
+		return hostilesIgnoreHostileShapedPlayer;
+	}
 
-    public abstract boolean playAmbientSounds();
+	public boolean playAmbientSounds() {
+		return playAmbientSounds;
+	}
 
-    public abstract boolean useShapeSounds();
+	public boolean useShapeSounds() {
+		return useShapeSounds;
+	}
 
-    public abstract boolean hearSelfAmbient();
+	public boolean hearSelfAmbient() {
+		return hearSelfAmbient;
+	}
 
-    public abstract double endermanAbilityTeleportDistance();
+	public double endermanAbilityTeleportDistance() {
+		return endermanAbilityTeleportDistance;
+	}
 
-    public abstract int hostilityTime();
+	public int hostilityTime() {
+		return hostilityTime;
+	}
 
-    public abstract boolean wardenIsBlinded();
+	public boolean wardenIsBlinded() {
+		return wardenIsBlinded;
+	}
 
-    public abstract boolean wardenBlindsNearby();
+	public boolean wardenBlindsNearby() {
+		return wardenBlindsNearby;
+	}
 
-    public abstract boolean enableUnlockSystem();
+	public float unlockTimer() {
+		return unlockTimer;
+	}
 
-    public abstract float unlockTimer();
+	public boolean unlockOveridesCurrentShape() {
+		return unlockOveridesCurrentShape;
+	}
 
-    public abstract boolean unlockOveridesCurrentShape();
+	public boolean devShapeIsThirdShape() {
+		return devShapeIsThirdShape;
+	}
 
-    public abstract boolean devShapeIsThirdShape();
-
-    public abstract List<String> shapeBlacklist();
+	public List<UUID> playerUUIDBlacklist() {
+		return playerUUIDBlacklist;
+	}
 }

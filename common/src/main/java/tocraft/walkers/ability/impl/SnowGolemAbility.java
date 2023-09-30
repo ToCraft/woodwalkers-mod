@@ -1,28 +1,28 @@
 package tocraft.walkers.ability.impl;
 
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.entity.animal.SnowGolem;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.Snowball;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.Level;
 import tocraft.walkers.ability.WalkersAbility;
-import net.minecraft.entity.passive.SnowGolemEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.projectile.thrown.SnowballEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.world.World;
 
-public class SnowGolemAbility extends WalkersAbility<SnowGolemEntity> {
+public class SnowGolemAbility extends WalkersAbility<SnowGolem> {
 
     @Override
-    public void onUse(PlayerEntity player, SnowGolemEntity shape, World world) {
-        world.playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.ENTITY_SNOWBALL_THROW, SoundCategory.NEUTRAL, 0.5F, 0.4F / (world.random.nextFloat() * 0.4F + 0.8F));
+    public void onUse(Player player, SnowGolem shape, Level world) {
+        world.playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.SNOWBALL_THROW, SoundSource.NEUTRAL, 0.5F, 0.4F / (world.random.nextFloat() * 0.4F + 0.8F));
 
-        if (!world.isClient) {
+        if (!world.isClientSide) {
             for(int i = 0; i < 10; i++) {
-                SnowballEntity snowballEntity = new SnowballEntity(world, player);
+                Snowball snowballEntity = new Snowball(world, player);
                 snowballEntity.setItem(new ItemStack(Items.SNOWBALL));
-                snowballEntity.setVelocity(player, player.getPitch() + world.random.nextInt(10) - 5, player.getYaw() + world.random.nextInt(10) - 5, 0.0F, 1.5F, 1.0F);
-                world.spawnEntity(snowballEntity);
+                snowballEntity.shootFromRotation(player, player.getXRot() + world.random.nextInt(10) - 5, player.getYRot() + world.random.nextInt(10) - 5, 0.0F, 1.5F, 1.0F);
+                world.addFreshEntity(snowballEntity);
             }
         }
     }

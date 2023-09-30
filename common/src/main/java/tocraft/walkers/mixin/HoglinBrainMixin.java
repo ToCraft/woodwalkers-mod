@@ -1,36 +1,36 @@
 package tocraft.walkers.mixin;
 
 import tocraft.walkers.api.PlayerShape;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.mob.HoglinBrain;
-import net.minecraft.entity.mob.HoglinEntity;
-import net.minecraft.entity.player.PlayerEntity;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.Optional;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.monster.hoglin.Hoglin;
+import net.minecraft.world.entity.monster.hoglin.HoglinAi;
+import net.minecraft.world.entity.player.Player;
 
-@Mixin(HoglinBrain.class)
+@Mixin(HoglinAi.class)
 public class HoglinBrainMixin {
 
     @Inject(
-            method = "getNearestVisibleTargetablePlayer",
+            method = "findNearestValidAttackTarget",
             at = @At("RETURN"),
     cancellable = true)
-    private static void getNearestVisibleTargetablePlayer(HoglinEntity hoglin, CallbackInfoReturnable<Optional<? extends LivingEntity>> cir) {
+    private static void findNearestValidAttackTarget(Hoglin hoglin, CallbackInfoReturnable<Optional<? extends LivingEntity>> cir) {
         Optional<? extends LivingEntity> ret = cir.getReturnValue();
         if(ret.isPresent()) {
             LivingEntity target = ret.get();
 
             // Check if Hoglin target is player
-            if(target instanceof PlayerEntity player) {
+            if(target instanceof Player player) {
                 LivingEntity shape = PlayerShape.getCurrentShape(player);
 
                 // Ensure player shape is valid
                 if(shape != null) {
-                    if(shape instanceof HoglinEntity) {
+                    if(shape instanceof Hoglin) {
                         cir.setReturnValue(Optional.empty());
                     }
                 }

@@ -1,33 +1,33 @@
 package tocraft.walkers.ability.impl;
 
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.entity.monster.Ghast;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.LargeFireball;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.Level;
 import tocraft.walkers.ability.WalkersAbility;
-import net.minecraft.entity.mob.GhastEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.projectile.FireballEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.Items;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.world.World;
 
-public class GhastAbility extends WalkersAbility<GhastEntity> {
+public class GhastAbility extends WalkersAbility<Ghast> {
 
     @Override
-    public void onUse(PlayerEntity player, GhastEntity shape, World world) {
-        FireballEntity fireball = new FireballEntity(
+    public void onUse(Player player, Ghast shape, Level world) {
+        LargeFireball fireball = new LargeFireball(
                 world,
                 player,
-                player.getRotationVector().x,
-                player.getRotationVector().y,
-                player.getRotationVector().z,
+                player.getLookAngle().x,
+                player.getLookAngle().y,
+                player.getLookAngle().z,
                 2
         );
 
-        fireball.refreshPositionAndAngles(fireball.getX(), fireball.getY() + 1.75, fireball.getZ(), fireball.getYaw(), fireball.getPitch());
-        fireball.updatePosition(fireball.getX(), fireball.getY(), fireball.getZ());
-        world.spawnEntity(fireball);
-        world.playSoundFromEntity(null, player, SoundEvents.ENTITY_GHAST_SHOOT, SoundCategory.HOSTILE, 10.0F, (world.random.nextFloat() - world.random.nextFloat()) * 0.2F + 1.0F);
-        world.playSoundFromEntity(null, player, SoundEvents.ENTITY_GHAST_WARN, SoundCategory.HOSTILE, 10.0F, (world.random.nextFloat() - world.random.nextFloat()) * 0.2F + 1.0F);
+        fireball.moveTo(fireball.getX(), fireball.getY() + 1.75, fireball.getZ(), fireball.getYRot(), fireball.getXRot());
+        fireball.absMoveTo(fireball.getX(), fireball.getY(), fireball.getZ());
+        world.addFreshEntity(fireball);
+        world.playSound(null, player, SoundEvents.GHAST_SHOOT, SoundSource.HOSTILE, 10.0F, (world.random.nextFloat() - world.random.nextFloat()) * 0.2F + 1.0F);
+        world.playSound(null, player, SoundEvents.GHAST_WARN, SoundSource.HOSTILE, 10.0F, (world.random.nextFloat() - world.random.nextFloat()) * 0.2F + 1.0F);
     }
 
     @Override

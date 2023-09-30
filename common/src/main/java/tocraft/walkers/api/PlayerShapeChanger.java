@@ -1,20 +1,20 @@
 package tocraft.walkers.api;
 
 import dev.architectury.event.EventResult;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.InteractionResult;
 import tocraft.walkers.api.event.UnlockWalkersCallback;
 import tocraft.walkers.api.variant.ShapeType;
 import tocraft.walkers.impl.PlayerDataProvider;
 import tocraft.walkers.network.impl.UnlockPackets;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.util.ActionResult;
 
 public class PlayerShapeChanger {
 
-    public static boolean change2ndShape(ServerPlayerEntity player, ShapeType newShape) {
+    public static boolean change2ndShape(ServerPlayer player, ShapeType newShape) {
         PlayerDataProvider provider = (PlayerDataProvider) player;
         EventResult unlock = UnlockWalkersCallback.EVENT.invoker().unlock(player, newShape);
 
-        if(unlock.asMinecraft() != ActionResult.FAIL && provider.get2ndShape() != newShape) {
+        if(unlock.asMinecraft() != InteractionResult.FAIL && provider.get2ndShape() != newShape) {
             provider.set2ndShape(newShape);
             sync(player);
             PlayerAbilities.sync(player); // TODO: ???
@@ -24,7 +24,7 @@ public class PlayerShapeChanger {
         }
     }
 
-    public static void sync(ServerPlayerEntity player) {
+    public static void sync(ServerPlayer player) {
         UnlockPackets.sendSyncPacket(player);
     }
 }

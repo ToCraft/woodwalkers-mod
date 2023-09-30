@@ -4,14 +4,14 @@ import dev.architectury.networking.NetworkManager;
 import tocraft.walkers.impl.PlayerDataProvider;
 import tocraft.walkers.network.NetworkHandler;
 import io.netty.buffer.Unpooled;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.player.Player;
 
 public class PlayerAbilities {
 
     /**
-     * Returns an integer representing the current ability cooldown of the specified {@link PlayerEntity} in ticks.
+     * Returns an integer representing the current ability cooldown of the specified {@link Player} in ticks.
      *
      * <p>
      * A return value of {@code 0} represents no cooldown, while 20 is 1 second.
@@ -19,20 +19,20 @@ public class PlayerAbilities {
      * @param player player to retrieve ability cooldown for
      * @return cooldown, in ticks, of the specified player's ability
      */
-    public static int getCooldown(PlayerEntity player) {
+    public static int getCooldown(Player player) {
         return ((PlayerDataProvider) player).getAbilityCooldown();
     }
 
-    public static boolean canUseAbility(PlayerEntity player) {
+    public static boolean canUseAbility(Player player) {
         return ((PlayerDataProvider) player).getAbilityCooldown() <= 0;
     }
 
-    public static void setCooldown(PlayerEntity player, int cooldown) {
+    public static void setCooldown(Player player, int cooldown) {
         ((PlayerDataProvider) player).setAbilityCooldown(cooldown);
     }
 
-    public static void sync(ServerPlayerEntity player) {
-        PacketByteBuf packet = new PacketByteBuf(Unpooled.buffer());
+    public static void sync(ServerPlayer player) {
+        FriendlyByteBuf packet = new FriendlyByteBuf(Unpooled.buffer());
         packet.writeInt(((PlayerDataProvider) player).getAbilityCooldown());
         NetworkManager.sendToPlayer(player, NetworkHandler.ABILITY_SYNC, packet);
     }

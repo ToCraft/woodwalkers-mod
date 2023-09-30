@@ -5,27 +5,27 @@ import tocraft.walkers.api.variant.ShapeType;
 import tocraft.walkers.impl.PlayerDataProvider;
 import tocraft.walkers.network.NetworkHandler;
 import io.netty.buffer.Unpooled;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.registry.Registries;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
 
 public class PlayerShape {
 
     /**
-     * Returns the shape associated with the {@link PlayerEntity} this component is attached to.
+     * Returns the shape associated with the {@link Player} this component is attached to.
      *
      * <p>Note that this method may return null, which represents "no shape."
      *
      * @return the current {@link LivingEntity} shape associated with this component's player owner, or null if they have no shape equipped
      */
-    public static LivingEntity getCurrentShape(PlayerEntity player) {
+    public static LivingEntity getCurrentShape(Player player) {
         return ((PlayerDataProvider) player).getCurrentShape();
     }
 
-    public static ShapeType<?> getCurrentShapeType(PlayerEntity player) {
+    public static ShapeType<?> getCurrentShapeType(Player player) {
         return ((PlayerDataProvider) player).getCurrentShapeType();
     }
 
@@ -37,27 +37,27 @@ public class PlayerShape {
      *
      * @param entity {@link LivingEntity} new shape for this component, or null to clear
      */
-    public static boolean updateShapes(ServerPlayerEntity player, ShapeType<?> type, LivingEntity entity) {
+    public static boolean updateShapes(ServerPlayer player, ShapeType<?> type, LivingEntity entity) {
         return ((PlayerDataProvider) player).updateShapes(entity);
     }
 
-    public static void sync(ServerPlayerEntity player) {
+    public static void sync(ServerPlayer player) {
         sync(player, player);
     }
 
-    public static void sync(ServerPlayerEntity changed, ServerPlayerEntity packetTarget) {
-        PacketByteBuf packet = new PacketByteBuf(Unpooled.buffer());
-        NbtCompound entityTag = new NbtCompound();
+    public static void sync(ServerPlayer changed, ServerPlayer packetTarget) {
+        FriendlyByteBuf packet = new FriendlyByteBuf(Unpooled.buffer());
+        CompoundTag entityTag = new CompoundTag();
 
         // serialize current shape data to tag if it exists
         LivingEntity shape = getCurrentShape(changed);
         if(shape != null) {
-            shape.writeNbt(entityTag);
+            shape.saveWithoutId(entityTag);
         }
 
         // put entity type ID under the key "id", or "minecraft:empty" if no shape is equipped (or the shape entity type is invalid)
-        packet.writeUuid(changed.getUuid());
-        packet.writeString(shape == null ? "minecraft:empty" : Registries.ENTITY_TYPE.getId(shape.getType()).toString());
+        packet.writeUUID(changed.getUUID());
+        packet.writeUtf(shape == null ? "minecraft:empty" : BuiltInRegistries.ENTITY_TYPE.getKey(shape.getType()).toString());
         packet.writeNbt(entityTag);
         NetworkManager.sendToPlayer(packetTarget, NetworkHandler.SHAPE_SYNC, packet);
     }

@@ -1,46 +1,44 @@
 package tocraft.walkers.mixin.accessor;
 
-import net.minecraft.entity.EntityDimensions;
-import net.minecraft.entity.EntityPose;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.sound.SoundEvent;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Accessor;
 import org.spongepowered.asm.mixin.gen.Invoker;
 
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.EntityDimensions;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Pose;
+
 @Mixin(LivingEntity.class)
 public interface LivingEntityAccessor {
-    @Accessor
-    boolean isJumping();
+	@Accessor
+	boolean isJumping();
 
-    @Invoker
-    float callGetActiveEyeHeight(EntityPose pose, EntityDimensions dimensions);
+	@Invoker
+	float callGetEyeHeight(Pose pose, EntityDimensions dimensions);
 
-    @Invoker
-    void callTickActiveItemStack();
+	@Invoker
+	void callUpdatingUsingItem();
 
-    @Invoker
-    SoundEvent callGetHurtSound(DamageSource source);
+	@Invoker
+	SoundEvent callGetHurtSound(DamageSource source);
 
-    @Invoker
-    SoundEvent callGetDeathSound();
+	@Invoker
+	SoundEvent callGetDeathSound();
 
-    @Invoker
-    void callPlayBlockFallSound();
+	@Invoker
+	void callPlayBlockFallSound();
 
-    @Invoker
-    int callComputeFallDamage(float fallDistance, float damageMultiplier);
+	@Invoker
+	int callCalculateFallDamage(float fallDistance, float damageMultiplier);
 
-    @Invoker
-    float callGetSoundVolume();
+	@Invoker
+	float callGetSoundVolume();
 
-    @Invoker
-    float callGetSoundPitch();
+	@Invoker
+	float callGetVoicePitch();
 
-    @Invoker
-    void callSetLivingFlag(int mask, boolean value);
-
-    @Invoker
-    float callGetEyeHeight(EntityPose pose, EntityDimensions dimensions);
+	@Invoker
+	void callSetLivingEntityFlag(int mask, boolean value);
 }

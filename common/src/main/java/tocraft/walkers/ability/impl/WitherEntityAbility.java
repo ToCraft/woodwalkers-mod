@@ -1,28 +1,28 @@
 package tocraft.walkers.ability.impl;
 
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.entity.boss.wither.WitherBoss;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.WitherSkull;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
 import tocraft.walkers.ability.WalkersAbility;
-import net.minecraft.entity.boss.WitherEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.projectile.WitherSkullEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.Items;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.World;
 
-public class WitherEntityAbility extends WalkersAbility<WitherEntity> {
+public class WitherEntityAbility extends WalkersAbility<WitherBoss> {
 
     @Override
-    public void onUse(PlayerEntity player, WitherEntity shape, World world) {
-        world.playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.ENTITY_WITHER_SHOOT, SoundCategory.NEUTRAL, 0.5F, 0.4F / (world.random.nextFloat() * 0.4F + 0.8F));
+    public void onUse(Player player, WitherBoss shape, Level world) {
+        world.playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.WITHER_SHOOT, SoundSource.NEUTRAL, 0.5F, 0.4F / (world.random.nextFloat() * 0.4F + 0.8F));
 
-        if (!world.isClient) {
-            Vec3d lookDirection = player.getRotationVector();
-            WitherSkullEntity skull = new WitherSkullEntity(world, player, lookDirection.x, lookDirection.y, lookDirection.z);
-            skull.setPos(player.getX(), player.getY() + 2, player.getZ());
-            skull.setVelocity(player, player.getPitch(), player.getYaw(), 0.0F, 1.5F, 1.0F);
-            world.spawnEntity(skull);
+        if (!world.isClientSide) {
+            Vec3 lookDirection = player.getLookAngle();
+            WitherSkull skull = new WitherSkull(world, player, lookDirection.x, lookDirection.y, lookDirection.z);
+            skull.setPosRaw(player.getX(), player.getY() + 2, player.getZ());
+            skull.shootFromRotation(player, player.getXRot(), player.getYRot(), 0.0F, 1.5F, 1.0F);
+            world.addFreshEntity(skull);
         }
     }
 

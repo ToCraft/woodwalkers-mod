@@ -1,14 +1,15 @@
 package tocraft.walkers.ability;
 
 import com.mojang.blaze3d.systems.RenderSystem;
+
 import dev.architectury.event.events.client.ClientGuiEvent;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screens.ChatScreen;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.ItemStack;
 import tocraft.walkers.api.PlayerAbilities;
 import tocraft.walkers.api.PlayerShape;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.screen.ChatScreen;
-import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.item.ItemStack;
 
 public class AbilityOverlayRenderer {
 
@@ -20,8 +21,8 @@ public class AbilityOverlayRenderer {
 
     public static void register() {
         ClientGuiEvent.RENDER_HUD.register((matrices, delta) -> {
-            MinecraftClient client = MinecraftClient.getInstance();
-            ClientPlayerEntity player = client.player;
+            Minecraft client = Minecraft.getInstance();
+            LocalPlayer player = client.player;
             LivingEntity shape = PlayerShape.getCurrentShape(player);
 
             if(shape == null) {
@@ -34,11 +35,11 @@ public class AbilityOverlayRenderer {
                 return;
             }
 
-            if(client.currentScreen instanceof ChatScreen) {
+            if(client.screen instanceof ChatScreen) {
                 return;
             }
 
-            double d = client.getWindow().getScaleFactor();
+            double d = client.getWindow().getGuiScale();
             int cd = PlayerAbilities.getCooldown(player);
             int max = AbilityRegistry.get(shape.getType()).getCooldown(shape);
             float cooldownScale = 1 - cd / (float) max;
@@ -68,10 +69,10 @@ public class AbilityOverlayRenderer {
             }
 
             if(player != null) {
-                int width = MinecraftClient.getInstance().getWindow().getScaledWidth();
-                int height = MinecraftClient.getInstance().getWindow().getScaledHeight();
+                int width = Minecraft.getInstance().getWindow().getGuiScaledWidth();
+                int height = Minecraft.getInstance().getWindow().getGuiScaledHeight();
 
-                matrices.push();
+                matrices.pushPose();
                 if(cooldownScale != 1) {
                     RenderSystem.enableScissor(
                             (int) ((double) 0 * d),
@@ -93,16 +94,11 @@ public class AbilityOverlayRenderer {
                 ItemStack stack = new ItemStack(shapeAbility.getIcon());
 //                BakedModel heldItemModel = MinecraftClient.getInstance().getItemRenderer().getHeldItemModel(stack, client.world, player);
 //                renderGuiItemModel(matrices, stack, (int) (width * .95f), (int) (height * .92f), heldItemModel);
-                MinecraftClient.getInstance().getItemRenderer()
-                        .renderGuiItemIcon(matrices, stack, (int) (width * .95f), (int) (height * .92f));
+                Minecraft.getInstance().getItemRenderer() .renderGuiItem(matrices, stack, (int) (width * .95f), (int) (height * .92f));
 
                 RenderSystem.disableScissor();
-                matrices.pop();
+                matrices.popPose();
             }
         });
-    }
-
-    private AbilityOverlayRenderer() {
-        // NO-OP
     }
 }

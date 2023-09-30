@@ -1,0 +1,85 @@
+{
+  "replace": false,
+  "values": [
+	  {
+		  "id": "vampirism:advanced_hunter",
+		  "required": false
+	  },
+	  {
+		  "id": "vampirism:advanced_vampire",
+		  "required": false
+	  },
+	  {
+		  "id": "vampirism:blinding_bat",
+		  "required": false
+	  },
+	  {
+		  "id": "vampirism:converted_donkey",
+		  "required": false
+	  },
+	  {
+		  "id": "vampirism:converted_horse",
+		  "required": false
+	  },
+	  {
+		  "id": "vampirism:converted_mule",
+		  "required": false
+	  },
+	  {
+		  "id": "vampirism:dummy_creature",
+		  "required": false
+	  },
+	  {
+		  "id": "vampirism:hunter",
+		  "required": false
+	  },
+	  {
+		  "id": "vampirism:hunter_trainer",
+		  "required": false
+	  },
+	  {
+		  "id": "vampirism:hunter_trainer_dummy",
+		  "required": false
+	  },
+	  {
+		  "id": "vampirism:task_master_hunter",
+		  "required": false
+	  },
+	  {
+		  "id": "vampirism:task_master_vampire",
+		  "required": false
+	  },
+	  {
+		  "id": "vampirism:vampire",
+		  "required": false
+	  },
+	  {
+		  "id": "vampirism:vampire_baron",
+		  "required": false
+	  },
+	  {
+		  "id": "vampirism:villager_converted",
+		  "required": false
+	  },
+	  {
+		  "id": "werewolves:alpha_werewolf",
+		  "required": false
+	  },
+	  {
+		  "id": "werewolves:alpha_werewolf",
+		  "required": false
+	  },
+	  {
+		  "id": "werewolves:human_werewolf",
+		  "required": false
+	  },
+	  {
+		  "id": "werewolves:task_master_werewolf",
+		  "required": false
+	  },
+	  {
+		  "id": "werewolves:werewolf_survivalist",
+		  "required": false
+	  }
+  ]
+}

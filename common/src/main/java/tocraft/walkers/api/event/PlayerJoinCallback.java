@@ -2,7 +2,7 @@ package tocraft.walkers.api.event;
 
 import dev.architectury.event.Event;
 import dev.architectury.event.EventFactory;
-import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.level.ServerPlayer;
 
 /**
  * This event is called when a player joins the server.
@@ -10,6 +10,6 @@ import net.minecraft.server.network.ServerPlayerEntity;
 public interface PlayerJoinCallback {
     Event<PlayerJoinCallback> EVENT = EventFactory.createLoop(PlayerJoinCallback.class);
 
-    void onPlayerJoin(ServerPlayerEntity player);
+    void onPlayerJoin(ServerPlayer player);
 }
 

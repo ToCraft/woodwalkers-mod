@@ -1,38 +1,38 @@
 package tocraft.walkers.mixin;
 
-import tocraft.walkers.Walkers;
-import tocraft.walkers.api.PlayerShape;
-import tocraft.walkers.registry.WalkersEntityTags;
-import net.minecraft.client.gui.hud.InGameHud;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.fluid.Fluid;
-import net.minecraft.registry.tag.FluidTags;
-import net.minecraft.registry.tag.TagKey;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
 
-@Mixin(InGameHud.class)
+import net.minecraft.client.gui.Gui;
+import net.minecraft.tags.FluidTags;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.material.Fluid;
+import tocraft.walkers.Walkers;
+import tocraft.walkers.api.PlayerShape;
+import tocraft.walkers.registry.WalkersEntityTags;
+
+@Mixin(Gui.class)
 public abstract class InGameHudMixin {
 
-    @Shadow protected abstract PlayerEntity getCameraPlayer();
+	@Shadow
+	protected abstract Player getCameraPlayer();
 
-    @ModifyArg(
-            method = "renderStatusBars",
-            at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/player/PlayerEntity;isSubmergedIn(Lnet/minecraft/registry/tag/TagKey;)Z")
-    )
-    private TagKey<Fluid> shouldRenderBreath(TagKey<Fluid> tag) {
-        PlayerEntity player = this.getCameraPlayer();
-        LivingEntity shape = PlayerShape.getCurrentShape(player);
+	@ModifyArg(method = "renderPlayerHealth", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/player/Player;isEyeInFluid(Lnet/minecraft/tags/TagKey;)Z"))
+	private TagKey<Fluid> shouldRenderBreath(TagKey<Fluid> tag) {
+		Player player = this.getCameraPlayer();
+		LivingEntity shape = PlayerShape.getCurrentShape(player);
 
-        if(shape != null) {
-            if(Walkers.isAquatic(shape) || shape.getType().isIn(WalkersEntityTags.UNDROWNABLE) && player.isSubmergedIn(FluidTags.WATER)) {
-                return FluidTags.LAVA;    // will cause isSubmergedIn to return false, preventing air render
-            }
-        }
+		if (shape != null) {
+			if (Walkers.isAquatic(shape)
+					|| shape.getType().is(WalkersEntityTags.UNDROWNABLE) && player.isEyeInFluid(FluidTags.WATER)) {
+				return FluidTags.LAVA; // will cause isEyeInFluid to return false, preventing air render
+			}
+		}
 
-        return tag;
-    }
+		return tag;
+	}
 }

@@ -1,11 +1,10 @@
 package tocraft.walkers.ability;
 
 import tocraft.walkers.ability.impl.*;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-
 import java.util.HashMap;
 import java.util.Map;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
 
 public class AbilityRegistry {
 
