@@ -50,6 +50,7 @@ public class WalkersConfig {
 			put("minecraft:evoker", 10);
 			put("minecraft:ghast", 60);
 			put("minecraft:goat", 20);
+			put("minecraft:mooshroom", 300);
 			put("minecraft:llama", 20);
 			put("minecraft:sheep", 20);
 			put("minecraft:sniffer", 9600);

@@ -15,6 +15,7 @@ import tocraft.walkers.ability.impl.EndermiteAbility;
 import tocraft.walkers.ability.impl.EvokerAbility;
 import tocraft.walkers.ability.impl.GhastAbility;
 import tocraft.walkers.ability.impl.LlamaAbility;
+import tocraft.walkers.ability.impl.MushroomCowAbility;
 import tocraft.walkers.ability.impl.SheepAbility;
 import tocraft.walkers.ability.impl.SnifferAbility;
 import tocraft.walkers.ability.impl.SnowGolemAbility;
@@ -51,6 +52,7 @@ public class AbilityRegistry {
         register(EntityType.SHEEP, new SheepAbility<>());
         register(EntityType.SNIFFER, new SnifferAbility());
         register(EntityType.CHICKEN, new ChickenAbility<>());
+        register(EntityType.MOOSHROOM, new MushroomCowAbility());
     }
 
     public static WalkersAbility get(EntityType<?> type) {
