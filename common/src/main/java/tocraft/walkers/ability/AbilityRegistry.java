@@ -6,6 +6,7 @@ import java.util.Map;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import tocraft.walkers.ability.impl.BlazeAbility;
+import tocraft.walkers.ability.impl.ChickenAbility;
 import tocraft.walkers.ability.impl.CowAbility;
 import tocraft.walkers.ability.impl.CreeperAbility;
 import tocraft.walkers.ability.impl.EnderDragonAbility;
@@ -49,6 +50,7 @@ public class AbilityRegistry {
         register(EntityType.WOLF, new WolfAbility());
         register(EntityType.SHEEP, new SheepAbility<>());
         register(EntityType.SNIFFER, new SnifferAbility());
+        register(EntityType.CHICKEN, new ChickenAbility<>());
     }
 
     public static WalkersAbility get(EntityType<?> type) {
