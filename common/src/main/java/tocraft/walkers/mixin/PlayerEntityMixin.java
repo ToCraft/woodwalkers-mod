@@ -33,7 +33,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.biome.Biome;
 import tocraft.walkers.Walkers;
 import tocraft.walkers.api.PlayerShape;
-import tocraft.walkers.api.platform.WalkersConfig;
 import tocraft.walkers.mixin.accessor.EntityAccessor;
 import tocraft.walkers.mixin.accessor.IronGolemEntityAccessor;
 import tocraft.walkers.mixin.accessor.LivingEntityAccessor;
@@ -101,7 +100,7 @@ public abstract class PlayerEntityMixin extends LivingEntityMixin {
 						this.hurt(damageSources().fall(), 2.0F);
 					}
 				} else {
-					this.setAirSupply(300);
+					this.setAirSupply(air + 1);
 				}
 			}
 		}
