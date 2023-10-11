@@ -1,10 +1,26 @@
 package tocraft.walkers.ability;
 
-import tocraft.walkers.ability.impl.*;
 import java.util.HashMap;
 import java.util.Map;
+
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import tocraft.walkers.ability.impl.BlazeAbility;
+import tocraft.walkers.ability.impl.CowAbility;
+import tocraft.walkers.ability.impl.CreeperAbility;
+import tocraft.walkers.ability.impl.EnderDragonAbility;
+import tocraft.walkers.ability.impl.EndermanAbility;
+import tocraft.walkers.ability.impl.EndermiteAbility;
+import tocraft.walkers.ability.impl.EvokerAbility;
+import tocraft.walkers.ability.impl.GhastAbility;
+import tocraft.walkers.ability.impl.LlamaAbility;
+import tocraft.walkers.ability.impl.SheepAbility;
+import tocraft.walkers.ability.impl.SnifferAbility;
+import tocraft.walkers.ability.impl.SnowGolemAbility;
+import tocraft.walkers.ability.impl.WardenAbility;
+import tocraft.walkers.ability.impl.WitchAbility;
+import tocraft.walkers.ability.impl.WitherEntityAbility;
+import tocraft.walkers.ability.impl.WolfAbility;
 
 public class AbilityRegistry {
 
@@ -22,7 +38,8 @@ public class AbilityRegistry {
         register(EntityType.GHAST, new GhastAbility());
         register(EntityType.SNOW_GOLEM, new SnowGolemAbility());
         register(EntityType.WITHER, new WitherEntityAbility());
-        register(EntityType.COW, new CowAbility());
+        register(EntityType.COW, new CowAbility<>());
+        register(EntityType.GOAT, new CowAbility<>());
         register(EntityType.ENDERMITE, new EndermiteAbility());
         register(EntityType.LLAMA, new LlamaAbility<>());
         register(EntityType.TRADER_LLAMA, new LlamaAbility<>());
