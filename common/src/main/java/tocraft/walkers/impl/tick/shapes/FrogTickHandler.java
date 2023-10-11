@@ -1,4 +1,4 @@
-package tocraft.walkers.impl.tick.walkers;
+package tocraft.walkers.impl.tick.shapes;
 
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;

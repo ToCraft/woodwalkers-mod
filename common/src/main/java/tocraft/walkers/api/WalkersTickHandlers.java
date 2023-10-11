@@ -1,12 +1,12 @@
 package tocraft.walkers.api;
 
-import tocraft.walkers.impl.tick.walkers.FrogTickHandler;
-import tocraft.walkers.impl.tick.walkers.JumpBoostTickHandler;
-import tocraft.walkers.impl.tick.walkers.WardenTickHandler;
 import java.util.HashMap;
 import java.util.Map;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import tocraft.walkers.impl.tick.shapes.FrogTickHandler;
+import tocraft.walkers.impl.tick.shapes.JumpBoostTickHandler;
+import tocraft.walkers.impl.tick.shapes.WardenTickHandler;
 
 public class WalkersTickHandlers {
 
