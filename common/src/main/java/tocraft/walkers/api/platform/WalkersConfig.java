@@ -41,6 +41,7 @@ public class WalkersConfig {
 	public Map<String, Integer> abilityCooldownMap = new HashMap<>() {
 		{
 			put("minecraft:blaze", 20);
+			put("minecraft:camel", 40);
 			put("minecraft:chicken", 1200);
 			put("minecraft:cow", 20);
 			put("minecraft:creeper", 100);
@@ -50,15 +51,18 @@ public class WalkersConfig {
 			put("minecraft:evoker", 10);
 			put("minecraft:ghast", 60);
 			put("minecraft:goat", 20);
+			put("minecraft:horse", 40);
 			put("minecraft:mooshroom", 300);
 			put("minecraft:llama", 20);
 			put("minecraft:sheep", 20);
+			put("minecraft:skeleton_horse", 40);
 			put("minecraft:sniffer", 9600);
 			put("minecraft:snow_golem", 10);
 			put("minecraft:warden", 200);
 			put("minecraft:witch", 200);
 			put("minecraft:wither", 200);
 			put("minecraft:wolf", 20);
+			put("minecraft:zombie_horse", 40);
 		}
 	};
 
