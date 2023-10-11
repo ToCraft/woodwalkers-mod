@@ -34,7 +34,7 @@ public class KeyPressHandler implements ClientTickEvent.Client {
 			handleAbilityKey(client);
 
 		if (WalkersClient.TRANSFORM_KEY.consumeClick()) {
-			handleTransformKey(client);
+			SwapPackets.sendSwapRequest();
 		}
 
 		if (WalkersClient.UNLOCK_KEY.isDown())
@@ -55,18 +55,6 @@ public class KeyPressHandler implements ClientTickEvent.Client {
 				ClientNetworking.sendAbilityRequest();
 			}
 		}
-	}
-
-	private void handleTransformKey(Minecraft client) {
-		// check if player is blacklisted
-		if (SyncedVars.getPlayerBlacklist().contains(client.player.getUUID())) {
-			client.player.displayClientMessage(Component.translatable("walkers.player_blacklisted"), true);
-			return;
-		}
-		if (PlayerShape.getCurrentShape(client.player) == null)
-			SwapPackets.sendSwapRequest(((PlayerDataProvider) client.player).get2ndShape());
-		else
-			SwapPackets.sendSwapRequest(null);
 	}
 
 	private void handleUnlockKey(Minecraft client) {
