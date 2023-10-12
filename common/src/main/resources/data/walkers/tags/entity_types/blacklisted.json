@@ -1,6 +1,7 @@
 {
   "replace": false,
   "values": [
+	  "minecraft:villager",
 	  {
 		  "id": "vampirism:advanced_hunter",
 		  "required": false
