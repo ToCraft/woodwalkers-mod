@@ -17,7 +17,7 @@ public class HorseAbility <T extends Mob> extends WalkersAbility<T> {
     public void onUse(Player player, T shape, Level world) {
     	int level = randInt(1, 3);
         player.addEffect(new MobEffectInstance(MobEffects.JUMP, this.getCooldown(shape) / 2, level, true, false));
-        world.playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.GENERIC_DRINK, SoundSource.PLAYERS, 1.0F, 1.0F);
+        world.playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.HORSE_JUMP, SoundSource.PLAYERS, 1.0F, 1.0F);
     }
 
     @Override
