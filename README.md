@@ -1,3 +1,8 @@
+[![Build-1.20.2](https://github.com/ToCraft/woodwalkers-mod/actions/workflows/gradle-1.20.2.yml/badge.svg)](https://github.com/ToCraft/woodwalkers-mod/actions/workflows/gradle-1.20.2.yml)
+![Maven metadata URL](https://img.shields.io/maven-metadata/v?metadataUrl=https%3A%2F%2Ftocraft.ddns.net%2Fmaven%2Freleases%2Fdev%2Ftocraft%2Fwalkers%2Fmaven-metadata.xml&versionPrefix=1.20.2-common&label=Woodwalkers)
+![Maven metadata URL](https://img.shields.io/maven-metadata/v?metadataUrl=https%3A%2F%2Ftocraft.ddns.net%2Fmaven%2Freleases%2Fdev%2Ftocraft%2Fwalkers%2Fmaven-metadata.xml&versionPrefix=1.20.2-forge&label=Woodwalkers)
+![Maven metadata URL](https://img.shields.io/maven-metadata/v?metadataUrl=https%3A%2F%2Ftocraft.ddns.net%2Fmaven%2Freleases%2Fdev%2Ftocraft%2Fwalkers%2Fmaven-metadata.xml&versionPrefix=1.20.2-fabric&label=Woodwalkers)
+
 # Woodwalkers
 
 *Woodwalkers* is a mod lore-wise based on the book [Woodwalkers](https://www.katja-brandis.de/2016/05/11/woodwalkers/), and technically-based on [Identity](https://www.curseforge.com/minecraft/mc-mods/identity).
