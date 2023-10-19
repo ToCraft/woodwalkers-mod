@@ -9,6 +9,7 @@ architectury {
 
 subprojects {
     apply plugin: "dev.architectury.loom"
+    apply plugin: "maven-publish"
 
     loom {
         silentMojangMappingsLicense()
@@ -21,12 +22,33 @@ subprojects {
             parchment("org.parchmentmc.data:parchment-${rootProject.minecraft_version}:${rootProject.parchmentmc_mappings}@zip")
         }
     }
+
+    publishing {
+        publications {
+            maven(MavenPublication) {
+                groupId = rootProject.maven_group
+                artifactId = rootProject.archives_base_name
+                version = rootProject.minecraft_version + "-" + project.name + "-" + rootProject.mod_version
+                from components.java
+            }
+        }
+        repositories {
+            maven {
+                name "tocraftMavenReleases"
+                url "https://tocraft.ddns.net/maven/releases"
+
+                credentials {
+                    username = System.getenv("TOCRAFTMAVEN_USERNAME")
+                    password = System.getenv("TOCRAFTMAVEN_TOKEN")
+                }
+            }
+        }
+    }
 }
 
 allprojects {
     apply plugin: "java"
     apply plugin: "architectury-plugin"
-    apply plugin: "maven-publish"
 
     archivesBaseName = rootProject.archives_base_name
     version = rootProject.mod_version
@@ -52,27 +74,5 @@ allprojects {
 
     java {
         withSourcesJar()
-    }
-
-    publishing {
-        publications {
-            maven(MavenPublication) {
-                groupId = rootProject.maven_group
-                artifactId = rootProject.archives_base_name
-                version = rootProject.minecraft_version + "-" + project.name + "-" + rootProject.mod_version
-                from components.java
-            }
-        }
-        repositories {
-            maven {
-                name "tocraftMavenReleases"
-                url "https://tocraft.ddns.net/maven/releases"
-
-                credentials {
-                    username = System.getenv("TOCRAFTMAVEN_USERNAME")
-                    password = System.getenv("TOCRAFTMAVEN_TOKEN")
-                }
-            }
-        }
     }
 }
