@@ -1,12 +1,12 @@
 package tocraft.walkers.api;
 
-import dev.architectury.networking.NetworkManager;
-import tocraft.walkers.impl.PlayerDataProvider;
-import tocraft.walkers.network.NetworkHandler;
 import io.netty.buffer.Unpooled;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
+import tocraft.craftedcore.network.NetworkManager;
+import tocraft.walkers.impl.PlayerDataProvider;
+import tocraft.walkers.network.NetworkHandler;
 
 public class PlayerAbilities {
 

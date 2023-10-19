@@ -2,12 +2,12 @@ package tocraft.walkers.network.impl;
 
 import org.jetbrains.annotations.Nullable;
 
-import dev.architectury.networking.NetworkManager;
 import io.netty.buffer.Unpooled;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.LivingEntity;
+import tocraft.craftedcore.network.NetworkManager;
 import tocraft.walkers.api.PlayerShape;
 import tocraft.walkers.api.platform.SyncedVars;
 import tocraft.walkers.api.variant.ShapeType;

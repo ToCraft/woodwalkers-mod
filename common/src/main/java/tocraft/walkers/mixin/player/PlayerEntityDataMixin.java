@@ -10,7 +10,6 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import dev.architectury.event.EventResult;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
@@ -23,11 +22,11 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.monster.Ravager;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import tocraft.craftedcore.events.Event;
 import tocraft.walkers.Walkers;
 import tocraft.walkers.api.FlightHelper;
 import tocraft.walkers.api.PlayerShape;
 import tocraft.walkers.api.event.WalkersSwapCallback;
-import tocraft.walkers.api.platform.WalkersConfig;
 import tocraft.walkers.api.variant.ShapeType;
 import tocraft.walkers.impl.DimensionsRefresher;
 import tocraft.walkers.impl.PlayerDataProvider;
@@ -199,7 +198,7 @@ public abstract class PlayerEntityDataMixin extends LivingEntity implements Play
 	@Override
 	public boolean updateShapes(@Nullable LivingEntity shape) {
 		Player player = (Player) (Object) this;
-		EventResult result = WalkersSwapCallback.EVENT.invoker().swap((ServerPlayer) player, shape);
+		Event.Result result = WalkersSwapCallback.EVENT.invoker().swap((ServerPlayer) player, shape);
 		if (result.isFalse()) {
 			return false;
 		}

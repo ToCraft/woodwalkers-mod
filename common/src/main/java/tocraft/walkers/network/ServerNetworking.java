@@ -1,10 +1,10 @@
 package tocraft.walkers.network;
 
-import dev.architectury.networking.NetworkManager;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import tocraft.craftedcore.network.NetworkManager;
 import tocraft.walkers.ability.AbilityRegistry;
 import tocraft.walkers.api.PlayerAbilities;
 import tocraft.walkers.api.PlayerShape;

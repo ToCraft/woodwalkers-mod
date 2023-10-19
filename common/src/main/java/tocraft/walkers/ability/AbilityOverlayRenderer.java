@@ -1,12 +1,13 @@
 package tocraft.walkers.ability;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import dev.architectury.event.events.client.ClientGuiEvent;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.ChatScreen;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
+import tocraft.craftedcore.events.client.ClientGuiEvents;
 import tocraft.walkers.api.PlayerAbilities;
 import tocraft.walkers.api.PlayerShape;
 
@@ -19,7 +20,7 @@ public class AbilityOverlayRenderer {
     private static int fadingProgress = 0;
 
     public static void register() {
-        ClientGuiEvent.RENDER_HUD.register((matrices, delta) -> {
+        ClientGuiEvents.RENDER_HUD.register((matrices, delta) -> {
             Minecraft client = Minecraft.getInstance();
             LocalPlayer player = client.player;
             LivingEntity shape = PlayerShape.getCurrentShape(player);

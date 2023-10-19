@@ -3,17 +3,17 @@ package tocraft.walkers;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import dev.architectury.event.events.common.PlayerEvent;
-import dev.architectury.networking.NetworkManager;
 import io.netty.buffer.Unpooled;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.AdvancementProgress;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -22,12 +22,15 @@ import net.minecraft.world.entity.FlyingMob;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.animal.WaterAnimal;
 import net.minecraft.world.entity.monster.Guardian;
+import tocraft.craftedcore.config.ConfigLoader;
+import tocraft.craftedcore.events.common.PlayerEvents;
+import tocraft.craftedcore.network.NetworkManager;
+import tocraft.craftedcore.platform.Platform;
+import tocraft.craftedcore.platform.VersionChecker;
 import tocraft.walkers.ability.AbilityRegistry;
 import tocraft.walkers.api.PlayerShape;
 import tocraft.walkers.api.PlayerShapeChanger;
 import tocraft.walkers.api.WalkersTickHandlers;
-import tocraft.walkers.api.platform.ConfigLoader;
-import tocraft.walkers.api.platform.VersionChecker;
 import tocraft.walkers.api.platform.WalkersConfig;
 import tocraft.walkers.mixin.ThreadedAnvilChunkStorageAccessor;
 import tocraft.walkers.network.NetworkHandler;
@@ -39,9 +42,9 @@ import tocraft.walkers.registry.WalkersEventHandlers;
 public class Walkers {
 
 	public static final Logger LOGGER = LoggerFactory.getLogger(Walkers.class);
-	public static final WalkersConfig CONFIG = ConfigLoader.read();
+	public static final WalkersConfig CONFIG = ConfigLoader.read(WalkersConfig.class);
 	public static final String MODID = "walkers";
-	private static String VERSION = "";
+	public static String versionURL = "https://raw.githubusercontent.com/ToCraft/woodwalkers-mod/arch-1.20.1/gradle.properties";
 	public static List<String> devs = new ArrayList<>();
 
 	static {
@@ -59,7 +62,7 @@ public class Walkers {
 	}
 
 	public static void registerJoinSyncPacket() {
-		PlayerEvent.PLAYER_JOIN.register(player -> {
+		PlayerEvents.PLAYER_JOIN.register(player -> {
 			// Send config sync packet
 			FriendlyByteBuf packet = new FriendlyByteBuf(Unpooled.buffer());
 			packet.writeBoolean(Walkers.CONFIG.showPlayerNametag());
@@ -71,7 +74,10 @@ public class Walkers {
 			PlayerShapeChanger.sync(player);
 
 			// check for updates
-			VersionChecker.checkForUpdates(player);
+			@Nullable
+			String newVersion = VersionChecker.checkForNewVersion(versionURL);
+			if (newVersion != null && !Platform.getMod(MODID).getVersion().contains(newVersion))
+				player.sendSystemMessage(Component.translatable("walkers.update", newVersion));
 
 			Int2ObjectMap<Object> trackers = ((ThreadedAnvilChunkStorageAccessor) ((ServerLevel) player.level())
 					.getChunkSource().chunkMap).getEntityMap();
@@ -123,13 +129,5 @@ public class Walkers {
 	public static int getCooldown(EntityType<?> type) {
 		String id = BuiltInRegistries.ENTITY_TYPE.getKey(type).toString();
 		return Walkers.CONFIG.getAbilityCooldownMap().getOrDefault(id, 20);
-	}
-
-	public static void setVersion(String version) {
-		VERSION = version;
-	}
-
-	public static String getVersion() {
-		return VERSION;
 	}
 }

@@ -4,7 +4,6 @@ import org.jetbrains.annotations.Nullable;
 
 import com.mojang.brigadier.tree.LiteralCommandNode;
 
-import dev.architectury.event.events.common.CommandRegistrationEvent;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.CompoundTagArgument;
@@ -21,6 +20,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import tocraft.craftedcore.events.common.CommandEvents;
 import tocraft.walkers.Walkers;
 import tocraft.walkers.api.PlayerShape;
 import tocraft.walkers.api.PlayerShapeChanger;
@@ -30,7 +30,7 @@ import tocraft.walkers.impl.PlayerDataProvider;
 public class WalkersCommand {
 
 	public static void register() {
-		CommandRegistrationEvent.EVENT.register((dispatcher, ctx, b) -> {
+		CommandEvents.REGISTRATION.register((dispatcher, ctx, b) -> {
 			LiteralCommandNode<CommandSourceStack> rootNode = Commands.literal("walkers")
 					.requires(source -> source.hasPermission(2)).build();
 

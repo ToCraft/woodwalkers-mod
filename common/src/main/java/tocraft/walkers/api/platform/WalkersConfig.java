@@ -6,7 +6,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-public class WalkersConfig {
+import tocraft.craftedcore.config.Config;
+
+public class WalkersConfig implements Config {
 
 	public boolean revoke2ndShapeOnDeath = false;
 	public boolean shapesEquipItems = true;

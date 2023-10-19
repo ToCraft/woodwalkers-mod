@@ -25,7 +25,7 @@ configurations {
 
 dependencies {
     forge "net.minecraftforge:forge:${rootProject.minecraft_version}-${rootProject.forge_version}"
-    modApi "dev.architectury:architectury-forge:${rootProject.architectury_version}"
+    modApi "dev.tocraft:craftedcore:${rootProject.minecraft_version}-forge-${rootProject.craftedcore_version}"
 
     common(project(path: ":common", configuration: "namedElements")) { transitive = false }
     shadowCommon(project(path: ":common", configuration: "transformProductionForge")) { transitive = false }
@@ -78,7 +78,7 @@ modrinth {
     loaders = [project.name]
     changelog = "https://github.com/ToCraft/woodwalkers-mod/releases/tag/" + rootProject.mod_version + "-" + rootProject.minecraft_version
     dependencies {
-        required.version "architectury-api", rootProject.architectury_version + "+" + project.name
+        required.version "crafted-core", rootProject.craftedcore_version + "+" + project.name
     }
 }
 
@@ -90,6 +90,6 @@ task curseforge(type: net.darkhax.curseforgegradle.TaskPublishCurseForge) {
     mainFile.displayName = rootProject.minecraft_version + "-" + project.name + "-" + rootProject.mod_version
     mainFile.releaseType = 'release'
     mainFile.addModLoader(project.name)
-    mainFile.addRequirement("architectury-api")
+    mainFile.addRequirement("crafted-core")
     mainFile.changelog = "https://github.com/ToCraft/woodwalkers-mod/releases/tag/" + rootProject.mod_version + "-" + rootProject.minecraft_version
 }

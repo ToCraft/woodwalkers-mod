@@ -2,7 +2,6 @@ package tocraft.walkers.impl.tick;
 
 import org.jetbrains.annotations.Nullable;
 
-import dev.architectury.event.events.client.ClientTickEvent;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -10,6 +9,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
+import tocraft.craftedcore.events.client.ClientTickEvents;
 import tocraft.walkers.Walkers;
 import tocraft.walkers.WalkersClient;
 import tocraft.walkers.ability.AbilityRegistry;
@@ -23,7 +23,7 @@ import tocraft.walkers.network.impl.SwapPackets;
 import tocraft.walkers.network.impl.UnlockPackets;
 import tocraft.walkers.registry.WalkersEntityTags;
 
-public class KeyPressHandler implements ClientTickEvent.Client {
+public class KeyPressHandler implements ClientTickEvents.Client {
 	private float currentTimer = 0f;
 
 	@Override

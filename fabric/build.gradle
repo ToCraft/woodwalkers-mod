@@ -21,7 +21,7 @@ configurations {
 dependencies {
     modImplementation "net.fabricmc:fabric-loader:${rootProject.fabric_loader_version}"
     modApi "net.fabricmc.fabric-api:fabric-api:${rootProject.fabric_api_version}+${rootProject.minecraft_version}"
-    modApi "dev.architectury:architectury-fabric:${rootProject.architectury_version}"
+    modApi "dev.tocraft:craftedcore:${rootProject.minecraft_version}-fabric-${rootProject.craftedcore_version}"
 
     common(project(path: ":common", configuration: "namedElements")) { transitive = false }
     shadowCommon(project(path: ":common", configuration: "transformProductionFabric")) { transitive = false }
@@ -76,7 +76,7 @@ modrinth {
     changelog = "https://github.com/ToCraft/woodwalkers-mod/releases/tag/" + rootProject.mod_version + "-" + rootProject.minecraft_version
     dependencies {
         required.project "fabric-api"
-        required.version "architectury-api", rootProject.architectury_version + "+" + project.name
+        required.version "crafted-core", rootProject.craftedcore_version + "+" + project.name
     }
 }
 
@@ -88,6 +88,6 @@ task curseforge(type: net.darkhax.curseforgegradle.TaskPublishCurseForge) {
     mainFile.displayName = rootProject.minecraft_version + "-" + project.name + "-" + rootProject.mod_version
     mainFile.releaseType = 'release'
     mainFile.addModLoader(project.name)
-    mainFile.addRequirement("architectury-api")
+    mainFile.addRequirement("crafted-core")
     mainFile.changelog = "https://github.com/ToCraft/woodwalkers-mod/releases/tag/" + rootProject.mod_version + "-" + rootProject.minecraft_version
 }

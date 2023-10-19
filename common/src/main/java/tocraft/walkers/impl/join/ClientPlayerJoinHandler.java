@@ -1,11 +1,11 @@
 package tocraft.walkers.impl.join;
 
-import dev.architectury.event.events.client.ClientPlayerEvent;
 import net.minecraft.client.player.LocalPlayer;
+import tocraft.craftedcore.events.client.ClientPlayerEvents;
 import tocraft.walkers.WalkersClient;
 import tocraft.walkers.api.ApplicablePacket;
 
-public class ClientPlayerJoinHandler implements ClientPlayerEvent.ClientPlayerJoin {
+public class ClientPlayerJoinHandler implements ClientPlayerEvents.ClientPlayerJoin {
 
     @Override
     public void join(LocalPlayer player) {

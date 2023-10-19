@@ -1,8 +1,8 @@
 package tocraft.walkers.api;
 
-import dev.architectury.event.EventResult;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionResult;
+import tocraft.craftedcore.events.Event;
 import tocraft.walkers.api.event.UnlockWalkersCallback;
 import tocraft.walkers.api.variant.ShapeType;
 import tocraft.walkers.impl.PlayerDataProvider;
@@ -12,7 +12,7 @@ public class PlayerShapeChanger {
 
     public static boolean change2ndShape(ServerPlayer player, ShapeType newShape) {
         PlayerDataProvider provider = (PlayerDataProvider) player;
-        EventResult unlock = UnlockWalkersCallback.EVENT.invoker().unlock(player, newShape);
+        Event.Result unlock = UnlockWalkersCallback.EVENT.invoker().unlock(player, newShape);
 
         if(unlock.asMinecraft() != InteractionResult.FAIL && provider.get2ndShape() != newShape) {
             provider.set2ndShape(newShape);

@@ -5,13 +5,13 @@ import java.util.UUID;
 
 import org.jetbrains.annotations.Nullable;
 
-import dev.architectury.networking.NetworkManager;
 import io.netty.buffer.Unpooled;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import tocraft.craftedcore.network.NetworkManager;
 import tocraft.walkers.WalkersClient;
 import tocraft.walkers.api.ApplicablePacket;
 import tocraft.walkers.api.platform.SyncedVars;

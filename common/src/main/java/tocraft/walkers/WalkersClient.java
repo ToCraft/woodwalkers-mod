@@ -7,10 +7,10 @@ import org.lwjgl.glfw.GLFW;
 
 import com.mojang.blaze3d.platform.InputConstants;
 
-import dev.architectury.event.events.client.ClientPlayerEvent;
-import dev.architectury.event.events.client.ClientTickEvent;
-import dev.architectury.registry.client.keymappings.KeyMappingRegistry;
 import net.minecraft.client.KeyMapping;
+import tocraft.craftedcore.events.client.ClientPlayerEvents;
+import tocraft.craftedcore.events.client.ClientTickEvents;
+import tocraft.craftedcore.registration.client.KeyMappingRegistry;
 import tocraft.walkers.ability.AbilityOverlayRenderer;
 import tocraft.walkers.api.ApplicablePacket;
 import tocraft.walkers.api.model.EntityArms;
@@ -40,9 +40,9 @@ public class WalkersClient {
 		EntityArms.init();
 
 		// Register event handlers
-		ClientTickEvent.CLIENT_PRE.register(new KeyPressHandler());
+		ClientTickEvents.CLIENT_PRE.register(new KeyPressHandler());
 		ClientNetworking.registerPacketHandlers();
-		ClientPlayerEvent.CLIENT_PLAYER_JOIN.register(new ClientPlayerJoinHandler());
+		ClientPlayerEvents.CLIENT_PLAYER_JOIN.register(new ClientPlayerJoinHandler());
 	}
 
 	// We do this because the Architectury "player log in" network event runs before
