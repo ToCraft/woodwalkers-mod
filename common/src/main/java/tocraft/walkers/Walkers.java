@@ -9,7 +9,7 @@ import org.slf4j.LoggerFactory;
 
 import io.netty.buffer.Unpooled;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
-import net.minecraft.advancements.Advancement;
+import net.minecraft.advancements.AdvancementHolder;
 import net.minecraft.advancements.AdvancementProgress;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.FriendlyByteBuf;
@@ -104,8 +104,7 @@ public class Walkers {
 
 				boolean hasPermission = true;
 				for (String requiredAdvancement : requiredAdvancements) {
-					Advancement advancement = player.server.getAdvancements()
-							.getAdvancement(new ResourceLocation(requiredAdvancement));
+					AdvancementHolder advancement = player.server.getAdvancements().get(new ResourceLocation(requiredAdvancement));
 					AdvancementProgress progress = player.getAdvancements().getOrStartProgress(advancement);
 
 					if (!progress.isDone()) {
