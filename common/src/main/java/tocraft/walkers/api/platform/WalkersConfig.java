@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.UUID;
 
 import tocraft.craftedcore.config.Config;
+import tocraft.craftedcore.config.annotions.Synchronize;
 
 public class WalkersConfig implements Config {
 
@@ -31,12 +32,15 @@ public class WalkersConfig implements Config {
 	public Boolean scalingAttackDamage = true;
 	public Double maxAttackDamage = 4D;
 	public int endermanAbilityTeleportDistance = 32;
+	@Synchronize
 	public boolean showPlayerNametag = false;
 	public boolean logCommands = true;
 	public float flySpeed = 0.05f;
 	public boolean wardenIsBlinded = true;
 	public boolean wardenBlindsNearby = true;
+	@Synchronize
 	public boolean unlockOveridesCurrentShape = false;
+	@Synchronize
 	public float unlockTimer = 60f;
 	public boolean devShapeIsThirdShape = false;
 
@@ -68,129 +72,6 @@ public class WalkersConfig implements Config {
 		}
 	};
 
+	@Synchronize
 	public List<UUID> playerUUIDBlacklist = new ArrayList<>();
-
-	public boolean enableFlight() {
-		return enableFlight;
-	}
-
-	public List<String> advancementsRequiredForFlight() {
-		return advancementsRequiredForFlight;
-	}
-
-	public Map<String, Integer> getAbilityCooldownMap() {
-		return abilityCooldownMap;
-	}
-
-	public boolean logCommands() {
-		return logCommands;
-	}
-
-	public boolean wolvesAttack2ndShapedPrey() {
-		return wolvesAttack2ndShapedPrey;
-	}
-
-	public boolean ownedwolvesAttack2ndShapedPrey() {
-		return ownedwolvesAttack2ndShapedPrey;
-	}
-
-	public boolean villagersRunFrom2ndShapes() {
-		return villagersRunFrom2ndShapes;
-	}
-
-	public boolean revoke2ndShapeOnDeath() {
-		return revoke2ndShapeOnDeath;
-	}
-
-	public float flySpeed() {
-		return flySpeed;
-	}
-
-	public boolean scalingHealth() {
-		return scalingHealth;
-	}
-
-	public boolean percentScalingHealth() {
-		return percentScalingHealth;
-	}
-
-	public int maxHealth() {
-		return maxHealth;
-	}
-
-	public Boolean scalingAttackDamage() {
-		return scalingAttackDamage;
-	}
-
-	public Double maxAttackDamage() {
-		return maxAttackDamage;
-	}
-
-	public boolean shapesEquipItems() {
-		return shapesEquipItems;
-	}
-
-	public boolean shapesEquipArmor() {
-		return shapesEquipArmor;
-	}
-
-	public boolean showPlayerNametag() {
-		return showPlayerNametag;
-	}
-
-	public boolean foxesAttack2ndShapedPrey() {
-		return foxesAttack2ndShapedPrey;
-	}
-
-	public boolean hostilesForgetNewHostileShapedPlayer() {
-		return hostilesForgetNewHostileShapedPlayer;
-	}
-
-	public boolean hostilesIgnoreHostileShapedPlayer() {
-		return hostilesIgnoreHostileShapedPlayer;
-	}
-
-	public boolean playAmbientSounds() {
-		return playAmbientSounds;
-	}
-
-	public boolean useShapeSounds() {
-		return useShapeSounds;
-	}
-
-	public boolean hearSelfAmbient() {
-		return hearSelfAmbient;
-	}
-
-	public double endermanAbilityTeleportDistance() {
-		return endermanAbilityTeleportDistance;
-	}
-
-	public int hostilityTime() {
-		return hostilityTime;
-	}
-
-	public boolean wardenIsBlinded() {
-		return wardenIsBlinded;
-	}
-
-	public boolean wardenBlindsNearby() {
-		return wardenBlindsNearby;
-	}
-
-	public float unlockTimer() {
-		return unlockTimer;
-	}
-
-	public boolean unlockOveridesCurrentShape() {
-		return unlockOveridesCurrentShape;
-	}
-
-	public boolean devShapeIsThirdShape() {
-		return devShapeIsThirdShape;
-	}
-
-	public List<UUID> playerUUIDBlacklist() {
-		return playerUUIDBlacklist;
-	}
 }

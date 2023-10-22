@@ -14,7 +14,6 @@ import tocraft.walkers.Walkers;
 import tocraft.walkers.WalkersClient;
 import tocraft.walkers.ability.AbilityRegistry;
 import tocraft.walkers.api.PlayerShape;
-import tocraft.walkers.api.platform.SyncedVars;
 import tocraft.walkers.api.variant.ShapeType;
 import tocraft.walkers.impl.PlayerDataProvider;
 import tocraft.walkers.network.ClientNetworking;
@@ -40,8 +39,8 @@ public class KeyPressHandler implements ClientTickEvents.Client {
 		if (WalkersClient.UNLOCK_KEY.isDown())
 			handleUnlockKey(client);
 
-		else if (currentTimer != SyncedVars.getUnlockTimer())
-			currentTimer = SyncedVars.getUnlockTimer();
+		else if (currentTimer != Walkers.CONFIG.unlockTimer)
+			currentTimer = Walkers.CONFIG.unlockTimer;
 	}
 
 	private void handleAbilityKey(Minecraft client) {
@@ -59,7 +58,7 @@ public class KeyPressHandler implements ClientTickEvents.Client {
 
 	private void handleUnlockKey(Minecraft client) {
 		// check if player is blacklisted
-		if (SyncedVars.getPlayerBlacklist().contains(client.player.getUUID())) {
+		if (Walkers.CONFIG.playerUUIDBlacklist.contains(client.player.getUUID())) {
 			client.player.displayClientMessage(Component.translatable("walkers.player_blacklisted"), true);
 			return;
 		}
@@ -72,7 +71,7 @@ public class KeyPressHandler implements ClientTickEvents.Client {
 		}
 
 		HitResult hit = client.hitResult;
-		if ((((PlayerDataProvider) client.player).get2ndShape() == null || SyncedVars.getUnlockOveridesCurrentShape())
+		if ((((PlayerDataProvider) client.player).get2ndShape() == null || Walkers.CONFIG.unlockOveridesCurrentShape)
 				&& hit instanceof EntityHitResult) {
 			Entity entityHit = ((EntityHitResult) hit).getEntity();
 			if (entityHit instanceof LivingEntity living) {
@@ -90,7 +89,7 @@ public class KeyPressHandler implements ClientTickEvents.Client {
 						// send unlock message
 						Component name = Component.translatable(type.getEntityType().getDescriptionId());
 						client.player.displayClientMessage(Component.translatable("walkers.unlock_entity", name), true);
-						currentTimer = SyncedVars.getUnlockTimer();
+						currentTimer = Walkers.CONFIG.unlockTimer;
 					} else {
 						client.player.displayClientMessage(Component.translatable("walkers.unlock_progress"), true);
 						currentTimer -= 1;
@@ -98,6 +97,6 @@ public class KeyPressHandler implements ClientTickEvents.Client {
 				}
 			}
 		} else
-			currentTimer = SyncedVars.getUnlockTimer();
+			currentTimer = Walkers.CONFIG.unlockTimer;
 	}
 }

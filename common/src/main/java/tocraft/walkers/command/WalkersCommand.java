@@ -149,14 +149,14 @@ public class WalkersCommand {
 	private static int show2ndShape(CommandSourceStack source, ServerPlayer player) {
 
 		if (((PlayerDataProvider) player).get2ndShape() != null) {
-			if (Walkers.CONFIG.logCommands()) {
+			if (Walkers.CONFIG.logCommands) {
 				source.sendSystemMessage(Component.translatable("walkers.show2ndShapeNot_positive",
 						player.getDisplayName(), Component.translatable(
 								((PlayerDataProvider) player).get2ndShape().getEntityType().getDescriptionId())));
 			}
 
 			return 1;
-		} else if (Walkers.CONFIG.logCommands()) {
+		} else if (Walkers.CONFIG.logCommands) {
 			source.sendSystemMessage(Component.translatable("walkers.show2ndShapeNot_failed", player.getDisplayName()));
 		}
 
@@ -167,7 +167,7 @@ public class WalkersCommand {
 
 		boolean result = PlayerShapeChanger.change2ndShape(player, null);
 
-		if (result && Walkers.CONFIG.logCommands()) {
+		if (result && Walkers.CONFIG.logCommands) {
 			player.displayClientMessage(Component.translatable("walkers.remove_entity"), true);
 			source.sendSystemMessage(Component.translatable("walkers.deletion_success", player.getDisplayName()));
 		}
@@ -194,13 +194,13 @@ public class WalkersCommand {
 		if (((PlayerDataProvider) player).get2ndShape() != type) {
 			boolean result = PlayerShapeChanger.change2ndShape(player, type);
 
-			if (result && Walkers.CONFIG.logCommands()) {
+			if (result && Walkers.CONFIG.logCommands) {
 				player.sendSystemMessage(Component.translatable("walkers.unlock_entity", name));
 				source.sendSystemMessage(
 						Component.translatable("walkers.grant_success", name, player.getDisplayName()));
 			}
 		} else {
-			if (Walkers.CONFIG.logCommands()) {
+			if (Walkers.CONFIG.logCommands) {
 				source.sendSystemMessage(Component.translatable("walkers.already_has", player.getDisplayName(), name));
 			}
 		}
@@ -226,7 +226,7 @@ public class WalkersCommand {
 
 			if (defaultType != null) {
 				boolean result = PlayerShape.updateShapes(player, defaultType, (LivingEntity) created);
-				if (result && Walkers.CONFIG.logCommands()) {
+				if (result && Walkers.CONFIG.logCommands) {
 					source.sendSystemMessage(Component.translatable("walkers.switchShape_success",
 							player.getDisplayName(), Component.translatable(created.getType().getDescriptionId())));
 				}
@@ -237,7 +237,7 @@ public class WalkersCommand {
 	private static void switchShape(CommandSourceStack source, ServerPlayer player) {
 		boolean result = PlayerShape.updateShapes(player, null, null);
 
-		if (result && Walkers.CONFIG.logCommands()) {
+		if (result && Walkers.CONFIG.logCommands) {
 			source.sendSystemMessage(
 					Component.translatable("walkers.switchShape_human_success", player.getDisplayName()));
 		}

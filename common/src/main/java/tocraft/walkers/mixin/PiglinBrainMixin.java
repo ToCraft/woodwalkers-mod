@@ -35,7 +35,7 @@ public class PiglinBrainMixin {
 
 				// Player has an shape but is not a piglin, check config for what to do
 				else {
-					if (Walkers.CONFIG.hostilesIgnoreHostileShapedPlayer() && shape instanceof Enemy) {
+					if (Walkers.CONFIG.hostilesIgnoreHostileShapedPlayer && shape instanceof Enemy) {
 
 						// Check hostility for aggro on non-piglin hostiles
 						if (!hasHostility) {

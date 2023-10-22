@@ -17,7 +17,6 @@ import net.minecraft.world.level.Level;
 import tocraft.walkers.Walkers;
 import tocraft.walkers.api.FlightHelper;
 import tocraft.walkers.api.PlayerShapeChanger;
-import tocraft.walkers.api.platform.WalkersConfig;
 
 @Mixin(ServerPlayer.class)
 public abstract class ServerPlayerEntityMixin extends Player {
@@ -37,7 +36,7 @@ public abstract class ServerPlayerEntityMixin extends Player {
 
 	@Inject(method = "die", at = @At("HEAD"))
 	private void revoke2ndShapeOnDeath(DamageSource source, CallbackInfo ci) {
-		if (Walkers.CONFIG.revoke2ndShapeOnDeath() && !this.isCreative() && !this.isSpectator()) {
+		if (Walkers.CONFIG.revoke2ndShapeOnDeath && !this.isCreative() && !this.isSpectator()) {
 			PlayerShapeChanger.change2ndShape((ServerPlayer) (Object) this, null);
 		}
 	}
@@ -48,7 +47,7 @@ public abstract class ServerPlayerEntityMixin extends Player {
 		if (Walkers.hasFlyingPermissions(player)) {
 			if (!FlightHelper.hasFlight(player)) {
 				FlightHelper.grantFlightTo(player);
-				getAbilities().setFlyingSpeed(Walkers.CONFIG.flySpeed());
+				getAbilities().setFlyingSpeed(Walkers.CONFIG.flySpeed);
 				onUpdateAbilities();
 			}
 

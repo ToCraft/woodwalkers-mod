@@ -35,13 +35,13 @@ public class PlayerManagerMixin {
 
 		if (shape != null) {
 			// Re-sync max health for shapes
-			if (Walkers.CONFIG.scalingHealth()) {
+			if (Walkers.CONFIG.scalingHealth) {
 				player.getAttribute(Attributes.MAX_HEALTH)
-						.setBaseValue(Math.min(Walkers.CONFIG.maxHealth(), shape.getMaxHealth()));
+						.setBaseValue(Math.min(Walkers.CONFIG.maxHealth, shape.getMaxHealth()));
 				player.setHealth(player.getMaxHealth());
 			}
 			// Re-sync attack damage for shapes
-			if (Walkers.CONFIG.scalingAttackDamage()) {
+			if (Walkers.CONFIG.scalingAttackDamage) {
 				// get shape attack damage, return 1D if value is lower then max or not existing
 				Double shapeAttackDamage = 1D;
 				try {
@@ -50,11 +50,11 @@ public class PlayerManagerMixin {
 				} catch (Exception ignored) {
 				}
 				player.getAttribute(Attributes.ATTACK_DAMAGE)
-						.setBaseValue(Math.min(Walkers.CONFIG.maxAttackDamage(), shapeAttackDamage));
+						.setBaseValue(Math.min(Walkers.CONFIG.maxAttackDamage, shapeAttackDamage));
 			}
 			// sync max health & attack damage with clients
-			if ((Walkers.CONFIG.scalingHealth() || Walkers.CONFIG.scalingAttackDamage())
-					|| Walkers.CONFIG.scalingAttackDamage()) {
+			if ((Walkers.CONFIG.scalingHealth || Walkers.CONFIG.scalingAttackDamage)
+					|| Walkers.CONFIG.scalingAttackDamage) {
 				player.connection.send(new ClientboundUpdateAttributesPacket(player.getId(),
 						player.getAttributes().getSyncableAttributes()));
 			}

@@ -14,7 +14,6 @@ import net.minecraft.world.entity.player.Player;
 import tocraft.craftedcore.network.NetworkManager;
 import tocraft.walkers.WalkersClient;
 import tocraft.walkers.api.ApplicablePacket;
-import tocraft.walkers.api.platform.SyncedVars;
 import tocraft.walkers.impl.DimensionsRefresher;
 import tocraft.walkers.impl.PlayerDataProvider;
 import tocraft.walkers.network.impl.UnlockPackets;
@@ -28,8 +27,6 @@ public class ClientNetworking implements NetworkHandler {
 				ClientNetworking::handleAbilitySyncPacket);
 		NetworkManager.registerReceiver(NetworkManager.Side.S2C, NetworkHandler.UNLOCK_SYNC,
 				UnlockPackets::handleUnlockSyncPacket);
-		NetworkManager.registerReceiver(NetworkManager.Side.S2C, NetworkHandler.CONFIG_SYNC,
-				ClientNetworking::handleConfigurationSyncPacket);
 	}
 
 	public static void runOrQueue(NetworkManager.PacketContext context, ApplicablePacket packet) {
@@ -91,15 +88,5 @@ public class ClientNetworking implements NetworkHandler {
 	public static void handleAbilitySyncPacket(FriendlyByteBuf packet, NetworkManager.PacketContext context) {
 		int cooldown = packet.readInt();
 		runOrQueue(context, player -> ((PlayerDataProvider) player).setAbilityCooldown(cooldown));
-	}
-
-	public static void handleConfigurationSyncPacket(FriendlyByteBuf packet, NetworkManager.PacketContext context) {
-		boolean showPlayerNametag = packet.readBoolean();
-		float unlockTimer = packet.readFloat();
-		boolean unlockOveridesCurrentShape = packet.readBoolean();
-
-		SyncedVars.setShowPlayerNametag(showPlayerNametag);
-		SyncedVars.setUnlockTimer(unlockTimer);
-		SyncedVars.setUnlockOveridesCurrentShape(unlockOveridesCurrentShape);
 	}
 }

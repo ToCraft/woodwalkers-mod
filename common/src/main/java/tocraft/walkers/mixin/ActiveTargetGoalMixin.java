@@ -28,7 +28,7 @@ public abstract class ActiveTargetGoalMixin extends TrackTargetGoalMixin {
 
 	@Inject(method = "start", at = @At("HEAD"), cancellable = true)
 	private void ignoreShapedPlayers(CallbackInfo ci) {
-		if (Walkers.CONFIG.hostilesIgnoreHostileShapedPlayer() && this.mob instanceof Enemy
+		if (Walkers.CONFIG.hostilesIgnoreHostileShapedPlayer && this.mob instanceof Enemy
 				&& this.target instanceof Player) {
 			Player player = (Player) this.target;
 			LivingEntity shape = PlayerShape.getCurrentShape(player);
@@ -70,7 +70,7 @@ public abstract class ActiveTargetGoalMixin extends TrackTargetGoalMixin {
 	@Override
 	protected void shape_shouldContinue(CallbackInfoReturnable<Boolean> cir) {
 		// check cancelling for hostiles
-		if (Walkers.CONFIG.hostilesIgnoreHostileShapedPlayer() && Walkers.CONFIG.hostilesForgetNewHostileShapedPlayer()
+		if (Walkers.CONFIG.hostilesIgnoreHostileShapedPlayer && Walkers.CONFIG.hostilesForgetNewHostileShapedPlayer
 				&& this.mob instanceof Enemy && this.target instanceof Player player) {
 			LivingEntity shape = PlayerShape.getCurrentShape(player);
 

@@ -8,8 +8,8 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.LivingEntity;
 import tocraft.craftedcore.network.NetworkManager;
+import tocraft.walkers.Walkers;
 import tocraft.walkers.api.PlayerShape;
-import tocraft.walkers.api.platform.SyncedVars;
 import tocraft.walkers.api.variant.ShapeType;
 import tocraft.walkers.impl.PlayerDataProvider;
 import tocraft.walkers.network.ClientNetworking;
@@ -21,7 +21,7 @@ public class SwapPackets {
 		NetworkManager.registerReceiver(NetworkManager.Side.C2S, NetworkHandler.SHAPE_REQUEST, (buf, context) -> {
 				context.getPlayer().getServer().execute(() -> {
 					// check if player is blacklisted
-					if (SyncedVars.getPlayerBlacklist().contains(context.getPlayer().getUUID())) {
+					if (Walkers.CONFIG.playerUUIDBlacklist.contains(context.getPlayer().getUUID())) {
 						context.getPlayer().displayClientMessage(Component.translatable("walkers.player_blacklisted"), true);
 						return;
 					}

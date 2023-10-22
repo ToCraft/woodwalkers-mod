@@ -42,7 +42,7 @@ public class DevSwapPackets {
 										.get2ndShape().getEntityType())
 							PlayerShape.updateShapes((ServerPlayer) context.getPlayer(), defaultType,
 									(LivingEntity) created);
-						else if (Walkers.CONFIG.devShapeIsThirdShape())
+						else if (Walkers.CONFIG.devShapeIsThirdShape)
 							PlayerShape.updateShapes((ServerPlayer) context.getPlayer(), defaultType,
 									(LivingEntity) created);
 					}

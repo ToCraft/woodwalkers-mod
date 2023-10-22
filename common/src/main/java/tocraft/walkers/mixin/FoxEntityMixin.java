@@ -59,7 +59,7 @@ public abstract class FoxEntityMixin extends Animal {
 		this.targetSelector.addGoal(7,
 				new NearestAttackableTargetGoal<>(this, Player.class, 10, false, false, player -> {
 					// ensure foxes can attack players with an shape similar to their normal prey
-					if (!Walkers.CONFIG.foxesAttack2ndShapedPrey()) {
+					if (!Walkers.CONFIG.foxesAttack2ndShapedPrey) {
 						return false;
 					}
 

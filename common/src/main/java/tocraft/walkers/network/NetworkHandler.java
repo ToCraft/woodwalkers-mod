@@ -10,6 +10,5 @@ public interface NetworkHandler {
 	ResourceLocation USE_ABILITY = Walkers.id("use_ability");
 	ResourceLocation SHAPE_SYNC = Walkers.id("shape_sync");
 	ResourceLocation ABILITY_SYNC = Walkers.id("ability_sync");
-	ResourceLocation CONFIG_SYNC = Walkers.id("config_sync");
 	ResourceLocation UNLOCK_SYNC = Walkers.id("unlock_sync");
 }

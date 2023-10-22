@@ -15,7 +15,7 @@ public class EndermanAbility extends WalkersAbility<EnderMan> {
 
 	@Override
 	public void onUse(Player player, EnderMan shape, Level world) {
-		HitResult lookingAt = player.pick(Walkers.CONFIG.endermanAbilityTeleportDistance(), 0, true);
+		HitResult lookingAt = player.pick(Walkers.CONFIG.endermanAbilityTeleportDistance, 0, true);
 		player.teleportTo(lookingAt.getLocation().x, lookingAt.getLocation().y, lookingAt.getLocation().z);
 		player.playNotifySound(SoundEvents.ENDERMAN_TELEPORT, SoundSource.PLAYERS, 1, 1);
 	}

@@ -7,12 +7,10 @@ import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import io.netty.buffer.Unpooled;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import net.minecraft.advancements.AdvancementHolder;
 import net.minecraft.advancements.AdvancementProgress;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
@@ -24,7 +22,6 @@ import net.minecraft.world.entity.animal.WaterAnimal;
 import net.minecraft.world.entity.monster.Guardian;
 import tocraft.craftedcore.config.ConfigLoader;
 import tocraft.craftedcore.events.common.PlayerEvents;
-import tocraft.craftedcore.network.NetworkManager;
 import tocraft.craftedcore.platform.Platform;
 import tocraft.craftedcore.platform.VersionChecker;
 import tocraft.walkers.ability.AbilityRegistry;
@@ -33,7 +30,6 @@ import tocraft.walkers.api.PlayerShapeChanger;
 import tocraft.walkers.api.WalkersTickHandlers;
 import tocraft.walkers.api.platform.WalkersConfig;
 import tocraft.walkers.mixin.ThreadedAnvilChunkStorageAccessor;
-import tocraft.walkers.network.NetworkHandler;
 import tocraft.walkers.network.ServerNetworking;
 import tocraft.walkers.registry.WalkersCommands;
 import tocraft.walkers.registry.WalkersEntityTags;
@@ -42,9 +38,9 @@ import tocraft.walkers.registry.WalkersEventHandlers;
 public class Walkers {
 
 	public static final Logger LOGGER = LoggerFactory.getLogger(Walkers.class);
-	public static final WalkersConfig CONFIG = ConfigLoader.read(WalkersConfig.class);
 	public static final String MODID = "walkers";
 	public static String versionURL = "https://raw.githubusercontent.com/ToCraft/woodwalkers-mod/arch-1.20.1/gradle.properties";
+	public static final WalkersConfig CONFIG = ConfigLoader.read(MODID, WalkersConfig.class);
 	public static List<String> devs = new ArrayList<>();
 
 	static {
@@ -63,13 +59,6 @@ public class Walkers {
 
 	public static void registerJoinSyncPacket() {
 		PlayerEvents.PLAYER_JOIN.register(player -> {
-			// Send config sync packet
-			FriendlyByteBuf packet = new FriendlyByteBuf(Unpooled.buffer());
-			packet.writeBoolean(Walkers.CONFIG.showPlayerNametag());
-			packet.writeFloat(Walkers.CONFIG.unlockTimer());
-			packet.writeBoolean(Walkers.CONFIG.unlockOveridesCurrentShape());
-			NetworkManager.sendToPlayer(player, NetworkHandler.CONFIG_SYNC, packet);
-
 			// Sync unlocked Walkers
 			PlayerShapeChanger.sync(player);
 
@@ -95,9 +84,9 @@ public class Walkers {
 	public static boolean hasFlyingPermissions(ServerPlayer player) {
 		LivingEntity shape = PlayerShape.getCurrentShape(player);
 
-		if (shape != null && Walkers.CONFIG.enableFlight()
+		if (shape != null && Walkers.CONFIG.enableFlight
 				&& (shape.getType().is(WalkersEntityTags.FLYING) || shape instanceof FlyingMob)) {
-			List<String> requiredAdvancements = Walkers.CONFIG.advancementsRequiredForFlight();
+			List<String> requiredAdvancements = Walkers.CONFIG.advancementsRequiredForFlight;
 
 			// requires at least 1 advancement, check if player has them
 			if (!requiredAdvancements.isEmpty()) {
@@ -127,6 +116,6 @@ public class Walkers {
 
 	public static int getCooldown(EntityType<?> type) {
 		String id = BuiltInRegistries.ENTITY_TYPE.getKey(type).toString();
-		return Walkers.CONFIG.getAbilityCooldownMap().getOrDefault(id, 20);
+		return Walkers.CONFIG.abilityCooldownMap.getOrDefault(id, 20);
 	}
 }

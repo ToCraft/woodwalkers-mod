@@ -10,9 +10,9 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import tocraft.craftedcore.network.NetworkManager;
+import tocraft.walkers.Walkers;
 import tocraft.walkers.api.PlayerShape;
 import tocraft.walkers.api.PlayerShapeChanger;
-import tocraft.walkers.api.platform.SyncedVars;
 import tocraft.walkers.api.variant.ShapeType;
 import tocraft.walkers.impl.PlayerDataProvider;
 import tocraft.walkers.network.ClientNetworking;
@@ -41,7 +41,7 @@ public class UnlockPackets {
 	public static void registerShapeUnlockRequestPacketHandler() {
 		NetworkManager.registerReceiver(NetworkManager.Side.C2S, NetworkHandler.UNLOCK_REQUEST, (buf, context) -> {
 			// check if player is blacklisted
-			if (SyncedVars.getPlayerBlacklist().contains(context.getPlayer().getUUID()))
+			if (Walkers.CONFIG.playerUUIDBlacklist.contains(context.getPlayer().getUUID()))
 				return;
 
 			boolean validType = buf.readBoolean();
@@ -52,7 +52,7 @@ public class UnlockPackets {
 				context.getPlayer().getServer().execute(() -> {
 					@Nullable
 					ShapeType<LivingEntity> type = ShapeType.from(entityType, variant);
-					if (type != null && !type.getEntityType().is(WalkersEntityTags.BLACKLISTED) && (SyncedVars.getUnlockOveridesCurrentShape() || ((PlayerDataProvider) context.getPlayer()).get2ndShape() == null)) {
+					if (type != null && !type.getEntityType().is(WalkersEntityTags.BLACKLISTED) && (Walkers.CONFIG.unlockOveridesCurrentShape || ((PlayerDataProvider) context.getPlayer()).get2ndShape() == null)) {
 						// set 2nd shape
 						PlayerShapeChanger.change2ndShape((ServerPlayer) context.getPlayer(), type);
 						// update Player
