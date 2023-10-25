@@ -65,7 +65,7 @@ public class Walkers {
 			// check for updates
 			@Nullable
 			String newVersion = VersionChecker.checkForNewVersion(versionURL);
-			if (newVersion != null && !Platform.getMod(MODID).getVersion().contains(newVersion))
+			if (newVersion != null && !Platform.getMod(MODID).getVersion().equals(newVersion))
 				player.sendSystemMessage(Component.translatable("walkers.update", newVersion));
 
 			Int2ObjectMap<Object> trackers = ((ThreadedAnvilChunkStorageAccessor) ((ServerLevel) player.level())
