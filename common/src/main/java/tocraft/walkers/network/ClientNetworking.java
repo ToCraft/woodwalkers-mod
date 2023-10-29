@@ -11,9 +11,9 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import tocraft.craftedcore.client.CraftedCoreClient;
 import tocraft.craftedcore.network.NetworkManager;
-import tocraft.walkers.WalkersClient;
-import tocraft.walkers.api.ApplicablePacket;
+import tocraft.craftedcore.network.client.ClientNetworking.ApplicablePacket;
 import tocraft.walkers.impl.DimensionsRefresher;
 import tocraft.walkers.impl.PlayerDataProvider;
 import tocraft.walkers.network.impl.UnlockPackets;
@@ -31,7 +31,7 @@ public class ClientNetworking implements NetworkHandler {
 
 	public static void runOrQueue(NetworkManager.PacketContext context, ApplicablePacket packet) {
 		if (context.getPlayer() == null) {
-			WalkersClient.getSyncPacketQueue().add(packet);
+			CraftedCoreClient.getSyncPacketQueue().add(packet);
 		} else {
 			context.queue(() -> packet.apply(context.getPlayer()));
 		}

@@ -26,7 +26,7 @@ import tocraft.craftedcore.events.Event;
 import tocraft.walkers.Walkers;
 import tocraft.walkers.api.FlightHelper;
 import tocraft.walkers.api.PlayerShape;
-import tocraft.walkers.api.event.WalkersSwapCallback;
+import tocraft.walkers.api.event.ShapeEvents;
 import tocraft.walkers.api.variant.ShapeType;
 import tocraft.walkers.impl.DimensionsRefresher;
 import tocraft.walkers.impl.PlayerDataProvider;
@@ -198,7 +198,7 @@ public abstract class PlayerEntityDataMixin extends LivingEntity implements Play
 	@Override
 	public boolean updateShapes(@Nullable LivingEntity shape) {
 		Player player = (Player) (Object) this;
-		Event.Result result = WalkersSwapCallback.EVENT.invoker().swap((ServerPlayer) player, shape);
+		Event.Result result = ShapeEvents.SWAP_SHAPE.invoker().swap((ServerPlayer) player, shape);
 		if (result.isFalse()) {
 			return false;
 		}
