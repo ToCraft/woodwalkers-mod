@@ -76,7 +76,7 @@ modrinth {
     changelog = "https://github.com/ToCraft/woodwalkers-mod/releases/tag/" + rootProject.mod_version + "-" + rootProject.minecraft_version
     dependencies {
         required.project "fabric-api"
-        required.version "crafted-core", rootProject.craftedcore_version + "+" + project.name
+        required.version "crafted-core", rootProject.minecraft_version + "-" + project.name + "-" + rootProject.craftedcore_version
     }
 }
 
