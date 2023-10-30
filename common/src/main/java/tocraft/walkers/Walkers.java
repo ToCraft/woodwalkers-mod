@@ -39,7 +39,7 @@ public class Walkers {
 
 	public static final Logger LOGGER = LoggerFactory.getLogger(Walkers.class);
 	public static final String MODID = "walkers";
-	public static String versionURL = "https://raw.githubusercontent.com/ToCraft/woodwalkers-mod/arch-1.20.1/gradle.properties";
+	public static String versionURL = "https://raw.githubusercontent.com/ToCraft/woodwalkers-mod/1.20.2/gradle.properties";
 	public static final WalkersConfig CONFIG = ConfigLoader.read(MODID, WalkersConfig.class);
 	public static List<String> devs = new ArrayList<>();
 
