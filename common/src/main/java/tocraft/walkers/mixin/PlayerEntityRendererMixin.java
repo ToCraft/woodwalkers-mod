@@ -81,7 +81,7 @@ public abstract class PlayerEntityRendererMixin
 			shape.yHeadRotO = player.yHeadRotO;
 			shape.tickCount = player.tickCount;
 			shape.swingingArm = player.swingingArm;
-			shape.setOnGround(player.onGround());
+			shape.setOnGround(player.isOnGround());
 			shape.setDeltaMovement(player.getDeltaMovement());
 
 			((EntityAccessor) shape).setVehicle(player.getVehicle());

@@ -44,22 +44,22 @@ public abstract class PlayerSonicBoomMixin extends LivingEntity implements Sonic
     public void shape$ability_startSonicBoom() {
         @Nullable LivingEntity shape = PlayerShape.getCurrentShape((Player) (Object) this);
         if(shape instanceof Warden) {
-            level().broadcastEntityEvent(this, EntityEvent.SONIC_CHARGE);
+            level.broadcastEntityEvent(this, EntityEvent.SONIC_CHARGE);
             shape$ability_wardenBoomDelay = 40;
 
             // SFX
-            level().playSound(null, getX(), getY(), getZ(), SoundEvents.WARDEN_SONIC_CHARGE, SoundSource.PLAYERS, 3.0f, 1.0f);
+            level.playSound(null, getX(), getY(), getZ(), SoundEvents.WARDEN_SONIC_CHARGE, SoundSource.PLAYERS, 3.0f, 1.0f);
         }
     }
 
     @Inject(method = "tick", at = @At("HEAD"))
     private void tickSonicBoom(CallbackInfo ci) {
-        if(!level().isClientSide) {
+        if(!level.isClientSide) {
             shape$ability_wardenBoomDelay = Math.max(-1, shape$ability_wardenBoomDelay - 1);
             if(shape$ability_wardenBoomDelay == 0) {
 
                 // SFX
-                level().playSound(null, getX(), getY(), getZ(), SoundEvents.WARDEN_SONIC_BOOM, SoundSource.PLAYERS, 3.0f, 1.0f);
+                level.playSound(null, getX(), getY(), getZ(), SoundEvents.WARDEN_SONIC_BOOM, SoundSource.PLAYERS, 3.0f, 1.0f);
 
                 // Raycast out for sonic boom effect
                 float heightOffset = 1.6f;
@@ -73,10 +73,10 @@ public abstract class PlayerSonicBoomMixin extends LivingEntity implements Sonic
                 Set<Entity> hit = new HashSet<>();
                 for (int particleIndex = 1; particleIndex < Mth.floor(offsetToTarget.length()) + 7; ++particleIndex) {
                     Vec3 particlePos = source.add(normalized.scale(particleIndex));
-                    ((ServerLevel) level()).sendParticles(ParticleTypes.SONIC_BOOM, particlePos.x, particlePos.y, particlePos.z, 1, 0.0, 0.0, 0.0, 0.0);
+                    ((ServerLevel) level).sendParticles(ParticleTypes.SONIC_BOOM, particlePos.x, particlePos.y, particlePos.z, 1, 0.0, 0.0, 0.0, 0.0);
 
                     // Locate entities around the particle location for damage
-                    hit.addAll(level().getEntitiesOfClass(LivingEntity.class, new AABB(BlockPos.containing(particlePos.x(), particlePos.y(), particlePos.z())).inflate(2), it -> !(it instanceof Wolf)));
+                    hit.addAll(level.getEntitiesOfClass(LivingEntity.class, new AABB(BlockPos.containing(particlePos.x(), particlePos.y(), particlePos.z())).inflate(2), it -> !(it instanceof Wolf)));
                 }
 
                 // Don't hit ourselves
@@ -85,7 +85,7 @@ public abstract class PlayerSonicBoomMixin extends LivingEntity implements Sonic
                 // Find
                 for (Entity hitTarget : hit) {
                     if(hitTarget instanceof LivingEntity living) {
-                        living.hurt(level().damageSources().sonicBoom((Player) (Object) this), 10.0f);
+                        living.hurt(level.damageSources().sonicBoom((Player) (Object) this), 10.0f);
                         double vertical = 0.5 * (1.0 - living.getAttributeValue(Attributes.KNOCKBACK_RESISTANCE));
                         double horizontal = 2.5 * (1.0 - living.getAttributeValue(Attributes.KNOCKBACK_RESISTANCE));
                         living.push(normalized.x() * horizontal, normalized.y() * vertical, normalized.z() * horizontal);

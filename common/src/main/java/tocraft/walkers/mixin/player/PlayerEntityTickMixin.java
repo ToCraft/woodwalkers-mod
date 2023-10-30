@@ -36,7 +36,7 @@ public abstract class PlayerEntityTickMixin extends LivingEntity {
         }
 
         // Update misc. server-side entity properties for the player.
-        if(!level().isClientSide) {
+        if(!level.isClientSide) {
             PlayerDataProvider data = (PlayerDataProvider) this;
             data.walkers$setRemainingHostilityTime(Math.max(0, data.walkers$getRemainingHostilityTime() - 1));
 

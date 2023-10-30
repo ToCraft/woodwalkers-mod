@@ -61,7 +61,7 @@ public class UnlockPackets {
 						// update Player
 						if (result)
 							PlayerShape.updateShapes((ServerPlayer) context.getPlayer(),
-								type.create(context.getPlayer().level()));
+								type.create(context.getPlayer().level));
 					}
 				});
 			} else {

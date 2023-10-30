@@ -215,7 +215,7 @@ public class WalkersCommand {
 			created = EntityType.loadEntityRecursive(copy, serverWorld, it -> it);
 		} else {
 			EntityType<?> entity = BuiltInRegistries.ENTITY_TYPE.get(shape);
-			created = entity.create(player.level());
+			created = entity.create(player.level);
 		}
 
 		if (created instanceof LivingEntity living) {

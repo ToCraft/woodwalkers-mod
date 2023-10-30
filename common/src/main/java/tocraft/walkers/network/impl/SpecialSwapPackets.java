@@ -34,7 +34,7 @@ public class SpecialSwapPackets {
 				
 				nbt.putBoolean("isSpecial", true);
 				nbt.putString("id", shape.toString());
-				ServerLevel serverWorld = player.serverLevel();
+				ServerLevel serverWorld = player.getLevel();
 				created = EntityType.loadEntityRecursive(nbt, serverWorld, it -> it);
 				
 				if (created instanceof LivingEntity living) {

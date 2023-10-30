@@ -7,6 +7,27 @@ import tocraft.walkers.ability.impl.*;
 import java.util.HashMap;
 import java.util.Map;
 
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import tocraft.walkers.ability.impl.BlazeAbility;
+import tocraft.walkers.ability.impl.ChickenAbility;
+import tocraft.walkers.ability.impl.CowAbility;
+import tocraft.walkers.ability.impl.CreeperAbility;
+import tocraft.walkers.ability.impl.EnderDragonAbility;
+import tocraft.walkers.ability.impl.EndermanAbility;
+import tocraft.walkers.ability.impl.EndermiteAbility;
+import tocraft.walkers.ability.impl.EvokerAbility;
+import tocraft.walkers.ability.impl.GhastAbility;
+import tocraft.walkers.ability.impl.HorseAbility;
+import tocraft.walkers.ability.impl.LlamaAbility;
+import tocraft.walkers.ability.impl.MushroomCowAbility;
+import tocraft.walkers.ability.impl.SheepAbility;
+import tocraft.walkers.ability.impl.SnowGolemAbility;
+import tocraft.walkers.ability.impl.WardenAbility;
+import tocraft.walkers.ability.impl.WitchAbility;
+import tocraft.walkers.ability.impl.WitherEntityAbility;
+import tocraft.walkers.ability.impl.WolfAbility;
+
 public class AbilityRegistry {
 
     private static final Map<EntityType<? extends LivingEntity>, ShapeAbility<?>> abilities = new HashMap<>();
@@ -33,7 +54,6 @@ public class AbilityRegistry {
         register(EntityType.WARDEN, new WardenAbility());
         register(EntityType.WOLF, new WolfAbility());
         register(EntityType.SHEEP, new SheepAbility<>());
-        register(EntityType.SNIFFER, new SnifferAbility());
         register(EntityType.CHICKEN, new ChickenAbility<>());
         register(EntityType.MOOSHROOM, new MushroomCowAbility());
         register(EntityType.CAMEL, new HorseAbility<>());

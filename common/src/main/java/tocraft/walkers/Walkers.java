@@ -38,7 +38,7 @@ public class Walkers {
 
 	public static final Logger LOGGER = LoggerFactory.getLogger(Walkers.class);
 	public static final String MODID = "walkers";
-	public static final String VERSION_URL = "https://raw.githubusercontent.com/ToCraft/woodwalkers-mod/1.20.1/gradle.properties";
+	public static String VERSION_URL = "https://raw.githubusercontent.com/ToCraft/woodwalkers-mod/1.19.4/gradle.properties";
 	public static final WalkersConfig CONFIG = ConfigLoader.read(MODID, WalkersConfig.class);
 	public static boolean foundPotionAbilities = false;
 	public static List<UUID> devs = new ArrayList<>();
@@ -67,11 +67,11 @@ public class Walkers {
 		VersionChecker.registerChecker(MODID, VERSION_URL, Component.translatable("key.categories.walkers"));
 		
 		PlayerEvents.PLAYER_JOIN.register(player -> {
-			Int2ObjectMap<Object> trackers = ((ThreadedAnvilChunkStorageAccessor) ((ServerLevel) player.level())
+			Int2ObjectMap<Object> trackers = ((ThreadedAnvilChunkStorageAccessor) ((ServerLevel) player.level)
 					.getChunkSource().chunkMap).getEntityMap();
 			trackers.forEach((entityid, tracking) -> {
-				if (player.level().getEntity(entityid) instanceof ServerPlayer)
-					PlayerShape.sync(((ServerPlayer) player.serverLevel().getEntity(entityid)), player);
+				if (((ServerLevel) player.level).getEntity(entityid) instanceof ServerPlayer)
+					PlayerShape.sync(((ServerPlayer) ((ServerLevel) player.level).getEntity(entityid)), player);
 			});
 		});
 	}
