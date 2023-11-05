@@ -24,7 +24,6 @@ import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.util.Tuple;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
-import tocraft.walkers.math.math;
 import tocraft.walkers.mixin.accessor.BlazeEntityModelAccessor;
 import tocraft.walkers.mixin.accessor.IllagerEntityModelAccessor;
 import tocraft.walkers.mixin.accessor.LlamaEntityModelAccessor;
@@ -33,6 +32,7 @@ import tocraft.walkers.mixin.accessor.QuadrupedEntityModelAccessor;
 import tocraft.walkers.mixin.accessor.RavagerEntityModelAccessor;
 import tocraft.walkers.mixin.accessor.SpiderEntityModelAccessor;
 import tocraft.walkers.mixin.accessor.SquidEntityModelAccessor;
+import tocraft.craftedcore.math.math;
 
 @Environment(EnvType.CLIENT)
 public class EntityArms {

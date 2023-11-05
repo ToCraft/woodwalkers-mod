@@ -1,7 +1,6 @@
 package tocraft.walkers.ability;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screens.ChatScreen;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.world.entity.LivingEntity;
 import tocraft.craftedcore.events.client.ClientGuiEvents;
@@ -24,10 +23,6 @@ public class AbilityOverlayRenderer {
             WalkersAbility<? extends LivingEntity> shapeAbility = AbilityRegistry.get(shape.getType());
 
             if(shapeAbility == null) {
-                return;
-            }
-
-            if(client.screen instanceof ChatScreen) {
                 return;
             }
 
