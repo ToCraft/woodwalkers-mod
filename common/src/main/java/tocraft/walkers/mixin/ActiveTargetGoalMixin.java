@@ -11,6 +11,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.MobType;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
+import net.minecraft.world.entity.animal.PolarBear;
 import net.minecraft.world.entity.boss.wither.WitherBoss;
 import net.minecraft.world.entity.monster.Creeper;
 import net.minecraft.world.entity.monster.Enemy;
@@ -46,6 +47,12 @@ public abstract class ActiveTargetGoalMixin extends TrackTargetGoalMixin {
 
 					// skeletons should ignore wolfs
 					if (this.mob instanceof Skeleton && shape.getType().equals(EntityType.WOLF)) {
+						this.stop();
+						ci.cancel();
+					}
+					
+					// polar bears should ignore polar bears
+					if (this.mob instanceof PolarBear && shape.getType().equals(EntityType.POLAR_BEAR)) {
 						this.stop();
 						ci.cancel();
 					}
