@@ -29,6 +29,7 @@ import tocraft.walkers.impl.variant.ParrotTypeProvider;
 import tocraft.walkers.impl.variant.RabbitTypeProvider;
 import tocraft.walkers.impl.variant.SheepTypeProvider;
 import tocraft.walkers.impl.variant.SlimeTypeProvider;
+import tocraft.walkers.impl.variant.VillagerTypeProvider;
 import tocraft.walkers.impl.variant.WolfTypeProvider;
 
 public class ShapeType<T extends LivingEntity> {
@@ -55,6 +56,7 @@ public class ShapeType<T extends LivingEntity> {
 		VARIANT_BY_TYPE.put(EntityType.MOOSHROOM, new MushroomCowTypeProvider());
 		VARIANT_BY_TYPE.put(EntityType.PANDA, new PandaTypeProvider());
 		VARIANT_BY_TYPE.put(EntityType.RABBIT, new RabbitTypeProvider());
+		VARIANT_BY_TYPE.put(EntityType.VILLAGER, new VillagerTypeProvider());
 	}
 
 	public ShapeType(EntityType<T> type) {
