@@ -47,19 +47,19 @@ public abstract class ActiveTargetGoalMixin extends TrackTargetGoalMixin {
 					}
 
 					// skeletons should ignore wolfs
-					if (this.mob instanceof Skeleton && shape.getType().equals(EntityType.WOLF)) {
+					else if (this.mob instanceof Skeleton && shape.getType().equals(EntityType.WOLF)) {
 						this.stop();
 						ci.cancel();
 					}
 					
 					// polar bears should ignore polar bears
-					if (this.mob instanceof PolarBear && shape.getType().equals(EntityType.POLAR_BEAR)) {
+					else if (this.mob instanceof PolarBear && shape.getType().equals(EntityType.POLAR_BEAR)) {
 						this.stop();
 						ci.cancel();
 					}
 					
 					// endermen should ignore endermites
-					if (this.mob instanceof EnderMan && shape.getType().equals(EntityType.ENDERMITE)) {
+					else if (this.mob instanceof EnderMan && shape.getType().equals(EntityType.ENDERMITE)) {
 						this.stop();
 						ci.cancel();
 					}
