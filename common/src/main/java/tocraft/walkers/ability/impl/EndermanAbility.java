@@ -9,9 +9,9 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.HitResult;
 import tocraft.walkers.Walkers;
-import tocraft.walkers.ability.WalkersAbility;
+import tocraft.walkers.ability.ShapeAbility;
 
-public class EndermanAbility extends WalkersAbility<EnderMan> {
+public class EndermanAbility extends ShapeAbility<EnderMan> {
 
 	@Override
 	public void onUse(Player player, EnderMan shape, Level world) {

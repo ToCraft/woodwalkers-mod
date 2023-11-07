@@ -9,9 +9,9 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
-import tocraft.walkers.ability.WalkersAbility;
+import tocraft.walkers.ability.ShapeAbility;
 
-public class SnowGolemAbility extends WalkersAbility<SnowGolem> {
+public class SnowGolemAbility extends ShapeAbility<SnowGolem> {
 
     @Override
     public void onUse(Player player, SnowGolem shape, Level world) {

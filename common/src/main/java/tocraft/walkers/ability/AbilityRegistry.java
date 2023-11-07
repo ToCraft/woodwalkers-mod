@@ -27,7 +27,7 @@ import tocraft.walkers.ability.impl.WolfAbility;
 
 public class AbilityRegistry {
 
-    private static final Map<EntityType<? extends LivingEntity>, WalkersAbility<?>> abilities = new HashMap<>();
+    private static final Map<EntityType<? extends LivingEntity>, ShapeAbility<?>> abilities = new HashMap<>();
 
     private AbilityRegistry() {
 
@@ -60,11 +60,11 @@ public class AbilityRegistry {
         register(EntityType.ZOMBIE_HORSE, new HorseAbility<>());
     }
 
-    public static WalkersAbility get(EntityType<?> type) {
+    public static ShapeAbility get(EntityType<?> type) {
         return abilities.get(type);
     }
 
-    public static <A extends LivingEntity, T extends EntityType<A>> void register(T type, WalkersAbility<A> ability) {
+    public static <A extends LivingEntity, T extends EntityType<A>> void register(T type, ShapeAbility<A> ability) {
         abilities.put(type, ability);
     }
 

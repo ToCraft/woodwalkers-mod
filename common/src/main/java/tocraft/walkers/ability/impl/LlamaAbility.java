@@ -9,9 +9,9 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
-import tocraft.walkers.ability.WalkersAbility;
+import tocraft.walkers.ability.ShapeAbility;
 
-public class LlamaAbility <T extends Llama> extends WalkersAbility<T> {
+public class LlamaAbility <T extends Llama> extends ShapeAbility<T> {
 
     @Override
     public void onUse(Player player, Llama shape, Level world) {

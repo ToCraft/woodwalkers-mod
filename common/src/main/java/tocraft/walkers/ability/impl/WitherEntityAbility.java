@@ -9,9 +9,9 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
-import tocraft.walkers.ability.WalkersAbility;
+import tocraft.walkers.ability.ShapeAbility;
 
-public class WitherEntityAbility extends WalkersAbility<WitherBoss> {
+public class WitherEntityAbility extends ShapeAbility<WitherBoss> {
 
     @Override
     public void onUse(Player player, WitherBoss shape, Level world) {

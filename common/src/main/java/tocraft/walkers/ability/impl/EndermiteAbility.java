@@ -9,9 +9,9 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
-import tocraft.walkers.ability.WalkersAbility;
+import tocraft.walkers.ability.ShapeAbility;
 
-public class EndermiteAbility extends WalkersAbility<Endermite> {
+public class EndermiteAbility extends ShapeAbility<Endermite> {
     
     @Override
     public void onUse(Player player, Endermite shape, Level world) {

@@ -8,9 +8,9 @@ import net.minecraft.world.entity.projectile.LargeFireball;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
-import tocraft.walkers.ability.WalkersAbility;
+import tocraft.walkers.ability.ShapeAbility;
 
-public class GhastAbility extends WalkersAbility<Ghast> {
+public class GhastAbility extends ShapeAbility<Ghast> {
 
     @Override
     public void onUse(Player player, Ghast shape, Level world) {

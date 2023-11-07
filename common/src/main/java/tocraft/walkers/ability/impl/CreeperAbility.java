@@ -6,9 +6,9 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.Level.ExplosionInteraction;
-import tocraft.walkers.ability.WalkersAbility;
+import tocraft.walkers.ability.ShapeAbility;
 
-public class CreeperAbility extends WalkersAbility<Creeper> {
+public class CreeperAbility extends ShapeAbility<Creeper> {
 
     @Override
     public void onUse(Player player, Creeper shape, Level world) {

@@ -20,7 +20,7 @@ public class AbilityOverlayRenderer {
                 return;
             }
 
-            WalkersAbility<? extends LivingEntity> shapeAbility = AbilityRegistry.get(shape.getType());
+            ShapeAbility<? extends LivingEntity> shapeAbility = AbilityRegistry.get(shape.getType());
 
             if(shapeAbility == null) {
                 return;

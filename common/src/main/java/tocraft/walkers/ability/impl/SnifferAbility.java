@@ -1,6 +1,6 @@
 package tocraft.walkers.ability.impl;
 
-import tocraft.walkers.ability.WalkersAbility;
+import tocraft.walkers.ability.ShapeAbility;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +16,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 
-public class SnifferAbility extends WalkersAbility<Sniffer> {
+public class SnifferAbility extends ShapeAbility<Sniffer> {
 
     @Override
     public void onUse(Player player, Sniffer shape, Level world) {

@@ -10,9 +10,9 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
-import tocraft.walkers.ability.WalkersAbility;
+import tocraft.walkers.ability.ShapeAbility;
 
-public class EvokerAbility extends WalkersAbility<Evoker> {
+public class EvokerAbility extends ShapeAbility<Evoker> {
 
     @Override
     public void onUse(Player player, Evoker shape, Level world) {

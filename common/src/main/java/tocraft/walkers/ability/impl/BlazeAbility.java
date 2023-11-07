@@ -8,9 +8,9 @@ import net.minecraft.world.entity.projectile.SmallFireball;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
-import tocraft.walkers.ability.WalkersAbility;
+import tocraft.walkers.ability.ShapeAbility;
 
-public class BlazeAbility extends WalkersAbility<Blaze> {
+public class BlazeAbility extends ShapeAbility<Blaze> {
 
     @Override
     public void onUse(Player player, Blaze shape, Level world) {

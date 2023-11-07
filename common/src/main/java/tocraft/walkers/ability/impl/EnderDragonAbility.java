@@ -6,9 +6,9 @@ import net.minecraft.world.entity.projectile.DragonFireball;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
-import tocraft.walkers.ability.WalkersAbility;
+import tocraft.walkers.ability.ShapeAbility;
 
-public class EnderDragonAbility extends WalkersAbility<EnderDragon> {
+public class EnderDragonAbility extends ShapeAbility<EnderDragon> {
 
     @Override
     public void onUse(Player player, EnderDragon shape, Level world) {

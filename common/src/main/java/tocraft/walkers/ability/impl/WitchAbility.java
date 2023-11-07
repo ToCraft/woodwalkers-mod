@@ -1,6 +1,6 @@
 package tocraft.walkers.ability.impl;
 
-import tocraft.walkers.ability.WalkersAbility;
+import tocraft.walkers.ability.ShapeAbility;
 import java.util.Arrays;
 import java.util.List;
 import net.minecraft.sounds.SoundEvents;
@@ -16,7 +16,7 @@ import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 
-public class WitchAbility extends WalkersAbility<Witch> {
+public class WitchAbility extends ShapeAbility<Witch> {
 
     public static final List<Potion> VALID_POTIONS = Arrays.asList(Potions.HARMING, Potions.POISON, Potions.SLOWNESS, Potions.WEAKNESS);
 
