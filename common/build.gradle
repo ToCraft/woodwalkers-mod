@@ -5,6 +5,8 @@ dependencies {
 
     // uses my own API
     modApi "dev.tocraft:craftedcore:${rootProject.minecraft_version}-common-${rootProject.craftedcore_version}"
+    // use YCDM, needed in case the player installs it
+    modApi "dev.tocraft:ycdm:${rootProject.minecraft_version}-common-${rootProject.ycdm_version}"
 }
 
 architectury {

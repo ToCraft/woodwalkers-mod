@@ -5,8 +5,10 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import tocraft.craftedcore.network.NetworkManager;
+import tocraft.walkers.Walkers;
 import tocraft.walkers.impl.PlayerDataProvider;
 import tocraft.walkers.network.NetworkHandler;
+import tocraft.ycdm.impl.PAPlayerDataProvider;
 
 public class PlayerAbilities {
 
@@ -24,7 +26,11 @@ public class PlayerAbilities {
     }
 
     public static boolean canUseAbility(Player player) {
-        return ((PlayerDataProvider) player).getAbilityCooldown() <= 0;
+    	// return false in case the player's already in cooldown as of ycdm
+    	if (Walkers.foundPotionAbilities && ((PAPlayerDataProvider) player).getCooldown() <= 0)
+    		return false;
+    	else
+    		return ((PlayerDataProvider) player).getAbilityCooldown() <= 0;
     }
 
     public static void setCooldown(Player player, int cooldown) {

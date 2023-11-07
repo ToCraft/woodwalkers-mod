@@ -41,6 +41,7 @@ public class Walkers {
 	public static final String MODID = "walkers";
 	public static String versionURL = "https://raw.githubusercontent.com/ToCraft/woodwalkers-mod/1.20.2/gradle.properties";
 	public static final WalkersConfig CONFIG = ConfigLoader.read(MODID, WalkersConfig.class);
+	public static boolean foundPotionAbilities = false;
 	public static List<String> devs = new ArrayList<>();
 
 	static {
@@ -48,6 +49,11 @@ public class Walkers {
 	}
 
 	public void initialize() {
+		Platform.getMods().forEach(mod -> {
+			if (mod.getModId().equals("ycdm"))
+				foundPotionAbilities = true;
+		});
+		
 		AbilityRegistry.init();
 		WalkersEventHandlers.initialize();
 		WalkersCommands.init();
