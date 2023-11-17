@@ -1,23 +1,23 @@
 package tocraft.walkers.impl;
 
-import tocraft.walkers.api.variant.ShapeType;
 import net.minecraft.world.entity.LivingEntity;
 import org.jetbrains.annotations.Nullable;
+import tocraft.walkers.api.variant.ShapeType;
 
 public interface PlayerDataProvider {
 
-    ShapeType<?> get2ndShape();
-    void set2ndShape(ShapeType<?> unlocked);
+    ShapeType<?> walkers$get2ndShape();
+    void walkers$set2ndShape(ShapeType<?> unlocked);
 
-    int getRemainingHostilityTime();
-    void setRemainingHostilityTime(int max);
+    int walkers$getRemainingHostilityTime();
+    void walkers$setRemainingHostilityTime(int max);
 
-    int getAbilityCooldown();
-    void setAbilityCooldown(int cooldown);
+    int walkers$getAbilityCooldown();
+    void walkers$setAbilityCooldown(int cooldown);
 
-    LivingEntity getCurrentShape();
-    void setCurrentShape(@Nullable LivingEntity shape);
-    boolean updateShapes(@Nullable LivingEntity shape);
+    LivingEntity walkers$getCurrentShape();
+    void walkers$setCurrentShape(@Nullable LivingEntity shape);
+    boolean walkers$updateShapes(@Nullable LivingEntity shape);
 
-    ShapeType<?> getCurrentShapeType();
+    ShapeType<?> walkers$getCurrentShapeType();
 }

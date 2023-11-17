@@ -1,9 +1,9 @@
 package tocraft.walkers.fabric;
 
-import tocraft.walkers.WalkersClient;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import tocraft.walkers.WalkersClient;
 
 @Environment(EnvType.CLIENT)
 public class WalkersFabricClient implements ClientModInitializer {

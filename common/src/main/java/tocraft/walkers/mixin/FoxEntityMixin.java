@@ -1,15 +1,5 @@
 package tocraft.walkers.mixin;
 
-import java.util.function.Predicate;
-
-import org.spongepowered.asm.mixin.Final;
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Mutable;
-import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntitySelector;
 import net.minecraft.world.entity.EntityType;
@@ -20,9 +10,18 @@ import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.animal.Fox;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import org.spongepowered.asm.mixin.Final;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Mutable;
+import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import tocraft.walkers.Walkers;
 import tocraft.walkers.api.PlayerShape;
 import tocraft.walkers.registry.WalkersEntityTags;
+
+import java.util.function.Predicate;
 
 @Mixin(Fox.class)
 public abstract class FoxEntityMixin extends Animal {
@@ -58,7 +57,7 @@ public abstract class FoxEntityMixin extends Animal {
 	private void addPlayerTarget(CallbackInfo ci) {
 		this.targetSelector.addGoal(7,
 				new NearestAttackableTargetGoal<>(this, Player.class, 10, false, false, player -> {
-					// ensure foxes can attack players with an shape similar to their normal prey
+					// ensure foxes can attack players with a shape similar to their normal prey
 					if (!Walkers.CONFIG.foxesAttack2ndShapedPrey) {
 						return false;
 					}

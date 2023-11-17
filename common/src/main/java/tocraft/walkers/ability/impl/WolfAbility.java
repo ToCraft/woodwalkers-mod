@@ -30,9 +30,9 @@ public class WolfAbility extends ShapeAbility<Wolf> {
 			Int2ObjectMap<Object> trackers = ((ThreadedAnvilChunkStorageAccessor) ((ServerLevel) world)
 					.getChunkSource().chunkMap).getEntityMap();
 			Object tracking = trackers.get(player.getId());
-			((EntityTrackerAccessor) tracking).getSeenBy().forEach(listener -> {
-				PlayerShape.sync((ServerPlayer) player, listener.getPlayer());
-			});
+			((EntityTrackerAccessor) tracking).getSeenBy().forEach(
+					listener -> PlayerShape.sync((ServerPlayer) player, listener.getPlayer())
+			);
 			world.playSound(null, player, SoundEvents.WOLF_GROWL, SoundSource.PLAYERS, 1.0F,
 					(world.random.nextFloat() - world.random.nextFloat()) * 0.2F + 1.0F);
 		}

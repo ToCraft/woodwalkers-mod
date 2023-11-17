@@ -15,6 +15,6 @@
   "walkers.update": "A new version of woodwalkers is available: %s",
   "key.categories.walkers": "Woodwalkers",
   "key.walkers": "Transform to your other shape",
-  "key.walkers_unlock": "Scann a mob",
+  "key.walkers_unlock": "Scan a mob",
   "key.walkers_ability": "Use an Shape Ability"
 }

@@ -1,22 +1,21 @@
 package tocraft.walkers.network;
 
-import java.util.Optional;
-import java.util.UUID;
-
-import org.jetbrains.annotations.Nullable;
-
 import io.netty.buffer.Unpooled;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import org.jetbrains.annotations.Nullable;
 import tocraft.craftedcore.client.CraftedCoreClient;
 import tocraft.craftedcore.network.NetworkManager;
 import tocraft.craftedcore.network.client.ClientNetworking.ApplicablePacket;
 import tocraft.walkers.impl.DimensionsRefresher;
 import tocraft.walkers.impl.PlayerDataProvider;
 import tocraft.walkers.network.impl.UnlockPackets;
+
+import java.util.Optional;
+import java.util.UUID;
 
 public class ClientNetworking implements NetworkHandler {
 
@@ -55,7 +54,7 @@ public class ClientNetworking implements NetworkHandler {
 
 				// set shape to null (no shape) if the entity id is "minecraft:empty"
 				if (id.equals("minecraft:empty")) {
-					data.setCurrentShape(null);
+					data.walkers$setCurrentShape(null);
 					((DimensionsRefresher) syncTarget).shape_refreshDimensions();
 					return;
 				}
@@ -65,12 +64,12 @@ public class ClientNetworking implements NetworkHandler {
 					entityNbt.putString("id", id);
 					Optional<EntityType<?>> type = EntityType.by(entityNbt);
 					if (type.isPresent()) {
-						LivingEntity shape = data.getCurrentShape();
+						LivingEntity shape = data.walkers$getCurrentShape();
 
 						// ensure entity data exists
 						if (shape == null || !type.get().equals(shape.getType())) {
 							shape = (LivingEntity) type.get().create(syncTarget.level());
-							data.setCurrentShape(shape);
+							data.walkers$setCurrentShape(shape);
 
 							// refresh player dimensions/hitbox on client
 							((DimensionsRefresher) syncTarget).shape_refreshDimensions();
@@ -87,6 +86,6 @@ public class ClientNetworking implements NetworkHandler {
 
 	public static void handleAbilitySyncPacket(FriendlyByteBuf packet, NetworkManager.PacketContext context) {
 		int cooldown = packet.readInt();
-		runOrQueue(context, player -> ((PlayerDataProvider) player).setAbilityCooldown(cooldown));
+		runOrQueue(context, player -> ((PlayerDataProvider) player).walkers$setAbilityCooldown(cooldown));
 	}
 }

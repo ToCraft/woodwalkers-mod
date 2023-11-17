@@ -1,9 +1,6 @@
 package tocraft.walkers.command;
 
-import org.jetbrains.annotations.Nullable;
-
 import com.mojang.brigadier.tree.LiteralCommandNode;
-
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.CompoundTagArgument;
@@ -20,6 +17,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import org.jetbrains.annotations.Nullable;
 import tocraft.craftedcore.events.common.CommandEvents;
 import tocraft.walkers.Walkers;
 import tocraft.walkers.api.PlayerShape;
@@ -131,11 +129,11 @@ public class WalkersCommand {
 							}))))
 					.build();
 
-			LiteralCommandNode<CommandSourceStack> show2ndShape = Commands.literal("show2ndShape").executes(context -> {
-				return show2ndShape(context.getSource(), context.getSource().getPlayer());
-			}).then(Commands.argument("player", EntityArgument.player()).executes(context -> {
-				return show2ndShape(context.getSource(), EntityArgument.getPlayer(context, "player"));
-			})).build();
+			LiteralCommandNode<CommandSourceStack> show2ndShape = Commands.literal("show2ndShape")
+					.executes(context -> show2ndShape(context.getSource(), context.getSource().getPlayer()))
+					.then(Commands.argument("player", EntityArgument.player())
+							.executes(context -> show2ndShape(context.getSource(), EntityArgument.getPlayer(context, "player"))))
+					.build();
 
 			rootNode.addChild(remove2ndShape);
 			rootNode.addChild(change2ndShape);
@@ -148,11 +146,11 @@ public class WalkersCommand {
 
 	private static int show2ndShape(CommandSourceStack source, ServerPlayer player) {
 
-		if (((PlayerDataProvider) player).get2ndShape() != null) {
+		if (((PlayerDataProvider) player).walkers$get2ndShape() != null) {
 			if (Walkers.CONFIG.logCommands) {
 				source.sendSystemMessage(Component.translatable("walkers.show2ndShapeNot_positive",
 						player.getDisplayName(), Component.translatable(
-								((PlayerDataProvider) player).get2ndShape().getEntityType().getDescriptionId())));
+								((PlayerDataProvider) player).walkers$get2ndShape().getEntityType().getDescriptionId())));
 			}
 
 			return 1;
@@ -171,7 +169,7 @@ public class WalkersCommand {
 			player.displayClientMessage(Component.translatable("walkers.remove_entity"), true);
 			source.sendSystemMessage(Component.translatable("walkers.deletion_success", player.getDisplayName()));
 		}
-	};
+	}
 
 	private static void change2ndShape(CommandSourceStack source, ServerPlayer player, ResourceLocation id,
 			@Nullable CompoundTag nbt) {
@@ -191,7 +189,7 @@ public class WalkersCommand {
 			}
 		}
 
-		if (((PlayerDataProvider) player).get2ndShape() != type) {
+		if (((PlayerDataProvider) player).walkers$get2ndShape() != type) {
 			boolean result = PlayerShapeChanger.change2ndShape(player, type);
 
 			if (result && Walkers.CONFIG.logCommands) {
@@ -204,7 +202,7 @@ public class WalkersCommand {
 				source.sendSystemMessage(Component.translatable("walkers.already_has", player.getDisplayName(), name));
 			}
 		}
-	};
+	}
 
 	private static void switchShape(CommandSourceStack source, ServerPlayer player, ResourceLocation shape,
 			@Nullable CompoundTag nbt) {

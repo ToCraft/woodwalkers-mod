@@ -1,10 +1,5 @@
 package tocraft.walkers.mixin;
 
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -16,10 +11,16 @@ import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.animal.Wolf;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import tocraft.walkers.Walkers;
 import tocraft.walkers.api.PlayerShape;
 import tocraft.walkers.registry.WalkersEntityTags;
 
+@SuppressWarnings({"RedundantCast", "WrongEntityDataParameterClass"})
 @Mixin(Wolf.class)
 public abstract class WolfEntityMixin extends TamableAnimal {
 
@@ -27,7 +28,8 @@ public abstract class WolfEntityMixin extends TamableAnimal {
 		super(entityType, world);
 	}
 
-	private static final EntityDataAccessor<Boolean> isDev = SynchedEntityData.defineId(Wolf.class,
+	@Unique
+	private static final EntityDataAccessor<Boolean> walkers$isDev = SynchedEntityData.defineId(Wolf.class,
 			EntityDataSerializers.BOOLEAN);
 
 	@Inject(method = "registerGoals", at = @At("RETURN"))
@@ -54,16 +56,16 @@ public abstract class WolfEntityMixin extends TamableAnimal {
 
 	@Inject(method = "defineSynchedData", at = @At("RETURN"))
 	protected void onInitDataTracker(CallbackInfo ci) {
-		((Wolf) (Object) this).getEntityData().define(isDev, false);
+		((Wolf) (Object) this).getEntityData().define(walkers$isDev, false);
 	}
 
 	@Inject(method = "addAdditionalSaveData", at = @At("RETURN"))
 	protected void onWriteCustomDataToNbt(CompoundTag nbt, CallbackInfo ci) {
-		nbt.putBoolean("isDev", ((Wolf) (Object) this).getEntityData().get(isDev));
+		nbt.putBoolean("isDev", ((Wolf) (Object) this).getEntityData().get(walkers$isDev));
 	}
 
 	@Inject(method = "readAdditionalSaveData", at = @At("RETURN"))
 	protected void onReadCustomDataFromNbt(CompoundTag nbt, CallbackInfo ci) {
-		((Wolf) (Object) this).getEntityData().set(isDev, nbt.getBoolean("isDev"));
+		((Wolf) (Object) this).getEntityData().set(walkers$isDev, nbt.getBoolean("isDev"));
 	}
 }

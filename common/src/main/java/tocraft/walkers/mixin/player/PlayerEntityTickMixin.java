@@ -1,10 +1,5 @@
 package tocraft.walkers.mixin.player;
 
-import tocraft.walkers.api.WalkersTickHandler;
-import tocraft.walkers.api.WalkersTickHandlers;
-import tocraft.walkers.api.PlayerAbilities;
-import tocraft.walkers.api.PlayerShape;
-import tocraft.walkers.impl.PlayerDataProvider;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -15,6 +10,11 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import tocraft.walkers.api.PlayerAbilities;
+import tocraft.walkers.api.PlayerShape;
+import tocraft.walkers.api.WalkersTickHandler;
+import tocraft.walkers.api.WalkersTickHandlers;
+import tocraft.walkers.impl.PlayerDataProvider;
 
 @Mixin(Player.class)
 public abstract class PlayerEntityTickMixin extends LivingEntity {
@@ -38,11 +38,11 @@ public abstract class PlayerEntityTickMixin extends LivingEntity {
         // Update misc. server-side entity properties for the player.
         if(!level().isClientSide) {
             PlayerDataProvider data = (PlayerDataProvider) this;
-            data.setRemainingHostilityTime(Math.max(0, data.getRemainingHostilityTime() - 1));
+            data.walkers$setRemainingHostilityTime(Math.max(0, data.walkers$getRemainingHostilityTime() - 1));
 
             // Update cooldown & Sync
             ServerPlayer player = (ServerPlayer) (Object) this;
-            PlayerAbilities.setCooldown(player, Math.max(0, data.getAbilityCooldown() - 1));
+            PlayerAbilities.setCooldown(player, Math.max(0, data.walkers$getAbilityCooldown() - 1));
             PlayerAbilities.sync(player);
         }
     }

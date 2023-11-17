@@ -1,12 +1,5 @@
 package tocraft.walkers;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.jetbrains.annotations.Nullable;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import net.minecraft.advancements.AdvancementHolder;
 import net.minecraft.advancements.AdvancementProgress;
@@ -20,6 +13,9 @@ import net.minecraft.world.entity.FlyingMob;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.animal.WaterAnimal;
 import net.minecraft.world.entity.monster.Guardian;
+import org.jetbrains.annotations.Nullable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import tocraft.craftedcore.config.ConfigLoader;
 import tocraft.craftedcore.events.common.PlayerEvents;
 import tocraft.craftedcore.platform.Platform;
@@ -35,11 +31,14 @@ import tocraft.walkers.registry.WalkersCommands;
 import tocraft.walkers.registry.WalkersEntityTags;
 import tocraft.walkers.registry.WalkersEventHandlers;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Walkers {
 
 	public static final Logger LOGGER = LoggerFactory.getLogger(Walkers.class);
 	public static final String MODID = "walkers";
-	public static String versionURL = "https://raw.githubusercontent.com/ToCraft/woodwalkers-mod/1.20.2/gradle.properties";
+	public static final String VERSION_URL = "https://raw.githubusercontent.com/ToCraft/woodwalkers-mod/1.20.2/gradle.properties";
 	public static final WalkersConfig CONFIG = ConfigLoader.read(MODID, WalkersConfig.class);
 	public static boolean foundPotionAbilities = false;
 	public static List<String> devs = new ArrayList<>();
@@ -70,14 +69,14 @@ public class Walkers {
 
 			// check for updates
 			@Nullable
-			String newVersion = VersionChecker.checkForNewVersion(versionURL);
+			String newVersion = VersionChecker.checkForNewVersion(VERSION_URL);
 			if (newVersion != null && !Platform.getMod(MODID).getVersion().equals(newVersion))
 				player.sendSystemMessage(Component.translatable("walkers.update", newVersion));
 
 			Int2ObjectMap<Object> trackers = ((ThreadedAnvilChunkStorageAccessor) ((ServerLevel) player.level())
 					.getChunkSource().chunkMap).getEntityMap();
 			trackers.forEach((entityid, tracking) -> {
-				if (((ServerLevel) player.level()).getEntity(entityid) instanceof ServerPlayer)
+				if (player.level().getEntity(entityid) instanceof ServerPlayer)
 					PlayerShape.sync(((ServerPlayer) player.serverLevel().getEntity(entityid)), player);
 			});
 		});

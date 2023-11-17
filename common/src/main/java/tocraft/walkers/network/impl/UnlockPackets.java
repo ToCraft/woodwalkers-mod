@@ -1,7 +1,5 @@
 package tocraft.walkers.network.impl;
 
-import org.jetbrains.annotations.Nullable;
-
 import io.netty.buffer.Unpooled;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
@@ -9,6 +7,7 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import org.jetbrains.annotations.Nullable;
 import tocraft.craftedcore.network.NetworkManager;
 import tocraft.walkers.Walkers;
 import tocraft.walkers.api.PlayerShape;
@@ -30,7 +29,7 @@ public class UnlockPackets {
 
 			ClientNetworking.runOrQueue(context, player -> {
 				if (idTag != null)
-					((PlayerDataProvider) player).set2ndShape(ShapeType.from(idTag));
+					((PlayerDataProvider) player).walkers$set2ndShape(ShapeType.from(idTag));
 			});
 		}
 	}
@@ -52,7 +51,7 @@ public class UnlockPackets {
 				context.getPlayer().getServer().execute(() -> {
 					@Nullable
 					ShapeType<LivingEntity> type = ShapeType.from(entityType, variant);
-					if (type != null && !type.getEntityType().is(WalkersEntityTags.BLACKLISTED) && (Walkers.CONFIG.unlockOveridesCurrentShape || ((PlayerDataProvider) context.getPlayer()).get2ndShape() == null)) {
+					if (type != null && !type.getEntityType().is(WalkersEntityTags.BLACKLISTED) && (Walkers.CONFIG.unlockOveridesCurrentShape || ((PlayerDataProvider) context.getPlayer()).walkers$get2ndShape() == null)) {
 						// set 2nd shape
 						PlayerShapeChanger.change2ndShape((ServerPlayer) context.getPlayer(), type);
 						// update Player
@@ -84,8 +83,8 @@ public class UnlockPackets {
 		// Serialize unlocked to tag
 		CompoundTag compound = new CompoundTag();
 		CompoundTag id = new CompoundTag();
-		if (((PlayerDataProvider) player).get2ndShape() != null)
-			id = ((PlayerDataProvider) player).get2ndShape().writeCompound();
+		if (((PlayerDataProvider) player).walkers$get2ndShape() != null)
+			id = ((PlayerDataProvider) player).walkers$get2ndShape().writeCompound();
 		compound.put(UNLOCK_KEY, id);
 		packet.writeNbt(compound);
 

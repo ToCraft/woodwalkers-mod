@@ -35,8 +35,8 @@ public class WalkersEventHandlers {
 	// be able to ride Ravagers.
 	public static void registerRavagerRidingHandler() {
 		PlayerEvents.INTERACT_ENTITY.register((player, entity, hand) -> {
-			// checks, if selected entity is a Ravager or a Player, shaped as a Rvager
-			if (entity instanceof Ravager || entity instanceof Player targetedPlayer && ((PlayerDataProvider) targetedPlayer).getCurrentShape() instanceof Ravager) {
+			// checks, if selected entity is a Ravager or a Player, shaped as a Ravager
+			if (entity instanceof Ravager || entity instanceof Player targetedPlayer && ((PlayerDataProvider) targetedPlayer).walkers$getCurrentShape() instanceof Ravager) {
 				LivingEntity shape = PlayerShape.getCurrentShape(player);
 				if (shape != null) {
 					if (shape.getType().is(WalkersEntityTags.RAVAGER_RIDING)) {
@@ -53,7 +53,7 @@ public class WalkersEventHandlers {
 	public static void registerPlayerRidingHandler() {
 		PlayerEvents.INTERACT_ENTITY.register((player, entity, hand) -> {
 			if (entity instanceof Player playerToBeRidden) {
-				if (((PlayerDataProvider) playerToBeRidden).getCurrentShape() instanceof AbstractHorse) {
+				if (((PlayerDataProvider) playerToBeRidden).walkers$getCurrentShape() instanceof AbstractHorse) {
 					player.startRiding(playerToBeRidden, true);
 				}
 			}

@@ -22,11 +22,11 @@ public class PlayerShape {
      * @return the current {@link LivingEntity} shape associated with this component's player owner, or null if they have no shape equipped
      */
     public static LivingEntity getCurrentShape(Player player) {
-        return ((PlayerDataProvider) player).getCurrentShape();
+        return ((PlayerDataProvider) player).walkers$getCurrentShape();
     }
 
     public static ShapeType<?> getCurrentShapeType(Player player) {
-        return ((PlayerDataProvider) player).getCurrentShapeType();
+        return ((PlayerDataProvider) player).walkers$getCurrentShapeType();
     }
 
     /**
@@ -38,7 +38,7 @@ public class PlayerShape {
      * @param entity {@link LivingEntity} new shape for this component, or null to clear
      */
     public static boolean updateShapes(ServerPlayer player, ShapeType<?> type, LivingEntity entity) {
-        return ((PlayerDataProvider) player).updateShapes(entity);
+        return ((PlayerDataProvider) player).walkers$updateShapes(entity);
     }
 
     public static void sync(ServerPlayer player) {

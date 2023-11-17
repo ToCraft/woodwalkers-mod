@@ -1,20 +1,14 @@
 package tocraft.walkers.mixin;
 
+import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityDimensions;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.MoverType;
-import net.minecraft.world.entity.Pose;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.phys.AABB;
-import net.minecraft.world.phys.Vec3;
 import tocraft.walkers.api.PlayerShape;
 import tocraft.walkers.impl.DimensionsRefresher;
 
@@ -38,8 +32,6 @@ public abstract class EntityMixin implements DimensionsRefresher {
 
 	@Shadow
 	protected boolean firstTick;
-	@Shadow
-	public Level level;
 
 	@Shadow
 	public abstract void move(MoverType type, Vec3 movement);
@@ -91,7 +83,7 @@ public abstract class EntityMixin implements DimensionsRefresher {
 		}
 	}
 
-	@Inject(at = @At("HEAD"), method = "getEyeHeight", cancellable = true)
+	@Inject(at = @At("HEAD"), method = "getEyeHeight()F", cancellable = true)
 	public void getEyeHeight(CallbackInfoReturnable<Float> cir) {
 		if ((Entity) (Object) this instanceof Player player) {
 			LivingEntity shape = PlayerShape.getCurrentShape(player);

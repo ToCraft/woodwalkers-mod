@@ -1,13 +1,13 @@
 package tocraft.walkers.mixin.player;
 
-import tocraft.walkers.api.PlayerShape;
-import tocraft.walkers.api.PlayerShapeChanger;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.players.PlayerList;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+import tocraft.walkers.api.PlayerShape;
+import tocraft.walkers.api.PlayerShapeChanger;
 
 @Mixin(PlayerList.class)
 public class PlayerManagerMixin {

@@ -1,15 +1,14 @@
 package tocraft.walkers.mixin;
 
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-
 import net.minecraft.network.protocol.game.ClientboundUpdateAttributesPacket;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.players.PlayerList;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import tocraft.walkers.Walkers;
 import tocraft.walkers.api.PlayerShape;
 import tocraft.walkers.impl.DimensionsRefresher;
@@ -33,8 +32,8 @@ public class PlayerManagerMixin {
 			}
 			// Re-sync attack damage for shapes
 			if (Walkers.CONFIG.scalingAttackDamage) {
-				// get shape attack damage, return 1D if value is lower then max or not existing
-				Double shapeAttackDamage = 1D;
+				// get shape attack damage, return 1D if value is lower than max or not existing
+				double shapeAttackDamage = 1D;
 				try {
 					shapeAttackDamage = Math.max(shape.getAttribute(Attributes.ATTACK_DAMAGE).getBaseValue(),
 							shapeAttackDamage);

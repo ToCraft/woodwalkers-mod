@@ -1,6 +1,5 @@
 package tocraft.walkers.mixin.player;
 
-import tocraft.walkers.api.PlayerShape;
 import net.minecraft.server.level.ServerEntity;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
@@ -10,6 +9,7 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import tocraft.walkers.api.PlayerShape;
 
 @Mixin(ServerEntity.class)
 public class PlayerTrackingMixin {
