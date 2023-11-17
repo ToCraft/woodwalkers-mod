@@ -1,9 +1,5 @@
 package tocraft.walkers.ability.impl;
 
-import tocraft.walkers.ability.ShapeAbility;
-
-import java.util.ArrayList;
-import java.util.List;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
@@ -15,6 +11,10 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import tocraft.walkers.ability.ShapeAbility;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class SnifferAbility extends ShapeAbility<Sniffer> {
 

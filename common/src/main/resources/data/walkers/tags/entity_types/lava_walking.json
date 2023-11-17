@@ -1,6 +1,9 @@
 {
   "replace": false,
   "values": [
-    "minecraft:strider"
+    {
+      "id": "minecraft:strider",
+      "required": false
+    }
   ]
 }

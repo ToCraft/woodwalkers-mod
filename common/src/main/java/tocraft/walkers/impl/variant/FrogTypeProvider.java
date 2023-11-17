@@ -1,14 +1,15 @@
 package tocraft.walkers.impl.variant;
 
 import com.google.common.collect.ImmutableMap;
-import tocraft.walkers.api.variant.TypeProvider;
-import java.util.Map;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.animal.frog.Frog;
 import net.minecraft.world.level.Level;
+import tocraft.walkers.api.variant.TypeProvider;
+
+import java.util.Map;
 
 public class FrogTypeProvider extends TypeProvider<Frog> {
 

@@ -1,15 +1,5 @@
 package tocraft.walkers.mixin.player;
 
-import java.util.Optional;
-
-import org.jetbrains.annotations.Nullable;
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.Unique;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
@@ -18,10 +8,18 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.monster.Ravager;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.Nullable;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import tocraft.craftedcore.events.Event;
 import tocraft.walkers.Walkers;
 import tocraft.walkers.api.FlightHelper;
@@ -34,6 +32,8 @@ import tocraft.walkers.mixin.EntityTrackerAccessor;
 import tocraft.walkers.mixin.ThreadedAnvilChunkStorageAccessor;
 import tocraft.walkers.registry.WalkersEntityTags;
 
+import java.util.Optional;
+
 @Mixin(Player.class)
 public abstract class PlayerEntityDataMixin extends LivingEntity implements PlayerDataProvider {
 
@@ -43,15 +43,15 @@ public abstract class PlayerEntityDataMixin extends LivingEntity implements Play
 	@Unique
 	private static final String ABILITY_COOLDOWN_KEY = "AbilityCooldown";
 	@Unique
-	private ShapeType<?> unlocked;
+	private ShapeType<?> walkers$unlocked;
 	@Unique
-	private int remainingTime = 0;
+	private int walkers$remainingTime = 0;
 	@Unique
-	private int abilityCooldown = 0;
+	private int walkers$abilityCooldown = 0;
 	@Unique
-	private LivingEntity shape = null;
+	private LivingEntity walkers$shape = null;
 	@Unique
-	private ShapeType<?> shapeType = null;
+	private ShapeType<?> walkers$shapeType = null;
 
 	private PlayerEntityDataMixin(EntityType<? extends LivingEntity> type, Level world) {
 		super(type, world);
@@ -62,64 +62,63 @@ public abstract class PlayerEntityDataMixin extends LivingEntity implements Play
 		// This is the new tag for saving Walkers unlock information.
 		// It includes metadata for variants.
 		CompoundTag unlockedShape = tag.getCompound("UnlockedShape");
-		ShapeType<?> type = ShapeType.from(unlockedShape);
-		this.unlocked = type;
+        this.walkers$unlocked = ShapeType.from(unlockedShape);
 
 		// Abilities
-		abilityCooldown = tag.getInt(ABILITY_COOLDOWN_KEY);
+		walkers$abilityCooldown = tag.getInt(ABILITY_COOLDOWN_KEY);
 
 		// Hostility
-		remainingTime = tag.getInt("RemainingHostilityTime");
+		walkers$remainingTime = tag.getInt("RemainingHostilityTime");
 
 		// Current Walkers
-		readCurrentShape(tag.getCompound("CurrentShape"));
+		walkers$readCurrentShape(tag.getCompound("CurrentShape"));
 	}
 
 	@Inject(method = "addAdditionalSaveData", at = @At("RETURN"))
 	private void writeNbt(CompoundTag tag, CallbackInfo info) {
 		// Write 'Unlocked' Walkers data
 		CompoundTag id = new CompoundTag();
-		if (unlocked != null)
-			id = unlocked.writeCompound();
+		if (walkers$unlocked != null)
+			id = walkers$unlocked.writeCompound();
 		tag.put("UnlockedShape", id);
 
 		// Abilities
-		tag.putInt(ABILITY_COOLDOWN_KEY, abilityCooldown);
+		tag.putInt(ABILITY_COOLDOWN_KEY, walkers$abilityCooldown);
 
 		// Hostility
-		tag.putInt("RemainingHostilityTime", remainingTime);
+		tag.putInt("RemainingHostilityTime", walkers$remainingTime);
 
 		// Current Walkers
-		tag.put("CurrentShape", writeCurrentShape(new CompoundTag()));
+		tag.put("CurrentShape", walkers$writeCurrentShape(new CompoundTag()));
 	}
 
 	@Unique
-	private CompoundTag writeCurrentShape(CompoundTag tag) {
+	private CompoundTag walkers$writeCurrentShape(CompoundTag tag) {
 		CompoundTag entityTag = new CompoundTag();
 
 		// serialize current shapeAttackDamage data to tag if it exists
-		if (shape != null) {
-			shape.saveWithoutId(entityTag);
-			if (shapeType != null) {
-				shapeType.writeEntityNbt(entityTag);
+		if (walkers$shape != null) {
+			walkers$shape.saveWithoutId(entityTag);
+			if (walkers$shapeType != null) {
+				walkers$shapeType.writeEntityNbt(entityTag);
 			}
 		}
 
 		// put entity type ID under the key "id", or "minecraft:empty" if no shape is
 		// equipped (or the shape entity type is invalid)
 		tag.putString("id",
-				shape == null ? "minecraft:empty" : BuiltInRegistries.ENTITY_TYPE.getKey(shape.getType()).toString());
+				walkers$shape == null ? "minecraft:empty" : BuiltInRegistries.ENTITY_TYPE.getKey(walkers$shape.getType()).toString());
 		tag.put("EntityData", entityTag);
 		return tag;
 	}
 
 	@Unique
-	public void readCurrentShape(CompoundTag tag) {
+	public void walkers$readCurrentShape(CompoundTag tag) {
 		Optional<EntityType<?>> type = EntityType.by(tag);
 
 		// set shape to null (no shape) if the entity id is "minecraft:empty"
 		if (tag.getString("id").equals("minecraft:empty")) {
-			this.shape = null;
+			this.walkers$shape = null;
 			((DimensionsRefresher) this).shape_refreshDimensions();
 		}
 
@@ -129,81 +128,83 @@ public abstract class PlayerEntityDataMixin extends LivingEntity implements Play
 
 			// ensure entity data exists
 			if (entityTag != null) {
-				if (shape == null || !type.get().equals(shape.getType())) {
-					shape = (LivingEntity) type.get().create(level());
+				if (walkers$shape == null || !type.get().equals(walkers$shape.getType())) {
+					walkers$shape = (LivingEntity) type.get().create(level());
 
 					// refresh player dimensions/hitbox on client
 					((DimensionsRefresher) this).shape_refreshDimensions();
 				}
 
-				shape.load(entityTag);
-				shapeType = ShapeType.fromEntityNbt(tag);
+				walkers$shape.load(entityTag);
+				walkers$shapeType = ShapeType.fromEntityNbt(tag);
 			}
 		}
 	}
 
 	@Unique
 	@Override
-	public ShapeType<?> get2ndShape() {
-		return unlocked;
+	public ShapeType<?> walkers$get2ndShape() {
+		return walkers$unlocked;
 	}
 
 	@Override
-	public void set2ndShape(ShapeType<?> unlocked) {
-		this.unlocked = unlocked;
-	}
-
-	@Unique
-	@Override
-	public int getRemainingHostilityTime() {
-		return remainingTime;
+	public void walkers$set2ndShape(ShapeType<?> unlocked) {
+		this.walkers$unlocked = unlocked;
 	}
 
 	@Unique
 	@Override
-	public void setRemainingHostilityTime(int max) {
-		remainingTime = max;
+	public int walkers$getRemainingHostilityTime() {
+		return walkers$remainingTime;
 	}
 
 	@Unique
 	@Override
-	public int getAbilityCooldown() {
-		return abilityCooldown;
+	public void walkers$setRemainingHostilityTime(int max) {
+		walkers$remainingTime = max;
 	}
 
 	@Unique
 	@Override
-	public void setAbilityCooldown(int abilityCooldown) {
-		this.abilityCooldown = abilityCooldown;
+	public int walkers$getAbilityCooldown() {
+		return walkers$abilityCooldown;
 	}
 
 	@Unique
 	@Override
-	public LivingEntity getCurrentShape() {
-		return shape;
-	}
-
-	@Override
-	public ShapeType<?> getCurrentShapeType() {
-		return shapeType;
+	public void walkers$setAbilityCooldown(int abilityCooldown) {
+		this.walkers$abilityCooldown = abilityCooldown;
 	}
 
 	@Unique
 	@Override
-	public void setCurrentShape(LivingEntity shape) {
-		this.shape = shape;
+	public LivingEntity walkers$getCurrentShape() {
+		return walkers$shape;
+	}
+
+	@Override
+	public ShapeType<?> walkers$getCurrentShapeType() {
+		return walkers$shapeType;
 	}
 
 	@Unique
 	@Override
-	public boolean updateShapes(@Nullable LivingEntity shape) {
+	public void walkers$setCurrentShape(LivingEntity shape) {
+		this.walkers$shape = shape;
+	}
+
+	@Unique
+	@Override
+	public boolean walkers$updateShapes(@Nullable LivingEntity shape) {
 		Player player = (Player) (Object) this;
+		AttributeInstance healthAttribute = player.getAttribute(Attributes.MAX_HEALTH);
+		AttributeInstance attackAttribute = player.getAttribute(Attributes.ATTACK_DAMAGE);
 		Event.Result result = ShapeEvents.SWAP_SHAPE.invoker().swap((ServerPlayer) player, shape);
 		if (result.isFalse()) {
 			return false;
 		}
 
-		this.shape = shape;
+		this.walkers$shape = shape;
 
 		// refresh entity hitbox dimensions
 		((DimensionsRefresher) player).shape_refreshDimensions();
@@ -211,12 +212,11 @@ public abstract class PlayerEntityDataMixin extends LivingEntity implements Play
 		// shape is valid and scaling health is on; set entity's max health and current
 		// health to reflect shape.
 		if (shape != null) {
-			if (Walkers.CONFIG.scalingHealth) {
+			if (Walkers.CONFIG.scalingHealth && healthAttribute != null) {
 				// calculate the current health in percentage, used later
 				float currentHealthPercent = player.getHealth() / player.getMaxHealth();
 
-				player.getAttribute(Attributes.MAX_HEALTH)
-						.setBaseValue(Math.min(Walkers.CONFIG.maxHealth, shape.getMaxHealth()));
+				healthAttribute.setBaseValue(Math.min(Walkers.CONFIG.maxHealth, shape.getMaxHealth()));
 
 				// set health
 				if (Walkers.CONFIG.percentScalingHealth)
@@ -224,16 +224,16 @@ public abstract class PlayerEntityDataMixin extends LivingEntity implements Play
 				else
 					player.setHealth(Math.min(player.getHealth(), player.getMaxHealth()));
 			}
-			if (Walkers.CONFIG.scalingAttackDamage) {
+			if (Walkers.CONFIG.scalingAttackDamage && attackAttribute != null) {
 				// get shape attack damage, return 1D if value is lower or not existing
-				Double shapeAttackDamage = 1D;
+				double shapeAttackDamage = 1D;
 				try {
 					shapeAttackDamage = Math.max(shape.getAttribute(Attributes.ATTACK_DAMAGE).getBaseValue(),
 							shapeAttackDamage);
 				} catch (Exception ignored) {
+
 				}
-				player.getAttribute(Attributes.ATTACK_DAMAGE)
-						.setBaseValue(Math.min(Walkers.CONFIG.maxAttackDamage, shapeAttackDamage));
+				attackAttribute.setBaseValue(Math.min(Walkers.CONFIG.maxAttackDamage, shapeAttackDamage));
 			}
 		}
 
@@ -242,12 +242,12 @@ public abstract class PlayerEntityDataMixin extends LivingEntity implements Play
 		if (shape == null) {
 			float currentHealthPercent = player.getHealth() / player.getMaxHealth();
 
-			if (Walkers.CONFIG.scalingHealth) {
-				player.getAttribute(Attributes.MAX_HEALTH).setBaseValue(20);
+			if (Walkers.CONFIG.scalingHealth && healthAttribute != null) {
+				healthAttribute.setBaseValue(20);
 			}
 
-			if (Walkers.CONFIG.scalingAttackDamage) {
-				player.getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(1D);
+			if (Walkers.CONFIG.scalingAttackDamage && attackAttribute != null) {
+				attackAttribute.setBaseValue(1D);
 			}
 
 			// Clear health value if needed
@@ -269,7 +269,7 @@ public abstract class PlayerEntityDataMixin extends LivingEntity implements Play
 			player.onUpdateAbilities();
 		}
 
-		// If the player is riding a Ravager and changes into an Walkers that cannot
+		// If the player is riding a Ravager and changes into a Walkers that cannot
 		// ride Ravagers, kick them off.
 		if (player.getVehicle() instanceof Ravager
 				&& (shape == null || !shape.getType().is(WalkersEntityTags.RAVAGER_RIDING))) {
@@ -283,9 +283,9 @@ public abstract class PlayerEntityDataMixin extends LivingEntity implements Play
 			Int2ObjectMap<Object> trackers = ((ThreadedAnvilChunkStorageAccessor) ((ServerLevel) player.level())
 					.getChunkSource().chunkMap).getEntityMap();
 			Object tracking = trackers.get(player.getId());
-			((EntityTrackerAccessor) tracking).getSeenBy().forEach(listener -> {
-				PlayerShape.sync((ServerPlayer) player, listener.getPlayer());
-			});
+			((EntityTrackerAccessor) tracking).getSeenBy().forEach(
+					listener -> PlayerShape.sync((ServerPlayer) player, listener.getPlayer())
+			);
 		}
 
 		return true;

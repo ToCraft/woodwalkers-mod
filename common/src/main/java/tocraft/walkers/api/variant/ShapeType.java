@@ -1,13 +1,5 @@
 package tocraft.walkers.api.variant;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-
-import org.jetbrains.annotations.Nullable;
-
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -15,23 +7,10 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
-import tocraft.walkers.impl.variant.AxolotlTypeProvider;
-import tocraft.walkers.impl.variant.CatTypeProvider;
-import tocraft.walkers.impl.variant.FoxTypeProvider;
-import tocraft.walkers.impl.variant.FrogTypeProvider;
-import tocraft.walkers.impl.variant.GoatTypeProvider;
-import tocraft.walkers.impl.variant.HorseTypeProvider;
-import tocraft.walkers.impl.variant.LlamaTypeProvider;
-import tocraft.walkers.impl.variant.MagmaCubeTypeProvider;
-import tocraft.walkers.impl.variant.MushroomCowTypeProvider;
-import tocraft.walkers.impl.variant.PandaTypeProvider;
-import tocraft.walkers.impl.variant.ParrotTypeProvider;
-import tocraft.walkers.impl.variant.RabbitTypeProvider;
-import tocraft.walkers.impl.variant.SheepTypeProvider;
-import tocraft.walkers.impl.variant.SlimeTypeProvider;
-import tocraft.walkers.impl.variant.VillagerTypeProvider;
-import tocraft.walkers.impl.variant.WolfTypeProvider;
-import tocraft.walkers.impl.variant.ZombieVillagerTypeProvider;
+import org.jetbrains.annotations.Nullable;
+import tocraft.walkers.impl.variant.*;
+
+import java.util.*;
 
 public class ShapeType<T extends LivingEntity> {
 

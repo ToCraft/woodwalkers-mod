@@ -1,7 +1,5 @@
 package tocraft.walkers.network.impl;
 
-import org.jetbrains.annotations.Nullable;
-
 import io.netty.buffer.Unpooled;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
@@ -11,6 +9,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import org.jetbrains.annotations.Nullable;
 import tocraft.craftedcore.network.NetworkManager;
 import tocraft.walkers.Walkers;
 import tocraft.walkers.api.PlayerShape;
@@ -37,9 +36,9 @@ public class DevSwapPackets {
 					ShapeType<?> defaultType = ShapeType.from(living);
 
 					if (defaultType != null) {
-						if (((PlayerDataProvider) context.getPlayer()).get2ndShape() != null
+						if (((PlayerDataProvider) context.getPlayer()).walkers$get2ndShape() != null
 								&& defaultType.getEntityType() == ((PlayerDataProvider) context.getPlayer())
-										.get2ndShape().getEntityType())
+										.walkers$get2ndShape().getEntityType())
 							PlayerShape.updateShapes((ServerPlayer) context.getPlayer(), defaultType,
 									(LivingEntity) created);
 						else if (Walkers.CONFIG.devShapeIsThirdShape)

@@ -1,10 +1,6 @@
 package tocraft.walkers.api.model;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import com.mojang.blaze3d.vertex.PoseStack;
-
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -17,6 +13,9 @@ import tocraft.walkers.Walkers;
 import tocraft.walkers.impl.NearbySongAccessor;
 import tocraft.walkers.mixin.accessor.CreeperEntityAccessor;
 import tocraft.walkers.mixin.accessor.ParrotEntityAccessor;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Registry class for {@link EntityUpdater} instances.
@@ -68,13 +67,8 @@ public class EntityUpdaters {
 
 	public static void init() {
 		// register specific entity animation handling
-		EntityUpdaters.register(EntityType.BAT, (player, bat) -> {
-			if (player.onGround()) {
-				bat.setResting(true);
-			} else {
-				bat.setResting(false);
-			}
-		});
+		EntityUpdaters.register(EntityType.BAT,
+				(player, bat) -> bat.setResting(player.onGround()));
 
 		EntityUpdaters.register(EntityType.PARROT, (player, parrot) -> {
 			if (player.onGround() && ((NearbySongAccessor) player).shape_isNearbySongPlaying()) {
@@ -131,9 +125,8 @@ public class EntityUpdaters {
 		// Creepers normally tick their fuse timer in tick(), but:
 		// 1. shapes do not tick
 		// 2. The Creeper ability is instant, so we do not need to re-implement ticking
-		EntityUpdaters.register(EntityType.CREEPER, (player, creeper) -> {
-			((CreeperEntityAccessor) creeper).callSwell(0);
-		});
+		EntityUpdaters.register(EntityType.CREEPER,
+				(player, creeper) -> ((CreeperEntityAccessor) creeper).callSwell(0));
 
 		EntityUpdaters.register(EntityType.SQUID, (player, squid) -> {
 			if (player.getRotationVector() != squid.getRotationVector())

@@ -1,6 +1,5 @@
 package tocraft.walkers.mixin;
 
-import tocraft.walkers.api.PlayerShape;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.boss.wither.WitherBoss;
 import net.minecraft.world.entity.monster.WitherSkeleton;
@@ -11,6 +10,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+import tocraft.walkers.api.PlayerShape;
 
 @Mixin(PiglinBruteAi.class)
 public class PiglinBruteBrainMixin {

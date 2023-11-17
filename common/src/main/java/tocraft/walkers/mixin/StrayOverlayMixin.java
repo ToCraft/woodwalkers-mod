@@ -1,14 +1,6 @@
 package tocraft.walkers.mixin;
 
-import org.spongepowered.asm.mixin.Final;
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-
 import com.mojang.blaze3d.vertex.PoseStack;
-
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.SkeletonModel;
@@ -19,6 +11,12 @@ import net.minecraft.client.renderer.entity.layers.StrayClothingLayer;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.monster.RangedAttackMob;
 import net.minecraft.world.entity.monster.Stray;
+import org.spongepowered.asm.mixin.Final;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(StrayClothingLayer.class)
 public abstract class StrayOverlayMixin<T extends Mob & RangedAttackMob, M extends EntityModel<T>>
@@ -39,7 +37,7 @@ public abstract class StrayOverlayMixin<T extends Mob & RangedAttackMob, M exten
 
 		if (layerModel instanceof HumanoidModel) {
 			this.layerModel.copyPropertiesTo((HumanoidModel<Stray>) layerModel);
-			((HumanoidModel) layerModel).crouching = mobEntity.isCrouching();
+			((HumanoidModel<Stray>) layerModel).crouching = mobEntity.isCrouching();
 		}
 	}
 }

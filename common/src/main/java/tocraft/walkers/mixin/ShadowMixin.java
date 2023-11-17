@@ -1,7 +1,5 @@
 package tocraft.walkers.mixin;
 
-import tocraft.walkers.api.PlayerShape;
-import tocraft.walkers.mixin.accessor.EntityShadowAccessor;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -17,6 +15,8 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import tocraft.walkers.api.PlayerShape;
+import tocraft.walkers.mixin.accessor.EntityShadowAccessor;
 
 @Mixin(EntityRenderDispatcher.class)
 public abstract class ShadowMixin {

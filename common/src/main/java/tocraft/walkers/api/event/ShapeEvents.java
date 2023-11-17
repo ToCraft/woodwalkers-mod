@@ -1,9 +1,8 @@
 package tocraft.walkers.api.event;
 
-import org.jetbrains.annotations.Nullable;
-
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.LivingEntity;
+import org.jetbrains.annotations.Nullable;
 import tocraft.craftedcore.events.Event;
 import tocraft.craftedcore.events.EventBuilder;
 import tocraft.walkers.api.variant.ShapeType;
@@ -18,6 +17,6 @@ public interface ShapeEvents {
 	}
 
 	interface UnlockShapeCallback {
-		Event.Result unlock(ServerPlayer player, ShapeType type);
+		Event.Result unlock(ServerPlayer player, ShapeType<?> type);
 	}
 }

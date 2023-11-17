@@ -1,6 +1,13 @@
 {
   "replace": false,
   "values": [
-    "minecraft:iron_golem"
+    {
+      "id": "minecraft:iron_golem",
+      "required":false
+    },
+    {
+      "id": "friendsandfoes:copper_golem",
+      "required": false
+    }
   ]
 }

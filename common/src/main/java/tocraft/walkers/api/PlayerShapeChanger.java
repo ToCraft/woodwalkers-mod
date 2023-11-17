@@ -10,12 +10,12 @@ import tocraft.walkers.network.impl.UnlockPackets;
 
 public class PlayerShapeChanger {
 
-    public static boolean change2ndShape(ServerPlayer player, ShapeType newShape) {
+    public static boolean change2ndShape(ServerPlayer player, ShapeType<?> newShape) {
         PlayerDataProvider provider = (PlayerDataProvider) player;
         Event.Result unlock = ShapeEvents.UNLOCK_SHAPE.invoker().unlock(player, newShape);
 
-        if(unlock.asMinecraft() != InteractionResult.FAIL && provider.get2ndShape() != newShape) {
-            provider.set2ndShape(newShape);
+        if(unlock.asMinecraft() != InteractionResult.FAIL && provider.walkers$get2ndShape() != newShape) {
+            provider.walkers$set2ndShape(newShape);
             sync(player);
             PlayerAbilities.sync(player); // TODO: ???
             return true;

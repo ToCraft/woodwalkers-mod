@@ -1,12 +1,12 @@
 package tocraft.walkers.mixin.player;
 
-import tocraft.walkers.api.PlayerShapeChanger;
-import tocraft.walkers.impl.PlayerDataProvider;
 import net.minecraft.server.level.ServerPlayer;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import tocraft.walkers.api.PlayerShapeChanger;
+import tocraft.walkers.impl.PlayerDataProvider;
 
 @Mixin(ServerPlayer.class)
 public class RespawnDataCopyMixin {
@@ -17,10 +17,10 @@ public class RespawnDataCopyMixin {
         PlayerDataProvider newData = ((PlayerDataProvider) this);
 
         // Transfer data from the old ServerPlayer -> new ServerPlayer
-        newData.setAbilityCooldown(oldData.getAbilityCooldown());
-        newData.setRemainingHostilityTime(oldData.getRemainingHostilityTime());
-        newData.setCurrentShape(oldData.getCurrentShape());
-        newData.set2ndShape(oldData.get2ndShape());
+        newData.walkers$setAbilityCooldown(oldData.walkers$getAbilityCooldown());
+        newData.walkers$setRemainingHostilityTime(oldData.walkers$getRemainingHostilityTime());
+        newData.walkers$setCurrentShape(oldData.walkers$getCurrentShape());
+        newData.walkers$set2ndShape(oldData.walkers$get2ndShape());
 
         PlayerShapeChanger.sync((ServerPlayer) (Object) this);
     }

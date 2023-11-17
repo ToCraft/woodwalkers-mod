@@ -1,15 +1,6 @@
 package tocraft.walkers.mixin;
 
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.Redirect;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-
 import com.mojang.blaze3d.vertex.PoseStack;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.HumanoidModel;
@@ -25,16 +16,19 @@ import net.minecraft.client.renderer.entity.player.PlayerRenderer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.util.Tuple;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.entity.HumanoidArm;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.Mob;
-import net.minecraft.world.entity.TamableAnimal;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.monster.Phantom;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.player.PlayerModelPart;
 import net.minecraft.world.phys.Vec3;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.Redirect;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import tocraft.walkers.Walkers;
 import tocraft.walkers.api.PlayerShape;
 import tocraft.walkers.api.model.ArmRenderingManipulator;
@@ -51,7 +45,7 @@ public abstract class PlayerEntityRendererMixin
 		extends LivingEntityRenderer<AbstractClientPlayer, PlayerModel<AbstractClientPlayer>> {
 
 	@Shadow
-	protected static HumanoidModel.ArmPose getArmPose(AbstractClientPlayer player, InteractionHand hand) {
+	private static HumanoidModel.ArmPose getArmPose(AbstractClientPlayer player, InteractionHand hand) {
 		return null;
 	}
 
@@ -60,8 +54,14 @@ public abstract class PlayerEntityRendererMixin
 		super(ctx, model, shadowRadius);
 	}
 
-	@Redirect(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/entity/LivingEntityRenderer;render(Lnet/minecraft/world/entity/LivingEntity;FFLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V"))
-	private void redirectRender(LivingEntityRenderer renderer, LivingEntity player, float f, float g,
+	@Redirect(
+			method = "render(Lnet/minecraft/client/player/AbstractClientPlayer;FFLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V",
+			at = @At(
+					value = "INVOKE",
+					target = "Lnet/minecraft/client/renderer/entity/LivingEntityRenderer;render(Lnet/minecraft/world/entity/LivingEntity;FFLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V"
+			)
+	)
+	private void redirectRender(LivingEntityRenderer<AbstractClientPlayer, EntityModel<AbstractClientPlayer>> renderer, LivingEntity player, float f, float g,
 			PoseStack matrixStack, MultiBufferSource buffer, int i) {
 		LivingEntity shape = PlayerShape.getCurrentShape((Player) player);
 
@@ -126,19 +126,19 @@ public abstract class PlayerEntityRendererMixin
 			shape.hurtTime = player.hurtTime; // FIX: https://github.com/Draylar/identity/issues/424
 
 			// update shape specific properties
-			EntityUpdater entityUpdater = EntityUpdaters
-					.getUpdater((EntityType<? extends LivingEntity>) shape.getType());
+			EntityUpdater<LivingEntity> entityUpdater = EntityUpdaters
+					.getUpdater((EntityType<LivingEntity>) shape.getType());
 			if (entityUpdater != null) {
 				entityUpdater.update((Player) player, shape);
 			}
 		}
 
 		if (shape != null) {
-			EntityRenderer shapeRenderer = Minecraft.getInstance().getEntityRenderDispatcher().getRenderer(shape);
+			EntityRenderer<LivingEntity> shapeRenderer = (EntityRenderer<LivingEntity>) Minecraft.getInstance().getEntityRenderDispatcher().getRenderer(shape);
 
 			// Sync biped information for stuff like bow drawing animation
 			if (shapeRenderer instanceof HumanoidMobRenderer) {
-				shape_setBipedShapeModelPose((AbstractClientPlayer) player, shape, (HumanoidMobRenderer) shapeRenderer);
+				shape_setBipedShapeModelPose((AbstractClientPlayer) player, shape, (HumanoidMobRenderer<?, ?>) shapeRenderer);
 			}
 
 			shapeRenderer.render(shape, f, g, matrixStack, buffer, i);
@@ -153,9 +153,10 @@ public abstract class PlayerEntityRendererMixin
 		}
 	}
 
+	@Unique
 	private void shape_setBipedShapeModelPose(AbstractClientPlayer player, LivingEntity shape,
-			LivingEntityRenderer shapeRenderer) {
-		HumanoidModel<?> shapeBipedModel = (HumanoidModel) shapeRenderer.getModel();
+											  LivingEntityRenderer<?, ?> shapeRenderer) {
+		HumanoidModel<?> shapeBipedModel = (HumanoidModel<?>) shapeRenderer.getModel();
 
 		if (shape.isSpectator()) {
 			shapeBipedModel.setAllVisible(false);
@@ -169,22 +170,22 @@ public abstract class PlayerEntityRendererMixin
 			HumanoidModel.ArmPose mainHandPose = getArmPose(player, InteractionHand.MAIN_HAND);
 			HumanoidModel.ArmPose offHandPose = getArmPose(player, InteractionHand.OFF_HAND);
 
-			if (mainHandPose.isTwoHanded()) {
+			if (mainHandPose != null && mainHandPose.isTwoHanded()) {
 				offHandPose = shape.getOffhandItem().isEmpty() ? HumanoidModel.ArmPose.EMPTY
 						: HumanoidModel.ArmPose.ITEM;
 			}
 
-			if (shape.getMainArm() == HumanoidArm.RIGHT) {
+			if ((mainHandPose != null && offHandPose != null) && shape.getMainArm() == HumanoidArm.RIGHT) {
 				shapeBipedModel.rightArmPose = mainHandPose;
 				shapeBipedModel.leftArmPose = offHandPose;
-			} else {
+			} else if (mainHandPose != null && offHandPose != null){
 				shapeBipedModel.rightArmPose = offHandPose;
 				shapeBipedModel.leftArmPose = mainHandPose;
 			}
 		}
 	}
 
-	@Inject(method = "getRenderOffset", at = @At("HEAD"), cancellable = true)
+	@Inject(method = "getRenderOffset(Lnet/minecraft/client/player/AbstractClientPlayer;F)Lnet/minecraft/world/phys/Vec3;", at = @At("HEAD"), cancellable = true)
 	private void modifyPositionOffset(AbstractClientPlayer player, float f, CallbackInfoReturnable<Vec3> cir) {
 		LivingEntity shape = PlayerShape.getCurrentShape(player);
 
@@ -213,13 +214,13 @@ public abstract class PlayerEntityRendererMixin
 				sleeve = null;
 
 				if (model instanceof PlayerModel) {
-					arm = ((PlayerModel) model).rightArm;
-					sleeve = ((PlayerModel) model).rightSleeve;
+					arm = ((PlayerModel<?>) model).rightArm;
+					sleeve = ((PlayerModel<?>) model).rightSleeve;
 				} else if (model instanceof HumanoidModel) {
-					arm = ((HumanoidModel) model).rightArm;
+					arm = ((HumanoidModel<?>) model).rightArm;
 					sleeve = null;
 				} else {
-					Tuple<ModelPart, ArmRenderingManipulator<EntityModel>> pair = EntityArms.get(shape, model);
+					Tuple<ModelPart, ArmRenderingManipulator<EntityModel<Entity>>> pair = EntityArms.get(shape, model);
 					if (pair != null) {
 						arm = pair.getA();
 						pair.getB().run(matrices, model);

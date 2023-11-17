@@ -1,7 +1,5 @@
 package tocraft.walkers.impl.tick;
 
-import org.jetbrains.annotations.Nullable;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -9,6 +7,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
+import org.jetbrains.annotations.Nullable;
 import tocraft.craftedcore.events.client.ClientTickEvents;
 import tocraft.walkers.Walkers;
 import tocraft.walkers.WalkersClient;
@@ -58,20 +57,20 @@ public class KeyPressHandler implements ClientTickEvents.Client {
 
 	private void handleUnlockKey(Minecraft client) {
 		// check if player is blacklisted
-		if (Walkers.CONFIG.playerUUIDBlacklist.contains(client.player.getUUID())) {
+		if (client.player != null && Walkers.CONFIG.playerUUIDBlacklist.contains(client.player.getUUID())) {
 			client.player.displayClientMessage(Component.translatable("walkers.player_blacklisted"), true);
 			return;
 		}
 
 		// check dev wolf
-		if (((PlayerDataProvider) client.player).get2ndShape() != null && (client.player.isShiftKeyDown()
+		if (client.player != null && ((PlayerDataProvider) client.player).walkers$get2ndShape() != null && (client.player.isShiftKeyDown()
 				&& (Walkers.devs.contains(client.player.getStringUUID()) || client.player.hasPermissions(2)))) {
 			DevSwapPackets.sendDevSwapRequest(new ResourceLocation("minecraft:wolf"));
 			return;
 		}
 
 		HitResult hit = client.hitResult;
-		if ((((PlayerDataProvider) client.player).get2ndShape() == null || Walkers.CONFIG.unlockOveridesCurrentShape)
+		if (client.player != null && (((PlayerDataProvider) client.player).walkers$get2ndShape() == null || Walkers.CONFIG.unlockOveridesCurrentShape)
 				&& hit instanceof EntityHitResult) {
 			Entity entityHit = ((EntityHitResult) hit).getEntity();
 			if (entityHit instanceof LivingEntity living) {

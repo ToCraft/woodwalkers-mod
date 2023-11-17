@@ -1,8 +1,5 @@
 package tocraft.walkers.ability.impl;
 
-import tocraft.walkers.ability.ShapeAbility;
-import java.util.Arrays;
-import java.util.List;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.monster.Witch;
 import net.minecraft.world.entity.player.Player;
@@ -15,6 +12,10 @@ import net.minecraft.world.item.alchemy.PotionUtils;
 import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
+import tocraft.walkers.ability.ShapeAbility;
+
+import java.util.Arrays;
+import java.util.List;
 
 public class WitchAbility extends ShapeAbility<Witch> {
 
@@ -28,7 +29,7 @@ public class WitchAbility extends ShapeAbility<Witch> {
         Vec3 rotation = player.getLookAngle();
         potionEntity.shoot(rotation.x(), rotation.y(), rotation.z(), 0.75F, 8.0F);
 
-        world.playSound((Player)null, player.getX(), player.getY(), player.getZ(), SoundEvents.WITCH_THROW, player.getSoundSource(), 1.0F, 0.8F + world.random.nextFloat() * 0.4F);
+        world.playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.WITCH_THROW, player.getSoundSource(), 1.0F, 0.8F + world.random.nextFloat() * 0.4F);
 
         world.addFreshEntity(potionEntity);
     }

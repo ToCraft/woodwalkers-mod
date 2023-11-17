@@ -13,7 +13,7 @@ public class PlayerHostility {
      * @return  whether this component's player will be targeted by hostile mobs, regardless of Walkers
      */
     public static boolean hasHostility(Player player) {
-        return ((PlayerDataProvider) player).getRemainingHostilityTime() > 0;
+        return ((PlayerDataProvider) player).walkers$getRemainingHostilityTime() > 0;
     }
 
     /**
@@ -22,6 +22,6 @@ public class PlayerHostility {
      * @param hostilityTime  time, in ticks, to set hostility timer to
      */
     public static void set(Player player, int hostilityTime) {
-        ((PlayerDataProvider) player).setRemainingHostilityTime(hostilityTime);
+        ((PlayerDataProvider) player).walkers$setRemainingHostilityTime(hostilityTime);
     }
 }

@@ -22,7 +22,7 @@ public class PlayerAbilities {
      * @return cooldown, in ticks, of the specified player's ability
      */
     public static int getCooldown(Player player) {
-        return ((PlayerDataProvider) player).getAbilityCooldown();
+        return ((PlayerDataProvider) player).walkers$getAbilityCooldown();
     }
 
     public static boolean canUseAbility(Player player) {
@@ -30,16 +30,16 @@ public class PlayerAbilities {
     	if (Walkers.foundPotionAbilities && ((PAPlayerDataProvider) player).getCooldown() <= 0)
     		return false;
     	else
-    		return ((PlayerDataProvider) player).getAbilityCooldown() <= 0;
+    		return ((PlayerDataProvider) player).walkers$getAbilityCooldown() <= 0;
     }
 
     public static void setCooldown(Player player, int cooldown) {
-        ((PlayerDataProvider) player).setAbilityCooldown(cooldown);
+        ((PlayerDataProvider) player).walkers$setAbilityCooldown(cooldown);
     }
 
     public static void sync(ServerPlayer player) {
         FriendlyByteBuf packet = new FriendlyByteBuf(Unpooled.buffer());
-        packet.writeInt(((PlayerDataProvider) player).getAbilityCooldown());
+        packet.writeInt(((PlayerDataProvider) player).walkers$getAbilityCooldown());
         NetworkManager.sendToPlayer(player, NetworkHandler.ABILITY_SYNC, packet);
     }
 }

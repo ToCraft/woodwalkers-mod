@@ -1,8 +1,17 @@
 {
   "replace": false,
   "values": [
-    "minecraft:evoker",
-    "minecraft:pillager",
-    "minecraft:vindicator"
+    {
+      "id": "minecraft:evoker",
+      "required": false
+    },
+    {
+      "id": "minecraft:pillager",
+      "required": false
+    },
+    {
+      "id": "minecraft:vindicator",
+      "required": false
+    }
   ]
 }

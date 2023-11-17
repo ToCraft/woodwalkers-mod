@@ -1,10 +1,8 @@
 package tocraft.walkers;
 
-import org.lwjgl.glfw.GLFW;
-
 import com.mojang.blaze3d.platform.InputConstants;
-
 import net.minecraft.client.KeyMapping;
+import org.lwjgl.glfw.GLFW;
 import tocraft.craftedcore.events.client.ClientTickEvents;
 import tocraft.craftedcore.registration.client.KeyMappingRegistry;
 import tocraft.walkers.ability.AbilityOverlayRenderer;

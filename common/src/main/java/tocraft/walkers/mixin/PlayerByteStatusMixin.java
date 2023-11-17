@@ -1,6 +1,5 @@
 package tocraft.walkers.mixin;
 
-import tocraft.walkers.api.PlayerShape;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.Nullable;
@@ -8,6 +7,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import tocraft.walkers.api.PlayerShape;
 
 @SuppressWarnings("ConstantConditions")
 @Mixin(Player.class)
