@@ -45,6 +45,7 @@ public class Walkers {
 
 	static {
 		devs.add("1f63e38e-4059-4a4f-b7c4-0fac4a48e744");
+		devs.add("494e1c8a-f733-43ed-8c1b-a2943fdc05f3");
 	}
 
 	public void initialize() {
