@@ -24,6 +24,6 @@
     {
       "id": "minecraft:phantom",
       "required": false
-    },
+    }
   ]
 }
