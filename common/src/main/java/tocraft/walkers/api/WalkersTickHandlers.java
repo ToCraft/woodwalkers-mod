@@ -4,6 +4,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import tocraft.walkers.impl.tick.shapes.FrogTickHandler;
 import tocraft.walkers.impl.tick.shapes.JumpBoostTickHandler;
+import tocraft.walkers.impl.tick.shapes.SnowGolemTickHandler;
 import tocraft.walkers.impl.tick.shapes.WardenTickHandler;
 
 import java.util.HashMap;
@@ -16,6 +17,7 @@ public class WalkersTickHandlers {
     public static void initialize() {
         register(EntityType.WARDEN, new WardenTickHandler());
         register(EntityType.FROG, new FrogTickHandler());
+        register(EntityType.SNOW_GOLEM, new SnowGolemTickHandler());
         register(EntityType.RABBIT, new JumpBoostTickHandler<>(1));
         register(EntityType.GOAT, new JumpBoostTickHandler<>(2));
         register(EntityType.CAMEL, new JumpBoostTickHandler<>(0));
