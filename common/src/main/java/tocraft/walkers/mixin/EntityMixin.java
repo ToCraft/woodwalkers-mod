@@ -8,9 +8,11 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import tocraft.walkers.api.PlayerShape;
 import tocraft.walkers.impl.DimensionsRefresher;
+import tocraft.walkers.registry.WalkersEntityTags;
 
 @Mixin(Entity.class)
 public abstract class EntityMixin implements DimensionsRefresher {
@@ -103,5 +105,11 @@ public abstract class EntityMixin implements DimensionsRefresher {
 				cir.setReturnValue(shape.getType().fireImmune());
 			}
 		}
+	}
+	
+	@Inject(method = "tick", at = @At("HEAD"), cancellable = true)
+	private void goThroughBlocks(CallbackInfo ci) {
+		if ((Object) this instanceof Player player && PlayerShape.getCurrentShape(player) != null && PlayerShape.getCurrentShape(player).getType().is(WalkersEntityTags.FALL_THROUGH_BLOCKS))
+			player.noPhysics = true;
 	}
 }

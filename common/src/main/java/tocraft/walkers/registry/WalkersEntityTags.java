@@ -19,6 +19,7 @@ public class WalkersEntityTags {
 	public static final TagKey<EntityType<?>> CANT_SWIM = register("cant_swim");
 	public static final TagKey<EntityType<?>> UNDROWNABLE = register("undrownable");
 	public static final TagKey<EntityType<?>> BLACKLISTED = register("blacklisted");
+	public static final TagKey<EntityType<?>> FALL_THROUGH_BLOCKS = register("fall_through_blocks");
 
 	private static TagKey<EntityType<?>> register(String id) {
 		return TagKey.create(Registries.ENTITY_TYPE, Walkers.id(id));
