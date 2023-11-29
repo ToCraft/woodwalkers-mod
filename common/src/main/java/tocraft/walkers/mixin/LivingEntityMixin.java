@@ -11,7 +11,6 @@ import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ambient.Bat;
 import net.minecraft.world.entity.animal.Dolphin;
-import net.minecraft.world.entity.animal.WaterAnimal;
 import net.minecraft.world.entity.monster.Spider;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
@@ -25,6 +24,8 @@ import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+
+import tocraft.walkers.Walkers;
 import tocraft.walkers.api.PlayerShape;
 import tocraft.walkers.impl.NearbySongAccessor;
 import tocraft.walkers.mixin.accessor.LivingEntityAccessor;
@@ -65,7 +66,7 @@ public abstract class LivingEntityMixin extends Entity implements NearbySongAcce
 
 			// Apply 'Dolphin's Grace' status effect benefits if the player's shape is a
 			// water creature
-			if (shape instanceof WaterAnimal) {
+			if (Walkers.isAquatic(shape)) {
 				return .96f;
 			}
 		}
@@ -211,5 +212,7 @@ public abstract class LivingEntityMixin extends Entity implements NearbySongAcce
 				cir.setReturnValue(this.horizontalCollision);
 			}
 		}
+		
+		((LivingEntity) (Object) this).isInWall();
 	}
 }
