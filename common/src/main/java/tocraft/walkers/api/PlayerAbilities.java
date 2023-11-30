@@ -27,7 +27,7 @@ public class PlayerAbilities {
 
     public static boolean canUseAbility(Player player) {
     	// return false in case the player's already in cooldown as of ycdm
-    	if (Walkers.foundPotionAbilities && ((PAPlayerDataProvider) player).getCooldown() <= 0)
+    	if (Walkers.foundPotionAbilities && ((PAPlayerDataProvider) player).getCooldown() > 0)
     		return false;
     	else
     		return ((PlayerDataProvider) player).walkers$getAbilityCooldown() <= 0;
