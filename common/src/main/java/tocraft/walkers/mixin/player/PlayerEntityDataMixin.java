@@ -64,8 +64,12 @@ public abstract class PlayerEntityDataMixin extends LivingEntity implements Play
 		CompoundTag unlockedShape = tag.getCompound("UnlockedShape");
         this.walkers$unlocked = ShapeType.from(unlockedShape);
 
+        int newCooldown = tag.getInt(ABILITY_COOLDOWN_KEY);
+        if (Walkers.foundPotionAbilities) {
+        	newCooldown = tag.getCompound("ycdm").getInt("cooldown");
+        }
 		// Abilities
-		walkers$abilityCooldown = tag.getInt(ABILITY_COOLDOWN_KEY);
+		walkers$abilityCooldown = newCooldown;
 
 		// Hostility
 		walkers$remainingTime = tag.getInt("RemainingHostilityTime");
