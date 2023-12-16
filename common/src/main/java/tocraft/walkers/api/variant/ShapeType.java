@@ -4,11 +4,13 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
 import tocraft.walkers.impl.variant.*;
+import tocraft.walkers.registry.WalkersEntityTags;
 
 import java.util.*;
 
@@ -108,6 +110,35 @@ public class ShapeType<T extends LivingEntity> {
 
 		return new ShapeType<>((EntityType<Z>) entityType, variant);
 	}
+	
+	public static List<ShapeType<?>> getAllTypes(Level world) {
+        if(LIVING_TYPE_CASH.isEmpty()) {
+            for (EntityType<?> type : BuiltInRegistries.ENTITY_TYPE) {
+                Entity instance = type.create(world);
+                if(instance instanceof LivingEntity) {
+                    LIVING_TYPE_CASH.add((EntityType<? extends LivingEntity>) type);
+                }
+            }
+        }
+
+        List<ShapeType<?>> types = new ArrayList<>();
+        for (EntityType<?> type : LIVING_TYPE_CASH) {
+            // check blacklist
+            if (!type.is(WalkersEntityTags.BLACKLISTED)) {
+                // hide dev_wolf & check other variants
+                if(type != EntityType.WOLF && VARIANT_BY_TYPE.containsKey(type)) {
+                    TypeProvider<?> variant = VARIANT_BY_TYPE.get(type);
+                    for (int i = 0; i <= variant.getRange(); i++) {
+                        types.add(new ShapeType(type, i));
+                    }
+                } else {
+                    types.add(new ShapeType(type));
+                }
+            }
+        }
+
+        return types;
+    }
 
 	public CompoundTag writeCompound() {
 		CompoundTag compound = new CompoundTag();
