@@ -8,7 +8,6 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import tocraft.walkers.ability.ShapeAbility;
@@ -36,6 +35,6 @@ public class SheepAbility<T extends Mob> extends ShapeAbility<T> {
 
     @Override
     public Item getIcon() {
-        return Items.GRASS;
+        return BuiltInRegistries.ITEM.get(new ResourceLocation("grass"));
     }
 }
