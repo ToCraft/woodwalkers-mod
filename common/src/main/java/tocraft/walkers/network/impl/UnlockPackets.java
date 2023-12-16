@@ -53,9 +53,10 @@ public class UnlockPackets {
 					ShapeType<LivingEntity> type = ShapeType.from(entityType, variant);
 					if (type != null && !type.getEntityType().is(WalkersEntityTags.BLACKLISTED) && (Walkers.CONFIG.unlockOveridesCurrentShape || ((PlayerDataProvider) context.getPlayer()).walkers$get2ndShape() == null)) {
 						// set 2nd shape
-						PlayerShapeChanger.change2ndShape((ServerPlayer) context.getPlayer(), type);
+						boolean result = PlayerShapeChanger.change2ndShape((ServerPlayer) context.getPlayer(), type);
 						// update Player
-						PlayerShape.updateShapes((ServerPlayer) context.getPlayer(),
+						if (result)
+							PlayerShape.updateShapes((ServerPlayer) context.getPlayer(),
 								type.create(context.getPlayer().level()));
 					}
 

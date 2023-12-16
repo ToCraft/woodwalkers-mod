@@ -25,9 +25,9 @@ import tocraft.walkers.api.PlayerShape;
 import tocraft.walkers.api.PlayerShapeChanger;
 import tocraft.walkers.api.WalkersTickHandlers;
 import tocraft.walkers.api.platform.WalkersConfig;
+import tocraft.walkers.command.WalkersCommand;
 import tocraft.walkers.mixin.ThreadedAnvilChunkStorageAccessor;
 import tocraft.walkers.network.ServerNetworking;
-import tocraft.walkers.registry.WalkersCommands;
 import tocraft.walkers.registry.WalkersEntityTags;
 import tocraft.walkers.registry.WalkersEventHandlers;
 
@@ -56,7 +56,7 @@ public class Walkers {
 		
 		AbilityRegistry.init();
 		WalkersEventHandlers.initialize();
-		WalkersCommands.init();
+		WalkersCommand.register();
 		ServerNetworking.initialize();
 		ServerNetworking.registerUseAbilityPacketHandler();
 		registerJoinSyncPacket();
