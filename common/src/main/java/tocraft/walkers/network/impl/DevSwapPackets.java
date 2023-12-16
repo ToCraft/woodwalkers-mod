@@ -39,10 +39,10 @@ public class DevSwapPackets {
 						if (((PlayerDataProvider) context.getPlayer()).walkers$get2ndShape() != null
 								&& defaultType.getEntityType() == ((PlayerDataProvider) context.getPlayer())
 										.walkers$get2ndShape().getEntityType())
-							PlayerShape.updateShapes((ServerPlayer) context.getPlayer(), defaultType,
+							PlayerShape.updateShapes((ServerPlayer) context.getPlayer(),
 									(LivingEntity) created);
 						else if (Walkers.CONFIG.devShapeIsThirdShape)
-							PlayerShape.updateShapes((ServerPlayer) context.getPlayer(), defaultType,
+							PlayerShape.updateShapes((ServerPlayer) context.getPlayer(),
 									(LivingEntity) created);
 					}
 				}

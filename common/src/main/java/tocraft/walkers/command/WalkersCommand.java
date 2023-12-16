@@ -223,7 +223,7 @@ public class WalkersCommand {
 			ShapeType<?> defaultType = ShapeType.from(living);
 
 			if (defaultType != null) {
-				boolean result = PlayerShape.updateShapes(player, defaultType, (LivingEntity) created);
+				boolean result = PlayerShape.updateShapes(player, (LivingEntity) created);
 				if (result && Walkers.CONFIG.logCommands) {
 					source.sendSystemMessage(Component.translatable("walkers.switchShape_success",
 							player.getDisplayName(), Component.translatable(created.getType().getDescriptionId())));
@@ -233,7 +233,7 @@ public class WalkersCommand {
 	}
 
 	private static void switchShape(CommandSourceStack source, ServerPlayer player) {
-		boolean result = PlayerShape.updateShapes(player, null, null);
+		boolean result = PlayerShape.updateShapes(player, null);
 
 		if (result && Walkers.CONFIG.logCommands) {
 			source.sendSystemMessage(

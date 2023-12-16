@@ -36,12 +36,12 @@ public class SwapPackets {
 			// Swap to other Shape
 			if (type != null) {
 				// update Player
-				PlayerShape.updateShapes((ServerPlayer) context.getPlayer(), type,
+				PlayerShape.updateShapes((ServerPlayer) context.getPlayer(),
 						type.create(context.getPlayer().level()));
 			}
 			else {
 				// Swap back to player if server allows it
-				PlayerShape.updateShapes((ServerPlayer) context.getPlayer(), null, null);
+				PlayerShape.updateShapes((ServerPlayer) context.getPlayer(), null);
 			}
 
 			// Refresh player dimensions

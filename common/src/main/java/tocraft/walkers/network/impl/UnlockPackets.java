@@ -55,7 +55,7 @@ public class UnlockPackets {
 						// set 2nd shape
 						PlayerShapeChanger.change2ndShape((ServerPlayer) context.getPlayer(), type);
 						// update Player
-						PlayerShape.updateShapes((ServerPlayer) context.getPlayer(), type,
+						PlayerShape.updateShapes((ServerPlayer) context.getPlayer(),
 								type.create(context.getPlayer().level()));
 					}
 
@@ -65,7 +65,7 @@ public class UnlockPackets {
 			} else {
 				// Swap back to player if server allows it
 				context.getPlayer().getServer().execute(() -> {
-					PlayerShape.updateShapes((ServerPlayer) context.getPlayer(), null, null);
+					PlayerShape.updateShapes((ServerPlayer) context.getPlayer(), null);
 
 					context.getPlayer().refreshDimensions();
 				});

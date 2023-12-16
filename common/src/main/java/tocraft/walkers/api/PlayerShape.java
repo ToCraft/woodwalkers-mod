@@ -37,7 +37,7 @@ public class PlayerShape {
      *
      * @param entity {@link LivingEntity} new shape for this component, or null to clear
      */
-    public static boolean updateShapes(ServerPlayer player, ShapeType<?> type, LivingEntity entity) {
+    public static boolean updateShapes(ServerPlayer player, LivingEntity entity) {
         return ((PlayerDataProvider) player).walkers$updateShapes(entity);
     }
 
