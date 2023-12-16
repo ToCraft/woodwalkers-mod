@@ -1,5 +1,15 @@
 package tocraft.walkers.mixin.player;
 
+import java.util.Optional;
+
+import org.jetbrains.annotations.Nullable;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
@@ -13,13 +23,6 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.monster.Ravager;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
-import org.jetbrains.annotations.Nullable;
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.Unique;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import tocraft.craftedcore.events.Event;
 import tocraft.walkers.Walkers;
 import tocraft.walkers.api.FlightHelper;
@@ -30,9 +33,8 @@ import tocraft.walkers.impl.DimensionsRefresher;
 import tocraft.walkers.impl.PlayerDataProvider;
 import tocraft.walkers.mixin.EntityTrackerAccessor;
 import tocraft.walkers.mixin.ThreadedAnvilChunkStorageAccessor;
+import tocraft.walkers.mixin.accessor.PlayerEntityAccessor;
 import tocraft.walkers.registry.WalkersEntityTags;
-
-import java.util.Optional;
 
 @Mixin(Player.class)
 public abstract class PlayerEntityDataMixin extends LivingEntity implements PlayerDataProvider {
@@ -265,11 +267,11 @@ public abstract class PlayerEntityDataMixin extends LivingEntity implements Play
 		ServerPlayer serverPlayer = (ServerPlayer) player;
 		if (Walkers.hasFlyingPermissions((ServerPlayer) player)) {
 			FlightHelper.grantFlightTo(serverPlayer);
-			player.getAbilities().setFlyingSpeed(Walkers.CONFIG.flySpeed);
+			((PlayerEntityAccessor) player).getAbilities().setFlyingSpeed(Walkers.CONFIG.flySpeed);
 			player.onUpdateAbilities();
 		} else {
 			FlightHelper.revokeFlight(serverPlayer);
-			player.getAbilities().setFlyingSpeed(0.05f);
+			((PlayerEntityAccessor) player).getAbilities().setFlyingSpeed(0.05f);
 			player.onUpdateAbilities();
 		}
 
@@ -288,7 +290,7 @@ public abstract class PlayerEntityDataMixin extends LivingEntity implements Play
 					.getChunkSource().chunkMap).getEntityMap();
 			Object tracking = trackers.get(player.getId());
 			((EntityTrackerAccessor) tracking).getSeenBy().forEach(
-					listener -> PlayerShape.sync((ServerPlayer) player, listener.getPlayer())
+					listener -> PlayerShape.sync((ServerPlayer) player, listener)
 			);
 		}
 

@@ -21,7 +21,7 @@ public class SnowGolemAbility extends ShapeAbility<SnowGolem> {
             for(int i = 0; i < 10; i++) {
                 Snowball snowballEntity = new Snowball(world, player);
                 snowballEntity.setItem(new ItemStack(Items.SNOWBALL));
-                snowballEntity.shootFromRotation(player, player.getXRot() + world.random.nextInt(10) - 5, player.getYRot() + world.random.nextInt(10) - 5, 0.0F, 1.5F, 1.0F);
+                snowballEntity.shootFromRotation(player, player.xRotO + world.random.nextInt(10) - 5, player.yRotO + world.random.nextInt(10) - 5, 0.0F, 1.5F, 1.0F);
                 world.addFreshEntity(snowballEntity);
             }
         }

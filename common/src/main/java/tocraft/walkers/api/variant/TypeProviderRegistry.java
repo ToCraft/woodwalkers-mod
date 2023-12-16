@@ -12,13 +12,11 @@ public class TypeProviderRegistry {
 	
 	static {
 		VARIANT_BY_TYPE.put(EntityType.SHEEP, new SheepTypeProvider());
-		VARIANT_BY_TYPE.put(EntityType.AXOLOTL, new AxolotlTypeProvider());
 		VARIANT_BY_TYPE.put(EntityType.PARROT, new ParrotTypeProvider());
 		VARIANT_BY_TYPE.put(EntityType.CAT, new CatTypeProvider());
 		VARIANT_BY_TYPE.put(EntityType.SLIME, new SlimeTypeProvider());
 		VARIANT_BY_TYPE.put(EntityType.LLAMA, new LlamaTypeProvider());
 		VARIANT_BY_TYPE.put(EntityType.TRADER_LLAMA, new LlamaTypeProvider());
-		VARIANT_BY_TYPE.put(EntityType.GOAT, new GoatTypeProvider());
 		VARIANT_BY_TYPE.put(EntityType.MAGMA_CUBE, new MagmaCubeTypeProvider());
 		VARIANT_BY_TYPE.put(EntityType.MOOSHROOM, new MushroomCowTypeProvider());
 		VARIANT_BY_TYPE.put(EntityType.PANDA, new PandaTypeProvider());

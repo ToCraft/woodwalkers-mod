@@ -24,16 +24,16 @@ public abstract class RavagerEntityMixin extends LivingEntity {
 
             // Ensure Ravager has a passenger
             if (isVehicle()) {
-                LivingEntity rider = (LivingEntity) getFirstPassenger();
+                LivingEntity rider = (LivingEntity) getControllingPassenger();
 
                 // Only players should be able to control Ravager
                 if (rider instanceof Player) {
                     // Assign rider properties to ravager
-                    this.setYRot(rider.getYRot());
-                    this.yRotO = this.getYRot();
-                    this.setXRot(rider.getXRot() * 0.5F);
-                    this.setRot(this.getYRot(), this.getXRot());
-                    this.yBodyRot = this.getYRot();
+                    this.yRotO = rider.yRotO;
+                    this.yRotO = rider.yRotO;
+                    this.xRotO = rider.xRotO * 0.5F;
+                    this.setRot(this.yRotO, this.xRotO);
+                    this.yBodyRot = this.yRotO;
                     this.yHeadRot = this.yBodyRot;
                     float sidewaysSpeed = rider.xxa * 0.5F;
                     float forwardSpeed = rider.zza;

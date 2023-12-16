@@ -44,7 +44,6 @@ public class AbilityRegistry {
         register(EntityType.SNOW_GOLEM, new SnowGolemAbility());
         register(EntityType.WITHER, new WitherEntityAbility());
         register(EntityType.COW, new CowAbility<>());
-        register(EntityType.GOAT, new CowAbility<>());
         register(EntityType.ENDERMITE, new EndermiteAbility());
         register(EntityType.LLAMA, new LlamaAbility<>());
         register(EntityType.TRADER_LLAMA, new LlamaAbility<>());

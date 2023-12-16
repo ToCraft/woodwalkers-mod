@@ -1,11 +1,5 @@
 package tocraft.walkers.api.variant;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-
 import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.core.Registry;

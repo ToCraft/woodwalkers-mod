@@ -1,19 +1,38 @@
 package tocraft.walkers.api.model;
 
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Optional;
+
+import org.jetbrains.annotations.Nullable;
+
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.model.*;
+import net.minecraft.client.model.BlazeModel;
+import net.minecraft.client.model.EntityModel;
+import net.minecraft.client.model.IronGolemModel;
+import net.minecraft.client.model.LlamaModel;
+import net.minecraft.client.model.OcelotModel;
+import net.minecraft.client.model.PandaModel;
+import net.minecraft.client.model.PigModel;
+import net.minecraft.client.model.PolarBearModel;
+import net.minecraft.client.model.QuadrupedModel;
+import net.minecraft.client.model.RavagerModel;
+import net.minecraft.client.model.SpiderModel;
+import net.minecraft.client.model.SquidModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.util.Tuple;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
-import org.jetbrains.annotations.Nullable;
 import tocraft.craftedcore.math.math;
-import tocraft.walkers.mixin.accessor.*;
-
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Optional;
+import tocraft.walkers.mixin.accessor.BlazeEntityModelAccessor;
+import tocraft.walkers.mixin.accessor.IllagerEntityModelAccessor;
+import tocraft.walkers.mixin.accessor.LlamaEntityModelAccessor;
+import tocraft.walkers.mixin.accessor.OcelotEntityModelAccessor;
+import tocraft.walkers.mixin.accessor.QuadrupedEntityModelAccessor;
+import tocraft.walkers.mixin.accessor.RavagerEntityModelAccessor;
+import tocraft.walkers.mixin.accessor.SpiderEntityModelAccessor;
+import tocraft.walkers.mixin.accessor.SquidEntityModelAccessor;
 
 @Environment(EnvType.CLIENT)
 public class EntityArms {
@@ -103,8 +122,8 @@ public class EntityArms {
 
 	public static void init() {
 		// specific
-		register(LlamaModel.class, (llama, model) -> ((LlamaEntityModelAccessor) model).getRightFrontLeg());
-		register(PandaModel.class, (llama, model) -> ((QuadrupedEntityModelAccessor) model).getRightFrontLeg(),
+		register(LlamaModel.class, (llama, model) -> ((LlamaEntityModelAccessor) model).getLeg1());
+		register(PandaModel.class, (llama, model) -> ((QuadrupedEntityModelAccessor) model).getLeg1(),
 				(stack, model) -> stack.translate(0, -0.5, 0));
 		register(BlazeModel.class, (llama, model) -> ((BlazeEntityModelAccessor) model).getUpperBodyParts()[10],
 				(stack, model) -> {
@@ -113,8 +132,8 @@ public class EntityArms {
 					stack.mulPose(math.getDegreesQuaternion(math.POSITIVE_X(), -25));
 					stack.translate(0, 0, -.25);
 				});
-		register(OcelotModel.class, (ocelot, model) -> ((OcelotEntityModelAccessor) model).getRightFrontLeg());
-		register(SpiderModel.class, (spider, model) -> ((SpiderEntityModelAccessor) model).getRightFrontLeg(),
+		register(OcelotModel.class, (ocelot, model) -> ((OcelotEntityModelAccessor) model).getFrontLegR());
+		register(SpiderModel.class, (spider, model) -> ((SpiderEntityModelAccessor) model).getLeg1(),
 				(stack, model) -> {
 					stack.mulPose(math.getDegreesQuaternion(math.POSITIVE_Y(), -15));
 					stack.mulPose(math.getDegreesQuaternion(math.POSITIVE_X(), 15));
@@ -124,19 +143,19 @@ public class EntityArms {
 				(golem, model) -> model.getFlowerHoldingArm(),
 				(stack, model) -> stack.translate(0, 0, -.5));
 		register(PigModel.class,
-				(pig, model) -> ((QuadrupedEntityModelAccessor) model).getRightFrontLeg(),
+				(pig, model) -> ((QuadrupedEntityModelAccessor) model).getLeg1(),
 				(stack, model) -> stack.translate(0, 0, .6));
 		register(PolarBearModel.class,
-				(bear, model) -> ((QuadrupedEntityModelAccessor) model).getRightFrontLeg(),
+				(bear, model) -> ((QuadrupedEntityModelAccessor) model).getLeg1(),
 				(stack, model) -> stack.translate(0, 0, .3));
 		register(RavagerModel.class,
-				(bear, model) -> ((RavagerEntityModelAccessor) model).getRightFrontLeg());
+				(bear, model) -> ((RavagerEntityModelAccessor) model).getLeg1());
 		register(SquidModel.class,
 				(squid, model) -> ((SquidEntityModelAccessor) model).getTentacles()[0]);
 
 		// generic
 		register(QuadrupedModel.class,
-				(quad, model) -> ((QuadrupedEntityModelAccessor) model).getRightFrontLeg());
+				(quad, model) -> ((QuadrupedEntityModelAccessor) model).getLeg1());
 
 		// types
 		register(EntityType.PILLAGER,

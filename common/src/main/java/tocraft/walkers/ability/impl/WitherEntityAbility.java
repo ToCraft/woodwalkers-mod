@@ -21,7 +21,7 @@ public class WitherEntityAbility extends ShapeAbility<WitherBoss> {
             Vec3 lookDirection = player.getLookAngle();
             WitherSkull skull = new WitherSkull(world, player, lookDirection.x, lookDirection.y, lookDirection.z);
             skull.setPosRaw(player.getX(), player.getY() + 2, player.getZ());
-            skull.shootFromRotation(player, player.getXRot(), player.getYRot(), 0.0F, 1.5F, 1.0F);
+            skull.shootFromRotation(player, player.xRotO, player.yRotO, 0.0F, 1.5F, 1.0F);
             world.addFreshEntity(skull);
         }
     }

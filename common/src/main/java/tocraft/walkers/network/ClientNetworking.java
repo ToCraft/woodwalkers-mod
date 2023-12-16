@@ -76,7 +76,11 @@ public class ClientNetworking implements NetworkHandler {
 						}
 
 						if (shape != null) {
-							shape.load(entityNbt);
+							// probably crashes, prevent console from being spammed with errors
+							try {
+								shape.load(entityNbt);
+							}
+							catch (Exception ignored) {};
 						}
 					}
 				}

@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import net.minecraft.advancements.Advancement;
@@ -36,9 +36,9 @@ import tocraft.walkers.registry.WalkersEventHandlers;
 
 public class Walkers {
 
-	public static final Logger LOGGER = LoggerFactory.getLogger(Walkers.class);
+	public static final Logger LOGGER = LogManager.getLogger(Walkers.class);
 	public static final String MODID = "walkers";
-	public static String VERSION_URL = "https://raw.githubusercontent.com/ToCraft/woodwalkers-mod/1.18.2/gradle.properties";
+	public static String VERSION_URL = "https://raw.githubusercontent.com/ToCraft/woodwalkers-mod/1.16.5/gradle.properties";
 	public static final WalkersConfig CONFIG = ConfigLoader.read(MODID, WalkersConfig.class);
 	public static boolean foundPotionAbilities = false;
 	public static List<UUID> devs = new ArrayList<>();

@@ -19,11 +19,10 @@ public class GhastAbility extends ShapeAbility<Ghast> {
                 player,
                 player.getLookAngle().x,
                 player.getLookAngle().y,
-                player.getLookAngle().z,
-                2
+                player.getLookAngle().z
         );
 
-        fireball.moveTo(fireball.getX(), fireball.getY() + 1.75, fireball.getZ(), fireball.getYRot(), fireball.getXRot());
+        fireball.moveTo(fireball.getX(), fireball.getY() + 1.75, fireball.getZ(), fireball.yRotO, fireball.xRotO);
         fireball.absMoveTo(fireball.getX(), fireball.getY(), fireball.getZ());
         world.addFreshEntity(fireball);
         world.playSound(null, player, SoundEvents.GHAST_SHOOT, SoundSource.HOSTILE, 10.0F, (world.random.nextFloat() - world.random.nextFloat()) * 0.2F + 1.0F);

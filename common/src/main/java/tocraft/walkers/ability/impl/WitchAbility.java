@@ -25,7 +25,7 @@ public class WitchAbility extends ShapeAbility<Witch> {
     public void onUse(Player player, Witch shape, Level world) {
         ThrownPotion potionEntity = new ThrownPotion(world, player);
         potionEntity.setItem(PotionUtils.setPotion(new ItemStack(Items.SPLASH_POTION), VALID_POTIONS.get(world.random.nextInt(VALID_POTIONS.size()))));
-        potionEntity.setXRot(-20.0F);
+        potionEntity.xRotO = -20.0F;
         Vec3 rotation = player.getLookAngle();
         potionEntity.shoot(rotation.x(), rotation.y(), rotation.z(), 0.75F, 8.0F);
 

@@ -8,8 +8,8 @@ import net.minecraft.client.model.PlayerModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.client.renderer.entity.EntityRenderer;
-import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.HumanoidMobRenderer;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.client.renderer.entity.player.PlayerRenderer;
@@ -48,7 +48,7 @@ public abstract class PlayerEntityRendererMixin
 		return null;
 	}
 
-	private PlayerEntityRendererMixin(EntityRendererProvider.Context ctx, PlayerModel<AbstractClientPlayer> model,
+	private PlayerEntityRendererMixin(EntityRenderDispatcher ctx, PlayerModel<AbstractClientPlayer> model,
 			float shadowRadius) {
 		super(ctx, model, shadowRadius);
 	}
@@ -68,6 +68,7 @@ public abstract class PlayerEntityRendererMixin
 		if (shape != null) {
 			shape.animationSpeedOld = player.animationSpeedOld;
 			shape.animationSpeed = player.animationSpeed;
+			shape.animationPosition = player.animationPosition;
 			shape.swinging = player.swinging;
 			shape.swingTime = player.swingTime;
 			shape.oAttackAnim = player.oAttackAnim;
@@ -86,10 +87,10 @@ public abstract class PlayerEntityRendererMixin
 
 			// phantoms' pitch is inverse for whatever reason
 			if (shape instanceof Phantom) {
-				shape.setXRot(-player.getXRot());
+				shape.xRot = -player.xRot;
 				shape.xRotO = -player.xRotO;
 			} else {
-				shape.setXRot(player.getXRot());
+				shape.xRot = player.xRot;
 				shape.xRotO = player.xRotO;
 			}
 

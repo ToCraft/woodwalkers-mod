@@ -30,7 +30,6 @@ import net.minecraft.world.entity.vehicle.Boat;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.biome.Biome;
 import tocraft.walkers.Walkers;
 import tocraft.walkers.api.PlayerShape;
 import tocraft.walkers.mixin.accessor.EntityAccessor;
@@ -43,12 +42,15 @@ import tocraft.walkers.registry.WalkersEntityTags;
 @Mixin(Player.class)
 public abstract class PlayerEntityMixin extends LivingEntityMixin {
 
+	@Override
 	@Shadow
 	public abstract boolean isSpectator();
 
+	@Override
 	@Shadow
 	public abstract @NotNull EntityDimensions getDimensions(Pose pose);
 
+	@Override
 	@Shadow
 	public abstract boolean isSwimming();
 
@@ -185,12 +187,12 @@ public abstract class PlayerEntityMixin extends LivingEntityMixin {
 		}
 	}
 
-	@Inject(method = "getFallSounds", at = @At("HEAD"), cancellable = true)
-	private void getFallSounds(CallbackInfoReturnable<LivingEntity.Fallsounds> cir) {
+	@Inject(method = "getFallDamageSound", at = @At("HEAD"), cancellable = true)
+	private void getFallSounds(int distance, CallbackInfoReturnable<SoundEvent> cir) {
 		LivingEntity shape = PlayerShape.getCurrentShape((Player) (Object) this);
 
 		if (Walkers.CONFIG.useShapeSounds && shape != null) {
-			cir.setReturnValue(shape.getFallSounds());
+			cir.setReturnValue(((LivingEntityAccessor)shape).callGetFallDamageSound(distance));
 		}
 	}
 
@@ -308,8 +310,7 @@ public abstract class PlayerEntityMixin extends LivingEntityMixin {
 				// damage player if they are a shape that gets hurt by high temps (e.g. snow
 				// golem in nether)
 				if (type.is(WalkersEntityTags.HURT_BY_HIGH_TEMPERATURE)) {
-					Biome biome = level.getBiome(blockPosition()).value();
-					if (!biome.coldEnoughToSnow(blockPosition())) {
+					if(player.level.getBiome(new BlockPos(player.getX(), 0, player.getZ())).getTemperature(new BlockPos(player.getX(), player.getY(), player.getZ())) > 1.0F) {
 						player.hurt(DamageSource.ON_FIRE, 1.0f);
 					}
 				}

@@ -1,12 +1,12 @@
 package tocraft.walkers.api;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import tocraft.walkers.impl.tick.shapes.JumpBoostTickHandler;
 import tocraft.walkers.impl.tick.shapes.SnowGolemTickHandler;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public class WalkersTickHandlers {
 
@@ -15,7 +15,6 @@ public class WalkersTickHandlers {
     public static void initialize() {
         register(EntityType.SNOW_GOLEM, new SnowGolemTickHandler());
         register(EntityType.RABBIT, new JumpBoostTickHandler<>(1));
-        register(EntityType.GOAT, new JumpBoostTickHandler<>(2));
     }
 
     public static <T extends LivingEntity> void register(EntityType<T> type, WalkersTickHandler<T> handler) {

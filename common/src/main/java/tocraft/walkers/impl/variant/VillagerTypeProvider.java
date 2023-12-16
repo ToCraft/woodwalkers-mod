@@ -32,7 +32,7 @@ public class VillagerTypeProvider extends TypeProvider<Villager> {
 
     @Override
     public int getRange() {
-        return Registry.VILLAGER_TYPE.size() - 1;
+        return Registry.VILLAGER_TYPE.keySet().size() - 1;
     }
 
     @Override

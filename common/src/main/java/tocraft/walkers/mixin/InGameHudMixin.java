@@ -2,7 +2,7 @@ package tocraft.walkers.mixin;
 
 import net.minecraft.client.gui.Gui;
 import net.minecraft.tags.FluidTags;
-import net.minecraft.tags.TagKey;
+import net.minecraft.tags.Tag;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.material.Fluid;
@@ -20,8 +20,8 @@ public abstract class InGameHudMixin {
 	@Shadow
 	protected abstract Player getCameraPlayer();
 
-	@ModifyArg(method = "renderPlayerHealth", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/player/Player;isEyeInFluid(Lnet/minecraft/tags/TagKey;)Z"))
-	private TagKey<Fluid> shouldRenderBreath(TagKey<Fluid> tag) {
+	@ModifyArg(method = "renderPlayerHealth", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/player/Player;isEyeInFluid(Lnet/minecraft/tags/Tag;)Z"))
+	private Tag<Fluid> shouldRenderBreath(Tag<Fluid> tag) {
 		Player player = this.getCameraPlayer();
 		LivingEntity shape = PlayerShape.getCurrentShape(player);
 

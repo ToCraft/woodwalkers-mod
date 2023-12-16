@@ -17,16 +17,20 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import tocraft.walkers.Walkers;
 import tocraft.walkers.api.FlightHelper;
 import tocraft.walkers.api.PlayerShapeChanger;
+import tocraft.walkers.mixin.accessor.PlayerEntityAccessor;
 
 @Mixin(ServerPlayer.class)
 public abstract class ServerPlayerEntityMixin extends Player {
 
+	@Override
 	@Shadow
 	public abstract boolean isCreative();
 
+	@Override
 	@Shadow
 	public abstract boolean isSpectator();
 
+	@Override
 	@Shadow
 	public abstract void displayClientMessage(Component message, boolean actionBar);
 
@@ -41,13 +45,13 @@ public abstract class ServerPlayerEntityMixin extends Player {
 		}
 	}
 
-	@Inject(method = "initInventoryMenu()V", at = @At("HEAD"))
+	@Inject(method = "initMenu()V", at = @At("HEAD"))
 	private void onSpawn(CallbackInfo ci) {
 		ServerPlayer player = (ServerPlayer) (Object) this;
 		if (Walkers.hasFlyingPermissions(player)) {
 			if (!FlightHelper.hasFlight(player)) {
 				FlightHelper.grantFlightTo(player);
-				getAbilities().setFlyingSpeed(Walkers.CONFIG.flySpeed);
+				((PlayerEntityAccessor) player).getAbilities().setFlyingSpeed(Walkers.CONFIG.flySpeed);
 				onUpdateAbilities();
 			}
 

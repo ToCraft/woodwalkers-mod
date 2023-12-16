@@ -30,7 +30,7 @@ public class ZombieVillagerTypeProvider extends TypeProvider<ZombieVillager> {
 
     @Override
     public int getRange() {
-        return Registry.VILLAGER_TYPE.size() - 1;
+        return Registry.VILLAGER_TYPE.keySet().size() - 1;
     }
 
     @Override

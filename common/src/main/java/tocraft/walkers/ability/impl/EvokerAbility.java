@@ -34,7 +34,7 @@ public class EvokerAbility extends ShapeAbility<Evoker> {
     		
     		for (int j = 0; j <= 2; j++) {
     			Vex vex = new Vex(EntityType.VEX, world);
-        		vex.setPos(player.position());
+        		vex.setPos(player.position().x, player.position().y, player.position().z);
         		world.addFreshEntity(vex);
     		}
     	}
@@ -53,7 +53,7 @@ public class EvokerAbility extends ShapeAbility<Evoker> {
                 // If we cannot go up or down 1 block (or stay at the same level), the chain ends.
 
             // If the block underneath is solid, we are good to go.
-            EvokerFangs fangs = new EvokerFangs(world, origin.x(), origin.y(), origin.z(), player.getYRot(), blockOut * 2, player);
+            EvokerFangs fangs = new EvokerFangs(world, origin.x(), origin.y(), origin.z(), player.yRotO, blockOut * 2, player);
             BlockPos underneathPosition = new BlockPos(origin).below();
             BlockState underneath = world.getBlockState(underneathPosition);
             if(underneath.isFaceSturdy(world, underneathPosition, Direction.UP) && world.isEmptyBlock(underneathPosition.above())) {

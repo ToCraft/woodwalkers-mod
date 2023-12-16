@@ -1,22 +1,23 @@
 package tocraft.walkers.api;
 
 import net.minecraft.server.level.ServerPlayer;
+import tocraft.walkers.mixin.accessor.PlayerEntityAccessor;
 
 public class FlightHelper {
 
     public static void grantFlightTo(ServerPlayer player) {
-        player.getAbilities().mayfly = true;
+    	((PlayerEntityAccessor) player).getAbilities().mayfly = true;
     }
 
     public static boolean hasFlight(ServerPlayer player) {
-        return player.getAbilities().mayfly;
+        return ((PlayerEntityAccessor) player).getAbilities().mayfly;
     }
 
     public static void revokeFlight(ServerPlayer player) {
         if(player.gameMode.isSurvival()) {
-            player.getAbilities().mayfly = false;
+        	((PlayerEntityAccessor) player).getAbilities().mayfly = false;
         }
 
-        player.getAbilities().flying = false;
+        ((PlayerEntityAccessor) player).getAbilities().flying = false;
     }
 }

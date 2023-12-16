@@ -3,6 +3,7 @@ package tocraft.walkers.mixin;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.core.BlockPos;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffect;
@@ -14,7 +15,7 @@ import net.minecraft.world.entity.animal.Dolphin;
 import net.minecraft.world.entity.monster.Spider;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.material.FluidState;
+import net.minecraft.world.level.material.Fluid;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -90,19 +91,19 @@ public abstract class LivingEntityMixin extends Entity implements NearbySongAcce
 	}
 
 	@Inject(method = "causeFallDamage", at = @At(value = "HEAD"), cancellable = true)
-	private void causeFallDamage(float fallDistance, float damageMultiplier, DamageSource damageSource,
+	private void causeFallDamage(float fallDistance, float damageMultiplier,
 			CallbackInfoReturnable<Boolean> cir) {
 		if ((Object) this instanceof Player player) {
 			LivingEntity shape = PlayerShape.getCurrentShape(player);
 
 			if (shape != null) {
-				boolean takesFallDamage = shape.causeFallDamage(fallDistance, damageMultiplier, damageSource);
+				boolean takesFallDamage = shape.causeFallDamage(fallDistance, damageMultiplier);
 				int damageAmount = ((LivingEntityAccessor) shape).callCalculateFallDamage(fallDistance,
 						damageMultiplier);
 
 				if (takesFallDamage && damageAmount > 0) {
-					LivingEntity.Fallsounds fallSounds = shape.getFallSounds();
-					this.playSound(damageAmount > 4 ? fallSounds.big() : fallSounds.small(), 1.0F, 1.0F);
+					SoundEvent fallSounds = ((LivingEntityAccessor) shape).callGetFallDamageSound(damageAmount);
+					this.playSound(fallSounds, 1.0F, 1.0F);
 					((LivingEntityAccessor) shape).callPlayBlockFallSound();
 					this.hurt(DamageSource.FALL, (float) damageAmount);
 					cir.setReturnValue(true);
@@ -208,7 +209,7 @@ public abstract class LivingEntityMixin extends Entity implements NearbySongAcce
 	}
 
 	@Inject(method = "canStandOnFluid", at = @At("HEAD"), cancellable = true)
-	protected void shape_canStandOnFluid(FluidState state, CallbackInfoReturnable<Boolean> cir) {
+	protected void shape_canStandOnFluid(Fluid state, CallbackInfoReturnable<Boolean> cir) {
 		if ((LivingEntity) (Object) this instanceof Player player) {
 			LivingEntity shape = PlayerShape.getCurrentShape(player);
 

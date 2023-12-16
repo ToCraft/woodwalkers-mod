@@ -1,5 +1,6 @@
 package tocraft.walkers.api.variant;
 
+
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;

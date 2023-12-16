@@ -11,6 +11,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import net.minecraft.advancements.Advancement;
 import tocraft.walkers.Walkers;
 import tocraft.walkers.api.FlightHelper;
+import tocraft.walkers.mixin.accessor.PlayerEntityAccessor;
 
 @Mixin(PlayerAdvancements.class)
 public class PlayerAdvancementTrackerMixin {
@@ -24,7 +25,7 @@ public class PlayerAdvancementTrackerMixin {
     private void refreshFlight(Advancement advancement, String criterionName, CallbackInfoReturnable<Boolean> cir) {
         if(Walkers.hasFlyingPermissions(player)) {
             FlightHelper.grantFlightTo(player);
-            player.getAbilities().setFlyingSpeed(Walkers.CONFIG.flySpeed);
+            ((PlayerEntityAccessor)player).getAbilities().setFlyingSpeed(Walkers.CONFIG.flySpeed);
             player.onUpdateAbilities();
         }
     }

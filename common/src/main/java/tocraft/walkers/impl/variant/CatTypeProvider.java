@@ -3,7 +3,7 @@ package tocraft.walkers.impl.variant;
 import java.util.Map;
 
 import com.google.common.collect.ImmutableMap;
-import net.minecraft.core.Registry;
+
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
@@ -13,8 +13,6 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.animal.Cat;
 import net.minecraft.world.level.Level;
 import tocraft.walkers.api.variant.TypeProvider;
-
-import java.util.Map;
 
 public class CatTypeProvider extends TypeProvider<Cat> {
 

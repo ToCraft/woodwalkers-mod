@@ -98,7 +98,7 @@ public class EntityUpdaters {
 			// setting yaw without +180 making tail faces front, for some reason
 			if (dragon.posPointer < 0) {
 				for (int l = 0; l < dragon.positions.length; ++l) {
-					dragon.positions[l][0] = (double) player.getYRot() + 180;
+					dragon.positions[l][0] = (double) player.yRotO + 180;
 					dragon.positions[l][1] = player.getY();
 				}
 			}
@@ -107,7 +107,7 @@ public class EntityUpdaters {
 				(dragon).posPointer = 0;
 			}
 
-			dragon.positions[dragon.posPointer][0] = (double) player.getYRot() + 180;
+			dragon.positions[dragon.posPointer][0] = (double) player.yRotO + 180;
 			dragon.positions[dragon.posPointer][1] = player.getY();
 		});
 
