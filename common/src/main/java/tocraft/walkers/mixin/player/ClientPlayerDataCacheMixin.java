@@ -1,29 +1,29 @@
 package tocraft.walkers.mixin.player;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.multiplayer.ClientCommonPacketListenerImpl;
-import net.minecraft.client.multiplayer.ClientPacketListener;
-import net.minecraft.client.multiplayer.CommonListenerCookie;
-import net.minecraft.network.Connection;
-import net.minecraft.network.protocol.game.ClientboundRespawnPacket;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.multiplayer.ClientPacketListener;
+import net.minecraft.network.protocol.game.ClientboundRespawnPacket;
 import tocraft.walkers.impl.PlayerDataProvider;
 
 @Environment(EnvType.CLIENT)
 @Mixin(ClientPacketListener.class)
-public abstract class ClientPlayerDataCacheMixin extends ClientCommonPacketListenerImpl {
+public class ClientPlayerDataCacheMixin {
+
+	@Shadow
+	@Final
+	private Minecraft minecraft;
 	@Unique
 	private PlayerDataProvider walkers$dataCache = null;
-
-	protected ClientPlayerDataCacheMixin(Minecraft minecraft, Connection connection, CommonListenerCookie commonListenerCookie) {
-        super(minecraft, connection, commonListenerCookie);
-    }
 
 	// This inject caches the custom data attached to this client's player before it
 	// is reset when changing dimensions.
