@@ -1,5 +1,11 @@
 package tocraft.walkers;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import net.minecraft.advancements.AdvancementHolder;
 import net.minecraft.advancements.AdvancementProgress;
@@ -13,16 +19,12 @@ import net.minecraft.world.entity.FlyingMob;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.animal.WaterAnimal;
 import net.minecraft.world.entity.monster.Guardian;
-import org.jetbrains.annotations.Nullable;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import tocraft.craftedcore.config.ConfigLoader;
 import tocraft.craftedcore.events.common.PlayerEvents;
 import tocraft.craftedcore.platform.Platform;
 import tocraft.craftedcore.platform.VersionChecker;
 import tocraft.walkers.ability.AbilityRegistry;
 import tocraft.walkers.api.PlayerShape;
-import tocraft.walkers.api.PlayerShapeChanger;
 import tocraft.walkers.api.WalkersTickHandlers;
 import tocraft.walkers.api.platform.WalkersConfig;
 import tocraft.walkers.command.WalkersCommand;
@@ -30,9 +32,6 @@ import tocraft.walkers.mixin.ThreadedAnvilChunkStorageAccessor;
 import tocraft.walkers.network.ServerNetworking;
 import tocraft.walkers.registry.WalkersEntityTags;
 import tocraft.walkers.registry.WalkersEventHandlers;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class Walkers {
 
@@ -64,16 +63,9 @@ public class Walkers {
 	}
 
 	public static void registerJoinSyncPacket() {
+		VersionChecker.registerChecker(MODID, VERSION_URL, Component.translatable("key.categories.walkers"));
+		
 		PlayerEvents.PLAYER_JOIN.register(player -> {
-			// Sync unlocked Walkers
-			PlayerShapeChanger.sync(player);
-
-			// check for updates
-			@Nullable
-			String newVersion = VersionChecker.checkForNewVersion(VERSION_URL);
-			if (newVersion != null && !Platform.getMod(MODID).getVersion().equals(newVersion))
-				player.sendSystemMessage(Component.translatable("walkers.update", newVersion));
-
 			Int2ObjectMap<Object> trackers = ((ThreadedAnvilChunkStorageAccessor) ((ServerLevel) player.level())
 					.getChunkSource().chunkMap).getEntityMap();
 			trackers.forEach((entityid, tracking) -> {

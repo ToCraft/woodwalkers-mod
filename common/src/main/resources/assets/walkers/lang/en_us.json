@@ -12,7 +12,6 @@
   "walkers.switchShape_human_success": "%s is now using the first shape.",
   "walkers.show2ndShapeNot_positive": "%s is disguised as a %s.",
   "walkers.show2ndShapeNot_failed": "%s doesn't have a second shape.",
-  "walkers.update": "A new version of woodwalkers is available: %s",
   "key.categories.walkers": "Woodwalkers",
   "key.walkers": "Transform to your other shape",
   "key.walkers_unlock": "Scan a mob",

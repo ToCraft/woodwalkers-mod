@@ -12,7 +12,6 @@
   "walkers.switchShape_human_success": "%s ist wieder in der ersten Gestalt.",
   "walkers.show2ndShapeNot_positive": "%s hat als zweite Gestalt %s.",
   "walkers.show2ndShapeNot_failed": "%s hat keine zweite Gestlat.",
-  "walkers.update": "Eine neue Version von Woodwalkers ist verfügbar: %s",
   "key.categories.walkers": "Woodwalkers",
   "key.walkers": "Verwandle dich",
   "key.walkers_unlock": "Scanne einen Mob",
