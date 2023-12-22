@@ -1,0 +1,33 @@
+modLoader = "javafml"
+loaderVersion = "[1,)"
+#issueTrackerURL = ""
+license = "MIT"
+
+[[mixins]]
+config = "walkers-neoforge.mixins.json"
+[[mixins]]
+config = "walkers.mixins.json"
+
+[[mods]]
+modId = "walkers"
+version = "${version}"
+displayName = "Walkers"
+authors = "To_Craft"
+description = '''
+Become a Woodwalker/animagus!
+'''
+#logoFile = ""
+
+[[dependencies.walkers]]
+modId = "minecraft"
+mandatory = true
+versionRange = "[1.20.2,)"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.walkers]]
+modId = "craftedcore"
+mandatory = true
+versionRange = "*"
+ordering = "AFTER"
+side = "BOTH"
