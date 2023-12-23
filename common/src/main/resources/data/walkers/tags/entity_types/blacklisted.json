@@ -2,10 +2,6 @@
   "replace": false,
   "values": [
 	  {
-		  "id": "minecraft:villager",
-		  "required": false
-	  },
-	  {
 		  "id": "amethyst_imbuement:sardonyx_elemental",
 		  "required": false
 	  },
@@ -131,22 +127,6 @@
 	  },
 	  {
 		  "id": "mcdw:summoned_bee",
-		  "required": false
-	  },
-	  {
-		  "id": "minecraft:ender_dragon",
-		  "required": false
-	  },
-	  {
-		  "id": "minecraft:giant",
-		  "required": false
-	  },
-	  {
-		  "id": "minecraft:wandering_trader",
-		  "required": false
-	  },
-	  {
-		  "id": "minecraft:wither",
 		  "required": false
 	  },
 	  {
