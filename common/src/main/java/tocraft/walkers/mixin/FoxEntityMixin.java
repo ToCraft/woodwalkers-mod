@@ -8,6 +8,7 @@ import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.animal.AbstractFish;
 import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.animal.Fox;
+import net.minecraft.world.entity.animal.Turtle;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import org.spongepowered.asm.mixin.Final;
@@ -64,10 +65,9 @@ public abstract class FoxEntityMixin extends Animal {
 
 					// foxes can target players if their shape is in the fox_prey tag, or if they
 					// are an entity that extends FishEntity
-					// todo: add baby turtle targeting
 					LivingEntity shape = PlayerShape.getCurrentShape((Player) player);
 					return shape != null && shape.getType().is(WalkersEntityTags.FOX_PREY)
-							|| shape instanceof AbstractFish;
+							|| shape instanceof AbstractFish || (shape instanceof Turtle && shape.isBaby());
 				}));
 	}
 }
