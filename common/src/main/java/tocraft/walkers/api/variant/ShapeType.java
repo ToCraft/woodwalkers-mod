@@ -29,7 +29,6 @@ public class ShapeType<T extends LivingEntity> {
 		VARIANT_BY_TYPE.put(EntityType.CAT, new CatTypeProvider());
 		VARIANT_BY_TYPE.put(EntityType.SLIME, new SlimeTypeProvider());
 		VARIANT_BY_TYPE.put(EntityType.FROG, new FrogTypeProvider());
-		VARIANT_BY_TYPE.put(EntityType.WOLF, new WolfTypeProvider());
 		VARIANT_BY_TYPE.put(EntityType.HORSE, new HorseTypeProvider());
 		VARIANT_BY_TYPE.put(EntityType.LLAMA, new LlamaTypeProvider());
 		VARIANT_BY_TYPE.put(EntityType.TRADER_LLAMA, new LlamaTypeProvider());
@@ -125,8 +124,8 @@ public class ShapeType<T extends LivingEntity> {
         for (EntityType<?> type : LIVING_TYPE_CASH) {
             // check blacklist
             if (!type.is(WalkersEntityTags.BLACKLISTED)) {
-                // hide dev_wolf & check other variants
-                if(type != EntityType.WOLF && VARIANT_BY_TYPE.containsKey(type)) {
+                // check variants
+                if(VARIANT_BY_TYPE.containsKey(type)) {
                     TypeProvider<?> variant = VARIANT_BY_TYPE.get(type);
                     for (int i = 0; i <= variant.getRange(); i++) {
                         types.add(new ShapeType(type, i));

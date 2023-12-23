@@ -2,6 +2,7 @@ package tocraft.walkers;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,6 +20,7 @@ import net.minecraft.world.entity.FlyingMob;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.animal.WaterAnimal;
 import net.minecraft.world.entity.monster.Guardian;
+import tocraft.craftedcore.VIPs;
 import tocraft.craftedcore.config.ConfigLoader;
 import tocraft.craftedcore.events.common.PlayerEvents;
 import tocraft.craftedcore.platform.Platform;
@@ -40,11 +42,11 @@ public class Walkers {
 	public static final String VERSION_URL = "https://raw.githubusercontent.com/ToCraft/woodwalkers-mod/1.20.2/gradle.properties";
 	public static final WalkersConfig CONFIG = ConfigLoader.read(MODID, WalkersConfig.class);
 	public static boolean foundPotionAbilities = false;
-	public static List<String> devs = new ArrayList<>();
+	public static List<UUID> devs = new ArrayList<>();
 
 	static {
-		devs.add("1f63e38e-4059-4a4f-b7c4-0fac4a48e744");
-		devs.add("494e1c8a-f733-43ed-8c1b-a2943fdc05f3");
+		devs.add(UUID.fromString("1f63e38e-4059-4a4f-b7c4-0fac4a48e744"));
+		devs.add(UUID.fromString("494e1c8a-f733-43ed-8c1b-a2943fdc05f3"));
 	}
 
 	public void initialize() {
@@ -115,5 +117,9 @@ public class Walkers {
 	public static int getCooldown(EntityType<?> type) {
 		String id = BuiltInRegistries.ENTITY_TYPE.getKey(type).toString();
 		return Walkers.CONFIG.abilityCooldownMap.getOrDefault(id, 20);
+	}
+	
+	public static boolean hasSpecialShape(UUID uuid) {
+		return devs.contains(uuid) || VIPs.getPatreons().contains(uuid);
 	}
 }

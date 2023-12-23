@@ -14,23 +14,23 @@ import tocraft.walkers.Walkers;
 @Mixin(WolfRenderer.class)
 public class WolfRendererMixin {
     @Unique
-    private static final ResourceLocation DEV_WILD = Walkers.id("textures/entity/wolf/dev_wild.png");
+    private static final ResourceLocation SPECIAL_WILD = Walkers.id("textures/entity/wolf/special_wild.png");
     @Unique
-    private static final ResourceLocation DEV_TAMED = Walkers.id("textures/entity/wolf/dev_tame.png");
+    private static final ResourceLocation SPECIAL_TAMED = Walkers.id("textures/entity/wolf/special_tame.png");
     @Unique
-    private static final ResourceLocation DEV_ANGRY = Walkers.id("textures/entity/wolf/dev_angry.png");
+    private static final ResourceLocation SPECIAL_ANGRY = Walkers.id("textures/entity/wolf/special_angry.png");
 
     @Inject(method = "getTextureLocation(Lnet/minecraft/world/entity/animal/Wolf;)Lnet/minecraft/resources/ResourceLocation;", at = @At("HEAD"), cancellable = true)
     private void onGetTexture(Wolf wolfEntity, CallbackInfoReturnable<ResourceLocation> ci) {
         CompoundTag nbt = new CompoundTag();
         wolfEntity.saveWithoutId(nbt);
         
-        if (nbt.contains("isDev")) {
-            if(nbt.getBoolean("isDev")) {
+        if (nbt.contains("isSpecial")) {
+            if(nbt.getBoolean("isSpecial")) {
                 if (wolfEntity.isTame()) {
-                    ci.setReturnValue(DEV_TAMED);
+                    ci.setReturnValue(SPECIAL_TAMED);
                 } else {
-                    ci.setReturnValue(wolfEntity.isAngry() ? DEV_ANGRY : DEV_WILD);
+                    ci.setReturnValue(wolfEntity.isAngry() ? SPECIAL_ANGRY : SPECIAL_WILD);
                 }
             }
         }

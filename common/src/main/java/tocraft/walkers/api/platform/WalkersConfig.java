@@ -38,7 +38,7 @@ public class WalkersConfig implements Config {
 	public boolean unlockOveridesCurrentShape = false;
 	@Synchronize
 	public float unlockTimer = 60f;
-	public boolean devShapeIsThirdShape = false;
+	public boolean specialShapeIsThirdShape = false;
 
 	public Map<String, Integer> abilityCooldownMap = new HashMap<>() {
 		{

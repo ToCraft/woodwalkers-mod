@@ -20,7 +20,7 @@ import tocraft.walkers.Walkers;
 import tocraft.walkers.api.PlayerShape;
 import tocraft.walkers.registry.WalkersEntityTags;
 
-@SuppressWarnings({"RedundantCast", "WrongEntityDataParameterClass"})
+@SuppressWarnings({})
 @Mixin(Wolf.class)
 public abstract class WolfEntityMixin extends TamableAnimal {
 
@@ -29,7 +29,7 @@ public abstract class WolfEntityMixin extends TamableAnimal {
 	}
 
 	@Unique
-	private static final EntityDataAccessor<Boolean> walkers$isDev = SynchedEntityData.defineId(Wolf.class,
+	private static final EntityDataAccessor<Boolean> walkers$isSpecial = SynchedEntityData.defineId(Wolf.class,
 			EntityDataSerializers.BOOLEAN);
 
 	@Inject(method = "registerGoals", at = @At("RETURN"))
@@ -56,16 +56,16 @@ public abstract class WolfEntityMixin extends TamableAnimal {
 
 	@Inject(method = "defineSynchedData", at = @At("RETURN"))
 	protected void onInitDataTracker(CallbackInfo ci) {
-		((Wolf) (Object) this).getEntityData().define(walkers$isDev, false);
+		((Wolf) (Object) this).getEntityData().define(walkers$isSpecial, false);
 	}
 
 	@Inject(method = "addAdditionalSaveData", at = @At("RETURN"))
 	protected void onWriteCustomDataToNbt(CompoundTag nbt, CallbackInfo ci) {
-		nbt.putBoolean("isDev", ((Wolf) (Object) this).getEntityData().get(walkers$isDev));
+		nbt.putBoolean("isSpecial", ((Wolf) (Object) this).getEntityData().get(walkers$isSpecial));
 	}
 
 	@Inject(method = "readAdditionalSaveData", at = @At("RETURN"))
 	protected void onReadCustomDataFromNbt(CompoundTag nbt, CallbackInfo ci) {
-		((Wolf) (Object) this).getEntityData().set(walkers$isDev, nbt.getBoolean("isDev"));
+		((Wolf) (Object) this).getEntityData().set(walkers$isSpecial, nbt.getBoolean("isSpecial"));
 	}
 }

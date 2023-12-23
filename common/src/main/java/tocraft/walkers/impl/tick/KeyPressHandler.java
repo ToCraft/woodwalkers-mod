@@ -2,12 +2,12 @@ package tocraft.walkers.impl.tick;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import org.jetbrains.annotations.Nullable;
+
 import tocraft.craftedcore.events.client.ClientTickEvents;
 import tocraft.walkers.Walkers;
 import tocraft.walkers.WalkersClient;
@@ -16,7 +16,7 @@ import tocraft.walkers.api.PlayerShape;
 import tocraft.walkers.api.variant.ShapeType;
 import tocraft.walkers.impl.PlayerDataProvider;
 import tocraft.walkers.network.ClientNetworking;
-import tocraft.walkers.network.impl.DevSwapPackets;
+import tocraft.walkers.network.impl.SpecialSwapPackets;
 import tocraft.walkers.network.impl.SwapPackets;
 import tocraft.walkers.network.impl.UnlockPackets;
 import tocraft.walkers.registry.WalkersEntityTags;
@@ -33,6 +33,10 @@ public class KeyPressHandler implements ClientTickEvents.Client {
 
 		if (WalkersClient.TRANSFORM_KEY.consumeClick()) {
 			SwapPackets.sendSwapRequest();
+		}
+		
+		if (WalkersClient.SPECIAL_TRANSFORM_KEY.consumeClick() && Walkers.hasSpecialShape(Minecraft.getInstance().player.getUUID())) {
+			SpecialSwapPackets.sendSpecialSwapRequest();
 		}
 
 		if (WalkersClient.UNLOCK_KEY.isDown())
@@ -59,13 +63,6 @@ public class KeyPressHandler implements ClientTickEvents.Client {
 		// check if player is blacklisted
 		if (client.player != null && Walkers.CONFIG.playerUUIDBlacklist.contains(client.player.getUUID())) {
 			client.player.displayClientMessage(Component.translatable("walkers.player_blacklisted"), true);
-			return;
-		}
-
-		// check dev wolf
-		if (client.player != null && ((PlayerDataProvider) client.player).walkers$get2ndShape() != null && (client.player.isShiftKeyDown()
-				&& (Walkers.devs.contains(client.player.getStringUUID()) || client.player.hasPermissions(2)))) {
-			DevSwapPackets.sendDevSwapRequest(new ResourceLocation("minecraft:wolf"));
 			return;
 		}
 
