@@ -9,37 +9,16 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
-import tocraft.walkers.impl.variant.*;
 import tocraft.walkers.registry.WalkersEntityTags;
 
 import java.util.*;
 
+@SuppressWarnings("unchecked")
 public class ShapeType<T extends LivingEntity> {
 
 	private static final List<EntityType<? extends LivingEntity>> LIVING_TYPE_CASH = new ArrayList<>();
-	private static final Map<EntityType<? extends LivingEntity>, TypeProvider<?>> VARIANT_BY_TYPE = new LinkedHashMap<>();
 	private final EntityType<T> type;
 	private final int variantData;
-
-	static {
-		VARIANT_BY_TYPE.put(EntityType.SHEEP, new SheepTypeProvider());
-		VARIANT_BY_TYPE.put(EntityType.AXOLOTL, new AxolotlTypeProvider());
-		VARIANT_BY_TYPE.put(EntityType.PARROT, new ParrotTypeProvider());
-		VARIANT_BY_TYPE.put(EntityType.FOX, new FoxTypeProvider());
-		VARIANT_BY_TYPE.put(EntityType.CAT, new CatTypeProvider());
-		VARIANT_BY_TYPE.put(EntityType.SLIME, new SlimeTypeProvider());
-		VARIANT_BY_TYPE.put(EntityType.FROG, new FrogTypeProvider());
-		VARIANT_BY_TYPE.put(EntityType.HORSE, new HorseTypeProvider());
-		VARIANT_BY_TYPE.put(EntityType.LLAMA, new LlamaTypeProvider());
-		VARIANT_BY_TYPE.put(EntityType.TRADER_LLAMA, new LlamaTypeProvider());
-		VARIANT_BY_TYPE.put(EntityType.GOAT, new GoatTypeProvider());
-		VARIANT_BY_TYPE.put(EntityType.MAGMA_CUBE, new MagmaCubeTypeProvider());
-		VARIANT_BY_TYPE.put(EntityType.MOOSHROOM, new MushroomCowTypeProvider());
-		VARIANT_BY_TYPE.put(EntityType.PANDA, new PandaTypeProvider());
-		VARIANT_BY_TYPE.put(EntityType.RABBIT, new RabbitTypeProvider());
-		VARIANT_BY_TYPE.put(EntityType.VILLAGER, new VillagerTypeProvider());
-		VARIANT_BY_TYPE.put(EntityType.ZOMBIE_VILLAGER, new ZombieVillagerTypeProvider());
-	}
 
 	public ShapeType(EntityType<T> type) {
 		this.type = type;
@@ -47,8 +26,9 @@ public class ShapeType<T extends LivingEntity> {
 	}
 
 	private int getDefaultVariantData(EntityType<T> type) {
-		if (VARIANT_BY_TYPE.containsKey(type)) {
-			return VARIANT_BY_TYPE.get(type).getFallbackData();
+		TypeProvider<T> provider = TypeProviderRegistry.getProvider(type);
+		if (provider != null) {
+			return provider.getFallbackData();
 		} else {
 			return -1;
 		}
@@ -64,7 +44,7 @@ public class ShapeType<T extends LivingEntity> {
 
 		// Discover variant data based on entity NBT data.
 		@Nullable
-		TypeProvider<T> provider = (TypeProvider<T>) VARIANT_BY_TYPE.get(type);
+		TypeProvider<T> provider = TypeProviderRegistry.getProvider(type);
 		if (provider != null) {
 			variantData = provider.getVariantData(entity);
 		} else {
@@ -79,8 +59,8 @@ public class ShapeType<T extends LivingEntity> {
 		}
 
 		EntityType<Z> type = (EntityType<Z>) entity.getType();
-		if (VARIANT_BY_TYPE.containsKey(type)) {
-			TypeProvider<Z> typeProvider = (TypeProvider<Z>) VARIANT_BY_TYPE.get(type);
+		TypeProvider<Z> typeProvider = TypeProviderRegistry.getProvider(type);
+		if (typeProvider != null) {
 			return typeProvider.create(type, entity);
 		}
 
@@ -99,10 +79,10 @@ public class ShapeType<T extends LivingEntity> {
 	}
 
 	@Nullable
-	public static <Z extends LivingEntity> ShapeType<Z> from(EntityType<?> entityType, int variant) {
-		if (VARIANT_BY_TYPE.containsKey(entityType)) {
-			TypeProvider<?> provider = VARIANT_BY_TYPE.get(entityType);
-			if (variant < -1 || variant > provider.getRange()) {
+	public static <Z extends LivingEntity> ShapeType<Z> from(EntityType<Z> entityType, int variant) {
+		TypeProvider<Z> typeProvider = TypeProviderRegistry.getProvider(entityType);
+		if (typeProvider != null) {
+			if (variant < -1 || variant > typeProvider.getRange()) {
 				return null;
 			}
 		}
@@ -120,13 +100,13 @@ public class ShapeType<T extends LivingEntity> {
             }
         }
 
-        List<ShapeType<?>> types = new ArrayList<>();
-        for (EntityType<?> type : LIVING_TYPE_CASH) {
+        List<ShapeType<? extends LivingEntity>> types = new ArrayList<>();
+        for (EntityType<? extends LivingEntity> type : LIVING_TYPE_CASH) {
             // check blacklist
             if (!type.is(WalkersEntityTags.BLACKLISTED)) {
                 // check variants
-                if(VARIANT_BY_TYPE.containsKey(type)) {
-                    TypeProvider<?> variant = VARIANT_BY_TYPE.get(type);
+            	TypeProvider<?> variant = TypeProviderRegistry.getProvider(type);
+                if(variant != null) {
                     for (int i = 0; i <= variant.getRange(); i++) {
                         types.add(new ShapeType(type, i));
                     }
@@ -151,7 +131,7 @@ public class ShapeType<T extends LivingEntity> {
 	}
 
 	public T create(Level world) {
-		TypeProvider<T> typeProvider = (TypeProvider<T>) VARIANT_BY_TYPE.get(type);
+		TypeProvider<T> typeProvider = TypeProviderRegistry.getProvider(type);
 		if (typeProvider != null) {
 			return typeProvider.create(type, world, variantData);
 		}
@@ -188,7 +168,7 @@ public class ShapeType<T extends LivingEntity> {
 	}
 
 	public Component createTooltipText(T entity) {
-		TypeProvider<T> provider = (TypeProvider<T>) VARIANT_BY_TYPE.get(type);
+		TypeProvider<T> provider = TypeProviderRegistry.getProvider(type);
 		if (provider != null) {
 			return provider.modifyText(entity, Component.translatable(type.getDescriptionId()));
 		}

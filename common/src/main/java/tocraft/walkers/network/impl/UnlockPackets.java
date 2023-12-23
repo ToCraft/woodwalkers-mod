@@ -4,6 +4,7 @@ import io.netty.buffer.Unpooled;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -37,6 +38,7 @@ public class UnlockPackets {
 	/**
 	 * Server handles request, that 2nd shape may be changed
 	 */
+	@SuppressWarnings("unchecked")
 	public static void registerShapeUnlockRequestPacketHandler() {
 		NetworkManager.registerReceiver(NetworkManager.Side.C2S, NetworkHandler.UNLOCK_REQUEST, (buf, context) -> {
 			// check if player is blacklisted
@@ -45,12 +47,14 @@ public class UnlockPackets {
 
 			boolean validType = buf.readBoolean();
 			if (validType) {
-				EntityType<?> entityType = BuiltInRegistries.ENTITY_TYPE.get(buf.readResourceLocation());
+				ResourceLocation typeId = buf.readResourceLocation();
+				EntityType<? extends LivingEntity> entityType = (EntityType<? extends LivingEntity>) BuiltInRegistries.ENTITY_TYPE.get(typeId);
+				
 				int variant = buf.readInt();
 
 				context.getPlayer().getServer().execute(() -> {
 					@Nullable
-					ShapeType<LivingEntity> type = ShapeType.from(entityType, variant);
+					ShapeType<? extends LivingEntity> type = ShapeType.from(entityType, variant);
 					if (type != null && !type.getEntityType().is(WalkersEntityTags.BLACKLISTED) && (Walkers.CONFIG.unlockOveridesCurrentShape || ((PlayerDataProvider) context.getPlayer()).walkers$get2ndShape() == null)) {
 						// set 2nd shape
 						boolean result = PlayerShapeChanger.change2ndShape((ServerPlayer) context.getPlayer(), type);
@@ -59,18 +63,16 @@ public class UnlockPackets {
 							PlayerShape.updateShapes((ServerPlayer) context.getPlayer(),
 								type.create(context.getPlayer().level()));
 					}
-
-					// Refresh player dimensions
-					context.getPlayer().refreshDimensions();
 				});
 			} else {
 				// Swap back to player if server allows it
 				context.getPlayer().getServer().execute(() -> {
 					PlayerShape.updateShapes((ServerPlayer) context.getPlayer(), null);
-
-					context.getPlayer().refreshDimensions();
 				});
 			}
+			
+			// Refresh player dimensions
+			context.getPlayer().refreshDimensions();
 		});
 	}
 
@@ -97,7 +99,7 @@ public class UnlockPackets {
 	 * Client requests, that server may unlock a shape
 	 * 
 	 */
-	public static void sendUnlockRequest(@Nullable ShapeType<?> type) {
+	public static void sendUnlockRequest(@Nullable ShapeType<? extends LivingEntity> type) {
 		FriendlyByteBuf packet = new FriendlyByteBuf(Unpooled.buffer());
 
 		packet.writeBoolean(type != null);
