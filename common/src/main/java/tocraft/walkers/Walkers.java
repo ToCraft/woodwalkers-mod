@@ -18,8 +18,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.FlyingMob;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.animal.WaterAnimal;
-import net.minecraft.world.entity.monster.Guardian;
+import net.minecraft.world.entity.MobType;
 import tocraft.craftedcore.VIPs;
 import tocraft.craftedcore.config.ConfigLoader;
 import tocraft.craftedcore.events.common.PlayerEvents;
@@ -111,7 +110,7 @@ public class Walkers {
 	}
 
 	public static boolean isAquatic(LivingEntity entity) {
-		return entity instanceof WaterAnimal || entity instanceof Guardian;
+		return entity.getMobType().equals(MobType.WATER);
 	}
 
 	public static int getCooldown(EntityType<?> type) {
