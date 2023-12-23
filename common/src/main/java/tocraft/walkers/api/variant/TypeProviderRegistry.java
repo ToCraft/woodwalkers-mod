@@ -5,22 +5,7 @@ import java.util.Map;
 
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
-import tocraft.walkers.impl.variant.AxolotlTypeProvider;
-import tocraft.walkers.impl.variant.CatTypeProvider;
-import tocraft.walkers.impl.variant.FoxTypeProvider;
-import tocraft.walkers.impl.variant.FrogTypeProvider;
-import tocraft.walkers.impl.variant.GoatTypeProvider;
-import tocraft.walkers.impl.variant.HorseTypeProvider;
-import tocraft.walkers.impl.variant.LlamaTypeProvider;
-import tocraft.walkers.impl.variant.MagmaCubeTypeProvider;
-import tocraft.walkers.impl.variant.MushroomCowTypeProvider;
-import tocraft.walkers.impl.variant.PandaTypeProvider;
-import tocraft.walkers.impl.variant.ParrotTypeProvider;
-import tocraft.walkers.impl.variant.RabbitTypeProvider;
-import tocraft.walkers.impl.variant.SheepTypeProvider;
-import tocraft.walkers.impl.variant.SlimeTypeProvider;
-import tocraft.walkers.impl.variant.VillagerTypeProvider;
-import tocraft.walkers.impl.variant.ZombieVillagerTypeProvider;
+import tocraft.walkers.impl.variant.*;
 
 public class TypeProviderRegistry {
 	private static final Map<EntityType<? extends LivingEntity>, TypeProvider<? extends LivingEntity>> VARIANT_BY_TYPE = new HashMap<>();
@@ -43,6 +28,7 @@ public class TypeProviderRegistry {
 		VARIANT_BY_TYPE.put(EntityType.RABBIT, new RabbitTypeProvider());
 		VARIANT_BY_TYPE.put(EntityType.VILLAGER, new VillagerTypeProvider());
 		VARIANT_BY_TYPE.put(EntityType.ZOMBIE_VILLAGER, new ZombieVillagerTypeProvider());
+		VARIANT_BY_TYPE.put(EntityType.TROPICAL_FISH, new TropicalFishTypeProvider());
 	}
 	
 	public static <T extends LivingEntity> void register(EntityType<T> type, TypeProvider<T> provider) {

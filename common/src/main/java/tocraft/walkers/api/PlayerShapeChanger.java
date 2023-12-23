@@ -17,7 +17,7 @@ public class PlayerShapeChanger {
         if(unlock.asMinecraft() != InteractionResult.FAIL && provider.walkers$get2ndShape() != newShape) {
             provider.walkers$set2ndShape(newShape);
             sync(player);
-            PlayerAbilities.sync(player); // TODO: ???
+            PlayerAbilities.sync(player);
             return true;
         } else {
             return false;
