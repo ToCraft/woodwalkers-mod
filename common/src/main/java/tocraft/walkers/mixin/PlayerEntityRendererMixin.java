@@ -133,7 +133,7 @@ public abstract class PlayerEntityRendererMixin
 			}
 		}
 
-		if (shape != null) {
+		if (shape != null && !player.isInvisible() && !player.isInvisibleTo(Minecraft.getInstance().player)) {
 			EntityRenderer<LivingEntity> shapeRenderer = (EntityRenderer<LivingEntity>) Minecraft.getInstance().getEntityRenderDispatcher().getRenderer(shape);
 
 			// Sync biped information for stuff like bow drawing animation
