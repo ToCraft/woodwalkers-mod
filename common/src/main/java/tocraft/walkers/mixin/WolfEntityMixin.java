@@ -54,6 +54,14 @@ public abstract class WolfEntityMixin extends TamableAnimal {
 				}));
 	}
 
+	@Inject(method = "tick", at = @At("HEAD"))
+	public void onTick(CallbackInfo ci) {
+		if (this.hasCustomName() && this.getCustomName().getString().equalsIgnoreCase("Patreon"))
+			((Wolf) (Object) this).getEntityData().set(walkers$isSpecial, true);
+		else
+			((Wolf) (Object) this).getEntityData().set(walkers$isSpecial, false);
+	}
+
 	@Inject(method = "defineSynchedData", at = @At("RETURN"))
 	protected void onInitDataTracker(CallbackInfo ci) {
 		((Wolf) (Object) this).getEntityData().define(walkers$isSpecial, false);

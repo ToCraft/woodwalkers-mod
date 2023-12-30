@@ -26,7 +26,7 @@ public class SpecialSwapPackets {
 				ResourceLocation shape = new ResourceLocation("minecraft:wolf");
 				
 				// check if player has a special shape
-				if (!Walkers.hasSpecialShape(player.getUUID()) || (!Walkers.CONFIG.specialShapeIsThirdShape && ((PlayerDataProvider) player).walkers$get2ndShape() != null && !((PlayerDataProvider) player).walkers$get2ndShape().getEntityType().equals(EntityType.WOLF)))
+				if (!Walkers.hasSpecialShape(player.getUUID()) || (!Walkers.CONFIG.specialShapeIsThirdShape && (((PlayerDataProvider) player).walkers$get2ndShape() == null || !((PlayerDataProvider) player).walkers$get2ndShape().getEntityType().equals(EntityType.WOLF))))
 					return;
 				
 				Entity created;
