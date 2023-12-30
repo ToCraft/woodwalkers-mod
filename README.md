@@ -15,11 +15,11 @@
 
 ---
 
-**Woodwalkers Requires Architectury API**
+**Woodwalkers Requires CraftedCore**
 
-[Architectury API (CurseForge)](https://www.curseforge.com/minecraft/mc-mods/architectury-api)
+[CraftedCore (CurseForge)](https://www.curseforge.com/minecraft/mc-mods/crafted-core)
 
-[Architectury API (Modrinth)](https://modrinth.com/mod/architectury-api)
+[CraftedCore (Modrinth)](https://modrinth.com/mod/crafted-core)
 
 ---
 
@@ -48,8 +48,9 @@ You can switch your shape by pressing the TRANSFORM_KEY (by default 'G'). Choose
 
 ## How can I support this project?
 
-I'm always happy about someone who translates this mod to other languages or tells me about bugs/issues.
-Everyone who supplies a concept, bug-fix, translation or generally helps a lot with dev-work will get a new texture as wolf which is enabled by sneaking while pressing the MENU_KEY.
+You could donate via Patreon (https://www.patreon.com/tocraft).
+Alternatively, if you want to contribute to this mod, I'm always happy about someone who translates this mod to other languages or tells me about bugs/issues.
+Everyone who helps a lot with dev-work will get a new texture as wolf which is enabled by pressing `V` (This key is only visible to Developer and Patreons).
 
 ![](https://raw.githubusercontent.com/ToCraft/woodwalkers-mod/arch-1.20.1/assets/dark_dev_wolf_vs_normal_wolf.png)
 
