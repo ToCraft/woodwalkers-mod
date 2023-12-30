@@ -110,7 +110,7 @@ public class Walkers {
 	}
 
 	public static boolean isAquatic(LivingEntity entity) {
-		return entity.getMobType().equals(MobType.WATER);
+		 return entity != null && entity.getMobType().equals(MobType.WATER);
 	}
 
 	public static int getCooldown(EntityType<?> type) {
