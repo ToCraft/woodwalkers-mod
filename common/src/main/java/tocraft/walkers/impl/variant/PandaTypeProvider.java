@@ -2,6 +2,7 @@ package tocraft.walkers.impl.variant;
 
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.animal.Panda;
 import net.minecraft.world.level.Level;
@@ -35,6 +36,6 @@ public class PandaTypeProvider extends TypeProvider<Panda> {
     public Component modifyText(Panda entity, MutableComponent text) {
     	Panda.Gene gene = entity.getMainGene();
         if(gene.equals(Panda.Gene.NORMAL)) return text;
-        else return Component.literal(formatTypePrefix(gene.getSerializedName()) + " ").append(text);
+        else return new TextComponent(formatTypePrefix(gene.name()) + " ").append(text);
     }
 }

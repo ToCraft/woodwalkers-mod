@@ -1,6 +1,6 @@
 package tocraft.walkers.registry;
 
-import net.minecraft.core.registries.Registries;
+import net.minecraft.core.DefaultedRegistry;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.EntityType;
 import tocraft.walkers.Walkers;
@@ -21,7 +21,11 @@ public class WalkersEntityTags {
 	public static final TagKey<EntityType<?>> BLACKLISTED = register("blacklisted");
 	public static final TagKey<EntityType<?>> FALL_THROUGH_BLOCKS = register("fall_through_blocks");
 
+	public static void init() {
+        // NO-OP
+    }
+	
 	private static TagKey<EntityType<?>> register(String id) {
-		return TagKey.create(Registries.ENTITY_TYPE, Walkers.id(id));
+		return TagKey.create(DefaultedRegistry.ENTITY_TYPE.key(), Walkers.id(id));
 	}
 }

@@ -36,7 +36,6 @@ import tocraft.walkers.api.model.EntityArms;
 import tocraft.walkers.api.model.EntityUpdater;
 import tocraft.walkers.api.model.EntityUpdaters;
 import tocraft.walkers.mixin.accessor.EntityAccessor;
-import tocraft.walkers.mixin.accessor.LimbAnimatorAccessor;
 import tocraft.walkers.mixin.accessor.LivingEntityAccessor;
 import tocraft.walkers.mixin.accessor.LivingEntityRendererAccessor;
 
@@ -67,10 +66,8 @@ public abstract class PlayerEntityRendererMixin
 
 		// sync player data to shape
 		if (shape != null) {
-			((LimbAnimatorAccessor) shape.walkAnimation)
-					.setPrevSpeed(((LimbAnimatorAccessor) player.walkAnimation).getPrevSpeed());
-			shape.walkAnimation.setSpeed(player.walkAnimation.speed());
-			((LimbAnimatorAccessor) shape.walkAnimation).setPos(player.walkAnimation.position());
+			shape.animationSpeedOld = player.animationSpeedOld;
+			shape.animationSpeed = player.animationSpeed;
 			shape.swinging = player.swinging;
 			shape.swingTime = player.swingTime;
 			shape.oAttackAnim = player.oAttackAnim;

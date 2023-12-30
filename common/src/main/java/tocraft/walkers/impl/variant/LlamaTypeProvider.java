@@ -2,6 +2,7 @@ package tocraft.walkers.impl.variant;
 
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.animal.horse.Llama;
 import net.minecraft.world.level.Level;
@@ -11,13 +12,13 @@ public class LlamaTypeProvider extends TypeProvider<Llama> {
 
     @Override
     public int getVariantData(Llama llama) {
-        return llama.getVariant().getId();
+        return llama.getVariant();
     }
 
     @Override
     public Llama create(EntityType<Llama> type, Level world, int data) {
     	Llama llama = new Llama(type, world);
-    	llama.setVariant(Llama.Variant.byId(data));
+    	llama.setVariant(data);
         return llama;
     }
 
@@ -33,6 +34,6 @@ public class LlamaTypeProvider extends TypeProvider<Llama> {
 
 	@Override
 	public Component modifyText(Llama entity, MutableComponent text) {
-		return Component.literal(entity.getVariant().getSerializedName() + " ").append(text);
+		return new TextComponent(entity.getVariant() + " ").append(text);
 	}
 }

@@ -19,7 +19,7 @@ public class LlamaAbility <T extends Llama> extends ShapeAbility<T> {
         spit.setOwner(player);
         Vec3 rotation = player.getLookAngle();
         spit.shoot(rotation.x, rotation.y, rotation.z, 1.5F, 10.0F);
-        spit.syncPacketPositionCodec(player.getX(), player.getEyeY(), player.getZ());
+        spit.lerpMotion(player.getX(), player.getEyeY(), player.getZ());
         spit.absMoveTo(player.getX(), player.getEyeY(), player.getZ());
 
         // Play SFX

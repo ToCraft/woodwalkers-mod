@@ -1,21 +1,5 @@
 package tocraft.walkers.mixin;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
-import net.minecraft.core.BlockPos;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.sounds.SoundEvent;
-import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.entity.*;
-import net.minecraft.world.entity.animal.IronGolem;
-import net.minecraft.world.entity.monster.Ravager;
-import net.minecraft.world.entity.monster.warden.Warden;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.vehicle.Boat;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.enchantment.EnchantmentHelper;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.biome.Biome;
 import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -24,9 +8,36 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityDimensions;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.Pose;
+import net.minecraft.world.entity.TamableAnimal;
+import net.minecraft.world.entity.animal.IronGolem;
+import net.minecraft.world.entity.monster.Ravager;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.vehicle.Boat;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.biome.Biome;
 import tocraft.walkers.Walkers;
 import tocraft.walkers.api.PlayerShape;
-import tocraft.walkers.mixin.accessor.*;
+import tocraft.walkers.mixin.accessor.EntityAccessor;
+import tocraft.walkers.mixin.accessor.IronGolemEntityAccessor;
+import tocraft.walkers.mixin.accessor.LivingEntityAccessor;
+import tocraft.walkers.mixin.accessor.MobEntityAccessor;
+import tocraft.walkers.mixin.accessor.RavagerEntityAccessor;
 import tocraft.walkers.registry.WalkersEntityTags;
 
 @Mixin(Player.class)
@@ -86,7 +97,7 @@ public abstract class PlayerEntityMixin extends LivingEntityMixin {
 					// Air has run out, start drowning
 					if (this.getAirSupply() == -20) {
 						this.setAirSupply(0);
-						this.hurt(damageSources().fall(), 2.0F);
+						this.hurt(DamageSource.FALL, 2.0F);
 					}
 				} else {
 					this.setAirSupply(air + 1);
@@ -191,10 +202,6 @@ public abstract class PlayerEntityMixin extends LivingEntityMixin {
 			((IronGolemEntityAccessor) golem).setAttackTicksLeft(10);
 		}
 
-		if (shape instanceof Warden warden) {
-			warden.attackAnimationState.start(tickCount);
-		}
-
 		if (shape instanceof Ravager ravager) {
 			((RavagerEntityAccessor) ravager).setAttackTick(10);
 		}
@@ -220,21 +227,6 @@ public abstract class PlayerEntityMixin extends LivingEntityMixin {
 			RavagerEntityAccessor accessor = (RavagerEntityAccessor) ravager;
 			if (accessor.getAttackTick() > 0) {
 				accessor.setAttackTick(accessor.getAttackTick() - 1);
-			}
-		}
-	}
-
-	@Inject(method = "tick", at = @At("HEAD"))
-	private void tickWardenSneakingAnimation(CallbackInfo ci) {
-		LivingEntity shape = PlayerShape.getCurrentShape((Player) (Object) this);
-
-		if (shape instanceof Warden warden) {
-			if (isShiftKeyDown()) {
-				if (!warden.sniffAnimationState.isStarted()) {
-					warden.sniffAnimationState.start(tickCount);
-				}
-			} else {
-				warden.sniffAnimationState.stop();
 			}
 		}
 	}
@@ -288,8 +280,8 @@ public abstract class PlayerEntityMixin extends LivingEntityMixin {
 	@Unique
 	private boolean walkers$isInDaylight() {
 		if (level.isDay() && !level.isClientSide) {
-			float brightnessAtEyes = getLightLevelDependentMagicValue();
-			BlockPos daylightTestPosition = BlockPos.containing(getX(), (double) Math.round(getY()), getZ());
+			float brightnessAtEyes = getBrightness();
+			BlockPos daylightTestPosition = new BlockPos(getX(), (double) Math.round(getY()), getZ());
 
 			// move test position up one block for boats
 			if (getVehicle() instanceof Boat) {
@@ -318,7 +310,7 @@ public abstract class PlayerEntityMixin extends LivingEntityMixin {
 				if (type.is(WalkersEntityTags.HURT_BY_HIGH_TEMPERATURE)) {
 					Biome biome = level.getBiome(blockPosition()).value();
 					if (!biome.coldEnoughToSnow(blockPosition())) {
-						player.hurt(level.damageSources().onFire(), 1.0f);
+						player.hurt(DamageSource.ON_FIRE, 1.0f);
 					}
 				}
 			}

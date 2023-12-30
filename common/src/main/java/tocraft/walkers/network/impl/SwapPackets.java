@@ -1,11 +1,12 @@
 package tocraft.walkers.network.impl;
 
+import org.jetbrains.annotations.Nullable;
+
 import io.netty.buffer.Unpooled;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.LivingEntity;
-import org.jetbrains.annotations.Nullable;
 import tocraft.craftedcore.network.NetworkManager;
 import tocraft.walkers.Walkers;
 import tocraft.walkers.api.PlayerShape;
@@ -21,10 +22,10 @@ public class SwapPackets {
 				(buf, context) -> context.getPlayer().getServer().execute(() -> {
 			// check if player is blacklisted
 			if (Walkers.CONFIG.playerUUIDBlacklist.contains(context.getPlayer().getUUID())) {
-				context.getPlayer().displayClientMessage(Component.translatable("walkers.player_blacklisted"), true);
+				context.getPlayer().displayClientMessage(new TranslatableComponent("walkers.player_blacklisted"), true);
 				return;
 			}
-
+			
 			// make the default ShapeType null, doing it this way, it's ensured that invalid 2ndShapes won't cause crashes.
 			@Nullable
 			ShapeType<LivingEntity> type = null;
@@ -32,7 +33,7 @@ public class SwapPackets {
 			if (PlayerShape.getCurrentShape(context.getPlayer()) == null) {
 				type = (@Nullable ShapeType<LivingEntity>) ((PlayerDataProvider) context.getPlayer()).walkers$get2ndShape();
 			}
-
+			
 			// Swap to other Shape
 			if (type != null) {
 				// update Player

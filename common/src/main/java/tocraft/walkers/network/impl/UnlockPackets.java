@@ -1,7 +1,7 @@
 package tocraft.walkers.network.impl;
 
 import io.netty.buffer.Unpooled;
-import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
@@ -48,7 +48,7 @@ public class UnlockPackets {
 			boolean validType = buf.readBoolean();
 			if (validType) {
 				ResourceLocation typeId = buf.readResourceLocation();
-				EntityType<? extends LivingEntity> entityType = (EntityType<? extends LivingEntity>) BuiltInRegistries.ENTITY_TYPE.get(typeId);
+				EntityType<? extends LivingEntity> entityType = (EntityType<? extends LivingEntity>) Registry.ENTITY_TYPE.get(typeId);
 				
 				int variant = buf.readInt();
 
@@ -104,7 +104,7 @@ public class UnlockPackets {
 
 		packet.writeBoolean(type != null);
 		if (type != null) {
-			packet.writeResourceLocation(BuiltInRegistries.ENTITY_TYPE.getKey(type.getEntityType()));
+			packet.writeResourceLocation(Registry.ENTITY_TYPE.getKey(type.getEntityType()));
 			packet.writeInt(type.getVariantData());
 		}
 

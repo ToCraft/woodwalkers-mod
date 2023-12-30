@@ -1,5 +1,5 @@
 modLoader = "javafml"
-loaderVersion = "[45,)"
+loaderVersion = "[40,)"
 #issueTrackerURL = ""
 license = "MIT"
 
@@ -16,14 +16,14 @@ Become a Woodwalker/animagus!
 [[dependencies.walkers]]
 modId = "forge"
 mandatory = true
-versionRange = "[45,)"
+versionRange = "[40,)"
 ordering = "NONE"
 side = "BOTH"
 
 [[dependencies.walkers]]
 modId = "minecraft"
 mandatory = true
-versionRange = "[1.19.4,)"
+versionRange = "[1.18.2,)"
 ordering = "NONE"
 side = "BOTH"
 

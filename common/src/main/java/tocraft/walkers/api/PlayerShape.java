@@ -1,7 +1,7 @@
 package tocraft.walkers.api;
 
 import io.netty.buffer.Unpooled;
-import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
@@ -57,7 +57,7 @@ public class PlayerShape {
 
         // put entity type ID under the key "id", or "minecraft:empty" if no shape is equipped (or the shape entity type is invalid)
         packet.writeUUID(changed.getUUID());
-        packet.writeUtf(shape == null ? "minecraft:empty" : BuiltInRegistries.ENTITY_TYPE.getKey(shape.getType()).toString());
+        packet.writeUtf(shape == null ? "minecraft:empty" : Registry.ENTITY_TYPE.getKey(shape.getType()).toString());
         packet.writeNbt(entityTag);
         NetworkManager.sendToPlayer(packetTarget, NetworkHandler.SHAPE_SYNC, packet);
     }

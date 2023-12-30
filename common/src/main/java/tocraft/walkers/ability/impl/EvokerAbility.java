@@ -52,34 +52,34 @@ public class EvokerAbility extends ShapeAbility<Evoker> {
                 // For each position, we go up or down at most -+1 block per iteration.
                 // If we cannot go up or down 1 block (or stay at the same level), the chain ends.
 
-                // If the block underneath is solid, we are good to go.
-                EvokerFangs fangs = new EvokerFangs(world, origin.x(), origin.y(), origin.z(), player.getYRot(), blockOut * 2, player);
-                BlockPos underneathPosition = BlockPos.containing(origin).below();
-                BlockState underneath = world.getBlockState(underneathPosition);
-                if(underneath.isFaceSturdy(world, underneathPosition, Direction.UP) && world.isEmptyBlock(underneathPosition.above())) {
-                    world.addFreshEntity(fangs);
-                    continue;
-                }
+            // If the block underneath is solid, we are good to go.
+            EvokerFangs fangs = new EvokerFangs(world, origin.x(), origin.y(), origin.z(), player.getYRot(), blockOut * 2, player);
+            BlockPos underneathPosition = new BlockPos(origin).below();
+            BlockState underneath = world.getBlockState(underneathPosition);
+            if(underneath.isFaceSturdy(world, underneathPosition, Direction.UP) && world.isEmptyBlock(underneathPosition.above())) {
+                world.addFreshEntity(fangs);
+                continue;
+            }
 
-                // Check underneath (2x down) again...
-                BlockPos underneath2Position = BlockPos.containing(origin).below(2);
-                BlockState underneath2 = world.getBlockState(underneath2Position);
-                if(underneath2.isFaceSturdy(world, underneath2Position, Direction.UP) && world.isEmptyBlock(underneath2Position.above())) {
-                    fangs.setPosRaw(fangs.getX(), fangs.getY() - 1, fangs.getZ());
-                    world.addFreshEntity(fangs);
-                    origin = origin.add(0, -1, 0);
-                    continue;
-                }
+            // Check underneath (2x down) again...
+            BlockPos underneath2Position = new BlockPos(origin).below(2);
+            BlockState underneath2 = world.getBlockState(underneath2Position);
+            if(underneath2.isFaceSturdy(world, underneath2Position, Direction.UP) && world.isEmptyBlock(underneath2Position.above())) {
+                fangs.setPosRaw(fangs.getX(), fangs.getY() - 1, fangs.getZ());
+                world.addFreshEntity(fangs);
+                origin = origin.add(0, -1, 0);
+                continue;
+            }
 
-                // Check above (1x up)
-                BlockPos upPosition = BlockPos.containing(origin).above();
-                BlockState up = world.getBlockState(underneath2Position);
-                if(up.isFaceSturdy(world, upPosition, Direction.UP) && world.isEmptyBlock(upPosition)) {
-                    fangs.setPosRaw(fangs.getX(), fangs.getY() + 1, fangs.getZ());
-                    world.addFreshEntity(fangs);
-                    origin = origin.add(0, 1, 0);
-                    continue;
-                }
+            // Check above (1x up)
+            BlockPos upPosition = new BlockPos(origin).above();
+            BlockState up = world.getBlockState(underneath2Position);
+            if(up.isFaceSturdy(world, upPosition, Direction.UP) && world.isEmptyBlock(upPosition)) {
+                fangs.setPosRaw(fangs.getX(), fangs.getY() + 1, fangs.getZ());
+                world.addFreshEntity(fangs);
+                origin = origin.add(0, 1, 0);
+                continue;
+            }
 
                 break;
             }

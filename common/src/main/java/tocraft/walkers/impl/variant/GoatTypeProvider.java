@@ -2,6 +2,7 @@ package tocraft.walkers.impl.variant;
 
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.animal.goat.Goat;
 import net.minecraft.world.level.Level;
@@ -33,7 +34,7 @@ public class GoatTypeProvider extends TypeProvider<Goat> {
 
     @Override
     public Component modifyText(Goat entity, MutableComponent text) {
-        if(entity.isScreamingGoat()) return Component.literal("Screaming ").append(text);
+        if(entity.isScreamingGoat()) return new TextComponent("Screaming ").append(text);
         else return text;
     }
 }

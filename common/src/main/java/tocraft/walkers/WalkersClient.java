@@ -1,6 +1,8 @@
 package tocraft.walkers;
 
 import com.mojang.blaze3d.platform.InputConstants;
+import com.mojang.util.UUIDTypeAdapter;
+
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 
@@ -28,7 +30,7 @@ public class WalkersClient {
 		KeyMappingRegistry.register(ABILITY_KEY);
 		KeyMappingRegistry.register(TRANSFORM_KEY);
 		KeyMappingRegistry.register(UNLOCK_KEY);
-		if (Walkers.hasSpecialShape(Minecraft.getInstance().getUser().getProfileId()))
+		if (Walkers.hasSpecialShape(UUIDTypeAdapter.fromString(Minecraft.getInstance().getUser().getUuid())))
 			KeyMappingRegistry.register(SPECIAL_TRANSFORM_KEY);
 
 		// Register client-side event handlers

@@ -9,7 +9,6 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
-import tocraft.walkers.Walkers;
 import tocraft.walkers.impl.NearbySongAccessor;
 import tocraft.walkers.mixin.accessor.CreeperEntityAccessor;
 import tocraft.walkers.mixin.accessor.ParrotEntityAccessor;
@@ -141,7 +140,6 @@ public class EntityUpdaters {
 			 * squid.getRotationClient() == new Vec2f(0F, 0F)) { squid.tickMovement(); }
 			 * else
 			 */
-			Walkers.LOGGER.warn("pitch: " + squid.getXRot() + ". yaw: " + squid.getVisualRotationYInDegrees());
 		});
 	}
 }

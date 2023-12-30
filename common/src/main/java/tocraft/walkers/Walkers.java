@@ -10,8 +10,8 @@ import org.slf4j.LoggerFactory;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.AdvancementProgress;
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.network.chat.Component;
+import net.minecraft.core.Registry;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -38,7 +38,7 @@ public class Walkers {
 
 	public static final Logger LOGGER = LoggerFactory.getLogger(Walkers.class);
 	public static final String MODID = "walkers";
-	public static String VERSION_URL = "https://raw.githubusercontent.com/ToCraft/woodwalkers-mod/1.19.4/gradle.properties";
+	public static String VERSION_URL = "https://raw.githubusercontent.com/ToCraft/woodwalkers-mod/1.18.2/gradle.properties";
 	public static final WalkersConfig CONFIG = ConfigLoader.read(MODID, WalkersConfig.class);
 	public static boolean foundPotionAbilities = false;
 	public static List<UUID> devs = new ArrayList<>();
@@ -54,6 +54,7 @@ public class Walkers {
 				foundPotionAbilities = true;
 		});
 		
+		WalkersEntityTags.init();
 		AbilityRegistry.init();
 		WalkersEventHandlers.initialize();
 		WalkersCommand.register();
@@ -64,7 +65,7 @@ public class Walkers {
 	}
 
 	public static void registerJoinSyncPacket() {
-		VersionChecker.registerChecker(MODID, VERSION_URL, Component.translatable("key.categories.walkers"));
+		VersionChecker.registerChecker(MODID, VERSION_URL, new TranslatableComponent("key.categories.walkers"));
 		
 		PlayerEvents.PLAYER_JOIN.register(player -> {
 			Int2ObjectMap<Object> trackers = ((ThreadedAnvilChunkStorageAccessor) ((ServerLevel) player.level)
@@ -115,7 +116,7 @@ public class Walkers {
 	}
 
 	public static int getCooldown(EntityType<?> type) {
-		String id = BuiltInRegistries.ENTITY_TYPE.getKey(type).toString();
+		String id = Registry.ENTITY_TYPE.getKey(type).toString();
 		return Walkers.CONFIG.abilityCooldownMap.getOrDefault(id, 20);
 	}
 	

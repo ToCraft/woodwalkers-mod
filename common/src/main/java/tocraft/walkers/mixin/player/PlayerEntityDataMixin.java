@@ -1,7 +1,7 @@
 package tocraft.walkers.mixin.player;
 
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
-import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -111,7 +111,7 @@ public abstract class PlayerEntityDataMixin extends LivingEntity implements Play
 		// put entity type ID under the key "id", or "minecraft:empty" if no shape is
 		// equipped (or the shape entity type is invalid)
 		tag.putString("id",
-				walkers$shape == null ? "minecraft:empty" : BuiltInRegistries.ENTITY_TYPE.getKey(walkers$shape.getType()).toString());
+				walkers$shape == null ? "minecraft:empty" : Registry.ENTITY_TYPE.getKey(walkers$shape.getType()).toString());
 		tag.put("EntityData", entityTag);
 		return tag;
 	}

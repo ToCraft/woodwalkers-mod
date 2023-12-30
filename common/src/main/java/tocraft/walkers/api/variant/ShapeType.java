@@ -1,8 +1,17 @@
 package tocraft.walkers.api.variant;
 
-import net.minecraft.core.registries.BuiltInRegistries;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+
+import org.jetbrains.annotations.Nullable;
+
+import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -70,11 +79,11 @@ public class ShapeType<T extends LivingEntity> {
 	@Nullable
 	public static ShapeType<?> from(CompoundTag compound) {
 		ResourceLocation id = new ResourceLocation(compound.getString("EntityID"));
-		if (!BuiltInRegistries.ENTITY_TYPE.containsKey(id)) {
+		if (!Registry.ENTITY_TYPE.containsKey(id)) {
 			return null;
 		}
 
-		return new ShapeType(BuiltInRegistries.ENTITY_TYPE.get(id),
+		return new ShapeType(Registry.ENTITY_TYPE.get(id),
 				compound.contains("Variant") ? compound.getInt("Variant") : -1);
 	}
 
@@ -92,7 +101,7 @@ public class ShapeType<T extends LivingEntity> {
 	
 	public static List<ShapeType<?>> getAllTypes(Level world) {
         if(LIVING_TYPE_CASH.isEmpty()) {
-            for (EntityType<?> type : BuiltInRegistries.ENTITY_TYPE) {
+            for (EntityType<?> type : Registry.ENTITY_TYPE) {
                 Entity instance = type.create(world);
                 if(instance instanceof LivingEntity) {
                     LIVING_TYPE_CASH.add((EntityType<? extends LivingEntity>) type);
@@ -121,7 +130,7 @@ public class ShapeType<T extends LivingEntity> {
 
 	public CompoundTag writeCompound() {
 		CompoundTag compound = new CompoundTag();
-		compound.putString("EntityID", BuiltInRegistries.ENTITY_TYPE.getKey(type).toString());
+		compound.putString("EntityID", Registry.ENTITY_TYPE.getKey(type).toString());
 		compound.putInt("Variant", variantData);
 		return compound;
 	}
@@ -170,9 +179,9 @@ public class ShapeType<T extends LivingEntity> {
 	public Component createTooltipText(T entity) {
 		TypeProvider<T> provider = TypeProviderRegistry.getProvider(type);
 		if (provider != null) {
-			return provider.modifyText(entity, Component.translatable(type.getDescriptionId()));
+			return provider.modifyText(entity, new TranslatableComponent(type.getDescriptionId()));
 		}
 
-		return Component.translatable(type.getDescriptionId());
+		return new TranslatableComponent(type.getDescriptionId());
 	}
 }

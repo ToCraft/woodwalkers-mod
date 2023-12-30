@@ -1,9 +1,14 @@
 package tocraft.walkers.impl.variant;
 
+import java.util.Map;
+
 import com.google.common.collect.ImmutableMap;
-import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.Registry;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.animal.Cat;
 import net.minecraft.world.level.Level;
@@ -30,13 +35,13 @@ public class CatTypeProvider extends TypeProvider<Cat> {
 
     @Override
     public int getVariantData(Cat entity) {
-        return BuiltInRegistries.CAT_VARIANT.getId(entity.getVariant());
+        return entity.getCatType();
     }
 
     @Override
     public Cat create(EntityType<Cat> type, Level world, int data) {
         Cat cat = new Cat(type, world);
-        cat.setVariant(BuiltInRegistries.CAT_VARIANT.byId(data));
+        cat.setCatType(data);
         return cat;
     }
 
@@ -53,6 +58,6 @@ public class CatTypeProvider extends TypeProvider<Cat> {
     @Override
     public Component modifyText(Cat cat, MutableComponent text) {
         int variant = getVariantData(cat);
-        return Component.literal(PREFIX_BY_ID.containsKey(variant) ? PREFIX_BY_ID.get(variant) + " " : "").append(text);
+        return new TextComponent(PREFIX_BY_ID.containsKey(variant) ? PREFIX_BY_ID.get(variant) + " " : "").append(text);
     }
 }

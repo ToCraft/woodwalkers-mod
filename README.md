@@ -1,7 +1,7 @@
-[![Build-1.20.2](https://github.com/ToCraft/woodwalkers-mod/actions/workflows/gradle-1.20.2.yml/badge.svg)](https://github.com/ToCraft/woodwalkers-mod/actions/workflows/gradle-1.20.2.yml)
-![Maven metadata URL](https://img.shields.io/maven-metadata/v?metadataUrl=https%3A%2F%2Ftocraft.ddns.net%2Fmaven%2Freleases%2Fdev%2Ftocraft%2Fwalkers%2Fmaven-metadata.xml&versionPrefix=1.20.2-common&label=Woodwalkers)
-![Maven metadata URL](https://img.shields.io/maven-metadata/v?metadataUrl=https%3A%2F%2Ftocraft.ddns.net%2Fmaven%2Freleases%2Fdev%2Ftocraft%2Fwalkers%2Fmaven-metadata.xml&versionPrefix=1.20.2-forge&label=Woodwalkers)
-![Maven metadata URL](https://img.shields.io/maven-metadata/v?metadataUrl=https%3A%2F%2Ftocraft.ddns.net%2Fmaven%2Freleases%2Fdev%2Ftocraft%2Fwalkers%2Fmaven-metadata.xml&versionPrefix=1.20.2-fabric&label=Woodwalkers)
+[![Build-1.18.2](https://github.com/ToCraft/woodwalkers-mod/actions/workflows/gradle-1.18.2.yml/badge.svg)](https://github.com/ToCraft/woodwalkers-mod/actions/workflows/gradle-1.18.2.yml)
+![Maven metadata URL](https://img.shields.io/maven-metadata/v?metadataUrl=https%3A%2F%2Ftocraft.ddns.net%2Fmaven%2Freleases%2Fdev%2Ftocraft%2Fwalkers%2Fmaven-metadata.xml&versionPrefix=1.18.2-common&label=Woodwalkers)
+![Maven metadata URL](https://img.shields.io/maven-metadata/v?metadataUrl=https%3A%2F%2Ftocraft.ddns.net%2Fmaven%2Freleases%2Fdev%2Ftocraft%2Fwalkers%2Fmaven-metadata.xml&versionPrefix=1.18.2-forge&label=Woodwalkers)
+![Maven metadata URL](https://img.shields.io/maven-metadata/v?metadataUrl=https%3A%2F%2Ftocraft.ddns.net%2Fmaven%2Freleases%2Fdev%2Ftocraft%2Fwalkers%2Fmaven-metadata.xml&versionPrefix=1.18.2-fabric&label=Woodwalkers)
 
 # Woodwalkers
 
@@ -32,11 +32,11 @@ Walk over lava as a strider, discovery the caves as a bat or let your foes base 
 
 Even your hearts and your size will be changed to the one of the mob and your nametag will stop rendering, so no one could tell which one is the mob and which one is the player! Trick your friends!
 
-![](https://raw.githubusercontent.com/ToCraft/woodwalkers-mod/arch-1.20.1/assets/every_mob_is_possible.png)
+![](https://raw.githubusercontent.com/ToCraft/woodwalkers-mod/arch-1.18.2/assets/every_mob_is_possible.png)
 
-![](https://raw.githubusercontent.com/ToCraft/woodwalkers-mod/arch-1.20.1/assets/use_abilities.png)
+![](https://raw.githubusercontent.com/ToCraft/woodwalkers-mod/arch-1.18.2/assets/use_abilities.png)
 
-![](https://raw.githubusercontent.com/ToCraft/woodwalkers-mod/arch-1.20.1/assets/hide_everywhere_dont_die_with_less_lives.png)
+![](https://raw.githubusercontent.com/ToCraft/woodwalkers-mod/arch-1.18.2/assets/hide_everywhere_dont_die_with_less_lives.png)
 
 
 ## Getting Started
@@ -52,7 +52,7 @@ You could donate via Patreon (https://www.patreon.com/tocraft).
 Alternatively, if you want to contribute to this mod, I'm always happy about someone who translates this mod to other languages or tells me about bugs/issues.
 Everyone who helps a lot with dev-work will get a new texture as wolf which is enabled by pressing `V` (This key is only visible to Developer and Patreons).
 
-![](https://raw.githubusercontent.com/ToCraft/woodwalkers-mod/arch-1.20.1/assets/dark_dev_wolf_vs_normal_wolf.png)
+![](https://raw.githubusercontent.com/ToCraft/woodwalkers-mod/arch-1.18.2/assets/dark_dev_wolf_vs_normal_wolf.png)
 
 ### License
 
