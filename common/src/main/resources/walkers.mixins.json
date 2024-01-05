@@ -35,7 +35,6 @@
     "accessor.IronGolemEntityAccessor",
     "accessor.LivingEntityAccessor",
     "accessor.MobEntityAccessor",
-    "accessor.MushroomCowEntityAccessor",
     "accessor.ParrotEntityAccessor",
     "accessor.RavagerEntityAccessor",
     "accessor.SlimeEntityAccessor",

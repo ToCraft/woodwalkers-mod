@@ -20,11 +20,8 @@ public class TypeProviderRegistry {
 		VARIANT_BY_TYPE.put(EntityType.TRADER_LLAMA, new LlamaTypeProvider());
 		VARIANT_BY_TYPE.put(EntityType.GOAT, new GoatTypeProvider());
 		VARIANT_BY_TYPE.put(EntityType.MAGMA_CUBE, new MagmaCubeTypeProvider());
-		VARIANT_BY_TYPE.put(EntityType.MOOSHROOM, new MushroomCowTypeProvider());
 		VARIANT_BY_TYPE.put(EntityType.PANDA, new PandaTypeProvider());
 		VARIANT_BY_TYPE.put(EntityType.RABBIT, new RabbitTypeProvider());
-		VARIANT_BY_TYPE.put(EntityType.VILLAGER, new VillagerTypeProvider());
-		VARIANT_BY_TYPE.put(EntityType.ZOMBIE_VILLAGER, new ZombieVillagerTypeProvider());
 	}
 	
 	public static <T extends LivingEntity> void register(EntityType<T> type, TypeProvider<T> provider) {
