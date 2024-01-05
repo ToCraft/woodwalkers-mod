@@ -24,6 +24,7 @@
     "PlayerSwimmingMixin",
     "RavagerEntityMixin",
     "ServerPlayerEntityMixin",
+    "ServerPlayerGameModeMixin",
     "SweetBerryBushBlockMixin",
     "ThreadedAnvilChunkStorageAccessor",
     "TrackTargetGoalMixin",
