@@ -152,7 +152,8 @@ public abstract class PlayerEntityMixin extends LivingEntityMixin {
 	private void tickAmbientSounds(CallbackInfo ci) {
 		LivingEntity shape = PlayerShape.getCurrentShape((Player) (Object) this);
 
-		if (!level.isClientSide && Walkers.CONFIG.playAmbientSounds && shape instanceof Mob mobShape) {
+		if (!level.isClientSide && Walkers.CONFIG.playAmbientSounds && shape instanceof Mob) {
+			Mob mobShape = (Mob) shape;
 
 			if (this.isAlive() && this.random.nextInt(1000) < this.shape_ambientSoundChance++) {
 				// reset sound delay
@@ -200,11 +201,13 @@ public abstract class PlayerEntityMixin extends LivingEntityMixin {
 	protected void shape_tryAttack(Entity target, CallbackInfo ci) {
 		LivingEntity shape = PlayerShape.getCurrentShape((Player) (Object) this);
 
-		if (shape instanceof IronGolem golem) {
+		if (shape instanceof IronGolem) {
+			IronGolem golem = (IronGolem) shape;
 			((IronGolemEntityAccessor) golem).setAttackTicksLeft(10);
 		}
 
-		if (shape instanceof Ravager ravager) {
+		if (shape instanceof Ravager) {
+			Ravager ravager = (Ravager) shape;
 			((RavagerEntityAccessor) ravager).setAttackTick(10);
 		}
 	}
@@ -213,7 +216,8 @@ public abstract class PlayerEntityMixin extends LivingEntityMixin {
 	private void tickGolemAttackTicks(CallbackInfo ci) {
 		LivingEntity shape = PlayerShape.getCurrentShape((Player) (Object) this);
 
-		if (shape instanceof IronGolem golem) {
+		if (shape instanceof IronGolem) {
+			IronGolem golem = (IronGolem) shape;
 			IronGolemEntityAccessor accessor = (IronGolemEntityAccessor) golem;
 			if (accessor.getAttackTicksLeft() > 0) {
 				accessor.setAttackTicksLeft(accessor.getAttackTicksLeft() - 1);
@@ -225,7 +229,8 @@ public abstract class PlayerEntityMixin extends LivingEntityMixin {
 	private void tickRavagerAttackTicks(CallbackInfo ci) {
 		LivingEntity shape = PlayerShape.getCurrentShape((Player) (Object) this);
 
-		if (shape instanceof Ravager ravager) {
+		if (shape instanceof Ravager) {
+			Ravager ravager = (Ravager) shape;
 			RavagerEntityAccessor accessor = (RavagerEntityAccessor) ravager;
 			if (accessor.getAttackTick() > 0) {
 				accessor.setAttackTick(accessor.getAttackTick() - 1);

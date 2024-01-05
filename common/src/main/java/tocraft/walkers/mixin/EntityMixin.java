@@ -46,7 +46,8 @@ public abstract class EntityMixin implements DimensionsRefresher {
 
 	@Inject(method = "getBbWidth", at = @At("HEAD"), cancellable = true)
 	private void getBbWidth(CallbackInfoReturnable<Float> cir) {
-		if ((Object) this instanceof Player player) {
+		if ((Object) this instanceof Player) {
+			Player player = (Player) (Object) this;
 			LivingEntity shape = PlayerShape.getCurrentShape(player);
 
 			if (shape != null) {
@@ -57,7 +58,8 @@ public abstract class EntityMixin implements DimensionsRefresher {
 
 	@Inject(method = "getBbHeight", at = @At("HEAD"), cancellable = true)
 	private void getBbHeight(CallbackInfoReturnable<Float> cir) {
-		if ((Object) this instanceof Player player) {
+		if ((Object) this instanceof Player) {
+			Player player = (Player) (Object) this;
 			LivingEntity shape = PlayerShape.getCurrentShape(player);
 
 			if (shape != null) {
@@ -87,7 +89,8 @@ public abstract class EntityMixin implements DimensionsRefresher {
 
 	@Inject(at = @At("HEAD"), method = "getEyeHeight()F", cancellable = true)
 	public void getEyeHeight(CallbackInfoReturnable<Float> cir) {
-		if ((Entity) (Object) this instanceof Player player) {
+		if ((Entity) (Object) this instanceof Player) {
+			Player player = (Player) (Object) this;
 			LivingEntity shape = PlayerShape.getCurrentShape(player);
 
 			if (shape != null) {
@@ -98,7 +101,8 @@ public abstract class EntityMixin implements DimensionsRefresher {
 
 	@Inject(method = "fireImmune", at = @At("HEAD"), cancellable = true)
 	private void fireImmune(CallbackInfoReturnable<Boolean> cir) {
-		if ((Object) this instanceof Player player) {
+		if ((Object) this instanceof Player) {
+			Player player = (Player) (Object) this;
 			LivingEntity shape = PlayerShape.getCurrentShape(player);
 
 			if (shape != null) {
@@ -109,7 +113,10 @@ public abstract class EntityMixin implements DimensionsRefresher {
 	
 	@Inject(method = "tick", at = @At("HEAD"), cancellable = true)
 	private void goThroughBlocks(CallbackInfo ci) {
-		if ((Object) this instanceof Player player && PlayerShape.getCurrentShape(player) != null && PlayerShape.getCurrentShape(player).getType().is(WalkersEntityTags.FALL_THROUGH_BLOCKS))
+		if ((Object) this instanceof Player) {
+			Player player = (Player) (Object) this;
+					if (PlayerShape.getCurrentShape(player) != null && PlayerShape.getCurrentShape(player).getType().is(WalkersEntityTags.FALL_THROUGH_BLOCKS))
 			player.noPhysics = true;
+		}
 	}
 }

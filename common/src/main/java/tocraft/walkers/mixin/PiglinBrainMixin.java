@@ -21,7 +21,8 @@ public class PiglinBrainMixin {
 	private static void shapeIsWearingGold(LivingEntity livingEntity, CallbackInfoReturnable<Boolean> cir) {
 		boolean wearingGold = cir.getReturnValue();
 		
-		if (!wearingGold && livingEntity instanceof Player player) {
+		if (!wearingGold && livingEntity instanceof Player) {
+			Player player = (Player) livingEntity;
 			LivingEntity shape = PlayerShape.getCurrentShape(player);
 
 			if (shape != null) {

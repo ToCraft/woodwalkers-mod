@@ -29,7 +29,8 @@ public abstract class CreeperEntityMixin extends Monster {
                 this,
                 Player.class,
                 entity -> {
-                    if (entity instanceof Player player) {
+                    if (entity instanceof Player) {
+                        Player player = (Player) entity;
                         LivingEntity shape = PlayerShape.getCurrentShape(player);
                         return shape != null && shape.getType().equals(EntityType.OCELOT);
                     }

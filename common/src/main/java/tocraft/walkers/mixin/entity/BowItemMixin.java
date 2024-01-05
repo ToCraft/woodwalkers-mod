@@ -22,7 +22,8 @@ public class BowItemMixin {
 	private void flameArrows(ItemStack stack, Level level, LivingEntity user, int remainingUseTicks, CallbackInfo ci,
 			Player playerEntity, boolean bl, ItemStack itemStack, int i, float f, boolean bl2, ArrowItem arrowItem,
 			AbstractArrow arrow) {
-		if (user instanceof Player player) {
+		if (user instanceof Player) {
+			Player player = (Player) user;
 			LivingEntity shape = PlayerShape.getCurrentShape(player);
 			if (shape instanceof WitherSkeleton) {
 				arrow.setSecondsOnFire(100);

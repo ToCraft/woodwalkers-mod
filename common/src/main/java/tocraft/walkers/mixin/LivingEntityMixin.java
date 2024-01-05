@@ -47,7 +47,8 @@ public abstract class LivingEntityMixin extends Entity implements NearbySongAcce
 	@Redirect(method = "baseTick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;setAirSupply(I)V", ordinal = 2))
 	private void cancelAirIncrement(LivingEntity livingEntity, int air) {
 		// Aquatic creatures should not regenerate breath on land
-		if ((Object) this instanceof Player player) {
+		if ((Object) this instanceof Player) {
+			Player player = (Player) (Object) this;
 			LivingEntity shape = PlayerShape.getCurrentShape(player);
 
 			if (shape != null) {
@@ -62,7 +63,8 @@ public abstract class LivingEntityMixin extends Entity implements NearbySongAcce
 
 	@Redirect(method = "travel", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;hasEffect(Lnet/minecraft/world/effect/MobEffect;)Z", ordinal = 0))
 	private boolean slowFall(LivingEntity livingEntity, MobEffect effect) {
-		if ((Object) this instanceof Player player) {
+		if ((Object) this instanceof Player) {
+			Player player = (Player) (Object) this;
 			LivingEntity shape = PlayerShape.getCurrentShape(player);
 
 			if (shape != null) {
@@ -77,7 +79,8 @@ public abstract class LivingEntityMixin extends Entity implements NearbySongAcce
 
 	@ModifyVariable(method = "travel", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;hasEffect(Lnet/minecraft/world/effect/MobEffect;)Z", ordinal = 1), ordinal = 0)
 	public float applyWaterCreatureSwimSpeedBoost(float j) {
-		if ((Object) this instanceof Player player) {
+		if ((Object) this instanceof Player) {
+			Player player = (Player) (Object) this;
 			LivingEntity shape = PlayerShape.getCurrentShape(player);
 
 			// Apply 'Dolphin's Grace' status effect benefits if the player's shape is a
@@ -93,7 +96,8 @@ public abstract class LivingEntityMixin extends Entity implements NearbySongAcce
 	@Inject(method = "causeFallDamage", at = @At(value = "HEAD"), cancellable = true)
 	private void causeFallDamage(float fallDistance, float damageMultiplier,
 			CallbackInfoReturnable<Boolean> cir) {
-		if ((Object) this instanceof Player player) {
+		if ((Object) this instanceof Player) {
+			Player player = (Player) (Object) this;
 			LivingEntity shape = PlayerShape.getCurrentShape(player);
 
 			if (shape != null) {
@@ -116,7 +120,8 @@ public abstract class LivingEntityMixin extends Entity implements NearbySongAcce
 
 	@Inject(method = "hasEffect", at = @At("HEAD"), cancellable = true)
 	private void returnHasNightVision(MobEffect effect, CallbackInfoReturnable<Boolean> cir) {
-		if ((Object) this instanceof Player player) {
+		if ((Object) this instanceof Player) {
+			Player player = (Player) (Object) this;
 			if (effect.equals(MobEffects.NIGHT_VISION)) {
 				LivingEntity shape = PlayerShape.getCurrentShape(player);
 
@@ -130,7 +135,8 @@ public abstract class LivingEntityMixin extends Entity implements NearbySongAcce
 
 	@Inject(method = "getEffect", at = @At("HEAD"), cancellable = true)
 	private void returnNightVisionInstance(MobEffect effect, CallbackInfoReturnable<MobEffectInstance> cir) {
-		if ((Object) this instanceof Player player) {
+		if ((Object) this instanceof Player) {
+			Player player = (Player) (Object) this;
 			if (effect.equals(MobEffects.NIGHT_VISION)) {
 				LivingEntity shape = PlayerShape.getCurrentShape(player);
 
@@ -144,7 +150,8 @@ public abstract class LivingEntityMixin extends Entity implements NearbySongAcce
 
 	@Inject(at = @At("HEAD"), method = "getEyeHeight", cancellable = true)
 	public void getEyeHeight(Pose pose, EntityDimensions dimensions, CallbackInfoReturnable<Float> cir) {
-		if ((LivingEntity) (Object) this instanceof Player player) {
+		if ((LivingEntity) (Object) this instanceof Player) {
+			Player player = (Player) (Object) this;
 
 			// this is cursed
 			try {
@@ -160,7 +167,8 @@ public abstract class LivingEntityMixin extends Entity implements NearbySongAcce
 
 	@Inject(method = "isSensitiveToWater", at = @At("HEAD"), cancellable = true)
 	protected void shape_isSensitiveToWater(CallbackInfoReturnable<Boolean> cir) {
-		if ((LivingEntity) (Object) this instanceof Player player) {
+		if ((LivingEntity) (Object) this instanceof Player) {
+			Player player = (Player) (Object) this;
 			LivingEntity entity = PlayerShape.getCurrentShape(player);
 
 			if (entity != null) {
@@ -171,7 +179,8 @@ public abstract class LivingEntityMixin extends Entity implements NearbySongAcce
 
 	@Inject(method = "canBreatheUnderwater", at = @At("HEAD"), cancellable = true)
 	protected void shape_canBreatheUnderwater(CallbackInfoReturnable<Boolean> cir) {
-		if ((LivingEntity) (Object) this instanceof Player player) {
+		if ((LivingEntity) (Object) this instanceof Player) {
+			Player player = (Player) (Object) this;
 			LivingEntity entity = PlayerShape.getCurrentShape(player);
 
 			if (entity != null) {
@@ -187,7 +196,8 @@ public abstract class LivingEntityMixin extends Entity implements NearbySongAcce
 	@Environment(EnvType.CLIENT)
 	@Inject(method = "setRecordPlayingNearby", at = @At("RETURN"))
 	protected void shape_setRecordPlayingNearby(BlockPos songPosition, boolean playing, CallbackInfo ci) {
-		if ((LivingEntity) (Object) this instanceof Player player) {
+		if ((LivingEntity) (Object) this instanceof Player) {
+			Player player = (Player) (Object) this;
 			walkers$nearbySongPlaying = playing;
 		}
 	}
@@ -199,7 +209,8 @@ public abstract class LivingEntityMixin extends Entity implements NearbySongAcce
 
 	@Inject(method = "isInvertedHealAndHarm", at = @At("HEAD"), cancellable = true)
 	protected void shape_isInvertedHealAndHarm(CallbackInfoReturnable<Boolean> cir) {
-		if ((LivingEntity) (Object) this instanceof Player player) {
+		if ((LivingEntity) (Object) this instanceof Player) {
+			Player player = (Player) (Object) this;
 			LivingEntity shape = PlayerShape.getCurrentShape(player);
 
 			if (shape != null) {
@@ -210,7 +221,8 @@ public abstract class LivingEntityMixin extends Entity implements NearbySongAcce
 
 	@Inject(method = "canStandOnFluid", at = @At("HEAD"), cancellable = true)
 	protected void shape_canStandOnFluid(Fluid state, CallbackInfoReturnable<Boolean> cir) {
-		if ((LivingEntity) (Object) this instanceof Player player) {
+		if ((LivingEntity) (Object) this instanceof Player) {
+			Player player = (Player) (Object) this;
 			LivingEntity shape = PlayerShape.getCurrentShape(player);
 
 			if (shape != null && shape.getType().is(WalkersEntityTags.LAVA_WALKING) && state.is(FluidTags.LAVA)) {
@@ -221,7 +233,8 @@ public abstract class LivingEntityMixin extends Entity implements NearbySongAcce
 
 	@Inject(method = "onClimbable", at = @At("HEAD"), cancellable = true)
 	protected void shape_allowSpiderClimbing(CallbackInfoReturnable<Boolean> cir) {
-		if ((LivingEntity) (Object) this instanceof Player player) {
+		if ((LivingEntity) (Object) this instanceof Player) {
+			Player player = (Player) (Object) this;
 			LivingEntity shape = PlayerShape.getCurrentShape(player);
 
 			if (shape instanceof Spider) {

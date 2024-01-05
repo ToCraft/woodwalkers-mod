@@ -175,7 +175,8 @@ public class WalkersCommand {
 			copy.putString("id", id.toString());
 			ServerLevel serverWorld = source.getLevel();
 			Entity loaded = EntityType.loadEntityRecursive(copy, serverWorld, it -> it);
-			if (loaded instanceof LivingEntity living) {
+			if (loaded instanceof LivingEntity) {
+				LivingEntity living = (LivingEntity) loaded;
 				type = new ShapeType<>(living);
 				name = type.createTooltipText(living);
 			}
@@ -210,9 +211,9 @@ public class WalkersCommand {
 			created = entity.create(player.level);
 		}
 
-		if (created instanceof LivingEntity living) {
+		if (created instanceof LivingEntity) {
 			@Nullable
-			ShapeType<?> defaultType = ShapeType.from(living);
+			ShapeType<?> defaultType = ShapeType.from((LivingEntity) created);
 
 			if (defaultType != null) {
 				boolean result = PlayerShape.updateShapes(player, (LivingEntity) created);

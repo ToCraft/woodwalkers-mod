@@ -43,7 +43,8 @@ public abstract class FoxEntityMixin extends Animal {
 		AVOID_PLAYERS = entity -> {
 			boolean isShapedPlayer = false;
 
-			if (entity instanceof Player player) {
+			if (entity instanceof Player) {
+				Player player = (Player) entity;
 				LivingEntity shape = PlayerShape.getCurrentShape(player);
 				if (shape instanceof Fox) {
 					isShapedPlayer = true;

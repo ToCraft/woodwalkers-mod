@@ -24,7 +24,8 @@ public class PiglinBruteBrainMixin {
     @Inject( method = "getTargetIfWithinRange", at = @At("RETURN"), cancellable = true)
     private static void getTargetIfWithinRange(AbstractPiglin piglinBrute, MemoryModuleType<? extends LivingEntity> memoryType, CallbackInfoReturnable<Optional<? extends LivingEntity>> cir) {
 		cir.setReturnValue(piglinBrute.getBrain().getMemory(memoryType).filter((livingEntity) -> {
-			if (livingEntity instanceof Player player) {
+			if (livingEntity instanceof Player) {
+				Player player = (Player) livingEntity;
 				LivingEntity shape = PlayerShape.getCurrentShape(player);
 
 				if (shape != null) {

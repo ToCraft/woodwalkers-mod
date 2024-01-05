@@ -18,7 +18,8 @@ public class PlayerTrackingMixin {
 
     @Inject(method = "addPairing", at = @At("RETURN"))
     private void sendPairingWalkersPackets(ServerPlayer newlyTracked, CallbackInfo ci) {
-        if(this.entity instanceof ServerPlayer player) {
+        if(this.entity instanceof ServerPlayer) {
+            ServerPlayer player = (ServerPlayer) this.entity;
             PlayerShape.sync(newlyTracked, player);
             PlayerShape.sync(player, newlyTracked);
         }

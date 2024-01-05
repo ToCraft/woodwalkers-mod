@@ -28,7 +28,8 @@ public abstract class WitherEntityMixin extends Monster {
 		List<LivingEntity> toRemove = new ArrayList<>();
 
 		list.forEach(entity -> {
-			if (entity instanceof Player player) {
+			if (entity instanceof Player) {
+				Player player = (Player) entity;
 				LivingEntity shape = PlayerShape.getCurrentShape(player);
 
 				// potentially ignore undead walkers players

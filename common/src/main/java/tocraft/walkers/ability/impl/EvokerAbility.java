@@ -23,7 +23,8 @@ public class EvokerAbility extends ShapeAbility<Evoker> {
     @Override
     public void onUse(Player player, Evoker shape, Level world) {
     	// spawn vexes while sneaking
-    	if (player.isCrouching() && world instanceof ServerLevel serverLevel) {
+    	if (player.isCrouching() && world instanceof ServerLevel) {
+            ServerLevel serverLevel = (ServerLevel)world;
     		i = 0;
     		for (Entity entity : serverLevel.getAllEntities()) {
     			if (entity instanceof Vex && player.distanceTo(entity) <= 16)

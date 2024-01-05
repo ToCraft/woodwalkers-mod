@@ -40,7 +40,7 @@ public class WalkersConfig implements Config {
 	public float unlockTimer = 60f;
 	public boolean specialShapeIsThirdShape = false;
 
-	public Map<String, Integer> abilityCooldownMap = new HashMap<>() {
+	public Map<String, Integer> abilityCooldownMap = new HashMap<String, Integer>() {
 		{
 			put("minecraft:blaze", 20);
 			put("minecraft:camel", 40);

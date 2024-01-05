@@ -73,7 +73,8 @@ public class KeyPressHandler implements ClientTickEvents.Client {
 		if (client.player != null && (((PlayerDataProvider) client.player).walkers$get2ndShape() == null || Walkers.CONFIG.unlockOveridesCurrentShape)
 				&& hit instanceof EntityHitResult) {
 			Entity entityHit = ((EntityHitResult) hit).getEntity();
-			if (entityHit instanceof LivingEntity living) {
+			if (entityHit instanceof LivingEntity) {
+				LivingEntity living = (LivingEntity) entityHit;
 				@Nullable
 				ShapeType<?> type = ShapeType.from(living);
 
