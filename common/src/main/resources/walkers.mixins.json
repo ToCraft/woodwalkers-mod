@@ -16,6 +16,7 @@
     "LivingEntityMixin",
     "PiglinBrainMixin",
     "PiglinBruteBrainMixin",
+    "PiglinSensorMixin",
     "PlayerAdvancementTrackerMixin",
     "PlayerByteStatusMixin",
     "PlayerEntityMixin",
