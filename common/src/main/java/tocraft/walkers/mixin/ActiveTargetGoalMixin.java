@@ -6,10 +6,8 @@ import net.minecraft.world.entity.MobType;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.animal.PolarBear;
 import net.minecraft.world.entity.boss.wither.WitherBoss;
-import net.minecraft.world.entity.monster.Creeper;
-import net.minecraft.world.entity.monster.EnderMan;
-import net.minecraft.world.entity.monster.Enemy;
-import net.minecraft.world.entity.monster.Skeleton;
+import net.minecraft.world.entity.monster.*;
+import net.minecraft.world.entity.monster.piglin.AbstractPiglin;
 import net.minecraft.world.entity.player.Player;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -68,9 +66,9 @@ public abstract class ActiveTargetGoalMixin extends TrackTargetGoalMixin {
 						ci.cancel();
 					}
 
-					// hostile mobs (besides wither) should not target players morphed as hostile
+					// hostile mobs (besides wither) should not target players morphed as hostile (though Wither Skeletons should attack Piglins)
 					// mobs
-					else if (!(this.mob instanceof WitherBoss) && shape instanceof Enemy) {
+					else if (!(this.mob instanceof WitherSkeleton && shape instanceof AbstractPiglin) && !(this.mob instanceof WitherBoss) && shape instanceof Enemy) {
 						this.stop();
 						ci.cancel();
 					}
