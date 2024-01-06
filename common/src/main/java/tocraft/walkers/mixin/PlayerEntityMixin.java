@@ -9,6 +9,7 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.animal.Bee;
 import net.minecraft.world.entity.animal.IronGolem;
 import net.minecraft.world.entity.monster.Ravager;
 import net.minecraft.world.entity.monster.WitherSkeleton;
@@ -194,16 +195,20 @@ public abstract class PlayerEntityMixin extends LivingEntityMixin {
 			((IronGolemEntityAccessor) golem).setAttackTicksLeft(10);
 		}
 
-		if (shape instanceof Warden warden) {
+		else if (shape instanceof Warden warden) {
 			warden.attackAnimationState.start(tickCount);
 		}
 
-		if (shape instanceof Ravager ravager) {
+		else if (shape instanceof Ravager ravager) {
 			((RavagerEntityAccessor) ravager).setAttackTick(10);
 		}
 
-		if (shape instanceof WitherSkeleton && target instanceof LivingEntity livingTarget) {
+		else if (shape instanceof WitherSkeleton && target instanceof LivingEntity livingTarget) {
 			livingTarget.addEffect(new MobEffectInstance(MobEffects.WITHER, 200), this);
+		}
+
+		else if (shape instanceof Bee bee && bee.isAngry() && target instanceof LivingEntity livingTarget) {
+			livingTarget.addEffect(new MobEffectInstance(MobEffects.POISON, 200), this);
 		}
 	}
 
