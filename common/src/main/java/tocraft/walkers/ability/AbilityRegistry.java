@@ -2,6 +2,7 @@ package tocraft.walkers.ability;
 
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.animal.horse.Horse;
 import tocraft.walkers.ability.impl.*;
 
 import java.util.HashMap;
@@ -38,6 +39,8 @@ public class AbilityRegistry {
         register(EntityType.MOOSHROOM, new MushroomCowAbility());
         register(EntityType.CAMEL, new HorseAbility<>());
         register(EntityType.HORSE, new HorseAbility<>());
+        register(EntityType.MULE, new HorseAbility<>());
+        register(EntityType.DONKEY, new HorseAbility<>());
         register(EntityType.SKELETON_HORSE, new HorseAbility<>());
         register(EntityType.ZOMBIE_HORSE, new HorseAbility<>());
         register(EntityType.BEE, new BeeAbility());
