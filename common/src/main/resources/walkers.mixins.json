@@ -6,6 +6,7 @@
   "mixins": [
     "AbstractSkeletonEntityMixin",
     "ActiveTargetGoalMixin",
+    "AxolotlAttackablesSensorMixin",
     "CreeperEntityMixin",
     "EntityMixin",
     "EntityTrackerAccessor",
