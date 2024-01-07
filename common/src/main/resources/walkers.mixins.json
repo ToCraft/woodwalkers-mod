@@ -24,6 +24,7 @@
     "PlayerManagerMixin",
     "PlayerSonicBoomMixin",
     "PlayerSwimmingMixin",
+    "RabbitAvoidEntityGoalMixin",
     "RavagerEntityMixin",
     "ServerPlayerEntityMixin",
     "ServerPlayerGameModeMixin",

@@ -5,8 +5,7 @@ plugins {
 }
 
 loom {
-    neoForge {
-    }
+    accessWidenerPath = project(":common").loom.accessWidenerPath
 }
 
 architectury {
@@ -49,6 +48,7 @@ remapJar {
     input.set shadowJar.archiveFile
     dependsOn shadowJar
     archiveClassifier.set("neoforge")
+    atAccessWideners.add "architectury.accessWidener"
 }
 
 jar {
