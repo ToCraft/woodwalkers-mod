@@ -15,6 +15,7 @@
     "LimbAnimatorAccessor",
     "LivingEntityFoodMixin",
     "LivingEntityMixin",
+    "LookAtPlayerGoalMixin",
     "PiglinBrainMixin",
     "PiglinBruteBrainMixin",
     "PiglinSensorMixin",
