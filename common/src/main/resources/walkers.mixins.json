@@ -24,6 +24,7 @@
     "PlayerManagerMixin",
     "PlayerSonicBoomMixin",
     "PlayerSwimmingMixin",
+    "PolarBearAttackPlayersGoalMixin",
     "RabbitAvoidEntityGoalMixin",
     "RavagerEntityMixin",
     "ServerPlayerEntityMixin",
