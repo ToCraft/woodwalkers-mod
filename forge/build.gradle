@@ -8,10 +8,10 @@ loom {
     accessWidenerPath = project(":common").loom.accessWidenerPath
 
     forge {
-        mixinConfigs = [ "walkers-forge.mixins.json", "walkers.mixins.json" ]
-
         convertAccessWideners = true
         extraAccessWideners.add loom.accessWidenerPath.get().asFile.name
+
+        mixinConfigs = [ "walkers-forge.mixins.json", "walkers.mixins.json" ]
     }
 }
 
@@ -46,8 +46,10 @@ processResources {
 
 shadowJar {
     exclude "fabric.mod.json"
+    exclude "architectury.common.json"
+    
     configurations = [project.configurations.shadowCommon]
-    archiveClassifier.set("dev-shadow")
+    archiveClassifier.set("forge-dev-shadow")
 }
 
 remapJar {
@@ -57,19 +59,13 @@ remapJar {
 }
 
 jar {
-    archiveClassifier.set("dev")
+    archiveClassifier.set("forge-dev")
 }
 
 sourcesJar {
-    afterEvaluate {
-        [":common"].forEach {
-            def depSources = project(it).sourcesJar
-            dependsOn depSources
-            from(depSources.archiveFile.map { zipTree(it) }) {
-                exclude "architectury.accessWidener"
-            }
-        }
-    }
+    def commonSources = project(":common").sourcesJar
+    dependsOn commonSources
+    from commonSources.archiveFile.map { zipTree(it) }
 }
 
 components.java {

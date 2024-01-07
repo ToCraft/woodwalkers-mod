@@ -42,8 +42,10 @@ processResources {
 }
 
 shadowJar {
+    exclude "architectury.common.json"
+
     configurations = [project.configurations.shadowCommon]
-    archiveClassifier.set("dev-shadow")
+    archiveClassifier.set("fabric-dev-shadow")
 }
 
 remapJar {
@@ -54,19 +56,13 @@ remapJar {
 }
 
 jar {
-    archiveClassifier.set("dev")
+    archiveClassifier.set("fabric-dev")
 }
 
 sourcesJar {
-    afterEvaluate {
-        [":common"].forEach {
-            def depSources = project(it).sourcesJar
-            dependsOn depSources
-            from(depSources.archiveFile.map { zipTree(it) }) {
-                exclude "walkers.accessWidener"
-            }
-        }
-    }
+    def commonSources = project(":common").sourcesJar
+    dependsOn commonSources
+    from commonSources.archiveFile.map { zipTree(it) }
 }
 
 components.java {

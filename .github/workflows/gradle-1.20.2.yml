@@ -31,4 +31,16 @@ jobs:
     - name: Build with Gradle
       uses: gradle/gradle-build-action@bd5760595778326ba7f1441bcf7e88b49de61a25 # v2.6.0
       with:
-        arguments: build
+        arguments: check build publishToMavenLocal --stacktrace --parallel
+    - uses: actions/upload-artifact@v3
+      with:
+        name: Fabric
+        path: fabric/build/libs/
+    - uses: actions/upload-artifact@v3
+      with:
+        name: Forge
+        path: forge/build/libs/
+    - uses: actions/upload-artifact@v3
+      with:
+        name: Neoforge
+        path: neoforge/build/libs/
