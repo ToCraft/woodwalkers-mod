@@ -6,6 +6,7 @@
   "mixins": [
     "AbstractSkeletonEntityMixin",
     "ActiveTargetGoalMixin",
+    "AvoidEntityGoalMixin",
     "AxolotlAttackablesSensorMixin",
     "CreeperEntityMixin",
     "EntityMixin",
@@ -26,7 +27,6 @@
     "PlayerSonicBoomMixin",
     "PlayerSwimmingMixin",
     "PolarBearAttackPlayersGoalMixin",
-    "RabbitAvoidEntityGoalMixin",
     "RavagerEntityMixin",
     "ServerPlayerEntityMixin",
     "ServerPlayerGameModeMixin",
