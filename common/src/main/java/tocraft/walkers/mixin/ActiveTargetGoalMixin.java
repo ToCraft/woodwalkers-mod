@@ -4,6 +4,8 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.MobType;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
+import net.minecraft.world.entity.animal.Cat;
+import net.minecraft.world.entity.animal.Ocelot;
 import net.minecraft.world.entity.animal.PolarBear;
 import net.minecraft.world.entity.boss.wither.WitherBoss;
 import net.minecraft.world.entity.monster.*;
@@ -37,7 +39,7 @@ public abstract class ActiveTargetGoalMixin extends TrackTargetGoalMixin {
 				// only cancel if the player does not have hostility
 				if (!hasHostility) {
 					// creepers should ignore cats
-					if (this.mob instanceof Creeper && shape.getType().equals(EntityType.OCELOT)) {
+					if (this.mob instanceof Creeper && (shape instanceof Ocelot || shape instanceof Cat)) {
 						this.stop();
 						ci.cancel();
 					}
