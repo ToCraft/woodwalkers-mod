@@ -90,34 +90,39 @@ public class ShapeType<T extends LivingEntity> {
 		return new ShapeType<>((EntityType<Z>) entityType, variant);
 	}
 	
+	@Deprecated
 	public static List<ShapeType<?>> getAllTypes(Level world) {
-        if(LIVING_TYPE_CASH.isEmpty()) {
-            for (EntityType<?> type : BuiltInRegistries.ENTITY_TYPE) {
-                Entity instance = type.create(world);
-                if(instance instanceof LivingEntity) {
-                    LIVING_TYPE_CASH.add((EntityType<? extends LivingEntity>) type);
-                }
-            }
-        }
-
-        List<ShapeType<? extends LivingEntity>> types = new ArrayList<>();
-        for (EntityType<? extends LivingEntity> type : LIVING_TYPE_CASH) {
-            // check blacklist
-            if (!type.is(WalkersEntityTags.BLACKLISTED)) {
-                // check variants
-            	TypeProvider<?> variant = TypeProviderRegistry.getProvider(type);
-                if(variant != null) {
-                    for (int i = 0; i <= variant.getRange(); i++) {
-                        types.add(new ShapeType(type, i));
-                    }
-                } else {
-                    types.add(new ShapeType(type));
-                }
-            }
-        }
-
-        return types;
+		return getAllTypes(world, true);
     }
+
+	public static List<ShapeType<?>> getAllTypes(Level world, boolean includeVariants) {
+		if(LIVING_TYPE_CASH.isEmpty()) {
+			for (EntityType<?> type : BuiltInRegistries.ENTITY_TYPE) {
+				Entity instance = type.create(world);
+				if(instance instanceof LivingEntity) {
+					LIVING_TYPE_CASH.add((EntityType<? extends LivingEntity>) type);
+				}
+			}
+		}
+
+		List<ShapeType<? extends LivingEntity>> types = new ArrayList<>();
+		for (EntityType<? extends LivingEntity> type : LIVING_TYPE_CASH) {
+			// check blacklist
+			if (!type.is(WalkersEntityTags.BLACKLISTED)) {
+				// check variants
+				TypeProvider<?> variant = TypeProviderRegistry.getProvider(type);
+				if(variant != null && includeVariants) {
+					for (int i = 0; i <= variant.getRange(); i++) {
+						types.add(new ShapeType(type, i));
+					}
+				} else {
+					types.add(new ShapeType(type));
+				}
+			}
+		}
+
+		return types;
+	}
 
 	public CompoundTag writeCompound() {
 		CompoundTag compound = new CompoundTag();
