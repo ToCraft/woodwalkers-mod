@@ -11,7 +11,7 @@ on:
   workflow_dispatch:
     inputs:
       release:
-        description: 'Do not publish'
+        description: 'Release'
         required: true
         default: 'false'
 
@@ -37,7 +37,7 @@ jobs:
         uses: gradle/wrapper-validation-action@v1
 
       - name: Setup and Build with Gradle
-        uses: gradle/gradle-build-action@v2
+        uses: gradle/gradle-build-action@982da8e78c05368c70dac0351bb82647a9e9a5d2
         with:
           arguments: check build --stacktrace --no-daemon
 
@@ -59,7 +59,7 @@ jobs:
             !**/*-transformProduction*.jar
 
       - name: Release to Maven, CurseForge & Modrinth
-        uses: gradle/gradle-build-action@v2
+        uses: gradle/gradle-build-action@982da8e78c05368c70dac0351bb82647a9e9a5d2
         if: |
           !contains(github.event.head_commit.message, '[release]') && github.event.inputs.release == 'true'
         env:
