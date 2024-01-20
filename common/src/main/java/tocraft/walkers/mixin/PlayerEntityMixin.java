@@ -12,6 +12,7 @@ import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.animal.Bee;
 import net.minecraft.world.entity.animal.IronGolem;
 import net.minecraft.world.entity.monster.Ravager;
+import net.minecraft.world.entity.monster.Spider;
 import net.minecraft.world.entity.monster.WitherSkeleton;
 import net.minecraft.world.entity.monster.warden.Warden;
 import net.minecraft.world.entity.player.Player;
@@ -20,6 +21,9 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -360,6 +364,13 @@ public abstract class PlayerEntityMixin extends LivingEntityMixin {
                 ((LivingEntityAccessor) shape).callUpdatingUsingItem();
                 PlayerShape.sync((ServerPlayer) player); // safe cast - context is server world
             }
+        }
+    }
+
+    @Inject(method = "makeStuckInBlock", at = @At("HEAD"), cancellable = true)
+    private void onStuckInBlock(BlockState state, Vec3 motionMultiplier, CallbackInfo ci) {
+        if (PlayerShape.getCurrentShape((Player) (Object) this) instanceof Spider && state.is(Blocks.COBWEB)) {
+            ci.cancel();
         }
     }
 }
