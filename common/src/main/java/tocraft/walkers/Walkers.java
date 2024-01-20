@@ -29,6 +29,8 @@ import tocraft.walkers.network.ServerNetworking;
 import tocraft.walkers.registry.WalkersEntityTags;
 import tocraft.walkers.registry.WalkersEventHandlers;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -63,7 +65,10 @@ public class Walkers {
     }
 
     public static void registerJoinSyncPacket() {
-        VersionChecker.registerChecker(MODID, VERSION_URL, Component.translatable("key.categories.walkers"));
+        try {
+            VersionChecker.registerChecker(MODID, new URL(VERSION_URL), Component.translatable("key.categories.walkers"));
+        } catch (MalformedURLException ignored) {
+        }
 
         PlayerEvent.PLAYER_JOIN.register(player -> {
             Int2ObjectMap<Object> trackers = ((ThreadedAnvilChunkStorageAccessor) ((ServerLevel) player.level())
