@@ -14,14 +14,15 @@ import tocraft.walkers.api.FlightHelper;
 @Mixin(PlayerAdvancements.class)
 public class PlayerAdvancementTrackerMixin {
 
-    @Shadow private ServerPlayer player;
+    @Shadow
+    private ServerPlayer player;
 
     @Inject(
             method = "award",
             at = @At(value = "INVOKE", target = "Lnet/minecraft/advancements/AdvancementRewards;grant(Lnet/minecraft/server/level/ServerPlayer;)V")
     )
     private void refreshFlight(AdvancementHolder advancement, String criterionName, CallbackInfoReturnable<Boolean> cir) {
-        if(Walkers.hasFlyingPermissions(player)) {
+        if (Walkers.hasFlyingPermissions(player)) {
             FlightHelper.grantFlightTo(player);
             player.getAbilities().setFlyingSpeed(Walkers.CONFIG.flySpeed);
             player.onUpdateAbilities();

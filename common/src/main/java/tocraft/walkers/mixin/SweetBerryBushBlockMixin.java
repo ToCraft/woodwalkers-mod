@@ -24,11 +24,11 @@ public class SweetBerryBushBlockMixin {
             cancellable = true
     )
     private void onDamage(BlockState state, Level world, BlockPos pos, Entity entity, CallbackInfo ci) {
-        if(entity instanceof Player player) {
+        if (entity instanceof Player player) {
             LivingEntity shape = PlayerShape.getCurrentShape(player);
 
             // Cancel damage if the player's shape is a fox
-            if(shape instanceof Fox || shape instanceof Bee) {
+            if (shape instanceof Fox || shape instanceof Bee) {
                 ci.cancel();
             }
         }

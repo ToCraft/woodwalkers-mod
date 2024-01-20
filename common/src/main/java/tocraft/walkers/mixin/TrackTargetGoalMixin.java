@@ -11,9 +11,12 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(TargetGoal.class)
 public abstract class TrackTargetGoalMixin {
-    @Shadow @Final protected Mob mob;
+    @Shadow
+    @Final
+    protected Mob mob;
 
-    @Shadow public abstract void stop();
+    @Shadow
+    public abstract void stop();
 
     @Inject(method = "canContinueToUse", at = @At("RETURN"), cancellable = true)
     protected void shape_shouldContinue(CallbackInfoReturnable<Boolean> cir) {

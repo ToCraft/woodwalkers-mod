@@ -16,7 +16,7 @@ public class GoatTypeProvider extends TypeProvider<Goat> {
 
     @Override
     public Goat create(EntityType<Goat> type, Level level, int data) {
-    	Goat goat = new Goat(type, level);
+        Goat goat = new Goat(type, level);
         goat.setScreamingGoat(data > 0);
         return goat;
     }
@@ -33,7 +33,7 @@ public class GoatTypeProvider extends TypeProvider<Goat> {
 
     @Override
     public Component modifyText(Goat entity, MutableComponent text) {
-        if(entity.isScreamingGoat()) return Component.literal("Screaming ").append(text);
+        if (entity.isScreamingGoat()) return Component.literal("Screaming ").append(text);
         else return text;
     }
 }

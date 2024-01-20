@@ -18,10 +18,10 @@ public class PlayerSwimmingMixin {
             method = "jumpInLiquid", at = @At("HEAD"), cancellable = true)
     private void onGolemSwimUp(TagKey<Fluid> fluid, CallbackInfo ci) {
         LivingEntity thisEntity = (LivingEntity) (Object) this;
-        if(thisEntity instanceof Player player) {
+        if (thisEntity instanceof Player player) {
             LivingEntity shape = PlayerShape.getCurrentShape(player);
 
-            if(shape != null && shape.getType().is(WalkersEntityTags.CANT_SWIM)) {
+            if (shape != null && shape.getType().is(WalkersEntityTags.CANT_SWIM)) {
                 ci.cancel();
             }
         }

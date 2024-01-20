@@ -35,10 +35,10 @@ public abstract class ShadowMixin {
             method = "renderShadow",
             at = @At(value = "INVOKE", target = "Lnet/minecraft/util/Mth;lerp(DDD)D", ordinal = 0), index = 7)
     private static float adjustShadowSize(float originalSize) {
-        if(shape_shadowEntity instanceof Player player) {
+        if (shape_shadowEntity instanceof Player player) {
             LivingEntity shape = PlayerShape.getCurrentShape(player);
 
-            if(shape != null) {
+            if (shape != null) {
                 EntityRenderer<?> r = Minecraft.getInstance().getEntityRenderDispatcher().getRenderer(shape);
                 float shadowRadius = ((EntityShadowAccessor) r).getShadowRadius();
                 float mod = shape.isBaby() ? .5f : 1;

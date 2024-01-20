@@ -7,12 +7,12 @@ import org.spongepowered.asm.mixin.gen.Invoker;
 
 @Mixin(Entity.class)
 public interface EntityAccessor {
-	@Accessor("wasTouchingWater")
-	void setTouchingWater(boolean touchingWater);
+    @Accessor("wasTouchingWater")
+    void setTouchingWater(boolean touchingWater);
 
-	@Accessor
-	void setVehicle(Entity vehicle);
+    @Accessor
+    void setVehicle(Entity vehicle);
 
-	@Invoker("setSharedFlag")
-	void shape_callSetFlag(int index, boolean value);
+    @Invoker("setSharedFlag")
+    void shape_callSetFlag(int index, boolean value);
 }

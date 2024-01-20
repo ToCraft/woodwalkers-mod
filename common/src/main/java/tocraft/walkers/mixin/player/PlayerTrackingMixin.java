@@ -14,11 +14,13 @@ import tocraft.walkers.api.PlayerShape;
 @Mixin(ServerEntity.class)
 public class PlayerTrackingMixin {
 
-    @Shadow @Final private Entity entity;
+    @Shadow
+    @Final
+    private Entity entity;
 
     @Inject(method = "addPairing", at = @At("RETURN"))
     private void sendPairingWalkersPackets(ServerPlayer newlyTracked, CallbackInfo ci) {
-        if(this.entity instanceof ServerPlayer player) {
+        if (this.entity instanceof ServerPlayer player) {
             PlayerShape.sync(newlyTracked, player);
             PlayerShape.sync(player, newlyTracked);
         }

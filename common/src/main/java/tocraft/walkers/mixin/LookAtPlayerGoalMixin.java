@@ -15,8 +15,11 @@ import tocraft.walkers.api.PlayerShape;
 
 @Mixin(LookAtPlayerGoal.class)
 public class LookAtPlayerGoalMixin {
-    @Shadow @Nullable protected Entity lookAt;
-    @Shadow @Final
+    @Shadow
+    @Nullable
+    protected Entity lookAt;
+    @Shadow
+    @Final
     protected Mob mob;
 
     @Inject(method = "canUse", at = @At("RETURN"), cancellable = true)

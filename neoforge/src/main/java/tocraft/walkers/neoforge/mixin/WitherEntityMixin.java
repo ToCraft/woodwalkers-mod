@@ -19,34 +19,34 @@ import java.util.List;
 @Mixin(WitherBoss.class)
 public abstract class WitherEntityMixin extends Monster {
 
-	private WitherEntityMixin(EntityType<? extends Monster> entityType, Level world) {
-		super(entityType, world);
-	}
+    private WitherEntityMixin(EntityType<? extends Monster> entityType, Level world) {
+        super(entityType, world);
+    }
 
-	// There's a de-compilation difference between Forge & Fabric which requires a
-	// tweaked mixin on both sides.
-	@Inject(method = "customServerAiStep", at = @At(value = "INVOKE", target = "Ljava/util/List;isEmpty()Z"), locals = LocalCapture.CAPTURE_FAILHARD)
-	private void removeInvalidPlayerTargets(CallbackInfo ci, int j, int b, List<LivingEntity> list) {
-		List<LivingEntity> toRemove = new ArrayList<>();
+    // There's a de-compilation difference between Forge & Fabric which requires a
+    // tweaked mixin on both sides.
+    @Inject(method = "customServerAiStep", at = @At(value = "INVOKE", target = "Ljava/util/List;isEmpty()Z"), locals = LocalCapture.CAPTURE_FAILHARD)
+    private void removeInvalidPlayerTargets(CallbackInfo ci, int j, int b, List<LivingEntity> list) {
+        List<LivingEntity> toRemove = new ArrayList<>();
 
-		list.forEach(entity -> {
-			if (entity instanceof Player player) {
-				LivingEntity shape = PlayerShape.getCurrentShape(player);
+        list.forEach(entity -> {
+            if (entity instanceof Player player) {
+                LivingEntity shape = PlayerShape.getCurrentShape(player);
 
-				// potentially ignore undead shaped players
-				if (shape != null && shape.isInvertedHealAndHarm()) {
-					if (this.getTarget() != null) {
-						// if this wither's target is not equal to the current entity
-						if (!this.getTarget().getUUID().equals(entity.getUUID())) {
-							toRemove.add(entity);
-						}
-					} else {
-						toRemove.add(entity);
-					}
-				}
-			}
-		});
+                // potentially ignore undead shaped players
+                if (shape != null && shape.isInvertedHealAndHarm()) {
+                    if (this.getTarget() != null) {
+                        // if this wither's target is not equal to the current entity
+                        if (!this.getTarget().getUUID().equals(entity.getUUID())) {
+                            toRemove.add(entity);
+                        }
+                    } else {
+                        toRemove.add(entity);
+                    }
+                }
+            }
+        });
 
-		list.removeAll(toRemove);
-	}
+        list.removeAll(toRemove);
+    }
 }

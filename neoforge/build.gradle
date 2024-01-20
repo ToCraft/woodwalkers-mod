@@ -22,7 +22,7 @@ configurations {
 }
 
 dependencies {
-    neoForge"net.neoforged:neoforge:${rootProject.neoforge_version}"
+    neoForge "net.neoforged:neoforge:${rootProject.neoforge_version}"
     modApi "dev.tocraft:craftedcore:${rootProject.minecraft_version}-neoforge-${rootProject.craftedcore_version}"
 
     common(project(path: ":common", configuration: "namedElements")) { transitive = false }
@@ -40,7 +40,7 @@ processResources {
 shadowJar {
     exclude "fabric.mod.json"
     exclude "architectury.common.json"
-    
+
     configurations = [project.configurations.shadowCommon]
     //exclude "walkers-common-refmap.json"
     archiveClassifier.set("neoforge-dev-shadow")
@@ -80,7 +80,7 @@ modrinth {
 
 task curseforge(type: net.darkhax.curseforgegradle.TaskPublishCurseForge) {
     apiToken = System.getenv("CURSEFORGE_TOKEN")
-    
+
     // The main file to upload
     def mainFile = upload(868922, remapJar)
     mainFile.displayName = rootProject.minecraft_version + "-" + project.name + "-" + rootProject.mod_version

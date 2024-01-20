@@ -15,16 +15,16 @@ import tocraft.walkers.api.PlayerShape;
 @Mixin(Villager.class)
 public abstract class VillagerEntityMixin {
 
-	@Shadow
-	protected abstract void stopTrading();
+    @Shadow
+    protected abstract void stopTrading();
 
-	@Inject(method = "mobInteract", at = @At("HEAD"), cancellable = true)
-	private void onInteract(Player player, InteractionHand hand, CallbackInfoReturnable<InteractionResult> cir) {
-		LivingEntity shape = PlayerShape.getCurrentShape(player);
+    @Inject(method = "mobInteract", at = @At("HEAD"), cancellable = true)
+    private void onInteract(Player player, InteractionHand hand, CallbackInfoReturnable<InteractionResult> cir) {
+        LivingEntity shape = PlayerShape.getCurrentShape(player);
 
-		if (shape != null && shape.isInvertedHealAndHarm()) {
-			this.stopTrading();
-			cir.setReturnValue(InteractionResult.SUCCESS);
-		}
-	}
+        if (shape != null && shape.isInvertedHealAndHarm()) {
+            this.stopTrading();
+            cir.setReturnValue(InteractionResult.SUCCESS);
+        }
+    }
 }

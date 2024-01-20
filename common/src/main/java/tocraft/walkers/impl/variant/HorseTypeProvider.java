@@ -17,8 +17,8 @@ public class HorseTypeProvider extends TypeProvider<Horse> {
 
     @Override
     public Horse create(EntityType<Horse> type, Level world, int data) {
-    	Horse horse = new Horse(type, world);
-    	horse.setVariant(Variant.byId(data));
+        Horse horse = new Horse(type, world);
+        horse.setVariant(Variant.byId(data));
         return horse;
     }
 
@@ -32,8 +32,8 @@ public class HorseTypeProvider extends TypeProvider<Horse> {
         return 6;
     }
 
-	@Override
-	public Component modifyText(Horse entity, MutableComponent text) {
-		return Component.literal(entity.getVariant().getSerializedName() + " ").append(text);
-	}
+    @Override
+    public Component modifyText(Horse entity, MutableComponent text) {
+        return Component.literal(entity.getVariant().getSerializedName() + " ").append(text);
+    }
 }

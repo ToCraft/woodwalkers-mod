@@ -63,9 +63,9 @@ allprojects {
         maven { url "https://maven.parchmentmc.org" }
         maven { url "https://maven.neoforged.net/releases/" }
         maven {
-                name "tocraftMavenReleases"
-                url "https://tocraft.ddns.net/maven/releases"
-            }
+            name "tocraftMavenReleases"
+            url "https://tocraft.ddns.net/maven/releases"
+        }
     }
 
     tasks.withType(JavaCompile) {

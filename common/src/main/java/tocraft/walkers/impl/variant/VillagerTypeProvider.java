@@ -17,7 +17,7 @@ public class VillagerTypeProvider extends TypeProvider<Villager> {
 
     @Override
     public Villager create(EntityType<Villager> type, Level level, int data) {
-    	Villager villager = new Villager(type, level);
+        Villager villager = new Villager(type, level);
         villager.setVariant(BuiltInRegistries.VILLAGER_TYPE.byId(data));
         return villager;
     }

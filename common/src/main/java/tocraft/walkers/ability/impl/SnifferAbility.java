@@ -25,7 +25,7 @@ public class SnifferAbility extends ShapeAbility<Sniffer> {
             return;
 
         BlockPos playerPos = player.blockPosition();
-        BlockPos blockPos = new BlockPos(playerPos.getX(), playerPos.getY()-1, playerPos.getZ());
+        BlockPos blockPos = new BlockPos(playerPos.getX(), playerPos.getY() - 1, playerPos.getZ());
         List<Block> diggableBlocks = new ArrayList<>();
         diggableBlocks.add(BuiltInRegistries.BLOCK.get(new ResourceLocation("minecraft:dirt")));
         diggableBlocks.add(BuiltInRegistries.BLOCK.get(new ResourceLocation("minecraft:grass_block")));
@@ -44,8 +44,7 @@ public class SnifferAbility extends ShapeAbility<Sniffer> {
                 player.spawnAtLocation(Items.PITCHER_POD);
 
             world.playSound(null, player, SoundEvents.SNIFFER_DIGGING, SoundSource.PLAYERS, 1.0F, (world.random.nextFloat() - world.random.nextFloat()) * 0.2F + 1.0F);
-        }
-        else
+        } else
             world.playSound(null, player, SoundEvents.SNIFFER_DIGGING_STOP, SoundSource.PLAYERS, 1.0F, (world.random.nextFloat() - world.random.nextFloat()) * 0.2F + 1.0F);
     }
 

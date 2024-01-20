@@ -16,8 +16,8 @@ public class LlamaTypeProvider extends TypeProvider<Llama> {
 
     @Override
     public Llama create(EntityType<Llama> type, Level world, int data) {
-    	Llama llama = new Llama(type, world);
-    	llama.setVariant(Llama.Variant.byId(data));
+        Llama llama = new Llama(type, world);
+        llama.setVariant(Llama.Variant.byId(data));
         return llama;
     }
 
@@ -31,8 +31,8 @@ public class LlamaTypeProvider extends TypeProvider<Llama> {
         return 3;
     }
 
-	@Override
-	public Component modifyText(Llama entity, MutableComponent text) {
-		return Component.literal(entity.getVariant().getSerializedName() + " ").append(text);
-	}
+    @Override
+    public Component modifyText(Llama entity, MutableComponent text) {
+        return Component.literal(entity.getVariant().getSerializedName() + " ").append(text);
+    }
 }

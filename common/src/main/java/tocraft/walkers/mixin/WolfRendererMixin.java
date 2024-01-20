@@ -24,9 +24,9 @@ public class WolfRendererMixin {
     private void onGetTexture(Wolf wolfEntity, CallbackInfoReturnable<ResourceLocation> ci) {
         CompoundTag nbt = new CompoundTag();
         wolfEntity.saveWithoutId(nbt);
-        
+
         if (nbt.contains("isSpecial")) {
-            if(nbt.getBoolean("isSpecial")) {
+            if (nbt.getBoolean("isSpecial")) {
                 if (wolfEntity.isTame()) {
                     ci.setReturnValue(SPECIAL_TAMED);
                 } else {

@@ -17,7 +17,7 @@ public class ZombieVillagerTypeProvider extends TypeProvider<ZombieVillager> {
 
     @Override
     public ZombieVillager create(EntityType<ZombieVillager> type, Level level, int data) {
-    	ZombieVillager villager = new ZombieVillager(type, level);
+        ZombieVillager villager = new ZombieVillager(type, level);
         villager.setVariant(BuiltInRegistries.VILLAGER_TYPE.byId(data));
         return villager;
     }

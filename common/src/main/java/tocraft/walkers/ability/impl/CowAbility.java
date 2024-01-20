@@ -9,7 +9,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import tocraft.walkers.ability.ShapeAbility;
 
-public class CowAbility <T extends Mob> extends ShapeAbility<T> {
+public class CowAbility<T extends Mob> extends ShapeAbility<T> {
 
     @Override
     public void onUse(Player player, Mob shape, Level world) {

@@ -11,7 +11,7 @@ loom {
         convertAccessWideners = true
         extraAccessWideners.add loom.accessWidenerPath.get().asFile.name
 
-        mixinConfigs = [ "walkers-forge.mixins.json", "walkers.mixins.json" ]
+        mixinConfigs = ["walkers-forge.mixins.json", "walkers.mixins.json"]
     }
 }
 
@@ -47,7 +47,7 @@ processResources {
 shadowJar {
     exclude "fabric.mod.json"
     exclude "architectury.common.json"
-    
+
     configurations = [project.configurations.shadowCommon]
     archiveClassifier.set("forge-dev-shadow")
 }
@@ -90,7 +90,7 @@ modrinth {
 
 task curseforge(type: net.darkhax.curseforgegradle.TaskPublishCurseForge) {
     apiToken = System.getenv("CURSEFORGE_TOKEN")
-    
+
     // The main file to upload
     def mainFile = upload(868922, remapJar)
     mainFile.displayName = rootProject.minecraft_version + "-" + project.name + "-" + rootProject.mod_version
