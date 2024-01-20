@@ -21,6 +21,8 @@ public class WalkersTickHandlers {
         register(EntityType.RABBIT, new JumpBoostTickHandler<>(1));
         register(EntityType.GOAT, new JumpBoostTickHandler<>(2));
         register(EntityType.CAMEL, new JumpBoostTickHandler<>(0));
+        register(EntityType.MAGMA_CUBE, new JumpBoostTickHandler<>(2));
+        register(EntityType.SLIME, new JumpBoostTickHandler<>(2));
     }
 
     public static <T extends LivingEntity> void register(EntityType<T> type, WalkersTickHandler<T> handler) {
