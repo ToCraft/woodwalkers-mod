@@ -1,7 +1,8 @@
 [![Build-1.20.2](https://github.com/ToCraft/woodwalkers-mod/actions/workflows/gradle-1.20.2.yml/badge.svg)](https://github.com/ToCraft/woodwalkers-mod/actions/workflows/gradle-1.20.2.yml)
-![Maven metadata URL](https://img.shields.io/maven-metadata/v?metadataUrl=https%3A%2F%2Ftocraft.ddns.net%2Fmaven%2Freleases%2Fdev%2Ftocraft%2Fwalkers%2Fmaven-metadata.xml&versionPrefix=1.20.2-common&label=Woodwalkers)
-![Maven metadata URL](https://img.shields.io/maven-metadata/v?metadataUrl=https%3A%2F%2Ftocraft.ddns.net%2Fmaven%2Freleases%2Fdev%2Ftocraft%2Fwalkers%2Fmaven-metadata.xml&versionPrefix=1.20.2-forge&label=Woodwalkers)
-![Maven metadata URL](https://img.shields.io/maven-metadata/v?metadataUrl=https%3A%2F%2Ftocraft.ddns.net%2Fmaven%2Freleases%2Fdev%2Ftocraft%2Fwalkers%2Fmaven-metadata.xml&versionPrefix=1.20.2-fabric&label=Woodwalkers)
+![Maven metadata URL](https://img.shields.io/maven-metadata/v?metadataUrl=https%3A%2F%2Ftocraft.ddns.net%2Fmaven%2Freleases%2Fdev%2Ftocraft%2Fwalkers%2Fmaven-metadata.xml&versionPrefix=1.20.2&label=Woodwalkers)
+![Maven metadata URL](https://img.shields.io/maven-metadata/v?metadataUrl=https%3A%2F%2Ftocraft.ddns.net%2Fmaven%2Freleases%2Fdev%2Ftocraft%2Fwalkers-forge%2Fmaven-metadata.xml&versionPrefix=1.20.2&label=Woodwalkers)
+![Maven metadata URL](https://img.shields.io/maven-metadata/v?metadataUrl=https%3A%2F%2Ftocraft.ddns.net%2Fmaven%2Freleases%2Fdev%2Ftocraft%2Fwalkers-fabric%2Fmaven-metadata.xml&versionPrefix=1.20.2&label=Woodwalkers)
+![Maven metadata URL](https://img.shields.io/maven-metadata/v?metadataUrl=https%3A%2F%2Ftocraft.ddns.net%2Fmaven%2Freleases%2Fdev%2Ftocraft%2Fwalkers-neoforge%2Fmaven-metadata.xml&versionPrefix=1.20.2&label=Woodwalkers)
 
 # Woodwalkers
 
