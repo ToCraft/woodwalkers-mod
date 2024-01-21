@@ -81,8 +81,8 @@ publishing {
     repositories {
         if (System.getenv("MAVEN_PASS") != null) {
             maven {
-                name "tocraftMavenReleases"
-                url "https://tocraft.ddns.net/maven/releases"
+                name = "tocraftMavenPublic"
+                url "https://maven.tocraft.dev/public"
 
                 credentials {
                     username = "tocraft"

@@ -40,7 +40,7 @@ public class Walkers {
 
     public static final Logger LOGGER = LoggerFactory.getLogger(Walkers.class);
     public static final String MODID = "walkers";
-    public static final String VERSION_URL = "https://raw.githubusercontent.com/ToCraft/woodwalkers-mod/1.20.2/gradle.properties";
+    public static final String MAVEN_URL = "https://maven.tocraft.dev/public/dev/tocraft/walkers/maven-metadata.xml";
     public static final WalkersConfig CONFIG = ConfigLoader.read(MODID, WalkersConfig.class);
     public static boolean foundPotionAbilities = false;
     public static List<UUID> devs = new ArrayList<>();
@@ -70,7 +70,7 @@ public class Walkers {
 
     public static void registerJoinSyncPacket() {
         try {
-            VersionChecker.registerChecker(MODID, new URL(VERSION_URL), Component.translatable("key.categories.walkers"));
+            VersionChecker.registerMavenChecker(MODID, new URL(MAVEN_URL), Component.translatable("key.categories.walkers"));
         } catch (MalformedURLException ignored) {
         }
 

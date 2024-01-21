@@ -25,28 +25,6 @@ subprojects {
             parchment("org.parchmentmc.data:parchment-${rootProject.minecraft_version}:${rootProject.parchmentmc_mappings}@zip")
         }
     }
-
-    publishing {
-        publications {
-            maven(MavenPublication) {
-                groupId = rootProject.maven_group
-                artifactId = rootProject.archives_base_name
-                version = rootProject.minecraft_version + "-" + project.name + "-" + rootProject.mod_version
-                from components.java
-            }
-        }
-        repositories {
-            maven {
-                name "tocraftMavenReleases"
-                url "https://tocraft.ddns.net/maven/releases"
-
-                credentials {
-                    username = System.getenv("TOCRAFTMAVEN_USERNAME")
-                    password = System.getenv("TOCRAFTMAVEN_TOKEN")
-                }
-            }
-        }
-    }
 }
 
 allprojects {
@@ -66,8 +44,8 @@ allprojects {
         maven { url "https://maven.parchmentmc.org" }
         maven { url "https://maven.neoforged.net/releases/" }
         maven {
-            name "tocraftMavenReleases"
-            url "https://tocraft.ddns.net/maven/releases"
+            name = "tocraftMavenPublic"
+            url "https://maven.tocraft.dev/public"
         }
     }
 
