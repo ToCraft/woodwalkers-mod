@@ -1,6 +1,7 @@
 package tocraft.walkers.mixin.player;
 
 import dev.architectury.event.EventResult;
+import dev.architectury.platform.Platform;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
@@ -66,13 +67,10 @@ public abstract class PlayerEntityDataMixin extends LivingEntity implements Play
         CompoundTag unlockedShape = tag.getCompound("UnlockedShape");
         this.walkers$unlocked = ShapeType.from(unlockedShape);
 
-        int newCooldown = tag.getInt(ABILITY_COOLDOWN_KEY);
-        if (Walkers.foundPotionAbilities) {
-            newCooldown = Math.max(newCooldown, tag.getCompound("ycdm").getInt("cooldown"));
-        }
         // Abilities
-        walkers$abilityCooldown = newCooldown;
-
+        if (Platform.getOptionalMod("ycdm").isPresent()) {
+            walkers$abilityCooldown = Math.max(tag.getInt(ABILITY_COOLDOWN_KEY), tag.getCompound("ycdm").getInt("cooldown"));
+        }
         // Hostility
         walkers$remainingTime = tag.getInt("RemainingHostilityTime");
 

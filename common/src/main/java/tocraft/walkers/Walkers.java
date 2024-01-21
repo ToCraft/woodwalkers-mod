@@ -42,7 +42,6 @@ public class Walkers {
     public static final String MODID = "walkers";
     public static final String MAVEN_URL = "https://maven.tocraft.dev/public/dev/tocraft/walkers/maven-metadata.xml";
     public static final WalkersConfig CONFIG = ConfigLoader.read(MODID, WalkersConfig.class);
-    public static boolean foundPotionAbilities = false;
     public static List<UUID> devs = new ArrayList<>();
 
     static {
@@ -51,11 +50,6 @@ public class Walkers {
     }
 
     public void initialize() {
-        Platform.getMods().forEach(mod -> {
-            if (mod.getModId().equals("ycdm"))
-                foundPotionAbilities = true;
-        });
-
         AbilityRegistry.init();
         WalkersEventHandlers.initialize();
         WalkersCommand.register();
