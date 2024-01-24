@@ -1,7 +1,6 @@
 package tocraft.walkers;
 
 import dev.architectury.event.events.common.PlayerEvent;
-import dev.architectury.platform.Platform;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import net.minecraft.advancements.AdvancementHolder;
 import net.minecraft.advancements.AdvancementProgress;
