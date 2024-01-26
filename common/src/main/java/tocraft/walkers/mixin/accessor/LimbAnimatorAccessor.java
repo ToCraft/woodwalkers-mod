@@ -6,12 +6,12 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 
 @Mixin(WalkAnimationState.class)
 public interface LimbAnimatorAccessor {
-	@Accessor("speedOld")
-	float getPrevSpeed();
+    @Accessor("speedOld")
+    float getPrevSpeed();
 
-	@Accessor("position")
-	void setPos(float pos);
+    @Accessor("position")
+    void setPos(float pos);
 
-	@Accessor("speedOld")
-	void setPrevSpeed(float prevSpeed);
+    @Accessor("speedOld")
+    void setPrevSpeed(float prevSpeed);
 }

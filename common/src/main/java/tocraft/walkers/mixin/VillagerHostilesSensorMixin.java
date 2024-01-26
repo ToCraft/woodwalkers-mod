@@ -17,43 +17,43 @@ import tocraft.walkers.api.PlayerShape;
 
 @Mixin(VillagerHostilesSensor.class)
 public class VillagerHostilesSensorMixin {
-	@Unique
-	private boolean walkers$lol = false;
+    @Unique
+    private boolean walkers$lol = false;
 
-	@Shadow
-	@Final
-	private static ImmutableMap<EntityType<?>, Float> ACCEPTABLE_DISTANCE_FROM_HOSTILES;
+    @Shadow
+    @Final
+    private static ImmutableMap<EntityType<?>, Float> ACCEPTABLE_DISTANCE_FROM_HOSTILES;
 
-	@Inject(method = "isHostile", at = @At("HEAD"), cancellable = true)
-	private void checkHostileWalkers(LivingEntity entity, CallbackInfoReturnable<Boolean> cir) {
-		if (entity instanceof Player player) {
-			// check if we should be performing this from config
-			if (Walkers.CONFIG.villagersRunFrom2ndShapes) {
-				LivingEntity shape = PlayerShape.getCurrentShape(player);
+    @Inject(method = "isHostile", at = @At("HEAD"), cancellable = true)
+    private void checkHostileWalkers(LivingEntity entity, CallbackInfoReturnable<Boolean> cir) {
+        if (entity instanceof Player player) {
+            // check if we should be performing this from config
+            if (Walkers.CONFIG.villagersRunFrom2ndShapes) {
+                LivingEntity shape = PlayerShape.getCurrentShape(player);
 
-				// check if shape is valid & if it is a type villagers run from
-				if (shape != null && ACCEPTABLE_DISTANCE_FROM_HOSTILES.containsKey(shape.getType())) {
-					cir.setReturnValue(true);
-				}
-			}
-		}
-	}
+                // check if shape is valid & if it is a type villagers run from
+                if (shape != null && ACCEPTABLE_DISTANCE_FROM_HOSTILES.containsKey(shape.getType())) {
+                    cir.setReturnValue(true);
+                }
+            }
+        }
+    }
 
-	@Inject(method = "isClose", at = @At("HEAD"), cancellable = true)
-	private void checkPlayerDanger(LivingEntity villager, LivingEntity potentialPlayer,
-			CallbackInfoReturnable<Boolean> cir) {
-		// should only be called if the above mixin passes, so we can assume the config
-		// option is true
-		if (potentialPlayer instanceof Player player) {
-			LivingEntity shape = PlayerShape.getCurrentShape(player);
+    @Inject(method = "isClose", at = @At("HEAD"), cancellable = true)
+    private void checkPlayerDanger(LivingEntity villager, LivingEntity potentialPlayer,
+                                   CallbackInfoReturnable<Boolean> cir) {
+        // should only be called if the above mixin passes, so we can assume the config
+        // option is true
+        if (potentialPlayer instanceof Player player) {
+            LivingEntity shape = PlayerShape.getCurrentShape(player);
 
-			// check if shape is valid & if it is a type villagers run from
-			if (shape != null && ACCEPTABLE_DISTANCE_FROM_HOSTILES.containsKey(shape.getType())) {
-				float f = ACCEPTABLE_DISTANCE_FROM_HOSTILES.get(shape.getType());
-				cir.setReturnValue(potentialPlayer.distanceToSqr(villager) <= (double) (f * f));
-			} else {
-				cir.setReturnValue(false);
-			}
-		}
-	}
+            // check if shape is valid & if it is a type villagers run from
+            if (shape != null && ACCEPTABLE_DISTANCE_FROM_HOSTILES.containsKey(shape.getType())) {
+                float f = ACCEPTABLE_DISTANCE_FROM_HOSTILES.get(shape.getType());
+                cir.setReturnValue(potentialPlayer.distanceToSqr(villager) <= (double) (f * f));
+            } else {
+                cir.setReturnValue(false);
+            }
+        }
+    }
 }

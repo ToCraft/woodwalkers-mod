@@ -33,18 +33,18 @@ public class ClientPlayerDataCacheMixin {
 		walkers$dataCache = ((PlayerDataProvider) minecraft.player);
 	}
 
-	// This inject applies data cached from the previous inject.
-	// Re-applying on the client will help to prevent sync blips which occur when
-	// wiping data and waiting for the server to send a sync packet.
-	@Inject(method = "handleRespawn", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/Level;dimension()Lnet/minecraft/resources/ResourceKey;", ordinal = 1))
-	private void afterPlayerReset(ClientboundRespawnPacket packet, CallbackInfo ci) {
-		if (walkers$dataCache != null && minecraft.player != null) {
-			((PlayerDataProvider) minecraft.player).walkers$setCurrentShape(walkers$dataCache.walkers$getCurrentShape());
-			((PlayerDataProvider) minecraft.player).walkers$set2ndShape(walkers$dataCache.walkers$get2ndShape());
-			((PlayerDataProvider) minecraft.player).walkers$setAbilityCooldown(walkers$dataCache.walkers$getAbilityCooldown());
-			((PlayerDataProvider) minecraft.player).walkers$setRemainingHostilityTime(walkers$dataCache.walkers$getRemainingHostilityTime());
-		}
+    // This inject applies data cached from the previous inject.
+    // Re-applying on the client will help to prevent sync blips which occur when
+    // wiping data and waiting for the server to send a sync packet.
+    @Inject(method = "handleRespawn", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/Level;dimension()Lnet/minecraft/resources/ResourceKey;", ordinal = 1))
+    private void afterPlayerReset(ClientboundRespawnPacket packet, CallbackInfo ci) {
+        if (walkers$dataCache != null && minecraft.player != null) {
+            ((PlayerDataProvider) minecraft.player).walkers$setCurrentShape(walkers$dataCache.walkers$getCurrentShape());
+            ((PlayerDataProvider) minecraft.player).walkers$set2ndShape(walkers$dataCache.walkers$get2ndShape());
+            ((PlayerDataProvider) minecraft.player).walkers$setAbilityCooldown(walkers$dataCache.walkers$getAbilityCooldown());
+            ((PlayerDataProvider) minecraft.player).walkers$setRemainingHostilityTime(walkers$dataCache.walkers$getRemainingHostilityTime());
+        }
 
-		walkers$dataCache = null;
-	}
+        walkers$dataCache = null;
+    }
 }

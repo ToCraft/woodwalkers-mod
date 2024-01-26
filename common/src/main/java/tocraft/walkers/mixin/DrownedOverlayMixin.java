@@ -17,7 +17,9 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(DrownedOuterLayer.class)
 public abstract class DrownedOverlayMixin extends RenderLayer<Drowned, DrownedModel<Drowned>> {
 
-    @Shadow @Final private DrownedModel<Drowned> model;
+    @Shadow
+    @Final
+    private DrownedModel<Drowned> model;
 
     public DrownedOverlayMixin(RenderLayerParent<Drowned, DrownedModel<Drowned>> context) {
         super(context);

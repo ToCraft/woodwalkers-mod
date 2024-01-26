@@ -58,8 +58,11 @@ public class AbilityRegistry {
         register(EntityType.MOOSHROOM, new MushroomCowAbility());
         register(EntityType.CAMEL, new HorseAbility<>());
         register(EntityType.HORSE, new HorseAbility<>());
+        register(EntityType.MULE, new HorseAbility<>());
+        register(EntityType.DONKEY, new HorseAbility<>());
         register(EntityType.SKELETON_HORSE, new HorseAbility<>());
         register(EntityType.ZOMBIE_HORSE, new HorseAbility<>());
+        register(EntityType.BEE, new BeeAbility());
     }
 
     public static ShapeAbility get(EntityType<?> type) {

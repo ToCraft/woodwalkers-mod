@@ -7,6 +7,6 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 
 @Mixin(ChunkMap.class)
 public interface ThreadedAnvilChunkStorageAccessor {
-	@Accessor
-	Int2ObjectMap<Object> getEntityMap();
+    @Accessor
+    Int2ObjectMap<Object> getEntityMap();
 }

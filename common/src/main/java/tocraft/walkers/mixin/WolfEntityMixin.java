@@ -24,56 +24,56 @@ import tocraft.walkers.registry.WalkersEntityTags;
 @Mixin(Wolf.class)
 public abstract class WolfEntityMixin extends TamableAnimal {
 
-	private WolfEntityMixin(EntityType<? extends TamableAnimal> entityType, Level world) {
-		super(entityType, world);
-	}
+    private WolfEntityMixin(EntityType<? extends TamableAnimal> entityType, Level world) {
+        super(entityType, world);
+    }
 
-	@Unique
-	private static final EntityDataAccessor<Boolean> walkers$isSpecial = SynchedEntityData.defineId(Wolf.class,
-			EntityDataSerializers.BOOLEAN);
+    @Unique
+    private static final EntityDataAccessor<Boolean> walkers$isSpecial = SynchedEntityData.defineId(Wolf.class,
+            EntityDataSerializers.BOOLEAN);
 
-	@Inject(method = "registerGoals", at = @At("RETURN"))
-	private void addPlayerTarget(CallbackInfo ci) {
-		this.targetSelector.addGoal(7,
-				new NearestAttackableTargetGoal<>(this, Player.class, 10, false, false, player -> {
-					// ensure wolves can attack players with a shape similar to their normal prey
-					if (!Walkers.CONFIG.wolvesAttack2ndShapedPrey) {
-						return false;
-					}
+    @Inject(method = "registerGoals", at = @At("RETURN"))
+    private void addPlayerTarget(CallbackInfo ci) {
+        this.targetSelector.addGoal(7,
+                new NearestAttackableTargetGoal<>(this, Player.class, 10, false, false, player -> {
+                    // ensure wolves can attack players with a shape similar to their normal prey
+                    if (!Walkers.CONFIG.wolvesAttack2ndShapedPrey) {
+                        return false;
+                    }
 
-					LivingEntity shape = PlayerShape.getCurrentShape((Player) player);
+                    LivingEntity shape = PlayerShape.getCurrentShape((Player) player);
 
-					// wolves should ignore players that look like their prey if they have an owner,
-					// unless the config option is turned to true
-					LivingEntity owner = this.getOwner();
-					if (owner != null || Walkers.CONFIG.ownedwolvesAttack2ndShapedPrey) {
-						return false;
-					}
+                    // wolves should ignore players that look like their prey if they have an owner,
+                    // unless the config option is turned to true
+                    LivingEntity owner = this.getOwner();
+                    if (owner != null || Walkers.CONFIG.ownedwolvesAttack2ndShapedPrey) {
+                        return false;
+                    }
 
-					return shape != null && shape.getType().is(WalkersEntityTags.WOLF_PREY);
-				}));
-	}
+                    return shape != null && shape.getType().is(WalkersEntityTags.WOLF_PREY);
+                }));
+    }
 
-	@Inject(method = "tick", at = @At("HEAD"))
-	public void onTick(CallbackInfo ci) {
-		if (this.hasCustomName() && this.getCustomName().getString().equalsIgnoreCase("Patreon"))
-			((Wolf) (Object) this).getEntityData().set(walkers$isSpecial, true);
-		else
-			((Wolf) (Object) this).getEntityData().set(walkers$isSpecial, false);
-	}
+    @Inject(method = "tick", at = @At("HEAD"))
+    public void onTick(CallbackInfo ci) {
+        if (this.hasCustomName() && this.getCustomName().getString().equalsIgnoreCase("Patreon"))
+            ((Wolf) (Object) this).getEntityData().set(walkers$isSpecial, true);
+        else
+            ((Wolf) (Object) this).getEntityData().set(walkers$isSpecial, false);
+    }
 
-	@Inject(method = "defineSynchedData", at = @At("RETURN"))
-	protected void onInitDataTracker(CallbackInfo ci) {
-		((Wolf) (Object) this).getEntityData().define(walkers$isSpecial, false);
-	}
+    @Inject(method = "defineSynchedData", at = @At("RETURN"))
+    protected void onInitDataTracker(CallbackInfo ci) {
+        ((Wolf) (Object) this).getEntityData().define(walkers$isSpecial, false);
+    }
 
-	@Inject(method = "addAdditionalSaveData", at = @At("RETURN"))
-	protected void onWriteCustomDataToNbt(CompoundTag nbt, CallbackInfo ci) {
-		nbt.putBoolean("isSpecial", ((Wolf) (Object) this).getEntityData().get(walkers$isSpecial));
-	}
+    @Inject(method = "addAdditionalSaveData", at = @At("RETURN"))
+    protected void onWriteCustomDataToNbt(CompoundTag nbt, CallbackInfo ci) {
+        nbt.putBoolean("isSpecial", ((Wolf) (Object) this).getEntityData().get(walkers$isSpecial));
+    }
 
-	@Inject(method = "readAdditionalSaveData", at = @At("RETURN"))
-	protected void onReadCustomDataFromNbt(CompoundTag nbt, CallbackInfo ci) {
-		((Wolf) (Object) this).getEntityData().set(walkers$isSpecial, nbt.getBoolean("isSpecial"));
-	}
+    @Inject(method = "readAdditionalSaveData", at = @At("RETURN"))
+    protected void onReadCustomDataFromNbt(CompoundTag nbt, CallbackInfo ci) {
+        ((Wolf) (Object) this).getEntityData().set(walkers$isSpecial, nbt.getBoolean("isSpecial"));
+    }
 }

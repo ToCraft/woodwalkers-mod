@@ -13,7 +13,7 @@ public class FlightHelper {
     }
 
     public static void revokeFlight(ServerPlayer player) {
-        if(player.gameMode.isSurvival()) {
+        if (player.gameMode.isSurvival()) {
             player.getAbilities().mayfly = false;
         }
 

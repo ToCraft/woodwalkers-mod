@@ -17,7 +17,7 @@ public class MagmaCubeTypeProvider extends TypeProvider<MagmaCube> {
 
     @Override
     public MagmaCube create(EntityType<MagmaCube> type, Level level, int data) {
-    	MagmaCube magmaCube = new MagmaCube(type, level);
+        MagmaCube magmaCube = new MagmaCube(type, level);
         ((SlimeEntityAccessor) magmaCube).callSetSize(data + 1, true);
         return magmaCube;
     }

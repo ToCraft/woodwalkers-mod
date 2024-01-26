@@ -33,15 +33,15 @@ import tocraft.walkers.registry.WalkersEntityTags;
 @Mixin(LivingEntity.class)
 public abstract class LivingEntityMixin extends Entity implements NearbySongAccessor {
 
-	@Shadow
-	protected abstract int increaseAirSupply(int air);
+    @Shadow
+    protected abstract int increaseAirSupply(int air);
 
-	@Shadow
-	public abstract boolean hasEffect(MobEffect effect);
+    @Shadow
+    public abstract boolean hasEffect(MobEffect effect);
 
-	protected LivingEntityMixin(EntityType<?> type, Level world) {
-		super(type, world);
-	}
+    protected LivingEntityMixin(EntityType<?> type, Level world) {
+        super(type, world);
+    }
 	
 	@Redirect(method = "baseTick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;setAirSupply(I)V", ordinal = 2))
 	private void cancelAirIncrement(LivingEntity livingEntity, int air) {
@@ -59,175 +59,175 @@ public abstract class LivingEntityMixin extends Entity implements NearbySongAcce
 		this.setAirSupply(this.increaseAirSupply(this.getAirSupply()));
 	}
 
-	@Redirect(method = "travel", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;hasEffect(Lnet/minecraft/world/effect/MobEffect;)Z", ordinal = 0))
-	private boolean slowFall(LivingEntity livingEntity, MobEffect effect) {
-		if ((Object) this instanceof Player player) {
-			LivingEntity shape = PlayerShape.getCurrentShape(player);
+    @Redirect(method = "travel", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;hasEffect(Lnet/minecraft/world/effect/MobEffect;)Z", ordinal = 0))
+    private boolean slowFall(LivingEntity livingEntity, MobEffect effect) {
+        if ((Object) this instanceof Player player) {
+            LivingEntity shape = PlayerShape.getCurrentShape(player);
 
-			if (shape != null) {
-				if (!this.isShiftKeyDown() && shape.getType().is(WalkersEntityTags.SLOW_FALLING)) {
-					return true;
-				}
-			}
-		}
+            if (shape != null) {
+                if (!this.isShiftKeyDown() && shape.getType().is(WalkersEntityTags.SLOW_FALLING)) {
+                    return true;
+                }
+            }
+        }
 
-		return this.hasEffect(MobEffects.SLOW_FALLING);
-	}
+        return this.hasEffect(MobEffects.SLOW_FALLING);
+    }
 
-	@ModifyVariable(method = "travel", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;hasEffect(Lnet/minecraft/world/effect/MobEffect;)Z", ordinal = 1), ordinal = 0)
-	public float applyWaterCreatureSwimSpeedBoost(float j) {
-		if ((Object) this instanceof Player player) {
-			LivingEntity shape = PlayerShape.getCurrentShape(player);
+    @ModifyVariable(method = "travel", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;hasEffect(Lnet/minecraft/world/effect/MobEffect;)Z", ordinal = 1), ordinal = 0)
+    public float applyWaterCreatureSwimSpeedBoost(float j) {
+        if ((Object) this instanceof Player player) {
+            LivingEntity shape = PlayerShape.getCurrentShape(player);
 
-			// Apply 'Dolphin's Grace' status effect benefits if the player's shape is a
-			// water creature
-			if (Walkers.isAquatic(shape)) {
-				return .96f;
-			}
-		}
+            // Apply 'Dolphin's Grace' status effect benefits if the player's shape is a
+            // water creature
+            if (Walkers.isAquatic(shape)) {
+                return .96f;
+            }
+        }
 
-		return j;
-	}
+        return j;
+    }
 
-	@Inject(method = "causeFallDamage", at = @At(value = "HEAD"), cancellable = true)
-	private void causeFallDamage(float fallDistance, float damageMultiplier, DamageSource damageSource,
-			CallbackInfoReturnable<Boolean> cir) {
-		if ((Object) this instanceof Player player) {
-			LivingEntity shape = PlayerShape.getCurrentShape(player);
+    @Inject(method = "causeFallDamage", at = @At(value = "HEAD"), cancellable = true)
+    private void causeFallDamage(float fallDistance, float damageMultiplier, DamageSource damageSource,
+                                 CallbackInfoReturnable<Boolean> cir) {
+        if ((Object) this instanceof Player player) {
+            LivingEntity shape = PlayerShape.getCurrentShape(player);
 
-			if (shape != null) {
-				boolean takesFallDamage = shape.causeFallDamage(fallDistance, damageMultiplier, damageSource);
-				int damageAmount = ((LivingEntityAccessor) shape).callCalculateFallDamage(fallDistance,
-						damageMultiplier);
+            if (shape != null) {
+                boolean takesFallDamage = shape.causeFallDamage(fallDistance, damageMultiplier, damageSource);
+                int damageAmount = ((LivingEntityAccessor) shape).callCalculateFallDamage(fallDistance,
+                        damageMultiplier);
 
-				if (takesFallDamage && damageAmount > 0) {
-					LivingEntity.Fallsounds fallSounds = shape.getFallSounds();
-					this.playSound(damageAmount > 4 ? fallSounds.big() : fallSounds.small(), 1.0F, 1.0F);
-					((LivingEntityAccessor) shape).callPlayBlockFallSound();
-					this.hurt(damageSources().fall(), (float) damageAmount);
-					cir.setReturnValue(true);
-				} else {
-					cir.setReturnValue(false);
-				}
-			}
-		}
-	}
+                if (takesFallDamage && damageAmount > 0) {
+                    LivingEntity.Fallsounds fallSounds = shape.getFallSounds();
+                    this.playSound(damageAmount > 4 ? fallSounds.big() : fallSounds.small(), 1.0F, 1.0F);
+                    ((LivingEntityAccessor) shape).callPlayBlockFallSound();
+                    this.hurt(damageSources().fall(), (float) damageAmount);
+                    cir.setReturnValue(true);
+                } else {
+                    cir.setReturnValue(false);
+                }
+            }
+        }
+    }
 
-	@Inject(method = "hasEffect", at = @At("HEAD"), cancellable = true)
-	private void returnHasNightVision(MobEffect effect, CallbackInfoReturnable<Boolean> cir) {
-		if ((Object) this instanceof Player player) {
-			if (effect.equals(MobEffects.NIGHT_VISION)) {
-				LivingEntity shape = PlayerShape.getCurrentShape(player);
+    @Inject(method = "hasEffect", at = @At("HEAD"), cancellable = true)
+    private void returnHasNightVision(MobEffect effect, CallbackInfoReturnable<Boolean> cir) {
+        if ((Object) this instanceof Player player) {
+            if (effect.equals(MobEffects.NIGHT_VISION)) {
+                LivingEntity shape = PlayerShape.getCurrentShape(player);
 
-				// Apply 'Night Vision' status effect to player if they are a Bat
-				if (shape instanceof Bat) {
-					cir.setReturnValue(true);
-				}
-			}
-		}
-	}
+                // Apply 'Night Vision' status effect to player if they are a Bat
+                if (shape instanceof Bat) {
+                    cir.setReturnValue(true);
+                }
+            }
+        }
+    }
 
-	@Inject(method = "getEffect", at = @At("HEAD"), cancellable = true)
-	private void returnNightVisionInstance(MobEffect effect, CallbackInfoReturnable<MobEffectInstance> cir) {
-		if ((Object) this instanceof Player player) {
-			if (effect.equals(MobEffects.NIGHT_VISION)) {
-				LivingEntity shape = PlayerShape.getCurrentShape(player);
+    @Inject(method = "getEffect", at = @At("HEAD"), cancellable = true)
+    private void returnNightVisionInstance(MobEffect effect, CallbackInfoReturnable<MobEffectInstance> cir) {
+        if ((Object) this instanceof Player player) {
+            if (effect.equals(MobEffects.NIGHT_VISION)) {
+                LivingEntity shape = PlayerShape.getCurrentShape(player);
 
-				// Apply 'Night Vision' status effect to player if they are a Bat
-				if (shape instanceof Bat) {
-					cir.setReturnValue(new MobEffectInstance(MobEffects.NIGHT_VISION, 100000, 0, false, false));
-				}
-			}
-		}
-	}
+                // Apply 'Night Vision' status effect to player if they are a Bat
+                if (shape instanceof Bat) {
+                    cir.setReturnValue(new MobEffectInstance(MobEffects.NIGHT_VISION, 100000, 0, false, false));
+                }
+            }
+        }
+    }
 
-	@Inject(at = @At("HEAD"), method = "getEyeHeight", cancellable = true)
-	public void getEyeHeight(Pose pose, EntityDimensions dimensions, CallbackInfoReturnable<Float> cir) {
-		if ((LivingEntity) (Object) this instanceof Player player) {
+    @Inject(at = @At("HEAD"), method = "getEyeHeight", cancellable = true)
+    public void getEyeHeight(Pose pose, EntityDimensions dimensions, CallbackInfoReturnable<Float> cir) {
+        if ((LivingEntity) (Object) this instanceof Player player) {
 
-			// this is cursed
-			try {
-				LivingEntity shape = PlayerShape.getCurrentShape(player);
+            // this is cursed
+            try {
+                LivingEntity shape = PlayerShape.getCurrentShape(player);
 
-				if (shape != null) {
-					cir.setReturnValue(shape.getEyeHeight(pose));
-				}
-			} catch (Exception ignored) {
-			}
-		}
-	}
+                if (shape != null) {
+                    cir.setReturnValue(shape.getEyeHeight(pose));
+                }
+            } catch (Exception ignored) {
+            }
+        }
+    }
 
-	@Inject(method = "isSensitiveToWater", at = @At("HEAD"), cancellable = true)
-	protected void shape_isSensitiveToWater(CallbackInfoReturnable<Boolean> cir) {
-		if ((LivingEntity) (Object) this instanceof Player player) {
-			LivingEntity entity = PlayerShape.getCurrentShape(player);
+    @Inject(method = "isSensitiveToWater", at = @At("HEAD"), cancellable = true)
+    protected void shape_isSensitiveToWater(CallbackInfoReturnable<Boolean> cir) {
+        if ((LivingEntity) (Object) this instanceof Player player) {
+            LivingEntity entity = PlayerShape.getCurrentShape(player);
 
-			if (entity != null) {
-				cir.setReturnValue(entity.isSensitiveToWater());
-			}
-		}
-	}
+            if (entity != null) {
+                cir.setReturnValue(entity.isSensitiveToWater());
+            }
+        }
+    }
 
-	@Inject(method = "canBreatheUnderwater", at = @At("HEAD"), cancellable = true)
-	protected void shape_canBreatheUnderwater(CallbackInfoReturnable<Boolean> cir) {
-		if ((LivingEntity) (Object) this instanceof Player player) {
-			LivingEntity entity = PlayerShape.getCurrentShape(player);
+    @Inject(method = "canBreatheUnderwater", at = @At("HEAD"), cancellable = true)
+    protected void shape_canBreatheUnderwater(CallbackInfoReturnable<Boolean> cir) {
+        if ((LivingEntity) (Object) this instanceof Player player) {
+            LivingEntity entity = PlayerShape.getCurrentShape(player);
 
-			if (entity != null) {
-				cir.setReturnValue(entity.canBreatheUnderwater() || entity instanceof Dolphin
-						|| entity.getType().is(WalkersEntityTags.UNDROWNABLE));
-			}
-		}
-	}
+            if (entity != null) {
+                cir.setReturnValue(entity.canBreatheUnderwater() || entity instanceof Dolphin
+                        || entity.getType().is(WalkersEntityTags.UNDROWNABLE));
+            }
+        }
+    }
 
-	@Unique
-	private boolean walkers$nearbySongPlaying = false;
+    @Unique
+    private boolean walkers$nearbySongPlaying = false;
 
-	@Environment(EnvType.CLIENT)
-	@Inject(method = "setRecordPlayingNearby", at = @At("RETURN"))
-	protected void shape_setRecordPlayingNearby(BlockPos songPosition, boolean playing, CallbackInfo ci) {
-		if ((LivingEntity) (Object) this instanceof Player player) {
-			walkers$nearbySongPlaying = playing;
-		}
-	}
+    @Environment(EnvType.CLIENT)
+    @Inject(method = "setRecordPlayingNearby", at = @At("RETURN"))
+    protected void shape_setRecordPlayingNearby(BlockPos songPosition, boolean playing, CallbackInfo ci) {
+        if ((LivingEntity) (Object) this instanceof Player player) {
+            walkers$nearbySongPlaying = playing;
+        }
+    }
 
-	@Override
-	public boolean shape_isNearbySongPlaying() {
-		return walkers$nearbySongPlaying;
-	}
+    @Override
+    public boolean shape_isNearbySongPlaying() {
+        return walkers$nearbySongPlaying;
+    }
 
-	@Inject(method = "isInvertedHealAndHarm", at = @At("HEAD"), cancellable = true)
-	protected void shape_isInvertedHealAndHarm(CallbackInfoReturnable<Boolean> cir) {
-		if ((LivingEntity) (Object) this instanceof Player player) {
-			LivingEntity shape = PlayerShape.getCurrentShape(player);
+    @Inject(method = "isInvertedHealAndHarm", at = @At("HEAD"), cancellable = true)
+    protected void shape_isInvertedHealAndHarm(CallbackInfoReturnable<Boolean> cir) {
+        if ((LivingEntity) (Object) this instanceof Player player) {
+            LivingEntity shape = PlayerShape.getCurrentShape(player);
 
-			if (shape != null) {
-				cir.setReturnValue(shape.isInvertedHealAndHarm());
-			}
-		}
-	}
+            if (shape != null) {
+                cir.setReturnValue(shape.isInvertedHealAndHarm());
+            }
+        }
+    }
 
-	@Inject(method = "canStandOnFluid", at = @At("HEAD"), cancellable = true)
-	protected void shape_canStandOnFluid(FluidState state, CallbackInfoReturnable<Boolean> cir) {
-		if ((LivingEntity) (Object) this instanceof Player player) {
-			LivingEntity shape = PlayerShape.getCurrentShape(player);
+    @Inject(method = "canStandOnFluid", at = @At("HEAD"), cancellable = true)
+    protected void shape_canStandOnFluid(FluidState state, CallbackInfoReturnable<Boolean> cir) {
+        if ((LivingEntity) (Object) this instanceof Player player) {
+            LivingEntity shape = PlayerShape.getCurrentShape(player);
 
-			if (shape != null && shape.getType().is(WalkersEntityTags.LAVA_WALKING) && state.is(FluidTags.LAVA)) {
-				cir.setReturnValue(true);
-			}
-		}
-	}
+            if (shape != null && shape.getType().is(WalkersEntityTags.LAVA_WALKING) && state.is(FluidTags.LAVA)) {
+                cir.setReturnValue(true);
+            }
+        }
+    }
 
-	@Inject(method = "onClimbable", at = @At("HEAD"), cancellable = true)
-	protected void shape_allowSpiderClimbing(CallbackInfoReturnable<Boolean> cir) {
-		if ((LivingEntity) (Object) this instanceof Player player) {
-			LivingEntity shape = PlayerShape.getCurrentShape(player);
+    @Inject(method = "onClimbable", at = @At("HEAD"), cancellable = true)
+    protected void shape_allowSpiderClimbing(CallbackInfoReturnable<Boolean> cir) {
+        if ((LivingEntity) (Object) this instanceof Player player) {
+            LivingEntity shape = PlayerShape.getCurrentShape(player);
 
-			if (shape instanceof Spider) {
-				cir.setReturnValue(this.horizontalCollision);
-			}
-		}
-		
-		((LivingEntity) (Object) this).isInWall();
-	}
+            if (shape instanceof Spider) {
+                cir.setReturnValue(this.horizontalCollision);
+            }
+        }
+
+        ((LivingEntity) (Object) this).isInWall();
+    }
 }
