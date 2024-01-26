@@ -18,19 +18,19 @@ public class HoglinBrainMixin {
     @Inject(
             method = "findNearestValidAttackTarget",
             at = @At("RETURN"),
-    cancellable = true)
+            cancellable = true)
     private static void findNearestValidAttackTarget(Hoglin hoglin, CallbackInfoReturnable<Optional<? extends LivingEntity>> cir) {
         Optional<? extends LivingEntity> ret = cir.getReturnValue();
-        if(ret.isPresent()) {
+        if (ret.isPresent()) {
             LivingEntity target = ret.get();
 
             // Check if Hoglin target is player
-            if(target instanceof Player player) {
+            if (target instanceof Player player) {
                 LivingEntity shape = PlayerShape.getCurrentShape(player);
 
                 // Ensure player shape is valid
-                if(shape != null) {
-                    if(shape instanceof Hoglin) {
+                if (shape != null) {
+                    if (shape instanceof Hoglin) {
                         cir.setReturnValue(Optional.empty());
                     }
                 }

@@ -11,33 +11,33 @@ import org.spongepowered.asm.mixin.gen.Invoker;
 
 @Mixin(LivingEntity.class)
 public interface LivingEntityAccessor {
-	@Accessor
-	boolean isJumping();
+    @Accessor
+    boolean isJumping();
 
-	@Invoker
-	float callGetEyeHeight(Pose pose, EntityDimensions dimensions);
+    @Invoker
+    float callGetEyeHeight(Pose pose, EntityDimensions dimensions);
 
-	@Invoker
-	void callUpdatingUsingItem();
+    @Invoker
+    void callUpdatingUsingItem();
 
-	@Invoker
-	SoundEvent callGetHurtSound(DamageSource source);
+    @Invoker
+    SoundEvent callGetHurtSound(DamageSource source);
 
-	@Invoker
-	SoundEvent callGetDeathSound();
+    @Invoker
+    SoundEvent callGetDeathSound();
 
-	@Invoker
-	void callPlayBlockFallSound();
+    @Invoker
+    void callPlayBlockFallSound();
 
-	@Invoker
-	int callCalculateFallDamage(float fallDistance, float damageMultiplier);
+    @Invoker
+    int callCalculateFallDamage(float fallDistance, float damageMultiplier);
 
-	@Invoker
-	float callGetSoundVolume();
+    @Invoker
+    float callGetSoundVolume();
 
-	@Invoker
-	float callGetVoicePitch();
+    @Invoker
+    float callGetVoicePitch();
 
-	@Invoker
-	void callSetLivingEntityFlag(int mask, boolean value);
+    @Invoker
+    void callSetLivingEntityFlag(int mask, boolean value);
 }

@@ -3,6 +3,8 @@ package tocraft.walkers.mixin;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.goal.AvoidEntityGoal;
+import net.minecraft.world.entity.animal.Cat;
+import net.minecraft.world.entity.animal.Ocelot;
 import net.minecraft.world.entity.monster.Creeper;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
@@ -31,7 +33,7 @@ public abstract class CreeperEntityMixin extends Monster {
                 entity -> {
                     if (entity instanceof Player player) {
                         LivingEntity shape = PlayerShape.getCurrentShape(player);
-                        return shape != null && shape.getType().equals(EntityType.OCELOT);
+                        return shape instanceof Ocelot || shape instanceof Cat;
                     }
 
                     return true;

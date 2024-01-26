@@ -1,7 +1,10 @@
 plugins {
     id "com.github.johnrengelman.shadow" version "8.1.1"
-    id "com.modrinth.minotaur" version "2.+"
-    id 'net.darkhax.curseforgegradle' version '1.1.15'
+    id "me.shedaniel.unified-publishing"
+}
+
+loom {
+    accessWidenerPath = project(":common").loom.accessWidenerPath
 }
 
 architectury {
@@ -15,13 +18,13 @@ configurations {
     compileClasspath.extendsFrom common
     runtimeClasspath.extendsFrom common
     developmentFabric.extendsFrom common
-   }
+}
 
 
 dependencies {
     modImplementation "net.fabricmc:fabric-loader:${rootProject.fabric_loader_version}"
     modApi "net.fabricmc.fabric-api:fabric-api:${rootProject.fabric_api_version}+${rootProject.minecraft_version}"
-    modApi "dev.tocraft:craftedcore:${rootProject.minecraft_version}-fabric-${rootProject.craftedcore_version}"
+    modApi "dev.tocraft:craftedcore-fabric:${rootProject.minecraft_version}-${rootProject.craftedcore_version}"
 
     common(project(path: ":common", configuration: "namedElements")) { transitive = false }
     shadowCommon(project(path: ":common", configuration: "transformProductionFabric")) { transitive = false }
@@ -38,22 +41,24 @@ processResources {
 }
 
 shadowJar {
+    exclude "architectury.common.json"
+
     configurations = [project.configurations.shadowCommon]
-    archiveClassifier.set("dev-shadow")
+    archiveClassifier.set("fabric-dev-shadow")
 }
 
 remapJar {
+    injectAccessWidener = true
     input.set shadowJar.archiveFile
     dependsOn shadowJar
     archiveClassifier.set("fabric")
 }
 
 jar {
-    archiveClassifier.set("dev")
+    archiveClassifier.set("fabric-dev")
 }
 
 sourcesJar {
-    duplicatesStrategy 'exclude'
     def commonSources = project(":common").sourcesJar
     dependsOn commonSources
     from commonSources.archiveFile.map { zipTree(it) }
@@ -65,29 +70,63 @@ components.java {
     }
 }
 
-modrinth {
-    token = System.getenv("MODRINTH_TOKEN")
-    projectId = "woodwalkers"
-    versionNumber = rootProject.minecraft_version + "-" + project.name + "-" + rootProject.mod_version
-    versionType = "release"
-    uploadFile = remapJar
-    gameVersions = [rootProject.minecraft_version]
-    loaders = [project.name]
-    changelog = "https://github.com/ToCraft/woodwalkers-mod/releases/tag/" + rootProject.mod_version + "-" + rootProject.minecraft_version
-    dependencies {
-        required.project "fabric-api"
-        required.version "crafted-core", rootProject.minecraft_version + "-" + project.name + "-" + rootProject.craftedcore_version
+publishing {
+    publications {
+        mavenFabric(MavenPublication) {
+            artifactId = rootProject.archivesBaseName + "-$project.name"
+            version = rootProject.minecraft_version + "-" + rootProject.mod_version
+            from components.java
+        }
+    }
+    repositories {
+        if (System.getenv("MAVEN_PASS") != null) {
+            maven {
+                name = "tocraftMavenPublic"
+                url "https://maven.tocraft.dev/public"
+
+                credentials {
+                    username = "tocraft"
+                    password = System.getenv("MAVEN_PASS")
+                }
+            }
+        }
     }
 }
 
-task curseforge(type: net.darkhax.curseforgegradle.TaskPublishCurseForge) {
-    apiToken = System.getenv("CURSEFORGE_TOKEN")
-    
-    // The main file to upload
-    def mainFile = upload(868922, remapJar)
-    mainFile.displayName = rootProject.minecraft_version + "-" + project.name + "-" + rootProject.mod_version
-    mainFile.releaseType = 'release'
-    mainFile.addModLoader(project.name)
-    mainFile.addRequirement("crafted-core")
-    mainFile.changelog = "https://github.com/ToCraft/woodwalkers-mod/releases/tag/" + rootProject.mod_version + "-" + rootProject.minecraft_version
+unifiedPublishing {
+    project {
+        displayName = "$rootProject.minecraft_version-$project.name-$project.version"
+        releaseType = "$rootProject.artifact_type"
+        changelog = releaseChangelog()
+        gameVersions = []
+        gameLoaders = ["fabric", "quilt"]
+        mainPublication remapJar
+        relations {
+            depends {
+                curseforge = "crafted-core"
+                modrinth = "crafted-core"
+            }
+        }
+
+        String[] supportedVersions = rootProject.supported_versions.split(",")
+        supportedVersions.each {gameVersions.add(it.trim())}
+
+        var CURSE_API_KEY = project.findProperty("CURSEFORGE_TOKEN") ?: System.getenv("CURSEFORGE_TOKEN")
+        if (CURSE_API_KEY != null) {
+            curseforge {
+                token = CURSE_API_KEY
+                id = rootProject.curseforge_id
+                gameVersions.add "Java 17"
+            }
+        }
+
+        var MODRINTH_TOKEN = project.findProperty("MODRINTH_TOKEN") ?: System.getenv("MODRINTH_TOKEN")
+        if (MODRINTH_TOKEN != null) {
+            modrinth {
+                token = MODRINTH_TOKEN
+                id = rootProject.modrinth_id
+                version = "$project.version+$project.name"
+            }
+        }
+    }
 }

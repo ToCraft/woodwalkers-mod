@@ -7,7 +7,7 @@
     },
     {
       "id": "minecraft:piglin_brute",
-      "required":  false
+      "required": false
     }
   ]
 }

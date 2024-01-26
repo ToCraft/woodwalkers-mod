@@ -37,12 +37,12 @@ public abstract class LivingEntityFoodMixin extends Entity {
             method = "addEatEffect",
             at = @At(value = "INVOKE", target = "Ljava/util/Iterator;hasNext()Z"), locals = LocalCapture.CAPTURE_FAILHARD, cancellable = true)
     private void removeFleshHungerForWolves(ItemStack stack, Level level, LivingEntity targetEntity, CallbackInfo ci, Item item) {
-        if((LivingEntity) (Object) this instanceof Player player) {
+        if ((LivingEntity) (Object) this instanceof Player player) {
             LivingEntity shape = PlayerShape.getCurrentShape(player);
 
             // If this player is a Wolf and the item they are eating is an item wolves are immune to, cancel the method.
-            if(shape instanceof Wolf) {
-                if(WOLVES_IGNORE.get().contains(item.getFoodProperties())) {
+            if (shape instanceof Wolf) {
+                if (WOLVES_IGNORE.get().contains(item.getFoodProperties())) {
                     ci.cancel();
                 }
             }

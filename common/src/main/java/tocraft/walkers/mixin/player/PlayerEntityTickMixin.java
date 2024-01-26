@@ -28,15 +28,15 @@ public abstract class PlayerEntityTickMixin extends LivingEntity {
     private void serverTick(CallbackInfo info) {
         // Tick WalkersTickHandlers on the client & server.
         @Nullable LivingEntity shape = PlayerShape.getCurrentShape((Player) (Object) this);
-        if(shape != null) {
+        if (shape != null) {
             @Nullable WalkersTickHandler handler = WalkersTickHandlers.getHandlers().get(shape.getType());
-            if(handler != null) {
+            if (handler != null) {
                 handler.tick((Player) (Object) this, shape);
             }
         }
 
         // Update misc. server-side entity properties for the player.
-        if(!level.isClientSide) {
+        if (!level.isClientSide) {
             PlayerDataProvider data = (PlayerDataProvider) this;
             data.walkers$setRemainingHostilityTime(Math.max(0, data.walkers$getRemainingHostilityTime() - 1));
 

@@ -14,8 +14,9 @@ assignees: ''
 *Upload your game log as a spoiler. e.g.:*
 <details>
   <summary>logfile:</summary>
-  
+
   ```log
   // Here comes your log
   ```
+
 </details>

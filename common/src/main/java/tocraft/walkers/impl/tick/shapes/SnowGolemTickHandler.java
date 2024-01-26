@@ -11,9 +11,9 @@ public class SnowGolemTickHandler implements WalkersTickHandler<SnowGolem> {
 
     @Override
     public void tick(Player player, SnowGolem golem) {
-    	if (player.isCrouching() && player.isOnGround() && player.level.getBlockState(player.blockPosition()).isAir()) {
-    		BlockState defaultSnowBlockState =  Registry.BLOCK.get(new ResourceLocation("minecraft:snow")).defaultBlockState();
+        if (player.isCrouching() && player.isOnGround() && player.level.getBlockState(player.blockPosition()).isAir()) {
+            BlockState defaultSnowBlockState = Registry.BLOCK.get(new ResourceLocation("minecraft:snow")).defaultBlockState();
             player.level.setBlockAndUpdate(player.blockPosition(), defaultSnowBlockState);
-    	}
+        }
     }
 }

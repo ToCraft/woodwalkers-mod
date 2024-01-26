@@ -9,9 +9,9 @@
     "Draylar"
   ],
   "contributors": [
+    "Uncle_Chronos"
   ],
   "license": "MIT",
-  "icon": "assets/walkers/icon.png",
   "environment": "*",
   "entrypoints": {
     "main": [

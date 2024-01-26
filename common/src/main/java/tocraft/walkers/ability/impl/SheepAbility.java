@@ -17,15 +17,14 @@ public class SheepAbility<T extends Mob> extends ShapeAbility<T> {
     @Override
     public void onUse(Player player, Mob shape, Level world) {
         BlockPos playerPos = player.blockPosition();
-        BlockPos blockPos = new BlockPos(playerPos.getX(), playerPos.getY()-1, playerPos.getZ());
+        BlockPos blockPos = new BlockPos(playerPos.getX(), playerPos.getY() - 1, playerPos.getZ());
 
         if ((world.getBlockState(playerPos).getBlock() == Registry.BLOCK.get(new ResourceLocation("minecraft:grass")) || world.getBlockState(playerPos).getBlock() == Registry.BLOCK.get(new ResourceLocation("minecraft:tall_grass")))) {
-            BlockState defaultAirBlockState =  Registry.BLOCK.get(new ResourceLocation("minecraft:air")).defaultBlockState();
+            BlockState defaultAirBlockState = Registry.BLOCK.get(new ResourceLocation("minecraft:air")).defaultBlockState();
             world.setBlockAndUpdate(playerPos, defaultAirBlockState);
             player.getFoodData().eat(2, 0.1F);
-        }
-        else if (world.getBlockState(blockPos).getBlock() == Registry.BLOCK.get(new ResourceLocation("minecraft:grass_block"))) {
-            BlockState defaultDirtBlockState =  Registry.BLOCK.get(new ResourceLocation("minecraft:dirt")).defaultBlockState();
+        } else if (world.getBlockState(blockPos).getBlock() == Registry.BLOCK.get(new ResourceLocation("minecraft:grass_block"))) {
+            BlockState defaultDirtBlockState = Registry.BLOCK.get(new ResourceLocation("minecraft:dirt")).defaultBlockState();
             world.setBlockAndUpdate(blockPos, defaultDirtBlockState);
             player.getFoodData().eat(3, 0.1F);
         }

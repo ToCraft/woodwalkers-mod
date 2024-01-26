@@ -5,8 +5,8 @@ import tocraft.walkers.Walkers;
 
 public class WalkersFabric implements ModInitializer {
 
-	@Override
-	public void onInitialize() {
-		new Walkers().initialize();
-	}
+    @Override
+    public void onInitialize() {
+        new Walkers().initialize();
+    }
 }

@@ -27,47 +27,47 @@ import java.util.function.Predicate;
 @Mixin(Fox.class)
 public abstract class FoxEntityMixin extends Animal {
 
-	@Shadow
-	@Final
-	@Mutable
-	private static Predicate<Entity> AVOID_PLAYERS;
+    @Shadow
+    @Final
+    @Mutable
+    private static Predicate<Entity> AVOID_PLAYERS;
 
-	private FoxEntityMixin(EntityType<? extends Animal> entityType, Level world) {
-		super(entityType, world);
-	}
+    private FoxEntityMixin(EntityType<? extends Animal> entityType, Level world) {
+        super(entityType, world);
+    }
 
-	// Change the default "flee from player," predicate to ignore players disguised
-	// as Foxes.
-	// Hopefully nobody else needs to modify fox fleeing behavior.
-	static {
-		AVOID_PLAYERS = entity -> {
-			boolean isShapedPlayer = false;
+    // Change the default "flee from player," predicate to ignore players disguised
+    // as Foxes.
+    // Hopefully nobody else needs to modify fox fleeing behavior.
+    static {
+        AVOID_PLAYERS = entity -> {
+            boolean isShapedPlayer = false;
 
-			if (entity instanceof Player player) {
-				LivingEntity shape = PlayerShape.getCurrentShape(player);
-				if (shape instanceof Fox) {
-					isShapedPlayer = true;
-				}
-			}
+            if (entity instanceof Player player) {
+                LivingEntity shape = PlayerShape.getCurrentShape(player);
+                if (shape instanceof Fox) {
+                    isShapedPlayer = true;
+                }
+            }
 
-			return !entity.isDiscrete() && EntitySelector.NO_CREATIVE_OR_SPECTATOR.test(entity) && !isShapedPlayer;
-		};
-	}
+            return !entity.isDiscrete() && EntitySelector.NO_CREATIVE_OR_SPECTATOR.test(entity) && !isShapedPlayer;
+        };
+    }
 
-	@Inject(method = "registerGoals", at = @At("RETURN"))
-	private void addPlayerTarget(CallbackInfo ci) {
-		this.targetSelector.addGoal(7,
-				new NearestAttackableTargetGoal<>(this, Player.class, 10, false, false, player -> {
-					// ensure foxes can attack players with a shape similar to their normal prey
-					if (!Walkers.CONFIG.foxesAttack2ndShapedPrey) {
-						return false;
-					}
+    @Inject(method = "registerGoals", at = @At("RETURN"))
+    private void addPlayerTarget(CallbackInfo ci) {
+        this.targetSelector.addGoal(7,
+                new NearestAttackableTargetGoal<>(this, Player.class, 10, false, false, player -> {
+                    // ensure foxes can attack players with a shape similar to their normal prey
+                    if (!Walkers.CONFIG.foxesAttack2ndShapedPrey) {
+                        return false;
+                    }
 
-					// foxes can target players if their shape is in the fox_prey tag, or if they
-					// are an entity that extends FishEntity
-					LivingEntity shape = PlayerShape.getCurrentShape((Player) player);
-					return shape != null && shape.getType().is(WalkersEntityTags.FOX_PREY)
-							|| shape instanceof AbstractFish || (shape instanceof Turtle && shape.isBaby());
-				}));
-	}
+                    // foxes can target players if their shape is in the fox_prey tag, or if they
+                    // are an entity that extends FishEntity
+                    LivingEntity shape = PlayerShape.getCurrentShape((Player) player);
+                    return shape != null && shape.getType().is(WalkersEntityTags.FOX_PREY)
+                            || shape instanceof AbstractFish || (shape instanceof Turtle && shape.isBaby());
+                }));
+    }
 }

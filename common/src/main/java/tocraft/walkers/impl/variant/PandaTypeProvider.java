@@ -17,7 +17,7 @@ public class PandaTypeProvider extends TypeProvider<Panda> {
 
     @Override
     public Panda create(EntityType<Panda> type, Level level, int data) {
-    	Panda panda = new Panda(type, level);
+        Panda panda = new Panda(type, level);
         panda.setMainGene(Panda.Gene.byId(data));
         return panda;
     }
@@ -34,8 +34,8 @@ public class PandaTypeProvider extends TypeProvider<Panda> {
 
     @Override
     public Component modifyText(Panda entity, MutableComponent text) {
-    	Panda.Gene gene = entity.getMainGene();
-        if(gene.equals(Panda.Gene.NORMAL)) return text;
+        Panda.Gene gene = entity.getMainGene();
+        if (gene.equals(Panda.Gene.NORMAL)) return text;
         else return new TextComponent(formatTypePrefix(gene.name()) + " ").append(text);
     }
 }

@@ -1,11 +1,11 @@
 package tocraft.walkers.api.variant;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import tocraft.walkers.impl.variant.*;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class TypeProviderRegistry {
 	private static final Map<EntityType<? extends LivingEntity>, TypeProvider<? extends LivingEntity>> VARIANT_BY_TYPE = new HashMap<>();

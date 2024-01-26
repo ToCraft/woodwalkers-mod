@@ -16,38 +16,38 @@ import tocraft.walkers.impl.DimensionsRefresher;
 @Mixin(PlayerList.class)
 public class PlayerManagerMixin {
 
-	@Inject(method = "respawn", at = @At("RETURN"))
-	private void onRespawn(ServerPlayer player, boolean alive, CallbackInfoReturnable<ServerPlayer> cir) {
-		LivingEntity shape = PlayerShape.getCurrentShape(player);
+    @Inject(method = "respawn", at = @At("RETURN"))
+    private void onRespawn(ServerPlayer player, boolean alive, CallbackInfoReturnable<ServerPlayer> cir) {
+        LivingEntity shape = PlayerShape.getCurrentShape(player);
 
-		// refresh entity hitbox dimensions after death
-		((DimensionsRefresher) player).shape_refreshDimensions();
+        // refresh entity hitbox dimensions after death
+        ((DimensionsRefresher) player).shape_refreshDimensions();
 
-		if (shape != null) {
-			// Re-sync max health for shapes
-			if (Walkers.CONFIG.scalingHealth) {
-				player.getAttribute(Attributes.MAX_HEALTH)
-						.setBaseValue(Math.min(Walkers.CONFIG.maxHealth, shape.getMaxHealth()));
-				player.setHealth(player.getMaxHealth());
-			}
-			// Re-sync attack damage for shapes
-			if (Walkers.CONFIG.scalingAttackDamage) {
-				// get shape attack damage, return 1D if value is lower than max or not existing
-				double shapeAttackDamage = 1D;
-				try {
-					shapeAttackDamage = Math.max(shape.getAttribute(Attributes.ATTACK_DAMAGE).getBaseValue(),
-							shapeAttackDamage);
-				} catch (Exception ignored) {
-				}
-				player.getAttribute(Attributes.ATTACK_DAMAGE)
-						.setBaseValue(Math.min(Walkers.CONFIG.maxAttackDamage, shapeAttackDamage));
-			}
-			// sync max health & attack damage with clients
-			if ((Walkers.CONFIG.scalingHealth || Walkers.CONFIG.scalingAttackDamage)
-					|| Walkers.CONFIG.scalingAttackDamage) {
-				player.connection.send(new ClientboundUpdateAttributesPacket(player.getId(),
-						player.getAttributes().getSyncableAttributes()));
-			}
-		}
-	}
+        if (shape != null) {
+            // Re-sync max health for shapes
+            if (Walkers.CONFIG.scalingHealth) {
+                player.getAttribute(Attributes.MAX_HEALTH)
+                        .setBaseValue(Math.min(Walkers.CONFIG.maxHealth, shape.getMaxHealth()));
+                player.setHealth(player.getMaxHealth());
+            }
+            // Re-sync attack damage for shapes
+            if (Walkers.CONFIG.scalingAttackDamage) {
+                // get shape attack damage, return 1D if value is lower than max or not existing
+                double shapeAttackDamage = 1D;
+                try {
+                    shapeAttackDamage = Math.max(shape.getAttribute(Attributes.ATTACK_DAMAGE).getBaseValue(),
+                            shapeAttackDamage);
+                } catch (Exception ignored) {
+                }
+                player.getAttribute(Attributes.ATTACK_DAMAGE)
+                        .setBaseValue(Math.min(Walkers.CONFIG.maxAttackDamage, shapeAttackDamage));
+            }
+            // sync max health & attack damage with clients
+            if ((Walkers.CONFIG.scalingHealth || Walkers.CONFIG.scalingAttackDamage)
+                    || Walkers.CONFIG.scalingAttackDamage) {
+                player.connection.send(new ClientboundUpdateAttributesPacket(player.getId(),
+                        player.getAttributes().getSyncableAttributes()));
+            }
+        }
+    }
 }

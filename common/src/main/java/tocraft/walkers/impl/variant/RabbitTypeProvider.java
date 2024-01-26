@@ -1,9 +1,6 @@
 package tocraft.walkers.impl.variant;
 
-import java.util.Map;
-
 import com.google.common.collect.ImmutableMap;
-
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TextComponent;
@@ -11,6 +8,8 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.animal.Rabbit;
 import net.minecraft.world.level.Level;
 import tocraft.walkers.api.variant.TypeProvider;
+
+import java.util.Map;
 
 public class RabbitTypeProvider extends TypeProvider<Rabbit> {
 	
@@ -27,15 +26,16 @@ public class RabbitTypeProvider extends TypeProvider<Rabbit> {
 
     @Override
     public int getVariantData(Rabbit entity) {
-    	int variant = entity.getRabbitType();
-    	return (variant == 99) ? 6 : variant;
+        int id = entity.getRabbitType();
+        if (id == 99) return 6;
+        else return id;
     }
 
     @Override
     public Rabbit create(EntityType<Rabbit> type, Level level, int data) {
-    	Rabbit rabbit = new Rabbit(type, level);
-    	int variant = (data == 6) ? 99 : data;
-        rabbit.setRabbitType(variant);
+        Rabbit rabbit = new Rabbit(type, level);
+        if (data == 6) data = 99;
+        rabbit.setRabbitType(data);
         return rabbit;
     }
 
