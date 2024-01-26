@@ -10,9 +10,9 @@ public abstract class ShapeAbility<E extends LivingEntity> {
     /**
      * Defines the use action of this ability. Implementers can assume the ability checks, such as cool-downs, have successfully passed.
      *
-     * @param player   player using the ability
-     * @param shape current shape of the player
-     * @param world    world the player is residing in
+     * @param player player using the ability
+     * @param shape  current shape of the player
+     * @param world  world the player is residing in
      */
     abstract public void onUse(Player player, E shape, Level world);
 

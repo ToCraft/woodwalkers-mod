@@ -3,7 +3,7 @@
   "values": [
     {
       "id": "minecraft:allay",
-      "required":false
+      "required": false
     },
     {
       "id": "minecraft:bat",
@@ -43,27 +43,27 @@
     },
     {
       "id": "beachparty:pelican",
-      "required":false
+      "required": false
     },
     {
       "id": "betterend:dragonfly",
-      "required":false
+      "required": false
     },
     {
       "id": "betterend:silk_moth",
-      "required":false
+      "required": false
     },
     {
       "id": "clutter:butterfly",
-      "required":false
+      "required": false
     },
     {
       "id": "endermanoverhaul:spirit",
-      "required":false
+      "required": false
     },
     {
       "id": "friendsandfoes:glare",
-      "required":false
+      "required": false
     },
     {
       "id": "naturalist:bluejay",

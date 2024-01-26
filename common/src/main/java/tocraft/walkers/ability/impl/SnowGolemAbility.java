@@ -18,7 +18,7 @@ public class SnowGolemAbility extends ShapeAbility<SnowGolem> {
         world.playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.SNOWBALL_THROW, SoundSource.NEUTRAL, 0.5F, 0.4F / (world.random.nextFloat() * 0.4F + 0.8F));
 
         if (!world.isClientSide) {
-            for(int i = 0; i < 10; i++) {
+            for (int i = 0; i < 10; i++) {
                 Snowball snowballEntity = new Snowball(world, player);
                 snowballEntity.setItem(new ItemStack(Items.SNOWBALL));
                 snowballEntity.shootFromRotation(player, player.getXRot() + world.random.nextInt(10) - 5, player.getYRot() + world.random.nextInt(10) - 5, 0.0F, 1.5F, 1.0F);

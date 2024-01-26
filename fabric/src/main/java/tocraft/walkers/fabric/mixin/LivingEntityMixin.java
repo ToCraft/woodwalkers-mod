@@ -15,26 +15,26 @@ import tocraft.walkers.api.PlayerShape;
 @Mixin(LivingEntity.class)
 public abstract class LivingEntityMixin extends Entity {
 
-	@Shadow
-	protected abstract int increaseAirSupply(int air);
+    @Shadow
+    protected abstract int increaseAirSupply(int air);
 
-	protected LivingEntityMixin(EntityType<?> type, Level world) {
-		super(type, world);
-	}
+    protected LivingEntityMixin(EntityType<?> type, Level world) {
+        super(type, world);
+    }
 
-	@Redirect(method = "baseTick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;setAirSupply(I)V", ordinal = 2))
-	private void cancelAirIncrement(LivingEntity livingEntity, int air) {
-		// Aquatic creatures should not regenerate breath on land
-		if ((Object) this instanceof Player player) {
-			LivingEntity shape = PlayerShape.getCurrentShape(player);
+    @Redirect(method = "baseTick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;setAirSupply(I)V", ordinal = 2))
+    private void cancelAirIncrement(LivingEntity livingEntity, int air) {
+        // Aquatic creatures should not regenerate breath on land
+        if ((Object) this instanceof Player player) {
+            LivingEntity shape = PlayerShape.getCurrentShape(player);
 
-			if (shape != null) {
-				if (Walkers.isAquatic(shape)) {
-					return;
-				}
-			}
-		}
+            if (shape != null) {
+                if (Walkers.isAquatic(shape)) {
+                    return;
+                }
+            }
+        }
 
-		this.setAirSupply(this.increaseAirSupply(this.getAirSupply()));
-	}
+        this.setAirSupply(this.increaseAirSupply(this.getAirSupply()));
+    }
 }

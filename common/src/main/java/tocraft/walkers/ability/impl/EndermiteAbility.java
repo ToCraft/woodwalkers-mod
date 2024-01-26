@@ -12,17 +12,17 @@ import net.minecraft.world.level.Level;
 import tocraft.walkers.ability.ShapeAbility;
 
 public class EndermiteAbility extends ShapeAbility<Endermite> {
-    
+
     @Override
     public void onUse(Player player, Endermite shape, Level world) {
         double x = player.getX();
         double y = player.getY();
         double z = player.getZ();
 
-        for(int i = 0; i < 16; ++i) {
+        for (int i = 0; i < 16; ++i) {
             // Pick a random location nearby to teleport to.
             double g = player.getX() + (player.getRandom().nextDouble() - 0.5D) * 16.0D;
-            double h = Mth.clamp(player.getY() + (double)(player.getRandom().nextInt(16) - 8), 0.0D, world.getHeight() - 1);
+            double h = Mth.clamp(player.getY() + (double) (player.getRandom().nextInt(16) - 8), 0.0D, world.getHeight() - 1);
             double j = player.getZ() + (player.getRandom().nextDouble() - 0.5D) * 16.0D;
 
             // Cancel vehicle/riding mechanics.

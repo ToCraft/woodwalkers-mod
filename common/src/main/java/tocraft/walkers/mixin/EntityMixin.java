@@ -4,6 +4,7 @@ import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -17,99 +18,103 @@ import tocraft.walkers.registry.WalkersEntityTags;
 @Mixin(Entity.class)
 public abstract class EntityMixin implements DimensionsRefresher {
 
-	@Shadow
-	private EntityDimensions dimensions;
+    @Shadow
+    private EntityDimensions dimensions;
 
-	@Shadow
-	public abstract Pose getPose();
+    @Shadow
+    public abstract Pose getPose();
 
-	@Shadow
-	public abstract EntityDimensions getDimensions(Pose pose);
+    @Shadow
+    public abstract EntityDimensions getDimensions(Pose pose);
 
-	@Shadow
-	public abstract AABB getBoundingBox();
+    @Shadow
+    public abstract AABB getBoundingBox();
 
-	@Shadow
-	public abstract void setBoundingBox(AABB boundingBox);
+    @Shadow
+    public abstract void setBoundingBox(AABB boundingBox);
 
-	@Shadow
-	protected boolean firstTick;
+    @Shadow
+    protected boolean firstTick;
 
-	@Shadow
-	public abstract void move(MoverType type, Vec3 movement);
+    @Shadow
+    public abstract void move(MoverType type, Vec3 movement);
 
-	@Shadow
-	private float eyeHeight;
+    @Shadow
+    private float eyeHeight;
 
-	@Shadow
-	protected abstract float getEyeHeight(Pose pose, EntityDimensions dimensions);
+    @Shadow
+    protected abstract float getEyeHeight(Pose pose, EntityDimensions dimensions);
 
-	@Inject(method = "getBbWidth", at = @At("HEAD"), cancellable = true)
-	private void getBbWidth(CallbackInfoReturnable<Float> cir) {
-		if ((Object) this instanceof Player player) {
-			LivingEntity shape = PlayerShape.getCurrentShape(player);
+    @Shadow
+    @Nullable
+    private Entity vehicle;
 
-			if (shape != null) {
-				cir.setReturnValue(shape.getBbWidth());
-			}
-		}
-	}
+    @Inject(method = "getBbWidth", at = @At("HEAD"), cancellable = true)
+    private void getBbWidth(CallbackInfoReturnable<Float> cir) {
+        if ((Object) this instanceof Player player) {
+            LivingEntity shape = PlayerShape.getCurrentShape(player);
 
-	@Inject(method = "getBbHeight", at = @At("HEAD"), cancellable = true)
-	private void getBbHeight(CallbackInfoReturnable<Float> cir) {
-		if ((Object) this instanceof Player player) {
-			LivingEntity shape = PlayerShape.getCurrentShape(player);
+            if (shape != null) {
+                cir.setReturnValue(shape.getBbWidth());
+            }
+        }
+    }
 
-			if (shape != null) {
-				cir.setReturnValue(shape.getBbHeight());
-			}
-		}
-	}
+    @Inject(method = "getBbHeight", at = @At("HEAD"), cancellable = true)
+    private void getBbHeight(CallbackInfoReturnable<Float> cir) {
+        if ((Object) this instanceof Player player) {
+            LivingEntity shape = PlayerShape.getCurrentShape(player);
 
-	@Override
-	public void shape_refreshDimensions() {
-		EntityDimensions currentDimensions = this.dimensions;
-		Pose entityPose = this.getPose();
-		EntityDimensions newDimensions = this.getDimensions(entityPose);
+            if (shape != null) {
+                cir.setReturnValue(shape.getBbHeight());
+            }
+        }
+    }
 
-		this.dimensions = newDimensions;
-		this.eyeHeight = this.getEyeHeight(entityPose, newDimensions);
+    @Override
+    public void shape_refreshDimensions() {
+        EntityDimensions currentDimensions = this.dimensions;
+        Pose entityPose = this.getPose();
+        EntityDimensions newDimensions = this.getDimensions(entityPose);
 
-		AABB box = this.getBoundingBox();
-		this.setBoundingBox(new AABB(box.minX, box.minY, box.minZ, box.minX + newDimensions.width,
-				box.minY + newDimensions.height, box.minZ + newDimensions.width));
+        this.dimensions = newDimensions;
+        this.eyeHeight = this.getEyeHeight(entityPose, newDimensions);
 
-		if (!this.firstTick) {
-			float f = currentDimensions.width - newDimensions.width;
-			this.move(MoverType.SELF, new Vec3(f, 0.0D, f));
-		}
-	}
+        AABB box = this.getBoundingBox();
+        this.setBoundingBox(new AABB(box.minX, box.minY, box.minZ, box.minX + newDimensions.width,
+                box.minY + newDimensions.height, box.minZ + newDimensions.width));
 
-	@Inject(at = @At("HEAD"), method = "getEyeHeight()F", cancellable = true)
-	public void getEyeHeight(CallbackInfoReturnable<Float> cir) {
-		if ((Entity) (Object) this instanceof Player player) {
-			LivingEntity shape = PlayerShape.getCurrentShape(player);
+        if (!this.firstTick) {
+            float f = currentDimensions.width - newDimensions.width;
+            this.move(MoverType.SELF, new Vec3(f, 0.0D, f));
+        }
+    }
 
-			if (shape != null) {
-				cir.setReturnValue(shape.getEyeHeight());
-			}
-		}
-	}
+    @Inject(at = @At("HEAD"), method = "getEyeHeight()F", cancellable = true)
+    public void getEyeHeight(CallbackInfoReturnable<Float> cir) {
+        if ((Entity) (Object) this instanceof Player player) {
+            LivingEntity shape = PlayerShape.getCurrentShape(player);
 
-	@Inject(method = "fireImmune", at = @At("HEAD"), cancellable = true)
-	private void fireImmune(CallbackInfoReturnable<Boolean> cir) {
-		if ((Object) this instanceof Player player) {
-			LivingEntity shape = PlayerShape.getCurrentShape(player);
+            if (shape != null) {
+                cir.setReturnValue(shape.getEyeHeight());
+            }
+        }
+    }
 
-			if (shape != null) {
-				cir.setReturnValue(shape.getType().fireImmune());
-			}
-		}
-	}
-	
-	@Inject(method = "tick", at = @At("HEAD"), cancellable = true)
-	private void goThroughBlocks(CallbackInfo ci) {
-		if ((Object) this instanceof Player player && PlayerShape.getCurrentShape(player) != null && PlayerShape.getCurrentShape(player).getType().is(WalkersEntityTags.FALL_THROUGH_BLOCKS))
-			player.noPhysics = true;
-	}
+    @Inject(method = "fireImmune", at = @At("HEAD"), cancellable = true)
+    private void fireImmune(CallbackInfoReturnable<Boolean> cir) {
+        if ((Object) this instanceof Player player) {
+            LivingEntity shape = PlayerShape.getCurrentShape(player);
+
+            if (shape != null) {
+                cir.setReturnValue(shape.getType().fireImmune());
+            }
+        }
+    }
+
+    @Inject(method = "tick", at = @At("HEAD"), cancellable = true)
+    private void goThroughBlocks(CallbackInfo ci) {
+        if ((Object) this instanceof Player player && PlayerShape.getCurrentShape(player) != null && PlayerShape.getCurrentShape(player).getType().is(WalkersEntityTags.FALL_THROUGH_BLOCKS))
+            player.noPhysics = true;
+    }
 }

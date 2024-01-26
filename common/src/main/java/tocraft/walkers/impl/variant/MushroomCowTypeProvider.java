@@ -16,7 +16,7 @@ public class MushroomCowTypeProvider extends TypeProvider<MushroomCow> {
 
     @Override
     public MushroomCow create(EntityType<MushroomCow> type, Level level, int data) {
-    	MushroomCow mooshroom = new MushroomCow(type, level);
+        MushroomCow mooshroom = new MushroomCow(type, level);
         mooshroom.setVariant(MushroomCow.MushroomType.values()[data]);
         return mooshroom;
     }

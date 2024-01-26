@@ -12,13 +12,13 @@ public class RabbitTypeProvider extends TypeProvider<Rabbit> {
     @Override
     public int getVariantData(Rabbit entity) {
         int id = entity.getVariant().id();
-        if(id == 99) return 6;
+        if (id == 99) return 6;
         else return id;
     }
 
     @Override
     public Rabbit create(EntityType<Rabbit> type, Level level, int data) {
-    	Rabbit rabbit = new Rabbit(type, level);
+        Rabbit rabbit = new Rabbit(type, level);
         if (data == 6) data = 99;
         rabbit.setVariant(Rabbit.Variant.byId(data));
         return rabbit;

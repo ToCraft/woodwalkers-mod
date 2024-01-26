@@ -3,6 +3,7 @@ package tocraft.walkers.mixin;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.goal.AvoidEntityGoal;
+import net.minecraft.world.entity.animal.Wolf;
 import net.minecraft.world.entity.monster.AbstractSkeleton;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
@@ -31,7 +32,7 @@ public abstract class AbstractSkeletonEntityMixin extends Monster {
                 entity -> {
                     if (entity instanceof Player player) {
                         LivingEntity shape = PlayerShape.getCurrentShape(player);
-                        return shape != null && shape.getType().equals(EntityType.WOLF);
+                        return shape instanceof Wolf;
                     }
 
                     return true;

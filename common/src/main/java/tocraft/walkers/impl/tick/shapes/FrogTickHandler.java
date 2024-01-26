@@ -10,12 +10,12 @@ public class FrogTickHandler implements WalkersTickHandler<Frog> {
 
     @Override
     public void tick(Player player, Frog frog) {
-        if(player.level().isClientSide) {
+        if (player.level().isClientSide) {
             boolean walk = player.onGround() && player.getDeltaMovement().horizontalDistanceSqr() > 1.0E-6 && !player.isInWaterOrBubble();
             boolean swim = player.getDeltaMovement().horizontalDistanceSqr() > 1.0E-6 && player.isInWaterOrBubble();
 
             // Jumping
-            if(!player.onGround() && !swim && !walk && !player.isInWaterOrBubble()) {
+            if (!player.onGround() && !swim && !walk && !player.isInWaterOrBubble()) {
                 frog.jumpAnimationState.startIfStopped(frog.tickCount);
             } else {
                 frog.jumpAnimationState.stop();
@@ -31,12 +31,12 @@ public class FrogTickHandler implements WalkersTickHandler<Frog> {
             }
 
             // Random croaking
-            if(player.level().random.nextDouble() <= 0.001) {
+            if (player.level().random.nextDouble() <= 0.001) {
                 frog.croakAnimationState.start(player.tickCount);
             }
 
             // Tongue
-            if(player.swinging) {
+            if (player.swinging) {
                 frog.tongueAnimationState.startIfStopped(player.tickCount);
             } else {
                 frog.tongueAnimationState.stop();

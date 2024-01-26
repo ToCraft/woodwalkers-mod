@@ -17,29 +17,29 @@ import tocraft.walkers.mixin.ThreadedAnvilChunkStorageAccessor;
 
 public class WolfAbility extends ShapeAbility<Wolf> {
 
-	@Override
-	public void onUse(Player player, Wolf shape, Level world) {
-		if (shape.isAngry()) {
-			shape.stopBeingAngry();
-			world.playSound(null, player, SoundEvents.WOLF_PANT, SoundSource.PLAYERS, 1.0F,
-					(world.random.nextFloat() - world.random.nextFloat()) * 0.2F + 1.0F);
-		} else
-			shape.startPersistentAngerTimer();
+    @Override
+    public void onUse(Player player, Wolf shape, Level world) {
+        if (shape.isAngry()) {
+            shape.stopBeingAngry();
+            world.playSound(null, player, SoundEvents.WOLF_PANT, SoundSource.PLAYERS, 1.0F,
+                    (world.random.nextFloat() - world.random.nextFloat()) * 0.2F + 1.0F);
+        } else
+            shape.startPersistentAngerTimer();
 
-		if (!world.isClientSide()) {
-			Int2ObjectMap<Object> trackers = ((ThreadedAnvilChunkStorageAccessor) ((ServerLevel) world)
-					.getChunkSource().chunkMap).getEntityMap();
-			Object tracking = trackers.get(player.getId());
-			((EntityTrackerAccessor) tracking).getSeenBy().forEach(
-					listener -> PlayerShape.sync((ServerPlayer) player, listener.getPlayer())
-			);
-			world.playSound(null, player, SoundEvents.WOLF_GROWL, SoundSource.PLAYERS, 1.0F,
-					(world.random.nextFloat() - world.random.nextFloat()) * 0.2F + 1.0F);
-		}
-	}
+        if (!world.isClientSide()) {
+            Int2ObjectMap<Object> trackers = ((ThreadedAnvilChunkStorageAccessor) ((ServerLevel) world)
+                    .getChunkSource().chunkMap).getEntityMap();
+            Object tracking = trackers.get(player.getId());
+            ((EntityTrackerAccessor) tracking).getSeenBy().forEach(
+                    listener -> PlayerShape.sync((ServerPlayer) player, listener.getPlayer())
+            );
+            world.playSound(null, player, SoundEvents.WOLF_GROWL, SoundSource.PLAYERS, 1.0F,
+                    (world.random.nextFloat() - world.random.nextFloat()) * 0.2F + 1.0F);
+        }
+    }
 
-	@Override
-	public Item getIcon() {
-		return Items.RED_DYE;
-	}
+    @Override
+    public Item getIcon() {
+        return Items.RED_DYE;
+    }
 }

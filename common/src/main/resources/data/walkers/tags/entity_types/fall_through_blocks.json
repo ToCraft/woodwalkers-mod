@@ -3,7 +3,7 @@
   "values": [
     {
       "id": "minecraft:vex",
-      "required":false
+      "required": false
     }
   ]
 }

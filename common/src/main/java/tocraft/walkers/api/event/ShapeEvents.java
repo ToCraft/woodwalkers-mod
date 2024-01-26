@@ -1,22 +1,23 @@
 package tocraft.walkers.api.event;
 
+import dev.architectury.event.Event;
+import dev.architectury.event.EventFactory;
+import dev.architectury.event.EventResult;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.LivingEntity;
 import org.jetbrains.annotations.Nullable;
-import tocraft.craftedcore.events.Event;
-import tocraft.craftedcore.events.EventBuilder;
 import tocraft.walkers.api.variant.ShapeType;
 
 public interface ShapeEvents {
-	Event<UnlockShapeCallback> UNLOCK_SHAPE = EventBuilder.createEventResult(UnlockShapeCallback.class);
-	
-	Event<ShapeSwapCallback> SWAP_SHAPE = EventBuilder.createEventResult(ShapeSwapCallback.class);
+    Event<UnlockShapeCallback> UNLOCK_SHAPE = EventFactory.createEventResult(UnlockShapeCallback.class);
 
-	interface ShapeSwapCallback {
-		Event.Result swap(ServerPlayer player, @Nullable LivingEntity to);
-	}
+    Event<ShapeSwapCallback> SWAP_SHAPE = EventFactory.createEventResult(ShapeSwapCallback.class);
 
-	interface UnlockShapeCallback {
-		Event.Result unlock(ServerPlayer player, ShapeType<?> type);
-	}
+    interface ShapeSwapCallback {
+        EventResult swap(ServerPlayer player, @Nullable LivingEntity to);
+    }
+
+    interface UnlockShapeCallback {
+        EventResult unlock(ServerPlayer player, ShapeType<?> type);
+    }
 }

@@ -3,7 +3,7 @@
   "values": [
     {
       "id": "minecraft:iron_golem",
-      "required":false
+      "required": false
     },
     {
       "id": "friendsandfoes:copper_golem",

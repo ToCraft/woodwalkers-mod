@@ -17,7 +17,7 @@ public class PlayerByteStatusMixin {
     @Inject(method = "handleEntityEvent", at = @At("RETURN"))
     private void shape$passByteStatus(byte status, CallbackInfo ci) {
         @Nullable LivingEntity shape = PlayerShape.getCurrentShape((Player) (Object) this);
-        if(shape != null) {
+        if (shape != null) {
             shape.handleEntityEvent(status);
         }
     }
