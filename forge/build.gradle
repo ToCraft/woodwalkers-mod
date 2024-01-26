@@ -102,7 +102,7 @@ unifiedPublishing {
         releaseType = "$rootProject.artifact_type"
         changelog = releaseChangelog()
         gameVersions = []
-        gameLoaders = ["neoforge"]
+        gameLoaders = ["nforge"]
         mainPublication remapJar
         relations {
             depends {
