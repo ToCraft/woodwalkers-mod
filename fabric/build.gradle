@@ -108,12 +108,15 @@ unifiedPublishing {
             }
         }
 
+        String[] supportedVersions = rootProject.supported_versions.split(",")
+        supportedVersions.each {gameVersions.add(it.trim())}
+
         var CURSE_API_KEY = project.findProperty("CURSEFORGE_TOKEN") ?: System.getenv("CURSEFORGE_TOKEN")
         if (CURSE_API_KEY != null) {
             curseforge {
                 token = CURSE_API_KEY
                 id = rootProject.curseforge_id
-                gameVersions.addAll "Java 17", rootProject.supported_versions
+                gameVersions.add "Java 17"
             }
         }
 
@@ -123,7 +126,6 @@ unifiedPublishing {
                 token = MODRINTH_TOKEN
                 id = rootProject.modrinth_id
                 version = "$project.version+$project.name"
-                gameVersions.addAll project.minecraft_version
             }
         }
     }
