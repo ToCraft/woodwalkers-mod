@@ -17,7 +17,6 @@
     "LivingEntityFoodMixin",
     "LivingEntityMixin",
     "LookAtPlayerGoalMixin",
-    "NearestAttackableTargetGoalMixin",
     "PiglinBrainMixin",
     "PiglinBruteBrainMixin",
     "PiglinSensorMixin",
