@@ -9,6 +9,7 @@
     "AvoidEntityGoalMixin",
     "AxolotlAttackablesSensorMixin",
     "CreeperEntityMixin",
+    "EnderManMixin",
     "EntityMixin",
     "EntityTrackerAccessor",
     "FoxEntityMixin",
