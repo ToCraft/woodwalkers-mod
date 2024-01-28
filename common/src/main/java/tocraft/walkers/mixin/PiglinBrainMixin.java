@@ -12,7 +12,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import tocraft.walkers.Walkers;
 import tocraft.walkers.api.PlayerHostility;
 import tocraft.walkers.api.PlayerShape;
-import tocraft.walkers.registry.WalkersEntityTags;
 
 @Mixin(PiglinAi.class)
 public class PiglinBrainMixin {
@@ -36,8 +35,8 @@ public class PiglinBrainMixin {
                     if (Walkers.CONFIG.hostilesIgnoreHostileShapedPlayer && shape instanceof Enemy) {
 
                         // Check hostility for aggro on non-piglin hostiles
-                        if (PlayerHostility.hasHostility(player)) {
-                            cir.setReturnValue(true);
+                        if (!PlayerHostility.hasHostility(player)) {
+                            cir.setReturnValue(false);
                         }
                     }
                 }
