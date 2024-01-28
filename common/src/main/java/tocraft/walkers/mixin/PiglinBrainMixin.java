@@ -2,6 +2,7 @@ package tocraft.walkers.mixin;
 
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.monster.Enemy;
+import net.minecraft.world.entity.monster.piglin.AbstractPiglin;
 import net.minecraft.world.entity.monster.piglin.PiglinAi;
 import net.minecraft.world.entity.player.Player;
 import org.spongepowered.asm.mixin.Mixin;
@@ -26,7 +27,7 @@ public class PiglinBrainMixin {
             if (shape != null) {
                 // Piglins should not attack Piglins or Piglin Brutes, unless they have
                 // hostility
-                if (shape.getType().is(WalkersEntityTags.PIGLIN_FRIENDLY)) {
+                if (shape instanceof AbstractPiglin) {
                     cir.setReturnValue(true);
                 }
 
