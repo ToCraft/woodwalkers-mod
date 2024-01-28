@@ -21,7 +21,6 @@ public class PiglinSensorMixin {
         for (LivingEntity livingEntity : entity.getBrain().getMemory(MemoryModuleType.NEAREST_VISIBLE_LIVING_ENTITIES).orElse(NearestVisibleLivingEntities.empty()).findAll(livingEntity -> true)) {
             if (livingEntity instanceof Player player && PlayerShape.getCurrentShape(player) != null && PiglinAi.isZombified(PlayerShape.getCurrentShape(player).getType())) {
                 entity.getBrain().setMemory(MemoryModuleType.NEAREST_VISIBLE_ZOMBIFIED, player);
-                Walkers.LOGGER.warn("got that");
             }
         }
     }

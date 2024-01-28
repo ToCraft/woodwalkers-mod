@@ -4,15 +4,18 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.animal.Squid;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
-import tocraft.walkers.Walkers;
+import net.minecraft.world.phys.Vec3;
 import tocraft.walkers.impl.NearbySongAccessor;
 import tocraft.walkers.mixin.accessor.CreeperEntityAccessor;
 import tocraft.walkers.mixin.accessor.ParrotEntityAccessor;
+import tocraft.walkers.mixin.accessor.SquidEntityAccessor;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -67,8 +70,7 @@ public class EntityUpdaters {
 
     public static void init() {
         // register specific entity animation handling
-        EntityUpdaters.register(EntityType.BAT,
-                (player, bat) -> bat.setResting(player.onGround()));
+        EntityUpdaters.register(EntityType.BAT, (player, bat) -> bat.setResting(player.onGround()));
 
         EntityUpdaters.register(EntityType.PARROT, (player, parrot) -> {
             if (player.onGround() && ((NearbySongAccessor) player).shape_isNearbySongPlaying()) {
@@ -125,23 +127,48 @@ public class EntityUpdaters {
         // Creepers normally tick their fuse timer in tick(), but:
         // 1. shapes do not tick
         // 2. The Creeper ability is instant, so we do not need to re-implement ticking
-        EntityUpdaters.register(EntityType.CREEPER,
-                (player, creeper) -> ((CreeperEntityAccessor) creeper).callSwell(0));
+        EntityUpdaters.register(EntityType.CREEPER, (player, creeper) -> ((CreeperEntityAccessor) creeper).callSwell(0));
 
-        EntityUpdaters.register(EntityType.SQUID, (player, squid) -> {
-            if (player.getRotationVector() != squid.getRotationVector())
-                // squid.setPitch(player.getPitch());
-                // squid.setYaw(player.getYaw());
-                squid.aiStep();
-            // if (player.getBodyYaw() != squid.getBodyYaw() && player.getPitch() !=
-            // squid.getPitch())
-            squid.aiStep();
-            /*
-             * if ((player.isTouchingWater() || player.isInLava()) &&
-             * squid.getRotationClient() == new Vec2f(0F, 0F)) { squid.tickMovement(); }
-             * else
-             */
-            Walkers.LOGGER.warn("pitch: " + squid.getXRot() + ". yaw: " + squid.getVisualRotationYInDegrees());
-        });
+        EntityUpdaters.register(EntityType.SQUID, (player, squid) -> trytest(squid, player));
+    }
+
+    private static void trytest(Squid squid, LivingEntity player) {
+        squid.xBodyRotO = squid.xBodyRot;
+        squid.zBodyRotO = squid.zBodyRot;
+        squid.oldTentacleMovement = squid.tentacleMovement;
+        squid.oldTentacleAngle = squid.tentacleAngle;
+        squid.tentacleMovement += 1.0F / (squid.getRandom().nextFloat() + 1.0F) * 0.2F;
+        if ((double) squid.tentacleMovement > 6.283185307179586) {
+            if (player.level().isClientSide) {
+                squid.tentacleMovement = 6.2831855F;
+            } else {
+                squid.tentacleMovement -= 6.2831855F;
+            }
+        }
+
+        if (player.isInWaterOrBubble()) {
+            if (squid.tentacleMovement < 3.1415927F) {
+                float f = squid.tentacleMovement / 3.1415927F;
+                squid.tentacleAngle = Mth.sin(f * f * 3.1415927F) * 3.1415927F * 0.25F;
+                if ((double) f > 0.75) {
+                    ((SquidEntityAccessor) squid).setSpeed(1.0F);
+                    ((SquidEntityAccessor) squid).setRotateSpeed(1.0F);
+                } else {
+                    ((SquidEntityAccessor) squid).setRotateSpeed(((SquidEntityAccessor) squid).getRotateSpeed() * 0.8F);
+                }
+            } else {
+                squid.tentacleAngle = 0.0F;
+                ((SquidEntityAccessor) squid).setSpeed(((SquidEntityAccessor) squid).getSpeed() * 0.9F);
+                ((SquidEntityAccessor) squid).setRotateSpeed(((SquidEntityAccessor) squid).getRotateSpeed() * 0.99F);
+            }
+
+            Vec3 vec3 = player.getDeltaMovement();
+            double d = vec3.horizontalDistance();
+            squid.zBodyRot += 3.1415927F * ((SquidEntityAccessor) squid).getRotateSpeed() * 1.5F;
+            squid.xBodyRot += (-((float) Mth.atan2(d, vec3.y)) * 57.295776F - squid.xBodyRot) * 0.1F;
+        } else {
+            squid.tentacleAngle = Mth.abs(Mth.sin(squid.tentacleMovement)) * 3.1415927F * 0.25F;
+            squid.xBodyRot += (-90.0F - squid.xBodyRot) * 0.02F;
+        }
     }
 }
