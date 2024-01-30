@@ -267,7 +267,7 @@ public abstract class PlayerEntityDataMixin extends LivingEntity implements Play
             FlightHelper.grantFlightTo(serverPlayer);
             player.getAbilities().setFlyingSpeed(Walkers.CONFIG.flySpeed);
             player.onUpdateAbilities();
-        } else {
+        } else if (!player.isCreative()) {
             FlightHelper.revokeFlight(serverPlayer);
             player.getAbilities().setFlyingSpeed(0.05f);
             player.onUpdateAbilities();
@@ -283,9 +283,9 @@ public abstract class PlayerEntityDataMixin extends LivingEntity implements Play
         // If the player is riding another Player that switches into another shape that cannot
         // be ridden, the riding player stops riding
         if (!(shape instanceof AbstractHorse)) {
-            for (Entity passenger : player.getPassengers()) {
+            /*for (Entity passenger : player.getPassengers()) {
                 passenger.stopRiding();
-            }
+            }*/
         }
 
         // sync with client

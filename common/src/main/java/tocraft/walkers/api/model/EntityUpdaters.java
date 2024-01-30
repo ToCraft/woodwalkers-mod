@@ -127,7 +127,7 @@ public class EntityUpdaters {
         // Creepers normally tick their fuse timer in tick(), but:
         // 1. shapes do not tick
         // 2. The Creeper ability is instant, so we do not need to re-implement ticking
-        EntityUpdaters.register(EntityType.CREEPER, (player, creeper) -> ((CreeperEntityAccessor) creeper).callSwell(0));
+        EntityUpdaters.register(EntityType.CREEPER, (player, creeper) -> ((CreeperEntityAccessor) creeper).setSwell(0));
 
         EntityUpdaters.register(EntityType.SQUID, (player, squid) -> trytest(squid, player));
     }

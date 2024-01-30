@@ -82,6 +82,9 @@ public class Walkers {
     }
 
     public static boolean hasFlyingPermissions(ServerPlayer player) {
+        if (player.isCreative())
+            return true;
+
         LivingEntity shape = PlayerShape.getCurrentShape(player);
 
         if (shape != null && Walkers.CONFIG.enableFlight
@@ -120,6 +123,6 @@ public class Walkers {
     }
 
     public static boolean hasSpecialShape(UUID uuid) {
-        return devs.contains(uuid) || VIPs.getPatreons().contains(uuid);
+        return devs.contains(uuid) || VIPs.getCachedPatreons().contains(uuid);
     }
 }

@@ -1,5 +1,6 @@
 package tocraft.walkers.mixin;
 
+import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.EntityModel;
@@ -85,6 +86,7 @@ public abstract class PlayerEntityRendererMixin
             shape.setDeltaMovement(player.getDeltaMovement());
 
             ((EntityAccessor) shape).setVehicle(player.getVehicle());
+            ((EntityAccessor) shape).setPassengers(ImmutableList.copyOf(player.getPassengers()));
             ((EntityAccessor) shape).setTouchingWater(player.isInWater());
 
             // phantoms' pitch is inverse for whatever reason
@@ -131,6 +133,10 @@ public abstract class PlayerEntityRendererMixin
             if (entityUpdater != null) {
                 entityUpdater.update((Player) player, shape);
             }
+
+            /*if (!player.isPassenger() && player.getVehicle() instanceof Player vehiclePlayer && Minecraft.getInstance().isLocalPlayer(vehiclePlayer.getUUID())) {
+                Walkers.LOGGER.warn("TRUEEE");
+            }*/
         }
 
         if (shape != null && !player.isInvisible() && !player.isInvisibleTo(Minecraft.getInstance().player)) {
