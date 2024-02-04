@@ -27,22 +27,20 @@ public class KeyPressHandler implements ClientTickEvent.Client {
     public void tick(Minecraft client) {
         assert client.player != null;
 
-        if (WalkersClient.ABILITY_KEY.consumeClick())
-            handleAbilityKey(client);
+        if (WalkersClient.ABILITY_KEY.consumeClick()) handleAbilityKey(client);
 
         if (WalkersClient.TRANSFORM_KEY.consumeClick()) {
             SwapPackets.sendSwapRequest();
         }
 
-        if (WalkersClient.SPECIAL_TRANSFORM_KEY.consumeClick() && Walkers.hasSpecialShape(Minecraft.getInstance().player.getUUID())) {
-            SpecialSwapPackets.sendSpecialSwapRequest();
+        if (WalkersClient.SPECIAL_TRANSFORM_KEY.consumeClick()) {
+            if (Walkers.hasSpecialShape(client.player.getUUID())) SpecialSwapPackets.sendSpecialSwapRequest();
+            else client.player.displayClientMessage(Component.translatable("walkers.not_special"), true);
         }
 
-        if (WalkersClient.UNLOCK_KEY.isDown())
-            handleUnlockKey(client);
+        if (WalkersClient.UNLOCK_KEY.isDown()) handleUnlockKey(client);
 
-        else if (currentTimer != Walkers.CONFIG.unlockTimer)
-            currentTimer = Walkers.CONFIG.unlockTimer;
+        else if (currentTimer != Walkers.CONFIG.unlockTimer) currentTimer = Walkers.CONFIG.unlockTimer;
     }
 
     private void handleAbilityKey(Minecraft client) {
@@ -66,17 +64,14 @@ public class KeyPressHandler implements ClientTickEvent.Client {
         }
 
         HitResult hit = client.hitResult;
-        if (client.player != null && (((PlayerDataProvider) client.player).walkers$get2ndShape() == null || Walkers.CONFIG.unlockOveridesCurrentShape)
-                && hit instanceof EntityHitResult) {
+        if (client.player != null && (((PlayerDataProvider) client.player).walkers$get2ndShape() == null || Walkers.CONFIG.unlockOveridesCurrentShape) && hit instanceof EntityHitResult) {
             Entity entityHit = ((EntityHitResult) hit).getEntity();
             if (entityHit instanceof LivingEntity living) {
-                @Nullable
-                ShapeType<?> type = ShapeType.from(living);
+                @Nullable ShapeType<?> type = ShapeType.from(living);
 
                 // Ensures, the mob isn't on the blacklist
                 if (type.getEntityType().is(WalkersEntityTags.BLACKLISTED))
-                    client.player.displayClientMessage(Component.translatable("walkers.unlock_entity_blacklisted"),
-                            true);
+                    client.player.displayClientMessage(Component.translatable("walkers.unlock_entity_blacklisted"), true);
                 else {
                     if (currentTimer <= 0) {
                         // unlock shape
@@ -91,7 +86,6 @@ public class KeyPressHandler implements ClientTickEvent.Client {
                     }
                 }
             }
-        } else
-            currentTimer = Walkers.CONFIG.unlockTimer;
+        } else currentTimer = Walkers.CONFIG.unlockTimer;
     }
 }
