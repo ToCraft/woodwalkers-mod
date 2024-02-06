@@ -43,6 +43,7 @@ public class AbilityRegistry {
         register(EntityType.SKELETON_HORSE, new HorseAbility<>());
         register(EntityType.ZOMBIE_HORSE, new HorseAbility<>());
         register(EntityType.BEE, new BeeAbility());
+        register(EntityType.SHULKER, new ShulkerAbility());
     }
 
     public static ShapeAbility get(EntityType<?> type) {

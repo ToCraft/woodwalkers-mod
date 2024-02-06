@@ -57,6 +57,7 @@ public class WalkersConfig implements Config {
             put("minecraft:mooshroom", 300);
             put("minecraft:llama", 20);
             put("minecraft:sheep", 20);
+            put("minecraft:shulker", 80);
             put("minecraft:skeleton_horse", 40);
             put("minecraft:sniffer", 9600);
             put("minecraft:snow_golem", 10);
