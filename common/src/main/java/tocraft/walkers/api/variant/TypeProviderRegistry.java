@@ -29,6 +29,7 @@ public class TypeProviderRegistry {
         VARIANT_BY_TYPE.put(EntityType.VILLAGER, new VillagerTypeProvider());
         VARIANT_BY_TYPE.put(EntityType.ZOMBIE_VILLAGER, new ZombieVillagerTypeProvider());
         VARIANT_BY_TYPE.put(EntityType.TROPICAL_FISH, new TropicalFishTypeProvider());
+        VARIANT_BY_TYPE.put(EntityType.SHULKER, new ShulkerTypeProvider());
     }
 
     public static <T extends LivingEntity> void register(EntityType<T> type, TypeProvider<T> provider) {
