@@ -19,6 +19,8 @@ public class ShulkerAbility extends ShapeAbility<Shulker> {
 
         player.level().addFreshEntity(new ShulkerBullet(player.level(), player, target, player.getDirection().getAxis()));
         player.playSound(SoundEvents.SHULKER_SHOOT, 2.0F, (player.getRandom().nextFloat() - player.getRandom().nextFloat()) * 0.2F + 1.0F);
+
+        shape.setRawPeekAmount(100);
     }
 
     @Override

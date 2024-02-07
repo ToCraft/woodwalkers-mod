@@ -49,6 +49,7 @@
     "accessor.MobEntityAccessor",
     "accessor.ParrotEntityAccessor",
     "accessor.RavagerEntityAccessor",
+    "accessor.ShulkerAccessor",
     "accessor.SlimeEntityAccessor",
     "accessor.SquidEntityAccessor",
     "entity.BowItemMixin",
