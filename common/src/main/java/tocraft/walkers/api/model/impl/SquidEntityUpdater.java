@@ -7,9 +7,9 @@ import net.minecraft.world.phys.Vec3;
 import tocraft.walkers.api.model.EntityUpdater;
 import tocraft.walkers.mixin.accessor.SquidEntityAccessor;
 
-public class SquidEntityUpdater implements EntityUpdater<Squid> {
+public class SquidEntityUpdater<S extends Squid> implements EntityUpdater<S> {
     @Override
-    public void update(Player player, Squid squid) {
+    public void update(Player player, S squid) {
         squid.xBodyRotO = squid.xBodyRot;
         squid.zBodyRotO = squid.zBodyRot;
         squid.oldTentacleMovement = squid.tentacleMovement;

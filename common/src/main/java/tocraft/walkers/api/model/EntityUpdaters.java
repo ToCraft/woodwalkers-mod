@@ -137,7 +137,8 @@ public class EntityUpdaters {
         // 2. The Creeper ability is instant, so we do not need to re-implement ticking
         EntityUpdaters.register(EntityType.CREEPER, (player, creeper) -> ((CreeperEntityAccessor) creeper).setSwell(0));
 
-        EntityUpdaters.register(EntityType.SQUID, new SquidEntityUpdater());
+        EntityUpdaters.register(EntityType.SQUID, new SquidEntityUpdater<>());
+        EntityUpdaters.register(EntityType.GLOW_SQUID, new SquidEntityUpdater<>());
 
         EntityUpdaters.register(EntityType.SHULKER, new ShulkerEntityUpdater());
     }
