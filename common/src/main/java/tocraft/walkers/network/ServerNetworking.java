@@ -18,9 +18,10 @@ public class ServerNetworking implements NetworkHandler {
         SwapPackets.registerWalkersRequestPacketHandler();
         UnlockPackets.registerShapeUnlockRequestPacketHandler();
         SpecialSwapPackets.registerDevRequestPacketHandler();
+        registerUseAbilityPacketHandler();
     }
 
-    public static void registerUseAbilityPacketHandler() {
+    private static void registerUseAbilityPacketHandler() {
         NetworkManager.registerReceiver(NetworkManager.Side.C2S, USE_ABILITY, (buf, context) -> {
             Player player = context.getPlayer();
 

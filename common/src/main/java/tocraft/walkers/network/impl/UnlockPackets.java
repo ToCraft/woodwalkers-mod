@@ -29,7 +29,7 @@ public class UnlockPackets {
             CompoundTag idTag = nbt.getCompound(UNLOCK_KEY);
 
             ClientNetworking.runOrQueue(context, player -> {
-                if (idTag != null)
+                if (!idTag.isEmpty())
                     ((PlayerDataProvider) player).walkers$set2ndShape(ShapeType.from(idTag));
             });
         }

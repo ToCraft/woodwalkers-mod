@@ -74,7 +74,7 @@ public class WalkersEventHandlers {
         InteractionEvent.INTERACT_ENTITY.register((player, entity, hand) -> {
             if (entity instanceof Player playerToBeRidden) {
                 if (PlayerShape.getCurrentShape(playerToBeRidden) instanceof AbstractHorse) {
-                    playerToBeRidden.startRiding(playerToBeRidden, true);
+                    player.startRiding(playerToBeRidden, true);
                 }
             }
             return EventResult.pass();

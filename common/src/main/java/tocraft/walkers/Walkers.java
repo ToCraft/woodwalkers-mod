@@ -53,7 +53,6 @@ public class Walkers {
         WalkersEventHandlers.initialize();
         WalkersCommand.register();
         ServerNetworking.initialize();
-        ServerNetworking.registerUseAbilityPacketHandler();
         registerJoinSyncPacket();
         WalkersTickHandlers.initialize();
 

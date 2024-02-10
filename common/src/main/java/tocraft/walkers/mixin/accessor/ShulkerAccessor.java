@@ -9,8 +9,10 @@ public interface ShulkerAccessor {
 
     @Invoker
     boolean callUpdatePeekAmount();
+
     @Invoker
     void callOnPeekAmountChange();
+
     @Invoker
     int callGetRawPeekAmount();
 }

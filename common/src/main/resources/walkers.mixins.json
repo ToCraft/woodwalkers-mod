@@ -78,6 +78,7 @@
     "accessor.RavagerEntityModelAccessor",
     "accessor.SpiderEntityModelAccessor",
     "accessor.SquidEntityModelAccessor",
+    "player.AbstractClientPlayerMixin",
     "player.ClientPlayerDataCacheMixin"
   ],
   "injectors": {

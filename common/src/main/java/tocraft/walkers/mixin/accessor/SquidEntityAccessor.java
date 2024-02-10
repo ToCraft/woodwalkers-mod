@@ -9,11 +9,13 @@ public interface SquidEntityAccessor {
 
     @Accessor
     float getRotateSpeed();
+
     @Accessor
     void setRotateSpeed(float rotateSpeed);
 
     @Accessor
     float getSpeed();
+
     @Accessor
     void setSpeed(float speed);
 }

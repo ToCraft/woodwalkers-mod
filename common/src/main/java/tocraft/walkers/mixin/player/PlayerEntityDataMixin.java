@@ -8,7 +8,6 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
@@ -36,6 +35,7 @@ import tocraft.walkers.mixin.ThreadedAnvilChunkStorageAccessor;
 import tocraft.walkers.registry.WalkersEntityTags;
 
 import java.util.Optional;
+import java.util.UUID;
 
 @Mixin(Player.class)
 public abstract class PlayerEntityDataMixin extends LivingEntity implements PlayerDataProvider {
@@ -54,7 +54,7 @@ public abstract class PlayerEntityDataMixin extends LivingEntity implements Play
     @Unique
     private LivingEntity walkers$shape = null;
     @Unique
-    private ShapeType<?> walkers$shapeType = null;
+    private Optional<UUID> walkers$vehiclePlayerUUID = Optional.empty();
 
     private PlayerEntityDataMixin(EntityType<? extends LivingEntity> type, Level world) {
         super(type, world);
@@ -103,9 +103,6 @@ public abstract class PlayerEntityDataMixin extends LivingEntity implements Play
         // serialize current shapeAttackDamage data to tag if it exists
         if (walkers$shape != null) {
             walkers$shape.saveWithoutId(entityTag);
-            if (walkers$shapeType != null) {
-                walkers$shapeType.writeEntityNbt(entityTag);
-            }
         }
 
         // put entity type ID under the key "id", or "minecraft:empty" if no shape is
@@ -131,7 +128,7 @@ public abstract class PlayerEntityDataMixin extends LivingEntity implements Play
             CompoundTag entityTag = tag.getCompound("EntityData");
 
             // ensure entity data exists
-            if (entityTag != null) {
+            if (!entityTag.isEmpty()) {
                 if (walkers$shape == null || !type.get().equals(walkers$shape.getType())) {
                     walkers$shape = (LivingEntity) type.get().create(level());
 
@@ -140,7 +137,6 @@ public abstract class PlayerEntityDataMixin extends LivingEntity implements Play
                 }
 
                 walkers$shape.load(entityTag);
-                walkers$shapeType = ShapeType.fromEntityNbt(tag);
             }
         }
     }
@@ -184,11 +180,6 @@ public abstract class PlayerEntityDataMixin extends LivingEntity implements Play
     @Override
     public LivingEntity walkers$getCurrentShape() {
         return walkers$shape;
-    }
-
-    @Override
-    public ShapeType<?> walkers$getCurrentShapeType() {
-        return walkers$shapeType;
     }
 
     @Unique
@@ -301,5 +292,17 @@ public abstract class PlayerEntityDataMixin extends LivingEntity implements Play
         }
 
         return true;
+    }
+
+    @Unique
+    @Override
+    public Optional<UUID> walkers$getVehiclePlayerUUID() {
+        return walkers$vehiclePlayerUUID;
+    }
+
+    @Unique
+    @Override
+    public void walkers$setVehiclePlayerUUID(UUID riddenPlayerUUID) {
+        walkers$vehiclePlayerUUID = Optional.ofNullable(riddenPlayerUUID);
     }
 }

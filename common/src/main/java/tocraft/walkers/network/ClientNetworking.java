@@ -13,6 +13,7 @@ import tocraft.craftedcore.network.client.ClientNetworking.ApplicablePacket;
 import tocraft.walkers.impl.DimensionsRefresher;
 import tocraft.walkers.impl.PlayerDataProvider;
 import tocraft.walkers.network.impl.UnlockPackets;
+import tocraft.walkers.network.impl.VehiclePackets;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -26,6 +27,8 @@ public class ClientNetworking implements NetworkHandler {
                 ClientNetworking::handleAbilitySyncPacket);
         NetworkManager.registerReceiver(NetworkManager.Side.S2C, NetworkHandler.UNLOCK_SYNC,
                 UnlockPackets::handleUnlockSyncPacket);
+        NetworkManager.registerReceiver(NetworkManager.Side.S2C, NetworkHandler.CHANGE_VEHICLE_STATE,
+                VehiclePackets::handleSyncPacket);
     }
 
     public static void runOrQueue(NetworkManager.PacketContext context, ApplicablePacket packet) {

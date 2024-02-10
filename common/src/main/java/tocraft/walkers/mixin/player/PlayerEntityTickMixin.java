@@ -15,6 +15,7 @@ import tocraft.walkers.api.PlayerShape;
 import tocraft.walkers.api.WalkersTickHandler;
 import tocraft.walkers.api.WalkersTickHandlers;
 import tocraft.walkers.impl.PlayerDataProvider;
+import tocraft.walkers.network.impl.VehiclePackets;
 
 @Mixin(Player.class)
 public abstract class PlayerEntityTickMixin extends LivingEntity {
@@ -44,6 +45,8 @@ public abstract class PlayerEntityTickMixin extends LivingEntity {
             ServerPlayer player = (ServerPlayer) (Object) this;
             PlayerAbilities.setCooldown(player, Math.max(0, data.walkers$getAbilityCooldown() - 1));
             PlayerAbilities.sync(player);
+
+            VehiclePackets.sync((ServerPlayer) (Object) this);
         }
     }
 }

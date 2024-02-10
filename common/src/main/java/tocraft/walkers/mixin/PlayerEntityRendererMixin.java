@@ -36,40 +36,40 @@ import tocraft.walkers.api.model.ArmRenderingManipulator;
 import tocraft.walkers.api.model.EntityArms;
 import tocraft.walkers.api.model.EntityUpdater;
 import tocraft.walkers.api.model.EntityUpdaters;
+import tocraft.walkers.impl.PlayerDataProvider;
 import tocraft.walkers.mixin.accessor.EntityAccessor;
 import tocraft.walkers.mixin.accessor.LimbAnimatorAccessor;
 import tocraft.walkers.mixin.accessor.LivingEntityAccessor;
 import tocraft.walkers.mixin.accessor.LivingEntityRendererAccessor;
 
+import java.util.Optional;
+import java.util.UUID;
+
 @Mixin(PlayerRenderer.class)
-public abstract class PlayerEntityRendererMixin
-        extends LivingEntityRenderer<AbstractClientPlayer, PlayerModel<AbstractClientPlayer>> {
+public abstract class PlayerEntityRendererMixin extends LivingEntityRenderer<AbstractClientPlayer, PlayerModel<AbstractClientPlayer>> {
 
     @Shadow
     private static HumanoidModel.ArmPose getArmPose(AbstractClientPlayer player, InteractionHand hand) {
         return null;
     }
 
-    private PlayerEntityRendererMixin(EntityRendererProvider.Context ctx, PlayerModel<AbstractClientPlayer> model,
-                                      float shadowRadius) {
+    private PlayerEntityRendererMixin(EntityRendererProvider.Context ctx, PlayerModel<AbstractClientPlayer> model, float shadowRadius) {
         super(ctx, model, shadowRadius);
     }
 
-    @Redirect(
-            method = "render(Lnet/minecraft/client/player/AbstractClientPlayer;FFLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V",
-            at = @At(
-                    value = "INVOKE",
-                    target = "Lnet/minecraft/client/renderer/entity/LivingEntityRenderer;render(Lnet/minecraft/world/entity/LivingEntity;FFLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V"
-            )
-    )
-    private void redirectRender(LivingEntityRenderer<AbstractClientPlayer, EntityModel<AbstractClientPlayer>> renderer, LivingEntity player, float f, float g,
-                                PoseStack matrixStack, MultiBufferSource buffer, int i) {
+    @Redirect(method = "render(Lnet/minecraft/client/player/AbstractClientPlayer;FFLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/entity/LivingEntityRenderer;render(Lnet/minecraft/world/entity/LivingEntity;FFLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V"))
+    private void redirectRender(LivingEntityRenderer<AbstractClientPlayer, EntityModel<AbstractClientPlayer>> renderer, LivingEntity player, float f, float g, PoseStack matrixStack, MultiBufferSource buffer, int i) {
         LivingEntity shape = PlayerShape.getCurrentShape((Player) player);
+
+        Optional<UUID> vehiclePlayerId = ((PlayerDataProvider) player).walkers$getVehiclePlayerUUID();
+        if (vehiclePlayerId.isPresent()) {
+            Vec3 vehiclePos = player.getCommandSenderWorld().getPlayerByUUID(vehiclePlayerId.get()).position();
+            player.moveTo(new Vec3(vehiclePos.x, vehiclePos.y + 1, vehiclePos.z));
+        }
 
         // sync player data to shape
         if (shape != null) {
-            ((LimbAnimatorAccessor) shape.walkAnimation)
-                    .setPrevSpeed(((LimbAnimatorAccessor) player.walkAnimation).getPrevSpeed());
+            ((LimbAnimatorAccessor) shape.walkAnimation).setPrevSpeed(((LimbAnimatorAccessor) player.walkAnimation).getPrevSpeed());
             shape.walkAnimation.setSpeed(player.walkAnimation.speed());
             ((LimbAnimatorAccessor) shape.walkAnimation).setPos(player.walkAnimation.position());
             shape.swinging = player.swinging;
@@ -120,16 +120,14 @@ public abstract class PlayerEntityRendererMixin
             shape.setPose(player.getPose());
 
             // set active hand after configuring held items
-            shape.startUsingItem(
-                    player.getUsedItemHand() == null ? InteractionHand.MAIN_HAND : player.getUsedItemHand());
+            shape.startUsingItem(player.getUsedItemHand() == null ? InteractionHand.MAIN_HAND : player.getUsedItemHand());
             ((LivingEntityAccessor) shape).callSetLivingEntityFlag(1, player.isUsingItem());
             shape.getTicksUsingItem();
             ((LivingEntityAccessor) shape).callUpdatingUsingItem();
             shape.hurtTime = player.hurtTime; // FIX: https://github.com/Draylar/identity/issues/424
 
             // update shape specific properties
-            EntityUpdater<LivingEntity> entityUpdater = EntityUpdaters
-                    .getUpdater((EntityType<LivingEntity>) shape.getType());
+            EntityUpdater<LivingEntity> entityUpdater = EntityUpdaters.getUpdater((EntityType<LivingEntity>) shape.getType());
             if (entityUpdater != null) {
                 entityUpdater.update((Player) player, shape);
             }
@@ -160,8 +158,7 @@ public abstract class PlayerEntityRendererMixin
     }
 
     @Unique
-    private void shape_setBipedShapeModelPose(AbstractClientPlayer player, LivingEntity shape,
-                                              LivingEntityRenderer<?, ?> shapeRenderer) {
+    private void shape_setBipedShapeModelPose(AbstractClientPlayer player, LivingEntity shape, LivingEntityRenderer<?, ?> shapeRenderer) {
         HumanoidModel<?> shapeBipedModel = (HumanoidModel<?>) shapeRenderer.getModel();
 
         if (shape.isSpectator()) {
@@ -177,8 +174,7 @@ public abstract class PlayerEntityRendererMixin
             HumanoidModel.ArmPose offHandPose = getArmPose(player, InteractionHand.OFF_HAND);
 
             if (mainHandPose != null && mainHandPose.isTwoHanded()) {
-                offHandPose = shape.getOffhandItem().isEmpty() ? HumanoidModel.ArmPose.EMPTY
-                        : HumanoidModel.ArmPose.ITEM;
+                offHandPose = shape.getOffhandItem().isEmpty() ? HumanoidModel.ArmPose.EMPTY : HumanoidModel.ArmPose.ITEM;
             }
 
             if ((mainHandPose != null && offHandPose != null) && shape.getMainArm() == HumanoidArm.RIGHT) {
@@ -203,8 +199,7 @@ public abstract class PlayerEntityRendererMixin
     }
 
     @Inject(method = "renderHand", at = @At("HEAD"), cancellable = true)
-    private void onRenderArm(PoseStack matrices, MultiBufferSource vertexConsumers, int light,
-                             AbstractClientPlayer player, ModelPart arm, ModelPart sleeve, CallbackInfo ci) {
+    private void onRenderArm(PoseStack matrices, MultiBufferSource vertexConsumers, int light, AbstractClientPlayer player, ModelPart arm, ModelPart sleeve, CallbackInfo ci) {
         LivingEntity shape = PlayerShape.getCurrentShape(player);
 
         // sync player data to shape
@@ -243,14 +238,12 @@ public abstract class PlayerEntityRendererMixin
                 // render
                 if (arm != null) {
                     arm.xRot = 0.0F;
-                    arm.render(matrices, vertexConsumers.getBuffer(((LivingEntityRendererAccessor) rendererCasted)
-                            .callGetRenderType(shape, true, false, true)), light, OverlayTexture.NO_OVERLAY);
+                    arm.render(matrices, vertexConsumers.getBuffer(((LivingEntityRendererAccessor) rendererCasted).callGetRenderType(shape, true, false, true)), light, OverlayTexture.NO_OVERLAY);
                 }
 
                 if (sleeve != null) {
                     sleeve.xRot = 0.0F;
-                    sleeve.render(matrices, vertexConsumers.getBuffer(((LivingEntityRendererAccessor) rendererCasted)
-                            .callGetRenderType(shape, true, false, true)), light, OverlayTexture.NO_OVERLAY);
+                    sleeve.render(matrices, vertexConsumers.getBuffer(((LivingEntityRendererAccessor) rendererCasted).callGetRenderType(shape, true, false, true)), light, OverlayTexture.NO_OVERLAY);
                 }
 
                 ci.cancel();
