@@ -2,6 +2,10 @@
   "replace": false,
   "values": [
     {
+      "id": "minecraft:allay",
+      "required": false
+    },
+    {
       "id": "minecraft:bat",
       "required": false
     },
