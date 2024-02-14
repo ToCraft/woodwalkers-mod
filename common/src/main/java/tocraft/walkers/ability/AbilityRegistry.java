@@ -1,5 +1,6 @@
 package tocraft.walkers.ability;
 
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import tocraft.walkers.ability.impl.*;
@@ -31,8 +32,8 @@ public class AbilityRegistry {
         register(EntityType.WITCH, new WitchAbility());
         register(EntityType.EVOKER, new EvokerAbility());
         register(EntityType.WARDEN, new WardenAbility());
-        register(EntityType.WOLF, new WolfAbility());
-        register(EntityType.SHEEP, new SheepAbility<>());
+        register(EntityType.WOLF, new AngerAbility<>(SoundEvents.WOLF_PANT, SoundEvents.WOLF_GROWL));
+        register(EntityType.SHEEP, new SheepAbility());
         register(EntityType.SNIFFER, new SnifferAbility());
         register(EntityType.CHICKEN, new ChickenAbility<>());
         register(EntityType.MOOSHROOM, new MushroomCowAbility());
@@ -42,7 +43,7 @@ public class AbilityRegistry {
         register(EntityType.DONKEY, new HorseAbility<>());
         register(EntityType.SKELETON_HORSE, new HorseAbility<>());
         register(EntityType.ZOMBIE_HORSE, new HorseAbility<>());
-        register(EntityType.BEE, new BeeAbility());
+        register(EntityType.BEE, new AngerAbility<>(SoundEvents.BEE_LOOP, SoundEvents.BEE_LOOP_AGGRESSIVE));
         register(EntityType.SHULKER, new ShulkerAbility());
     }
 
