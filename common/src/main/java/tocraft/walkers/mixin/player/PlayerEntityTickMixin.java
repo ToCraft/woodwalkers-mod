@@ -1,14 +1,25 @@
 package tocraft.walkers.mixin.player;
 
+import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.animal.Pufferfish;
+import net.minecraft.world.entity.animal.Sheep;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.LevelEvent;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.predicate.BlockStatePredicate;
+import net.minecraft.world.level.gameevent.GameEvent;
+import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -18,6 +29,8 @@ import tocraft.walkers.api.WalkersTickHandler;
 import tocraft.walkers.api.WalkersTickHandlers;
 import tocraft.walkers.impl.PlayerDataProvider;
 import tocraft.walkers.network.impl.VehiclePackets;
+
+import java.util.function.Predicate;
 
 @Mixin(Player.class)
 public abstract class PlayerEntityTickMixin extends LivingEntity {
@@ -80,5 +93,49 @@ public abstract class PlayerEntityTickMixin extends LivingEntity {
                 }
             }
         }
+    }
+
+    @Unique
+    private static final Predicate<BlockState> walkers$IS_TALL_GRASS = BlockStatePredicate.forBlock(Blocks.GRASS);
+
+    @Inject(method = "tick", at = @At("HEAD"))
+    private void sheepServerTick(CallbackInfo info) {
+        if (!level().isClientSide && this.isAlive()) {
+            ServerPlayer serverPlayer = (ServerPlayer) (Object) this;
+            if (PlayerShape.getCurrentShape(serverPlayer) instanceof Sheep sheepShape && sheepShape.eatAnimationTick != 0) {
+
+                sheepShape.eatAnimationTick = Math.max(0, sheepShape.eatAnimationTick - 1);
+                if (sheepShape.eatAnimationTick == Mth.positiveCeilDiv(4, 2)) {
+                    BlockPos blockPos = serverPlayer.blockPosition();
+                    if (walkers$IS_TALL_GRASS.test(level().getBlockState(blockPos)) && walkers$isLookingAtPos(blockPos)) {
+                        level().destroyBlock(blockPos, false);
+
+                        walkers$sheepAte(sheepShape);
+                    } else {
+                        BlockPos blockPos2 = blockPos.below();
+                        if (level().getBlockState(blockPos2).is(Blocks.GRASS_BLOCK) && walkers$isLookingAtPos(blockPos2)) {
+                            level().levelEvent(LevelEvent.PARTICLES_DESTROY_BLOCK, blockPos2, Block.getId(Blocks.GRASS_BLOCK.defaultBlockState()));
+                            level().setBlock(blockPos2, Blocks.DIRT.defaultBlockState(), 2);
+
+                            walkers$sheepAte(sheepShape);
+                        }
+                    }
+
+                }
+            }
+        }
+    }
+
+    @Unique
+    private void walkers$sheepAte(Sheep sheepShape) {
+        sheepShape.setSheared(false);
+        gameEvent(GameEvent.EAT);
+        ((Player) (Object) this).getFoodData().eat(3, 0.1F);
+    }
+
+    @Unique
+    private boolean walkers$isLookingAtPos(BlockPos blockPos) {
+        Player player = (Player) (Object) this;
+        return player.pick(2, 0, false) instanceof BlockHitResult blockHitResult && blockHitResult.getBlockPos().equals(blockPos);
     }
 }

@@ -212,7 +212,7 @@ public abstract class PlayerEntityMixin extends LivingEntityMixin {
             int i = pufferfish.getPuffState();
 
             if (target instanceof LivingEntity livingTarget) {
-                if (livingTarget.hurt(this.damageSources().mobAttack((Player) (Object) this), (float)(1 + i))) {
+                if (livingTarget.hurt(this.damageSources().mobAttack((Player) (Object) this), (float) (1 + i))) {
                     livingTarget.addEffect(new MobEffectInstance(MobEffects.POISON, 60 * i, 0), (Player) (Object) this);
                     this.playSound(SoundEvents.PUFFER_FISH_STING, 1.0F, 1.0F);
 

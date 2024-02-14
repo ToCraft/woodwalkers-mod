@@ -4,3 +4,4 @@ accessible method net/minecraft/world/entity/monster/Shulker onPeekAmountChange 
 accessible method net/minecraft/world/entity/monster/Shulker setRawPeekAmount (I)V
 accessible field net/minecraft/world/entity/animal/Pufferfish inflateCounter I
 accessible field net/minecraft/world/entity/animal/Pufferfish deflateTimer I
+accessible field net/minecraft/world/entity/animal/Sheep eatAnimationTick I
