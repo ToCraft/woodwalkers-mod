@@ -84,6 +84,7 @@ public abstract class PlayerEntityRendererMixin extends LivingEntityRenderer<Abs
             shape.swingingArm = player.swingingArm;
             shape.setOnGround(player.onGround());
             shape.setDeltaMovement(player.getDeltaMovement());
+            shape.setInvisible(player.isInvisibleTo(Minecraft.getInstance().player));
 
             ((EntityAccessor) shape).setVehicle(player.getVehicle());
             ((EntityAccessor) shape).setPassengers(ImmutableList.copyOf(player.getPassengers()));
@@ -132,25 +133,21 @@ public abstract class PlayerEntityRendererMixin extends LivingEntityRenderer<Abs
                 entityUpdater.update((Player) player, shape);
             }
 
-            /*if (!player.isPassenger() && player.getVehicle() instanceof Player vehiclePlayer && Minecraft.getInstance().isLocalPlayer(vehiclePlayer.getUUID())) {
-                Walkers.LOGGER.warn("TRUEEE");
-            }*/
-        }
+            if (!player.isInvisibleTo(Minecraft.getInstance().player)) {
+                EntityRenderer<LivingEntity> shapeRenderer = (EntityRenderer<LivingEntity>) Minecraft.getInstance().getEntityRenderDispatcher().getRenderer(shape);
 
-        if (shape != null && !player.isInvisible() && !player.isInvisibleTo(Minecraft.getInstance().player)) {
-            EntityRenderer<LivingEntity> shapeRenderer = (EntityRenderer<LivingEntity>) Minecraft.getInstance().getEntityRenderDispatcher().getRenderer(shape);
+                // Sync biped information for stuff like bow drawing animation
+                if (shapeRenderer instanceof HumanoidMobRenderer) {
+                    shape_setBipedShapeModelPose((AbstractClientPlayer) player, shape, (HumanoidMobRenderer<?, ?>) shapeRenderer);
+                }
 
-            // Sync biped information for stuff like bow drawing animation
-            if (shapeRenderer instanceof HumanoidMobRenderer) {
-                shape_setBipedShapeModelPose((AbstractClientPlayer) player, shape, (HumanoidMobRenderer<?, ?>) shapeRenderer);
-            }
+                shapeRenderer.render(shape, f, g, matrixStack, buffer, i);
 
-            shapeRenderer.render(shape, f, g, matrixStack, buffer, i);
-
-            // Only render nametags if the server option is true and the entity being
-            // rendered is NOT this player/client
-            if (Walkers.CONFIG.showPlayerNametag && player != Minecraft.getInstance().player) {
-                renderNameTag((AbstractClientPlayer) player, player.getDisplayName(), matrixStack, buffer, i);
+                // Only render nametags if the server option is true and the entity being
+                // rendered is NOT this player/client
+                if (Walkers.CONFIG.showPlayerNametag && player != Minecraft.getInstance().player) {
+                    renderNameTag((AbstractClientPlayer) player, player.getDisplayName(), matrixStack, buffer, i);
+                }
             }
         } else {
             super.render((AbstractClientPlayer) player, f, g, matrixStack, buffer, i);

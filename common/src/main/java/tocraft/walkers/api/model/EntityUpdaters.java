@@ -4,6 +4,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -119,5 +120,17 @@ public class EntityUpdaters {
         EntityUpdaters.register(EntityType.GLOW_SQUID, new SquidEntityUpdater<>());
 
         EntityUpdaters.register(EntityType.SHULKER, new ShulkerEntityUpdater());
+
+        EntityUpdaters.register(EntityType.CHICKEN, (player, chicken) -> {
+            chicken.oFlap = chicken.flap;
+            chicken.oFlapSpeed = chicken.flapSpeed;
+            chicken.flapSpeed += (player.onGround() ? -1.0F : 4.0F) * 0.3F;
+            chicken.flapSpeed = Mth.clamp(chicken.flapSpeed, 0.0F, 1.0F);
+            if (!player.onGround() && chicken.flapping < 1.0F) {
+                chicken.flapping = 1.0F;
+            }
+            chicken.flapping *= 0.9F;
+            chicken.flap += chicken.flapping * 2.0F;
+        });
     }
 }
