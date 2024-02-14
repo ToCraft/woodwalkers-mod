@@ -45,6 +45,7 @@ public class AbilityRegistry {
         register(EntityType.ZOMBIE_HORSE, new HorseAbility<>());
         register(EntityType.BEE, new AngerAbility<>(SoundEvents.BEE_LOOP, SoundEvents.BEE_LOOP_AGGRESSIVE));
         register(EntityType.SHULKER, new ShulkerAbility());
+        register(EntityType.PUFFERFISH, new PufferfishAbility());
     }
 
     public static ShapeAbility get(EntityType<?> type) {

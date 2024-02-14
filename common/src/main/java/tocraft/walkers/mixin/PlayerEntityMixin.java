@@ -3,14 +3,17 @@ package tocraft.walkers.mixin;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.core.BlockPos;
+import net.minecraft.network.protocol.game.ClientboundGameEventPacket;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.animal.Bee;
 import net.minecraft.world.entity.animal.IronGolem;
+import net.minecraft.world.entity.animal.Pufferfish;
 import net.minecraft.world.entity.monster.Ravager;
 import net.minecraft.world.entity.monster.Spider;
 import net.minecraft.world.entity.monster.WitherSkeleton;
@@ -205,6 +208,19 @@ public abstract class PlayerEntityMixin extends LivingEntityMixin {
             livingTarget.addEffect(new MobEffectInstance(MobEffects.WITHER, 200), this);
         } else if (shape instanceof Bee bee && bee.isAngry() && target instanceof LivingEntity livingTarget) {
             livingTarget.addEffect(new MobEffectInstance(MobEffects.POISON, 200), this);
+        } else if (shape instanceof Pufferfish pufferfish) {
+            int i = pufferfish.getPuffState();
+
+            if (target instanceof LivingEntity livingTarget) {
+                if (livingTarget.hurt(this.damageSources().mobAttack((Player) (Object) this), (float)(1 + i))) {
+                    livingTarget.addEffect(new MobEffectInstance(MobEffects.POISON, 60 * i, 0), (Player) (Object) this);
+                    this.playSound(SoundEvents.PUFFER_FISH_STING, 1.0F, 1.0F);
+
+                    if (livingTarget instanceof ServerPlayer serverPlayerTarget && !this.isSilent()) {
+                        serverPlayerTarget.connection.send(new ClientboundGameEventPacket(ClientboundGameEventPacket.PUFFER_FISH_STING, 0.0F));
+                    }
+                }
+            }
         }
     }
 
