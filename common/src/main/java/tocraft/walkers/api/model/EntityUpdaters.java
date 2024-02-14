@@ -7,6 +7,7 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.animal.Parrot;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import tocraft.walkers.api.model.impl.ShulkerEntityUpdater;
@@ -71,24 +72,11 @@ public class EntityUpdaters {
         EntityUpdaters.register(EntityType.BAT, (player, bat) -> bat.setResting(player.onGround()));
 
         EntityUpdaters.register(EntityType.PARROT, (player, parrot) -> {
-            if (player.onGround() && ((NearbySongAccessor) player).shape_isNearbySongPlaying()) {
-                parrot.setRecordPlayingNearby(player.blockPosition(), true);
-                parrot.setOrderedToSit(true);
-                parrot.setOnGround(true);
-            } else if (player.onGround()) {
-                parrot.setRecordPlayingNearby(player.blockPosition(), false);
-                parrot.setOrderedToSit(true);
-                parrot.setOnGround(true);
-                parrot.oFlap = 0;
-                parrot.flap = 0;
-                parrot.flapSpeed = 0;
-                parrot.oFlapSpeed = 0;
-            } else {
-                parrot.setRecordPlayingNearby(player.blockPosition(), false);
-                parrot.setOrderedToSit(false);
-                parrot.setOnGround(false);
-                parrot.setInSittingPose(false);
-                ((ParrotEntityAccessor) parrot).callCalculateFlapping();
+            parrot.setRecordPlayingNearby(player.blockPosition(), ((NearbySongAccessor) player).shape_isNearbySongPlaying());
+            ((ParrotEntityAccessor) parrot).callCalculateFlapping();
+            // imitate sounds
+            if (player.getRandom().nextInt(400) == 0) {
+                Parrot.imitateNearbyMobs(player.level(), player);
             }
         });
 
