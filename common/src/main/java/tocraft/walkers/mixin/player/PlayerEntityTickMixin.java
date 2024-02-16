@@ -23,6 +23,9 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import tocraft.walkers.ability.AbilityRegistry;
+import tocraft.walkers.ability.impl.GrassEaterAbility;
+import tocraft.walkers.ability.impl.SheepAbility;
 import tocraft.walkers.api.PlayerAbilities;
 import tocraft.walkers.api.PlayerShape;
 import tocraft.walkers.api.WalkersTickHandler;
@@ -102,35 +105,39 @@ public abstract class PlayerEntityTickMixin extends LivingEntity {
     private void sheepServerTick(CallbackInfo info) {
         if (!level().isClientSide && this.isAlive()) {
             ServerPlayer serverPlayer = (ServerPlayer) (Object) this;
-            if (PlayerShape.getCurrentShape(serverPlayer) instanceof Sheep sheepShape && sheepShape.eatAnimationTick != 0) {
+            LivingEntity shape = PlayerShape.getCurrentShape(serverPlayer);
+            if (shape != null && AbilityRegistry.get(shape.getType()) instanceof GrassEaterAbility grassEaterAbility) {
+                if (grassEaterAbility.eatTick != 0) {
+                    grassEaterAbility.eatTick = Math.max(0, grassEaterAbility.eatTick - 1);
 
-                sheepShape.eatAnimationTick = Math.max(0, sheepShape.eatAnimationTick - 1);
-                if (sheepShape.eatAnimationTick == Mth.positiveCeilDiv(4, 2)) {
-                    BlockPos blockPos = serverPlayer.blockPosition();
-                    if (walkers$IS_TALL_GRASS.test(level().getBlockState(blockPos)) && walkers$isLookingAtPos(blockPos)) {
-                        level().destroyBlock(blockPos, false);
+                    if (shape instanceof Sheep sheepShape) sheepShape.eatAnimationTick = grassEaterAbility.eatTick;
 
-                        walkers$sheepAte(sheepShape);
-                    } else {
-                        BlockPos blockPos2 = blockPos.below();
-                        if (level().getBlockState(blockPos2).is(Blocks.GRASS_BLOCK) && walkers$isLookingAtPos(blockPos2)) {
-                            level().levelEvent(LevelEvent.PARTICLES_DESTROY_BLOCK, blockPos2, Block.getId(Blocks.GRASS_BLOCK.defaultBlockState()));
-                            level().setBlock(blockPos2, Blocks.DIRT.defaultBlockState(), 2);
+                    if (grassEaterAbility.eatTick == Mth.positiveCeilDiv(4, 2)) {
+                        BlockPos blockPos = serverPlayer.blockPosition();
+                        if (walkers$IS_TALL_GRASS.test(level().getBlockState(blockPos)) && walkers$isLookingAtPos(blockPos)) {
+                            level().destroyBlock(blockPos, false);
 
-                            walkers$sheepAte(sheepShape);
+                            gameEvent(GameEvent.EAT);
+                            serverPlayer.getFoodData().eat(3, 0.2F);
+
+                            if (shape instanceof Sheep sheepShape) sheepShape.setSheared(false);
+                        } else {
+                            BlockPos blockPos2 = blockPos.below();
+                            if (level().getBlockState(blockPos2).is(Blocks.GRASS_BLOCK) && walkers$isLookingAtPos(blockPos2)) {
+                                level().levelEvent(LevelEvent.PARTICLES_DESTROY_BLOCK, blockPos2, Block.getId(Blocks.GRASS_BLOCK.defaultBlockState()));
+                                level().setBlock(blockPos2, Blocks.DIRT.defaultBlockState(), 2);
+
+                                gameEvent(GameEvent.EAT);
+                                serverPlayer.getFoodData().eat(3, 0.1F);
+
+                                if (shape instanceof Sheep sheepShape) sheepShape.setSheared(false);
+                            }
                         }
-                    }
 
+                    }
                 }
             }
         }
-    }
-
-    @Unique
-    private void walkers$sheepAte(Sheep sheepShape) {
-        sheepShape.setSheared(false);
-        gameEvent(GameEvent.EAT);
-        ((Player) (Object) this).getFoodData().eat(3, 0.1F);
     }
 
     @Unique
