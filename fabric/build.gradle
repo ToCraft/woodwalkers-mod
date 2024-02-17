@@ -24,7 +24,7 @@ configurations {
 dependencies {
     modImplementation "net.fabricmc:fabric-loader:${rootProject.fabric_loader_version}"
     modApi "net.fabricmc.fabric-api:fabric-api:${rootProject.fabric_api_version}+${rootProject.minecraft_version}"
-        modApi "dev.architectury:architectury-fabric:${rootProject.architectury_version}"
+    modApi "dev.architectury:architectury-fabric:${rootProject.architectury_version}"
     modApi "dev.tocraft:craftedcore-fabric:${rootProject.minecraft_version}-${rootProject.craftedcore_version}"
 
     common(project(path: ":common", configuration: "namedElements")) { transitive = false }
@@ -32,8 +32,16 @@ dependencies {
 }
 
 processResources {
-    filesMatching("fabric.mod.json") {
-        expand project.properties
+    Map<String, ?> replaceProperties = [
+            minecraft_version: minecraft_version, version: version,
+            architectury_version: architectury_version,
+            craftedcore_version: craftedcore_version,
+    ]
+
+    inputs.properties replaceProperties
+
+    filesMatching(["fabric.mod.json"]) {
+        expand replaceProperties + [project: project]
     }
 }
 

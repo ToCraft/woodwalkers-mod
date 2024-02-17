@@ -17,12 +17,6 @@ architectury {
     common("fabric", "forge", "neoforge")
 }
 
-//afterEvaluate {
-//    remapJar {
-//        remapAccessWidener = false
-//    }
-//}
-
 configurations {
     dev
 }
