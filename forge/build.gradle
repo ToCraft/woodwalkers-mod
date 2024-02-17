@@ -29,6 +29,7 @@ configurations {
 
 dependencies {
     forge "net.minecraftforge:forge:${rootProject.minecraft_version}-${rootProject.forge_version}"
+    modApi "dev.architectury:architectury-forge:${rootProject.architectury_version}"
     modApi "dev.tocraft:craftedcore-forge:${rootProject.minecraft_version}-${rootProject.craftedcore_version}"
 
     common(project(path: ":common", configuration: "namedElements")) { transitive = false }
@@ -36,10 +37,8 @@ dependencies {
 }
 
 processResources {
-    inputs.property "version", project.version.toString()
-
     filesMatching("META-INF/mods.toml") {
-        expand "version": project.version.toString()
+        expand project.properties
     }
 }
 

@@ -22,6 +22,7 @@ configurations {
 
 dependencies {
     neoForge "net.neoforged:neoforge:${rootProject.neoforge_version}"
+    modApi "dev.architectury:architectury-neoforge:${rootProject.architectury_version}"
     modApi "dev.tocraft:craftedcore-neoforge:${rootProject.minecraft_version}-${rootProject.craftedcore_version}"
 
     common(project(path: ":common", configuration: "namedElements")) { transitive = false }
@@ -29,10 +30,8 @@ dependencies {
 }
 
 processResources {
-    inputs.property "version", project.version.toString()
-
     filesMatching("META-INF/mods.toml") {
-        expand "version": project.version.toString()
+        expand project.properties
     }
 }
 
