@@ -2,6 +2,8 @@ package tocraft.walkers.mixin;
 
 import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.HumanoidModel;
@@ -48,6 +50,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 @SuppressWarnings("ALL")
+@Environment(EnvType.CLIENT)
 @Mixin(PlayerRenderer.class)
 public abstract class PlayerEntityRendererMixin extends LivingEntityRenderer<AbstractClientPlayer, PlayerModel<AbstractClientPlayer>> {
 

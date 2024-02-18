@@ -1,5 +1,7 @@
 package tocraft.walkers.api.model.impl;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.animal.Squid;
 import net.minecraft.world.entity.player.Player;
@@ -7,6 +9,7 @@ import net.minecraft.world.phys.Vec3;
 import tocraft.walkers.api.model.EntityUpdater;
 import tocraft.walkers.mixin.accessor.SquidEntityAccessor;
 
+@Environment(EnvType.CLIENT)
 public class SquidEntityUpdater<S extends Squid> implements EntityUpdater<S> {
     @Override
     public void update(Player player, S squid) {
@@ -16,11 +19,7 @@ public class SquidEntityUpdater<S extends Squid> implements EntityUpdater<S> {
         squid.oldTentacleAngle = squid.tentacleAngle;
         squid.tentacleMovement += 1.0F / (squid.getRandom().nextFloat() + 1.0F) * 0.2F;
         if ((double) squid.tentacleMovement > 6.283185307179586) {
-            if (player.level().isClientSide) {
-                squid.tentacleMovement = 6.2831855F;
-            } else {
-                squid.tentacleMovement -= 6.2831855F;
-            }
+            squid.tentacleMovement = 6.2831855F;
         }
 
         if (player.isInWaterOrBubble()) {

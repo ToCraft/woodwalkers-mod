@@ -43,7 +43,6 @@
     "accessor.EntityAccessor",
     "accessor.FoxEntityAccessor",
     "accessor.IronGolemEntityAccessor",
-    "accessor.LimbAnimatorAccessor",
     "accessor.LivingEntityAccessor",
     "accessor.MobEntityAccessor",
     "accessor.ParrotEntityAccessor",
