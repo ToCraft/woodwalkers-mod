@@ -32,8 +32,12 @@ public class AngerAbility<T extends LivingEntity> extends ShapeAbility<T> {
                 shape.stopBeingAngry();
                 world.playSound(null, player, notAggressiveSound, SoundSource.PLAYERS, 1.0F,
                         (world.random.nextFloat() - world.random.nextFloat()) * 0.2F + 1.0F);
-            } else
+            } else {
                 shape.startPersistentAngerTimer();
+                world.playSound(null, player, aggressiveSound, SoundSource.PLAYERS, 1.0F,
+                        (world.random.nextFloat() - world.random.nextFloat()) * 0.2F + 1.0F);
+
+            }
 
             if (!world.isClientSide()) {
                 Int2ObjectMap<Object> trackers = ((ThreadedAnvilChunkStorageAccessor) ((ServerLevel) world)
@@ -42,8 +46,6 @@ public class AngerAbility<T extends LivingEntity> extends ShapeAbility<T> {
                 ((EntityTrackerAccessor) tracking).getSeenBy().forEach(
                         listener -> PlayerShape.sync((ServerPlayer) player, listener.getPlayer())
                 );
-                world.playSound(null, player, aggressiveSound, SoundSource.PLAYERS, 1.0F,
-                        (world.random.nextFloat() - world.random.nextFloat()) * 0.2F + 1.0F);
             }
         }
     }

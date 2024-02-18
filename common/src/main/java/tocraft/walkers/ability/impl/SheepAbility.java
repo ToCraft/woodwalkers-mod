@@ -1,6 +1,5 @@
 package tocraft.walkers.ability.impl;
 
-import net.minecraft.util.Mth;
 import net.minecraft.world.entity.animal.Sheep;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
@@ -14,7 +13,7 @@ public class SheepAbility extends GrassEaterAbility<Sheep> {
         if (!shape.isSheared() && player.getMainHandItem().getItem() instanceof ShearsItem) {
             shape.shear(player.getSoundSource());
         } else {
-            eatGrass();
+            eatGrass(player);
         }
     }
 

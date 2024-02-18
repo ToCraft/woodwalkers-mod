@@ -50,7 +50,7 @@ public class KeyPressHandler implements ClientTickEvent.Client {
         LivingEntity shape = PlayerShape.getCurrentShape(client.player);
 
         if (shape != null) {
-            if (AbilityRegistry.has(shape.getType())) {
+            if (AbilityRegistry.has(shape)) {
                 ClientNetworking.sendAbilityRequest();
             }
         }

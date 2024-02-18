@@ -8,16 +8,20 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import tocraft.walkers.ability.ShapeAbility;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
+
 public class GrassEaterAbility<T extends LivingEntity> extends ShapeAbility<T> {
-    public int eatTick = 0;
+    public Map<UUID, Integer> eatTick = new HashMap<>();
 
     @Override
     public void onUse(Player player, T shape, Level world) {
-        eatGrass();
+        eatGrass(player);
     }
 
-    public void eatGrass() {
-        eatTick = Mth.positiveCeilDiv(40, 2);
+    public void eatGrass(Player player) {
+        eatTick.put(player.getUUID(), Mth.positiveCeilDiv(40, 2));
     }
 
     @Override

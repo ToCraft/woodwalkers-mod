@@ -25,7 +25,6 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import tocraft.walkers.ability.AbilityRegistry;
 import tocraft.walkers.ability.impl.GrassEaterAbility;
-import tocraft.walkers.ability.impl.SheepAbility;
 import tocraft.walkers.api.PlayerAbilities;
 import tocraft.walkers.api.PlayerShape;
 import tocraft.walkers.api.WalkersTickHandler;
@@ -106,13 +105,14 @@ public abstract class PlayerEntityTickMixin extends LivingEntity {
         if (!level().isClientSide && this.isAlive()) {
             ServerPlayer serverPlayer = (ServerPlayer) (Object) this;
             LivingEntity shape = PlayerShape.getCurrentShape(serverPlayer);
-            if (shape != null && AbilityRegistry.get(shape.getType()) instanceof GrassEaterAbility grassEaterAbility) {
-                if (grassEaterAbility.eatTick != 0) {
-                    grassEaterAbility.eatTick = Math.max(0, grassEaterAbility.eatTick - 1);
+            if (shape != null && AbilityRegistry.get(shape) instanceof GrassEaterAbility<?> grassEaterAbility) {
+                if (grassEaterAbility.eatTick.get(serverPlayer.getUUID()) != 0) {
+                    grassEaterAbility.eatTick.put(serverPlayer.getUUID(), Math.max(0, grassEaterAbility.eatTick.get(serverPlayer.getUUID()) - 1));
 
-                    if (shape instanceof Sheep sheepShape) sheepShape.eatAnimationTick = grassEaterAbility.eatTick;
+                    if (shape instanceof Sheep sheepShape)
+                        sheepShape.eatAnimationTick = grassEaterAbility.eatTick.get(serverPlayer.getUUID());
 
-                    if (grassEaterAbility.eatTick == Mth.positiveCeilDiv(4, 2)) {
+                    if (grassEaterAbility.eatTick.get(serverPlayer.getUUID()) == Mth.positiveCeilDiv(4, 2)) {
                         BlockPos blockPos = serverPlayer.blockPosition();
                         if (walkers$IS_TALL_GRASS.test(level().getBlockState(blockPos)) && walkers$isLookingAtPos(blockPos)) {
                             level().destroyBlock(blockPos, false);
