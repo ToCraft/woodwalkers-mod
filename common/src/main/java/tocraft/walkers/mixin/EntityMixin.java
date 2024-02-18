@@ -1,5 +1,7 @@
 package tocraft.walkers.mixin;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.world.entity.*;
@@ -124,6 +126,7 @@ public abstract class EntityMixin implements DimensionsRefresher {
             player.noPhysics = true;
     }
 
+    @Environment(EnvType.CLIENT)
     @Inject(method = "getVehicle", at = @At("RETURN"), cancellable = true)
     private void getClientVehicle(CallbackInfoReturnable<Entity> cir) {
         if ((Object) this instanceof AbstractClientPlayer clientPlayer && cir.getReturnValue() == null) {

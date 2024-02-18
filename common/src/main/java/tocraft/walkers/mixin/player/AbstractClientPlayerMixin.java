@@ -1,6 +1,8 @@
 package tocraft.walkers.mixin.player;
 
 import com.mojang.authlib.GameProfile;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.core.BlockPos;
@@ -16,6 +18,7 @@ import tocraft.walkers.impl.PlayerDataProvider;
 import java.util.Optional;
 import java.util.UUID;
 
+@Environment(EnvType.CLIENT)
 @Mixin(AbstractClientPlayer.class)
 public abstract class AbstractClientPlayerMixin extends Player {
 

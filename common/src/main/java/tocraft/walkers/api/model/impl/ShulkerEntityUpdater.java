@@ -1,10 +1,13 @@
 package tocraft.walkers.api.model.impl;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.world.entity.monster.Shulker;
 import net.minecraft.world.entity.player.Player;
 import tocraft.walkers.api.model.EntityUpdater;
 import tocraft.walkers.mixin.accessor.ShulkerAccessor;
 
+@Environment(EnvType.CLIENT)
 public class ShulkerEntityUpdater implements EntityUpdater<Shulker> {
     @Override
     public void update(Player player, Shulker shulker) {
