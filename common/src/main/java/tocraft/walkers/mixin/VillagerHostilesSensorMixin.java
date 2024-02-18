@@ -8,7 +8,6 @@ import net.minecraft.world.entity.player.Player;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
@@ -17,8 +16,6 @@ import tocraft.walkers.api.PlayerShape;
 
 @Mixin(VillagerHostilesSensor.class)
 public class VillagerHostilesSensorMixin {
-    @Unique
-    private boolean walkers$lol = false;
 
     @Shadow
     @Final
@@ -39,6 +36,7 @@ public class VillagerHostilesSensorMixin {
         }
     }
 
+    @SuppressWarnings("ConstantConditions")
     @Inject(method = "isClose", at = @At("HEAD"), cancellable = true)
     private void checkPlayerDanger(LivingEntity villager, LivingEntity potentialPlayer,
                                    CallbackInfoReturnable<Boolean> cir) {

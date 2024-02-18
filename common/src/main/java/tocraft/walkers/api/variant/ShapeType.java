@@ -8,6 +8,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import tocraft.walkers.registry.WalkersEntityTags;
 
@@ -22,13 +23,8 @@ public class ShapeType<T extends LivingEntity> {
     private final EntityType<T> type;
     private final int variantData;
 
-    public ShapeType(EntityType<T> type) {
-        this.type = type;
-        variantData = getDefaultVariantData(type);
-    }
-
-    private int getDefaultVariantData(EntityType<T> type) {
-        TypeProvider<T> provider = TypeProviderRegistry.getProvider(type);
+    private static <Z extends LivingEntity> int getDefaultVariantData(EntityType<Z> type) {
+        TypeProvider<Z> provider = TypeProviderRegistry.getProvider(type);
         if (provider != null) {
             return provider.getFallbackData();
         } else {
@@ -36,22 +32,13 @@ public class ShapeType<T extends LivingEntity> {
         }
     }
 
-    public ShapeType(EntityType<T> type, int variantData) {
+    private ShapeType(EntityType<T> type, int variantData) {
         this.type = type;
         this.variantData = variantData;
     }
 
-    public ShapeType(T entity) {
-        this.type = (EntityType<T>) entity.getType();
-
-        // Discover variant data based on entity NBT data.
-        @Nullable
-        TypeProvider<T> provider = TypeProviderRegistry.getProvider(type);
-        if (provider != null) {
-            variantData = provider.getVariantData(entity);
-        } else {
-            variantData = getDefaultVariantData(type);
-        }
+    public static <Z extends LivingEntity> @NotNull ShapeType<Z> from(EntityType<Z> entityType) {
+        return new ShapeType<>(entityType, getDefaultVariantData(entityType));
     }
 
     @Nullable
@@ -63,10 +50,10 @@ public class ShapeType<T extends LivingEntity> {
         EntityType<Z> type = (EntityType<Z>) entity.getType();
         TypeProvider<Z> typeProvider = TypeProviderRegistry.getProvider(type);
         if (typeProvider != null) {
-            return typeProvider.create(type, entity);
+            return typeProvider.create(entity);
         }
 
-        return new ShapeType<>((EntityType<Z>) entity.getType());
+        return ShapeType.from(type);
     }
 
     @Nullable
@@ -76,7 +63,7 @@ public class ShapeType<T extends LivingEntity> {
             return null;
         }
 
-        return new ShapeType(BuiltInRegistries.ENTITY_TYPE.get(id),
+        return from((EntityType<? extends LivingEntity>) BuiltInRegistries.ENTITY_TYPE.get(id),
                 compound.contains("Variant") ? compound.getInt("Variant") : -1);
     }
 
@@ -89,7 +76,7 @@ public class ShapeType<T extends LivingEntity> {
             }
         }
 
-        return new ShapeType<>((EntityType<Z>) entityType, variant);
+        return new ShapeType<>(entityType, variant);
     }
 
     @Deprecated
@@ -115,10 +102,10 @@ public class ShapeType<T extends LivingEntity> {
                 TypeProvider<?> variant = TypeProviderRegistry.getProvider(type);
                 if (variant != null && includeVariants) {
                     for (int i = 0; i <= variant.getRange(); i++) {
-                        types.add(new ShapeType(type, i));
+                        types.add(new ShapeType<>(type, i));
                     }
                 } else {
-                    types.add(new ShapeType(type));
+                    types.add(ShapeType.from(type));
                 }
             }
         }
@@ -163,15 +150,6 @@ public class ShapeType<T extends LivingEntity> {
     @Override
     public int hashCode() {
         return Objects.hash(type, variantData);
-    }
-
-    public void writeEntityNbt(CompoundTag tag) {
-        CompoundTag inner = writeCompound();
-        tag.put("ShapeType", inner);
-    }
-
-    public static ShapeType<?> fromEntityNbt(CompoundTag tag) {
-        return from(tag.getCompound("ShapeType"));
     }
 
     public Component createTooltipText(T entity) {

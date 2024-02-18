@@ -14,7 +14,6 @@ public class WalkersEntityTags {
     public static final TagKey<EntityType<?>> FOX_PREY = register("fox_prey");
     public static final TagKey<EntityType<?>> HURT_BY_HIGH_TEMPERATURE = register("hurt_by_high_temperature");
     public static final TagKey<EntityType<?>> RAVAGER_RIDING = register("ravager_riding");
-    public static final TagKey<EntityType<?>> PIGLIN_FRIENDLY = register("piglin_friendly");
     public static final TagKey<EntityType<?>> LAVA_WALKING = register("lava_walking");
     public static final TagKey<EntityType<?>> CANT_SWIM = register("cant_swim");
     public static final TagKey<EntityType<?>> UNDROWNABLE = register("undrownable");

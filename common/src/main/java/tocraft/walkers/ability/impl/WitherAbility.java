@@ -11,7 +11,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import tocraft.walkers.ability.ShapeAbility;
 
-public class WitherEntityAbility extends ShapeAbility<WitherBoss> {
+public class WitherAbility extends ShapeAbility<WitherBoss> {
 
     @Override
     public void onUse(Player player, WitherBoss shape, Level world) {
@@ -29,5 +29,10 @@ public class WitherEntityAbility extends ShapeAbility<WitherBoss> {
     @Override
     public Item getIcon() {
         return Items.WITHER_SKELETON_SKULL;
+    }
+
+    @Override
+    public int getDefaultCooldown() {
+        return 200;
     }
 }

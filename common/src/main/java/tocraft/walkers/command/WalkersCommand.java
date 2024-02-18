@@ -171,9 +171,10 @@ public class WalkersCommand {
         }
     }
 
+    @SuppressWarnings("unchecked")
     private static void change2ndShape(CommandSourceStack source, ServerPlayer player, ResourceLocation id,
                                        @Nullable CompoundTag nbt) {
-        ShapeType<LivingEntity> type = new ShapeType(BuiltInRegistries.ENTITY_TYPE.get(id));
+        ShapeType<LivingEntity> type = ShapeType.from((EntityType<LivingEntity>) BuiltInRegistries.ENTITY_TYPE.get(id));
         Component name = Component.translatable(type.getEntityType().getDescriptionId());
 
         // If the specified granting NBT is not null, change the ShapeType to reflect
@@ -184,8 +185,8 @@ public class WalkersCommand {
             ServerLevel serverWorld = source.getLevel();
             Entity loaded = EntityType.loadEntityRecursive(copy, serverWorld, it -> it);
             if (loaded instanceof LivingEntity living) {
-                type = new ShapeType<>(living);
-                name = type.createTooltipText(living);
+                type =  ShapeType.from(living);
+                name = type != null ? type.createTooltipText(living) : Component.nullToEmpty("");
             }
         }
 

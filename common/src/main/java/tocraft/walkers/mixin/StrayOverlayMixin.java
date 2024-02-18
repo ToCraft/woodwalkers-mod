@@ -2,7 +2,6 @@ package tocraft.walkers.mixin;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.model.EntityModel;
-import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.SkeletonModel;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
@@ -33,11 +32,6 @@ public abstract class StrayOverlayMixin<T extends Mob & RangedAttackMob, M exten
     @Inject(method = "render(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;ILnet/minecraft/world/entity/Mob;FFFFFF)V", at = @At("HEAD"))
     private void onRender(PoseStack matrixStack, MultiBufferSource buffer, int i, T mobEntity, float f,
                           float g, float h, float j, float k, float l, CallbackInfo ci) {
-        M layerModel = getParentModel();
-
-        if (layerModel instanceof HumanoidModel) {
-            this.layerModel.copyPropertiesTo((HumanoidModel<Stray>) layerModel);
-            ((HumanoidModel<Stray>) layerModel).crouching = mobEntity.isCrouching();
-        }
+        layerModel.crouching = mobEntity.isCrouching();
     }
 }

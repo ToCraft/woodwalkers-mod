@@ -19,4 +19,9 @@ public class WardenAbility extends ShapeAbility<Warden> {
     public Item getIcon() {
         return Items.ECHO_SHARD;
     }
+
+    @Override
+    public int getDefaultCooldown() {
+        return 200;
+    }
 }

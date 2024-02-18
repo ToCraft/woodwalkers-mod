@@ -17,13 +17,12 @@ import net.minecraft.world.phys.Vec3;
 import tocraft.walkers.ability.ShapeAbility;
 
 public class EvokerAbility extends ShapeAbility<Evoker> {
-    private int i = 0;
 
     @Override
     public void onUse(Player player, Evoker shape, Level world) {
         // spawn vexes while sneaking
         if (player.isCrouching() && world instanceof ServerLevel serverLevel) {
-            i = 0;
+            int i = 0;
             for (Entity entity : serverLevel.getAllEntities()) {
                 if (entity instanceof Vex && player.distanceTo(entity) <= 16)
                     ++i;
@@ -86,5 +85,10 @@ public class EvokerAbility extends ShapeAbility<Evoker> {
     @Override
     public Item getIcon() {
         return Items.EMERALD;
+    }
+
+    @Override
+    public int getDefaultCooldown() {
+        return 10;
     }
 }

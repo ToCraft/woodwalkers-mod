@@ -34,4 +34,9 @@ public class GhastAbility extends ShapeAbility<Ghast> {
     public Item getIcon() {
         return Items.FIRE_CHARGE;
     }
+
+    @Override
+    public int getDefaultCooldown() {
+        return 60;
+    }
 }

@@ -1,5 +1,6 @@
 package tocraft.walkers.ability;
 
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
@@ -20,7 +21,12 @@ public abstract class ShapeAbility<E extends LivingEntity> {
      * @return cooldown of this ability, in ticks, after it is used.
      */
     public int getCooldown(E entity) {
-        return Walkers.getCooldown(entity.getType());
+        String id = BuiltInRegistries.ENTITY_TYPE.getKey(entity.getType()).toString();
+        return Walkers.CONFIG.abilityCooldownMap.getOrDefault(id, getDefaultCooldown());
+    }
+
+    public int getDefaultCooldown() {
+        return 20;
     }
 
     abstract public Item getIcon();

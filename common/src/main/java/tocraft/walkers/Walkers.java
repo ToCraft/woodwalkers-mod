@@ -4,12 +4,10 @@ import dev.architectury.event.events.common.PlayerEvent;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.AdvancementProgress;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.FlyingMob;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.MobType;
@@ -23,7 +21,6 @@ import tocraft.walkers.api.PlayerShape;
 import tocraft.walkers.api.WalkersTickHandlers;
 import tocraft.walkers.api.platform.WalkersConfig;
 import tocraft.walkers.command.WalkersCommand;
-import tocraft.walkers.integrations.Integrations;
 import tocraft.walkers.mixin.ThreadedAnvilChunkStorageAccessor;
 import tocraft.walkers.network.ServerNetworking;
 import tocraft.walkers.registry.WalkersEntityTags;
@@ -41,7 +38,7 @@ public class Walkers {
     public static final String MODID = "walkers";
     public static final String MAVEN_URL = "https://maven.tocraft.dev/public/dev/tocraft/walkers/maven-metadata.xml";
     public static final WalkersConfig CONFIG = ConfigLoader.read(MODID, WalkersConfig.class);
-    public static List<UUID> devs = new ArrayList<>();
+    public static final List<UUID> devs = new ArrayList<>();
 
     static {
         devs.add(UUID.fromString("1f63e38e-4059-4a4f-b7c4-0fac4a48e744"));
@@ -53,12 +50,10 @@ public class Walkers {
         WalkersEventHandlers.initialize();
         WalkersCommand.register();
         ServerNetworking.initialize();
-        ServerNetworking.registerUseAbilityPacketHandler();
         registerJoinSyncPacket();
         WalkersTickHandlers.initialize();
 
-        // handle integrations
-        Integrations.initialize();
+        LOGGER.warn("TEST: " + CONFIG.revoke2ndShapeOnDeath);
     }
 
     public static void registerJoinSyncPacket() {
@@ -82,6 +77,9 @@ public class Walkers {
     }
 
     public static boolean hasFlyingPermissions(ServerPlayer player) {
+        if (player.isCreative())
+            return true;
+
         LivingEntity shape = PlayerShape.getCurrentShape(player);
 
         if (shape != null && Walkers.CONFIG.enableFlight
@@ -115,12 +113,7 @@ public class Walkers {
         return entity != null && entity.getMobType().equals(MobType.WATER);
     }
 
-    public static int getCooldown(EntityType<?> type) {
-        String id = BuiltInRegistries.ENTITY_TYPE.getKey(type).toString();
-        return Walkers.CONFIG.abilityCooldownMap.getOrDefault(id, 20);
-    }
-
     public static boolean hasSpecialShape(UUID uuid) {
-        return devs.contains(uuid) || VIPs.getPatreons().contains(uuid);
+        return devs.contains(uuid) || VIPs.getCachedPatreons().contains(uuid);
     }
 }

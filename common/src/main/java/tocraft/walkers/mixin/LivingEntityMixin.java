@@ -11,9 +11,12 @@ import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ambient.Bat;
 import net.minecraft.world.entity.animal.Dolphin;
+import net.minecraft.world.entity.animal.Sheep;
 import net.minecraft.world.entity.monster.Spider;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.material.FluidState;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -170,7 +173,7 @@ public abstract class LivingEntityMixin extends Entity implements NearbySongAcce
     @Environment(EnvType.CLIENT)
     @Inject(method = "setRecordPlayingNearby", at = @At("RETURN"))
     protected void shape_setRecordPlayingNearby(BlockPos songPosition, boolean playing, CallbackInfo ci) {
-        if ((LivingEntity) (Object) this instanceof Player player) {
+        if ((LivingEntity) (Object) this instanceof Player) {
             walkers$nearbySongPlaying = playing;
         }
     }
@@ -208,10 +211,20 @@ public abstract class LivingEntityMixin extends Entity implements NearbySongAcce
             LivingEntity shape = PlayerShape.getCurrentShape(player);
 
             if (shape instanceof Spider) {
-                cir.setReturnValue(this.horizontalCollision);
+                cir.setReturnValue(this.horizontalCollision || this.level().getBlockState(this.blockPosition()).is(Blocks.COBWEB));
             }
         }
+    }
 
-        ((LivingEntity) (Object) this).isInWall();
+
+    @Inject(method = "eat", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;addEatEffect(Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/level/Level;Lnet/minecraft/world/entity/LivingEntity;)V"))
+    private void regenerateWoolFromFood(Level level, ItemStack food, CallbackInfoReturnable<ItemStack> cir) {
+        if ((Object) this instanceof Player player) {
+            LivingEntity shape = PlayerShape.getCurrentShape(player);
+            if (shape instanceof Sheep sheepShape) {
+                if (sheepShape.isSheared())
+                    sheepShape.setSheared(false);
+            }
+        }
     }
 }

@@ -15,6 +15,7 @@ public class AxolotlTypeProvider extends TypeProvider<Axolotl> {
         return entity.getVariant().getId();
     }
 
+    @SuppressWarnings("ConstantConditions")
     @Override
     public Axolotl create(EntityType<Axolotl> type, Level world, int data) {
         Axolotl axolotl = new Axolotl(type, world);

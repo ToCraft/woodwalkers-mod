@@ -56,4 +56,9 @@ public class SnifferAbility extends ShapeAbility<Sniffer> {
     private static boolean getRandomBoolean() {
         return Math.random() < 0.5;
     }
+
+    @Override
+    public int getDefaultCooldown() {
+        return 9600;
+    }
 }

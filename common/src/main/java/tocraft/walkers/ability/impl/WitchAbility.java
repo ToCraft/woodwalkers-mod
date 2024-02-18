@@ -38,4 +38,9 @@ public class WitchAbility extends ShapeAbility<Witch> {
     public Item getIcon() {
         return Items.POTION;
     }
+
+    @Override
+    public int getDefaultCooldown() {
+        return 200;
+    }
 }

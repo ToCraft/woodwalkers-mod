@@ -10,8 +10,9 @@ import java.util.Locale;
 
 public abstract class TypeProvider<T extends LivingEntity> {
 
-    public ShapeType<T> create(EntityType<T> type, T entity) {
-        return new ShapeType<>((EntityType<T>) entity.getType(), getVariantData(entity));
+    @SuppressWarnings("unchecked")
+    public ShapeType<T> create(T entity) {
+        return ShapeType.from((EntityType<T>) entity.getType(), getVariantData(entity));
     }
 
     public abstract int getVariantData(T entity);

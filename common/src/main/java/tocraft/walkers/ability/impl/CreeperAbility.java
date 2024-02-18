@@ -19,4 +19,9 @@ public class CreeperAbility extends ShapeAbility<Creeper> {
     public Item getIcon() {
         return Items.TNT;
     }
+
+    @Override
+    public int getDefaultCooldown() {
+        return 100;
+    }
 }
