@@ -23,11 +23,6 @@ public class ShapeType<T extends LivingEntity> {
     private final EntityType<T> type;
     private final int variantData;
 
-    public ShapeType(EntityType<T> type) {
-        this.type = type;
-        variantData = getDefaultVariantData(type);
-    }
-
     private static <Z extends LivingEntity> int getDefaultVariantData(EntityType<Z> type) {
         TypeProvider<Z> provider = TypeProviderRegistry.getProvider(type);
         if (provider != null) {

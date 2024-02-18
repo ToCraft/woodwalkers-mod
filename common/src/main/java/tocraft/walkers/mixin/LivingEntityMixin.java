@@ -16,6 +16,7 @@ import net.minecraft.world.entity.monster.Spider;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.material.FluidState;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -210,7 +211,7 @@ public abstract class LivingEntityMixin extends Entity implements NearbySongAcce
             LivingEntity shape = PlayerShape.getCurrentShape(player);
 
             if (shape instanceof Spider) {
-                cir.setReturnValue(this.horizontalCollision);
+                cir.setReturnValue(this.horizontalCollision || this.level().getBlockState(this.blockPosition()).is(Blocks.COBWEB));
             }
         }
     }
