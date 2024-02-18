@@ -1,15 +1,20 @@
 package tocraft.walkers.registry;
 
 import dev.architectury.event.EventResult;
+import dev.architectury.event.events.common.EntityEvent;
 import dev.architectury.event.events.common.InteractionEvent;
+import net.minecraft.nbt.NbtOps;
+import net.minecraft.world.Difficulty;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.animal.horse.AbstractHorse;
 import net.minecraft.world.entity.animal.horse.SkeletonHorse;
 import net.minecraft.world.entity.animal.horse.ZombieHorse;
-import net.minecraft.world.entity.monster.Enemy;
-import net.minecraft.world.entity.monster.Monster;
-import net.minecraft.world.entity.monster.Ravager;
+import net.minecraft.world.entity.monster.*;
+import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.ServerLevelAccessor;
 import tocraft.walkers.Walkers;
 import tocraft.walkers.api.PlayerHostility;
 import tocraft.walkers.api.PlayerShape;
@@ -22,6 +27,7 @@ public class WalkersEventHandlers {
         WalkersEventHandlers.registerRavagerRidingHandler();
         WalkersEventHandlers.registerHostileHorseRidingHandler();
         WalkersEventHandlers.registerPlayerRidingHandler();
+        WalkersEventHandlers.registerLivingDeathHandler();
     }
 
     public static void registerHostilityUpdateHandler() {
@@ -75,6 +81,26 @@ public class WalkersEventHandlers {
             if (entity instanceof Player playerToBeRidden) {
                 if (PlayerShape.getCurrentShape(playerToBeRidden) instanceof AbstractHorse) {
                     player.startRiding(playerToBeRidden, true);
+                }
+            }
+            return EventResult.pass();
+        });
+    }
+
+    public static void registerLivingDeathHandler() {
+        EntityEvent.LIVING_DEATH.register((entity, damageSource) -> {
+            if (!entity.level().isClientSide()) {
+                if (entity instanceof Villager villager && damageSource.getEntity() instanceof Player player && PlayerShape.getCurrentShape(player) instanceof Zombie) {
+                    if (!(player.level().getDifficulty() != Difficulty.HARD && player.getRandom().nextBoolean())) {
+                        ZombieVillager zombievillager = villager.convertTo(EntityType.ZOMBIE_VILLAGER, false);
+                        if (zombievillager != null) {
+                            zombievillager.finalizeSpawn((ServerLevelAccessor) player.level(), player.level().getCurrentDifficultyAt(zombievillager.blockPosition()), MobSpawnType.CONVERSION, new Zombie.ZombieGroupData(false, true), null);
+                            zombievillager.setVillagerData(villager.getVillagerData());
+                            zombievillager.setGossips(villager.getGossips().store(NbtOps.INSTANCE));
+                            zombievillager.setTradeOffers(villager.getOffers().createTag());
+                            zombievillager.setVillagerXp(villager.getVillagerXp());
+                        }
+                    }
                 }
             }
             return EventResult.pass();
