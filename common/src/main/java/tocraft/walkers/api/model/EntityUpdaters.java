@@ -70,7 +70,7 @@ public class EntityUpdaters {
 
     public static void init() {
         // register specific entity animation handling
-        EntityUpdaters.register(EntityType.BAT, (player, bat) -> bat.setResting(player.onGround()));
+        EntityUpdaters.register(EntityType.BAT, (player, bat) -> bat.setResting(!player.level().getBlockState(player.blockPosition().above()).isAir()));
 
         EntityUpdaters.register(EntityType.PARROT, (player, parrot) -> {
             parrot.setRecordPlayingNearby(player.blockPosition(), ((NearbySongAccessor) player).shape_isNearbySongPlaying());
