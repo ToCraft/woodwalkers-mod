@@ -38,7 +38,7 @@ public class UnlockPackets {
     /**
      * Server handles request, that 2nd shape may be changed
      */
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({"unchecked", "ConstantConditions"})
     public static void registerShapeUnlockRequestPacketHandler() {
         NetworkManager.registerReceiver(NetworkManager.Side.C2S, NetworkHandler.UNLOCK_REQUEST, (buf, context) -> {
             // check if player is blacklisted
@@ -55,7 +55,7 @@ public class UnlockPackets {
                 context.getPlayer().getServer().execute(() -> {
                     @Nullable
                     ShapeType<? extends LivingEntity> type = ShapeType.from(entityType, variant);
-                    if (type != null && !type.getEntityType().is(WalkersEntityTags.BLACKLISTED) && (Walkers.CONFIG.unlockOveridesCurrentShape || ((PlayerDataProvider) context.getPlayer()).walkers$get2ndShape() == null)) {
+                    if (type != null && !type.getEntityType().is(WalkersEntityTags.BLACKLISTED) && (Walkers.CONFIG.unlockOverridesCurrentShape || ((PlayerDataProvider) context.getPlayer()).walkers$get2ndShape() == null)) {
                         // set 2nd shape
                         boolean result = PlayerShapeChanger.change2ndShape((ServerPlayer) context.getPlayer(), type);
                         // update Player
@@ -66,9 +66,7 @@ public class UnlockPackets {
                 });
             } else {
                 // Swap back to player if server allows it
-                context.getPlayer().getServer().execute(() -> {
-                    PlayerShape.updateShapes((ServerPlayer) context.getPlayer(), null);
-                });
+                context.getPlayer().getServer().execute(() -> PlayerShape.updateShapes((ServerPlayer) context.getPlayer(), null));
             }
 
             // Refresh player dimensions

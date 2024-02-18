@@ -34,6 +34,7 @@ import tocraft.walkers.network.impl.VehiclePackets;
 
 import java.util.function.Predicate;
 
+@SuppressWarnings("ConstantConditions")
 @Mixin(Player.class)
 public abstract class PlayerEntityTickMixin extends LivingEntity {
 

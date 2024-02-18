@@ -62,19 +62,19 @@ public abstract class ActiveTargetGoalMixin extends TrackTargetGoalMixin {
                         ci.cancel();
                     }
 
-                    // endermen should attack endermites
-                    else if (this.mob instanceof EnderMan && shape.getType().equals(EntityType.ENDERMITE)) {
-                        return;
-                    }
-
-                    // Wither Skeletons should attack Piglins)
-                    else if (this.mob instanceof WitherSkeleton && shape instanceof AbstractPiglin) {
-                        return;
-                    }
-
                     // hostile mobs (besides wither) should not target players morphed as hostile
                     // mobs
                     else if (!(this.mob instanceof WitherBoss) && shape instanceof Enemy) {
+                        // endermen should attack endermites
+                        if (this.mob instanceof EnderMan && shape.getType().equals(EntityType.ENDERMITE)) {
+                            return;
+                        }
+
+                        // Wither Skeletons should attack Piglins
+                        else if (this.mob instanceof WitherSkeleton && shape instanceof AbstractPiglin) {
+                            return;
+                        }
+
                         this.stop();
                         ci.cancel();
                     }

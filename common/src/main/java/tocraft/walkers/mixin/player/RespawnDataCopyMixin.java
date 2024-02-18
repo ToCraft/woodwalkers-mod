@@ -12,6 +12,7 @@ import tocraft.walkers.impl.PlayerDataProvider;
 @Mixin(ServerPlayer.class)
 public class RespawnDataCopyMixin {
 
+    @SuppressWarnings("ConstantConditions")
     @Inject(method = "restoreFrom", at = @At("TAIL"))
     private void copyWalkersData(ServerPlayer oldPlayer, boolean alive, CallbackInfo ci) {
         PlayerDataProvider oldData = ((PlayerDataProvider) oldPlayer);
@@ -22,7 +23,7 @@ public class RespawnDataCopyMixin {
         newData.walkers$setRemainingHostilityTime(oldData.walkers$getRemainingHostilityTime());
         newData.walkers$setCurrentShape(oldData.walkers$getCurrentShape());
         newData.walkers$set2ndShape(oldData.walkers$get2ndShape());
-        ((DimensionsRefresher) (ServerPlayer) (Object) this).shape_refreshDimensions();
+        ((DimensionsRefresher) this).shape_refreshDimensions();
 
         PlayerShapeChanger.sync((ServerPlayer) (Object) this);
     }

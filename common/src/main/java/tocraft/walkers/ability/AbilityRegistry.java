@@ -20,8 +20,7 @@ import java.util.function.Predicate;
 
 public class AbilityRegistry {
 
-    private static final Map<EntityType<? extends LivingEntity>, ShapeAbility<?>> abilities = new HashMap<>();
-    private static final Map<Predicate<LivingEntity>, ShapeAbility<?>> abilityPredicates = new LinkedHashMap<>();
+    private static final Map<Predicate<LivingEntity>, ShapeAbility<?>> abilities = new LinkedHashMap<>();
 
     private AbilityRegistry() {
 
@@ -62,17 +61,16 @@ public class AbilityRegistry {
      */
     @SuppressWarnings("unchecked")
     public static <L extends LivingEntity> ShapeAbility<L> get(L shape) {
-        List<ShapeAbility<?>> shapeAbilities = new ArrayList<>(abilityPredicates.entrySet().stream().filter(entry -> entry.getKey().test(shape)).map(Map.Entry::getValue).toList());
-        return !shapeAbilities.isEmpty() ? (ShapeAbility<L>) shapeAbilities.get(shapeAbilities.size() - 1) : (ShapeAbility<L>) abilities.get(shape.getType());
+        List<ShapeAbility<?>> shapeAbilities = new ArrayList<>(abilities.entrySet().stream().filter(entry -> entry.getKey().test(shape)).map(Map.Entry::getValue).toList());
+        return !shapeAbilities.isEmpty() ? (ShapeAbility<L>) shapeAbilities.get(shapeAbilities.size() - 1) : null;
     }
 
     public static <A extends LivingEntity, T extends EntityType<A>> void register(T type, ShapeAbility<A> ability) {
-        abilities.put(type, ability);
-        abilityPredicates.put(livingEntity -> type.equals(livingEntity.getType()), ability);
+        register((Predicate<LivingEntity>) livingEntity -> type.equals(livingEntity.getType()), ability);
     }
 
     public static <A extends LivingEntity> void register(Class<A> entityClass, ShapeAbility<A> ability) {
-        abilityPredicates.put(entityClass::isInstance, ability);
+        register((Predicate<LivingEntity>) entityClass::isInstance, ability);
     }
 
     /**
@@ -82,26 +80,10 @@ public class AbilityRegistry {
      * @param ability         your {@link ShapeAbility}
      */
     public static void register(Predicate<LivingEntity> entityPredicate, ShapeAbility<?> ability) {
-        abilityPredicates.put(entityPredicate, ability);
+        abilities.put(entityPredicate, ability);
     }
 
     public static <L extends LivingEntity> boolean has(L shape) {
-        return abilityPredicates.keySet().stream().anyMatch(predicate -> predicate.test(shape)) || abilities.containsKey(shape.getType());
-    }
-
-    /**
-     * @Deprecated Use {@link #get(LivingEntity)} instead
-     */
-    @Deprecated
-    public static ShapeAbility get(EntityType<?> type) {
-        return abilities.get(type);
-    }
-
-    /**
-     * @Deprecated Use {@link #has(LivingEntity)} instead
-     */
-    @Deprecated
-    public static boolean has(EntityType<?> type) {
-        return abilities.containsKey(type);
+        return abilities.keySet().stream().anyMatch(predicate -> predicate.test(shape));
     }
 }

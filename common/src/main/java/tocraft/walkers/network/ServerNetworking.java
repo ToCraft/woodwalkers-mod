@@ -20,6 +20,7 @@ public class ServerNetworking implements NetworkHandler {
         registerUseAbilityPacketHandler();
     }
 
+    @SuppressWarnings("ConstantConditions")
     private static void registerUseAbilityPacketHandler() {
         NetworkManager.registerReceiver(NetworkManager.Side.C2S, USE_ABILITY, (buf, context) -> {
             Player player = context.getPlayer();

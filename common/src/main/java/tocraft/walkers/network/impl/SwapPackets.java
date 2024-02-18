@@ -16,6 +16,7 @@ import tocraft.walkers.network.NetworkHandler;
 
 public class SwapPackets {
 
+    @SuppressWarnings({"unchecked", "ConstantConditions"})
     public static void registerWalkersRequestPacketHandler() {
         NetworkManager.registerReceiver(NetworkManager.Side.C2S, NetworkHandler.SHAPE_REQUEST,
                 (buf, context) -> context.getPlayer().getServer().execute(() -> {

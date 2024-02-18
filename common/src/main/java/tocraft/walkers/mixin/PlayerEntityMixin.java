@@ -40,6 +40,7 @@ import tocraft.walkers.api.PlayerShape;
 import tocraft.walkers.mixin.accessor.*;
 import tocraft.walkers.registry.WalkersEntityTags;
 
+@SuppressWarnings("ConstantConditions")
 @Mixin(Player.class)
 public abstract class PlayerEntityMixin extends LivingEntityMixin {
 

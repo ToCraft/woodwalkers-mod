@@ -17,12 +17,18 @@ import tocraft.walkers.mixin.EntityTrackerAccessor;
 import tocraft.walkers.mixin.ThreadedAnvilChunkStorageAccessor;
 
 public class AngerAbility<T extends LivingEntity> extends ShapeAbility<T> {
-    SoundEvent notAggressiveSound;
-    SoundEvent aggressiveSound;
+    private final SoundEvent notAggressiveSound;
+    private final SoundEvent aggressiveSound;
+    private final Item icon;
 
     public AngerAbility(SoundEvent notAggressiveSound, SoundEvent aggressionSound) {
+        this(notAggressiveSound, aggressionSound, Items.RED_DYE);
+    }
+
+    public AngerAbility(SoundEvent notAggressiveSound, SoundEvent aggressionSound, Item icon) {
         this.notAggressiveSound = notAggressiveSound;
         this.aggressiveSound = aggressionSound;
+        this.icon = icon;
     }
 
     @Override
@@ -52,6 +58,6 @@ public class AngerAbility<T extends LivingEntity> extends ShapeAbility<T> {
 
     @Override
     public Item getIcon() {
-        return Items.RED_DYE;
+        return icon;
     }
 }

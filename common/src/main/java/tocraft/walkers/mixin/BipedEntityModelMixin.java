@@ -22,6 +22,7 @@ public abstract class BipedEntityModelMixin extends LivingEntityRenderer<LivingE
         super(ctx, model, shadowRadius);
     }
 
+    @SuppressWarnings("ConstantConditions")
     @Inject(
             method = "render(Lnet/minecraft/world/entity/Mob;FFLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V",
             at = @At("HEAD"))

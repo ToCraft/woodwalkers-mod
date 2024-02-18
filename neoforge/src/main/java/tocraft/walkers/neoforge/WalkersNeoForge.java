@@ -5,6 +5,7 @@ import net.neoforged.fml.loading.FMLEnvironment;
 import tocraft.walkers.Walkers;
 import tocraft.walkers.WalkersClient;
 
+@SuppressWarnings("unused")
 @Mod(Walkers.MODID)
 public class WalkersNeoForge {
     public WalkersNeoForge() {

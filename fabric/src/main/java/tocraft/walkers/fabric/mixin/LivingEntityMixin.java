@@ -12,6 +12,7 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 import tocraft.walkers.Walkers;
 import tocraft.walkers.api.PlayerShape;
 
+@SuppressWarnings("ConstantConditions")
 @Mixin(LivingEntity.class)
 public abstract class LivingEntityMixin extends Entity {
 

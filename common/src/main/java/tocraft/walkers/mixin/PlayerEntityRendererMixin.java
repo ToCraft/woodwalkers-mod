@@ -22,6 +22,8 @@ import net.minecraft.world.entity.monster.Phantom;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.player.PlayerModelPart;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -45,11 +47,13 @@ import tocraft.walkers.mixin.accessor.LivingEntityRendererAccessor;
 import java.util.Optional;
 import java.util.UUID;
 
+@SuppressWarnings("ALL")
 @Mixin(PlayerRenderer.class)
 public abstract class PlayerEntityRendererMixin extends LivingEntityRenderer<AbstractClientPlayer, PlayerModel<AbstractClientPlayer>> {
 
+    @Contract(pure = true)
     @Shadow
-    private static HumanoidModel.ArmPose getArmPose(AbstractClientPlayer player, InteractionHand hand) {
+    private static HumanoidModel.@Nullable ArmPose getArmPose(AbstractClientPlayer player, InteractionHand hand) {
         return null;
     }
 

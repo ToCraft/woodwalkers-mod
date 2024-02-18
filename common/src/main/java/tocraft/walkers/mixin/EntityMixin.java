@@ -21,6 +21,7 @@ import tocraft.walkers.registry.WalkersEntityTags;
 import java.util.Optional;
 import java.util.UUID;
 
+@SuppressWarnings("ConstantConditions")
 @Mixin(Entity.class)
 public abstract class EntityMixin implements DimensionsRefresher {
 
@@ -117,7 +118,7 @@ public abstract class EntityMixin implements DimensionsRefresher {
         }
     }
 
-    @Inject(method = "tick", at = @At("HEAD"), cancellable = true)
+    @Inject(method = "tick", at = @At("HEAD"))
     private void goThroughBlocks(CallbackInfo ci) {
         if ((Object) this instanceof Player player && PlayerShape.getCurrentShape(player) != null && PlayerShape.getCurrentShape(player).getType().is(WalkersEntityTags.FALL_THROUGH_BLOCKS))
             player.noPhysics = true;

@@ -23,6 +23,7 @@ public abstract class AbstractClientPlayerMixin extends Player {
         super(level, pos, yRot, gameProfile);
     }
 
+    @SuppressWarnings("ConstantConditions")
     @Inject(method = "tick", at = @At("HEAD"))
     private void clientTick(CallbackInfo info) {
         Optional<UUID> vehiclePlayerId = ((PlayerDataProvider) this).walkers$getVehiclePlayerUUID();

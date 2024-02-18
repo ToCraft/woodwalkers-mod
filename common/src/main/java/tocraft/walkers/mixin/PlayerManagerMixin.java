@@ -16,6 +16,7 @@ import tocraft.walkers.impl.DimensionsRefresher;
 @Mixin(PlayerList.class)
 public class PlayerManagerMixin {
 
+    @SuppressWarnings("ConstantConditions")
     @Inject(method = "respawn", at = @At("RETURN"))
     private void onRespawn(ServerPlayer player, boolean alive, CallbackInfoReturnable<ServerPlayer> cir) {
         LivingEntity shape = PlayerShape.getCurrentShape(player);
@@ -43,7 +44,7 @@ public class PlayerManagerMixin {
                         .setBaseValue(Math.min(Walkers.CONFIG.maxAttackDamage, shapeAttackDamage));
             }
             // sync max health & attack damage with clients
-            if ((Walkers.CONFIG.scalingHealth || Walkers.CONFIG.scalingAttackDamage)
+            if ((Walkers.CONFIG.scalingHealth || Walkers.CONFIG.percentScalingHealth)
                     || Walkers.CONFIG.scalingAttackDamage) {
                 player.connection.send(new ClientboundUpdateAttributesPacket(player.getId(),
                         player.getAttributes().getSyncableAttributes()));

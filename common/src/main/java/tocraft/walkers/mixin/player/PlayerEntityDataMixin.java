@@ -8,6 +8,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
@@ -188,6 +189,7 @@ public abstract class PlayerEntityDataMixin extends LivingEntity implements Play
         this.walkers$shape = shape;
     }
 
+    @SuppressWarnings("ConstantConditions")
     @Unique
     @Override
     public boolean walkers$updateShapes(@Nullable LivingEntity shape) {
@@ -274,9 +276,9 @@ public abstract class PlayerEntityDataMixin extends LivingEntity implements Play
         // If the player is riding another Player that switches into another shape that cannot
         // be ridden, the riding player stops riding
         if (!(shape instanceof AbstractHorse)) {
-            /*for (Entity passenger : player.getPassengers()) {
+            for (Entity passenger : player.getPassengers()) {
                 passenger.stopRiding();
-            }*/
+            }
         }
 
         // sync with client

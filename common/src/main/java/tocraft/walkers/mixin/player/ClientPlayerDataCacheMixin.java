@@ -25,7 +25,7 @@ public abstract class ClientPlayerDataCacheMixin extends ClientCommonPacketListe
         super(minecraft, connection, commonListenerCookie);
     }
 
-    // This inject caches the custom data attached to this client's player before it
+    // This @Inject caches the custom data attached to this client's player before it
     // is reset when changing dimensions.
     // For example, switching from The End => Overworld will reset the player's NBT.
     @Inject(method = "handleRespawn", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/multiplayer/MultiPlayerGameMode;createPlayer(Lnet/minecraft/client/multiplayer/ClientLevel;Lnet/minecraft/stats/StatsCounter;Lnet/minecraft/client/ClientRecipeBook;ZZ)Lnet/minecraft/client/player/LocalPlayer;"))

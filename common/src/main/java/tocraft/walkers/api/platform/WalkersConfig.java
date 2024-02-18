@@ -5,6 +5,7 @@ import tocraft.craftedcore.config.annotions.Synchronize;
 
 import java.util.*;
 
+@SuppressWarnings("ConstantConditions")
 public class WalkersConfig implements Config {
 
     public boolean revoke2ndShapeOnDeath = false;
@@ -13,7 +14,7 @@ public class WalkersConfig implements Config {
     public boolean hostilesIgnoreHostileShapedPlayer = true;
     public boolean hostilesForgetNewHostileShapedPlayer = false;
     public boolean wolvesAttack2ndShapedPrey = true;
-    public boolean ownedwolvesAttack2ndShapedPrey = false;
+    public boolean ownedWolvesAttack2ndShapedPrey = false;
     public boolean villagersRunFrom2ndShapes = true;
     public boolean foxesAttack2ndShapedPrey = true;
     public boolean useShapeSounds = true;
@@ -35,7 +36,7 @@ public class WalkersConfig implements Config {
     public boolean wardenIsBlinded = true;
     public boolean wardenBlindsNearby = true;
     @Synchronize
-    public boolean unlockOveridesCurrentShape = false;
+    public boolean unlockOverridesCurrentShape = false;
     @Synchronize
     public float unlockTimer = 60f;
     public boolean specialShapeIsThirdShape = false;

@@ -56,6 +56,7 @@ public class KeyPressHandler implements ClientTickEvent.Client {
         }
     }
 
+    @SuppressWarnings("ConstantConditions")
     private void handleUnlockKey(Minecraft client) {
         // check if player is blacklisted
         if (client.player != null && Walkers.CONFIG.playerUUIDBlacklist.contains(client.player.getUUID())) {
@@ -64,7 +65,7 @@ public class KeyPressHandler implements ClientTickEvent.Client {
         }
 
         HitResult hit = client.hitResult;
-        if (client.player != null && (((PlayerDataProvider) client.player).walkers$get2ndShape() == null || Walkers.CONFIG.unlockOveridesCurrentShape) && hit instanceof EntityHitResult) {
+        if (client.player != null && (((PlayerDataProvider) client.player).walkers$get2ndShape() == null || Walkers.CONFIG.unlockOverridesCurrentShape) && hit instanceof EntityHitResult) {
             Entity entityHit = ((EntityHitResult) hit).getEntity();
             if (entityHit instanceof LivingEntity living) {
                 @Nullable ShapeType<?> type = ShapeType.from(living);

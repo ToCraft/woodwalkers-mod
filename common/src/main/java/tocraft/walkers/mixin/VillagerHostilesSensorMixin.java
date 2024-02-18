@@ -36,6 +36,7 @@ public class VillagerHostilesSensorMixin {
         }
     }
 
+    @SuppressWarnings("ConstantConditions")
     @Inject(method = "isClose", at = @At("HEAD"), cancellable = true)
     private void checkPlayerDanger(LivingEntity villager, LivingEntity potentialPlayer,
                                    CallbackInfoReturnable<Boolean> cir) {

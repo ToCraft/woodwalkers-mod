@@ -15,6 +15,7 @@ public class FoxTypeProvider extends TypeProvider<Fox> {
         return entity.getVariant().getId();
     }
 
+    @SuppressWarnings("ConstantConditions")
     @Override
     public Fox create(EntityType<Fox> type, Level world, int data) {
         Fox fox = new Fox(type, world);

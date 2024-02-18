@@ -13,7 +13,7 @@ import java.util.Map;
 import java.util.UUID;
 
 public class GrassEaterAbility<T extends LivingEntity> extends ShapeAbility<T> {
-    public Map<UUID, Integer> eatTick = new HashMap<>();
+    public final Map<UUID, Integer> eatTick = new HashMap<>();
 
     @Override
     public void onUse(Player player, T shape, Level world) {

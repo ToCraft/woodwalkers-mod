@@ -20,13 +20,11 @@ public class AbilityOverlayRenderer {
                 return;
             }
 
-            ShapeAbility<? extends LivingEntity> shapeAbility = AbilityRegistry.get(shape);
+            ShapeAbility<LivingEntity> shapeAbility = AbilityRegistry.get(shape);
 
-            if (shapeAbility == null) {
-                return;
+            if (shapeAbility != null) {
+                TimerOverlayRenderer.register(matrices, PlayerAbilities.getCooldown(player), shapeAbility.getCooldown(shape), shapeAbility.getIcon());
             }
-
-            TimerOverlayRenderer.register(matrices, PlayerAbilities.getCooldown(player), AbilityRegistry.get(shape).getCooldown(shape), shapeAbility.getIcon());
         });
     }
 }

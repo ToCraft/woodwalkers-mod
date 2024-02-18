@@ -172,7 +172,7 @@ public abstract class LivingEntityMixin extends Entity implements NearbySongAcce
     @Environment(EnvType.CLIENT)
     @Inject(method = "setRecordPlayingNearby", at = @At("RETURN"))
     protected void shape_setRecordPlayingNearby(BlockPos songPosition, boolean playing, CallbackInfo ci) {
-        if ((LivingEntity) (Object) this instanceof Player player) {
+        if ((LivingEntity) (Object) this instanceof Player) {
             walkers$nearbySongPlaying = playing;
         }
     }
@@ -213,8 +213,6 @@ public abstract class LivingEntityMixin extends Entity implements NearbySongAcce
                 cir.setReturnValue(this.horizontalCollision);
             }
         }
-
-        ((LivingEntity) (Object) this).isInWall();
     }
 
 
