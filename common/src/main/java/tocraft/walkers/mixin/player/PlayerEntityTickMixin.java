@@ -106,7 +106,7 @@ public abstract class PlayerEntityTickMixin extends LivingEntity {
             ServerPlayer serverPlayer = (ServerPlayer) (Object) this;
             LivingEntity shape = PlayerShape.getCurrentShape(serverPlayer);
             if (shape != null && AbilityRegistry.get(shape) instanceof GrassEaterAbility<?> grassEaterAbility) {
-                if (grassEaterAbility.eatTick.get(serverPlayer.getUUID()) != 0) {
+                if (grassEaterAbility.eatTick.get(serverPlayer.getUUID()) != null && grassEaterAbility.eatTick.get(serverPlayer.getUUID()) != 0) {
                     grassEaterAbility.eatTick.put(serverPlayer.getUUID(), Math.max(0, grassEaterAbility.eatTick.get(serverPlayer.getUUID()) - 1));
 
                     if (shape instanceof Sheep sheepShape)
