@@ -87,4 +87,9 @@ public class EvokerAbility extends ShapeAbility<Evoker> {
     public Item getIcon() {
         return Items.EMERALD;
     }
+
+    @Override
+    public int getDefaultCooldown() {
+        return 10;
+    }
 }

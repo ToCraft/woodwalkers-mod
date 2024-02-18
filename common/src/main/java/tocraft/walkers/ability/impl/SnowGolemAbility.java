@@ -31,4 +31,9 @@ public class SnowGolemAbility extends ShapeAbility<SnowGolem> {
     public Item getIcon() {
         return Items.SNOWBALL;
     }
+
+    @Override
+    public int getDefaultCooldown() {
+        return 10;
+    }
 }

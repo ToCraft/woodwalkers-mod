@@ -38,7 +38,7 @@ public class AbilityRegistry {
         register(EnderMan.class, new EndermanAbility());
         register(Ghast.class, new GhastAbility());
         register(SnowGolem.class, new SnowGolemAbility());
-        register(WitherBoss.class, new WitherEntityAbility());
+        register(WitherBoss.class, new WitherAbility());
         register(Cow.class, new CowAbility<>());
         register(Goat.class, new CowAbility<>());
         register(Endermite.class, new EndermiteAbility());

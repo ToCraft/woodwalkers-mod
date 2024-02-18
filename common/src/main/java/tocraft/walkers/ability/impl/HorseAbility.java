@@ -29,4 +29,9 @@ public class HorseAbility<T extends Mob> extends ShapeAbility<T> {
     private static int randInt(int min, int max) {
         return min + (int) (Math.random() * ((max - min) + 1));
     }
+
+    @Override
+    public int getDefaultCooldown() {
+        return 40;
+    }
 }

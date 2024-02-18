@@ -22,4 +22,9 @@ public class ChickenAbility<T extends Mob> extends ShapeAbility<T> {
     public Item getIcon() {
         return Items.EGG;
     }
+
+    @Override
+    public int getDefaultCooldown() {
+        return 1200;
+    }
 }

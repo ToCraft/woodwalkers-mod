@@ -112,11 +112,6 @@ public class Walkers {
         return entity != null && entity.getMobType().equals(MobType.WATER);
     }
 
-    public static int getCooldown(EntityType<?> type) {
-        String id = BuiltInRegistries.ENTITY_TYPE.getKey(type).toString();
-        return Walkers.CONFIG.abilityCooldownMap.getOrDefault(id, 20);
-    }
-
     public static boolean hasSpecialShape(UUID uuid) {
         return devs.contains(uuid) || VIPs.getCachedPatreons().contains(uuid);
     }

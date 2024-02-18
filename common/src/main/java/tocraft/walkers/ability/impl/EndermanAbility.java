@@ -24,4 +24,9 @@ public class EndermanAbility extends ShapeAbility<EnderMan> {
     public Item getIcon() {
         return Items.ENDER_PEARL;
     }
+
+    @Override
+    public int getDefaultCooldown() {
+        return 100;
+    }
 }
