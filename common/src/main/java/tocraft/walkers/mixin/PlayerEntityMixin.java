@@ -12,6 +12,7 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.animal.Bee;
+import net.minecraft.world.entity.animal.Fox;
 import net.minecraft.world.entity.animal.IronGolem;
 import net.minecraft.world.entity.animal.Pufferfish;
 import net.minecraft.world.entity.monster.Ravager;
@@ -374,6 +375,10 @@ public abstract class PlayerEntityMixin extends LivingEntityMixin {
                 if (shape instanceof TamableAnimal) {
                     ((TamableAnimal) shape).setInSittingPose(player.isShiftKeyDown());
                     ((TamableAnimal) shape).setOrderedToSit(player.isShiftKeyDown());
+                }
+                else if (shape instanceof Fox) {
+                    ((Fox) shape).setSitting(player.isShiftKeyDown());
+                    ((Fox) shape).setJumping(!player.onGround());
                 }
 
                 ((EntityAccessor) shape).shape_callSetFlag(7, player.isFallFlying());
