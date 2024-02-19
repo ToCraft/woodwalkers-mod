@@ -1,0 +1,67 @@
+name: Bug Report
+labels:
+  - bug
+description: Report issues
+body:
+  - type: dropdown
+    id: modloader
+    attributes:
+      label: Mod loader
+      options:
+        - Forge
+        - NeoForge
+        - Fabric
+    validations:
+      required: true
+  - type: input
+    id: mc-version
+    attributes:
+      label: Minecraft version
+      placeholder: e.g. 1.20.2
+    validations:
+      required: true
+  - type: input
+    id: walkers-version
+    attributes:
+      label: Woodwalkers version
+      placeholder: e.g. 2.1
+    validations:
+      required: true
+  - type: input
+    id: craftedcore-version
+    attributes:
+      label: CraftedCore version
+      placeholder: e.g. 2.1
+    validations:
+      required: true
+  - type: input
+    id: modloader-version
+    attributes:
+      label: Modloader version
+      placeholder: "e.g. 48.2.0"
+    validations:
+      required: true
+  - type: input
+    attributes:
+      label: "The latest.log file"
+      description: "Please use [gist](https://gist.github.com/)"
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Issue description
+      placeholder: A description of the issue.
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        e.g.
+        1. Start game
+        2. go into world
+        3. etc...
+  - type: textarea
+    attributes:
+      label: Other
+      description: Anything else which is related to the issue, e.g. the mod it's crashing with.
