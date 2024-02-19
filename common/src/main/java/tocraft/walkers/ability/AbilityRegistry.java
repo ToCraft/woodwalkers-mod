@@ -30,32 +30,32 @@ public class AbilityRegistry {
 
     public static void init() {
         // Register generic Abilities first (since the last registered ability will be the used one
-        register((Predicate<LivingEntity>) livingEntity -> livingEntity instanceof NeutralMob, new AngerAbility<>(SoundEvents.PLAYER_BREATH, SoundEvents.PLAYER_ATTACK_CRIT));
+        register((Predicate<LivingEntity>) livingEntity -> livingEntity instanceof NeutralMob, new AngerAbility<>());
 
         // Register 'normal' Abilities
-        register(Blaze.class, new BlazeAbility());
-        register(Creeper.class, new CreeperAbility());
-        register(EnderDragon.class, new EnderDragonAbility());
-        register(EnderMan.class, new EndermanAbility());
-        register(Ghast.class, new GhastAbility());
-        register(SnowGolem.class, new SnowGolemAbility());
-        register(WitherBoss.class, new WitherAbility());
+        register(Blaze.class, new BlazeAbility<>());
+        register(Creeper.class, new CreeperAbility<>());
+        register(EnderDragon.class, new EnderDragonAbility<>());
+        register(EnderMan.class, new EndermanAbility<>());
+        register(Ghast.class, new GhastAbility<>());
+        register(SnowGolem.class, new SnowGolemAbility<>());
+        register(WitherBoss.class, new WitherAbility<>());
         register(Cow.class, new CowAbility<>());
         register(Goat.class, new CowAbility<>());
-        register(Endermite.class, new EndermiteAbility());
+        register(Endermite.class, new EndermiteAbility<>());
         register(Llama.class, new LlamaAbility<>());
-        register(Witch.class, new WitchAbility());
-        register(Evoker.class, new EvokerAbility());
-        register(Warden.class, new WardenAbility());
+        register(Witch.class, new WitchAbility<>());
+        register(Evoker.class, new EvokerAbility<>());
+        register(Warden.class, new WardenAbility<>());
         register(Wolf.class, new AngerAbility<>(SoundEvents.WOLF_PANT, SoundEvents.WOLF_GROWL));
-        register(Sheep.class, new SheepAbility());
-        register(Sniffer.class, new SnifferAbility());
+        register(Sheep.class, new SheepAbility<>());
+        register(Sniffer.class, new SnifferAbility<>());
         register(Chicken.class, new ChickenAbility<>());
-        register(MushroomCow.class, new MushroomCowAbility());
+        register(MushroomCow.class, new MushroomCowAbility<>());
         register(AbstractHorse.class, new HorseAbility<>());
         register(Bee.class, new AngerAbility<>(SoundEvents.BEE_LOOP, SoundEvents.BEE_LOOP_AGGRESSIVE));
-        register(Shulker.class, new ShulkerAbility());
-        register(Pufferfish.class, new PufferfishAbility());
+        register(Shulker.class, new ShulkerAbility<>());
+        register(Pufferfish.class, new PufferfishAbility<>());
     }
 
     /**

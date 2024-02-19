@@ -5,6 +5,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.monster.Evoker;
 import net.minecraft.world.entity.monster.Vex;
 import net.minecraft.world.entity.player.Player;
@@ -16,10 +17,10 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import tocraft.walkers.ability.ShapeAbility;
 
-public class EvokerAbility extends ShapeAbility<Evoker> {
+public class EvokerAbility<T extends Mob> extends ShapeAbility<T> {
 
     @Override
-    public void onUse(Player player, Evoker shape, Level world) {
+    public void onUse(Player player, T shape, Level world) {
         // spawn vexes while sneaking
         if (player.isCrouching() && world instanceof ServerLevel serverLevel) {
             int i = 0;

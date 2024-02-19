@@ -7,9 +7,9 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.ShearsItem;
 import net.minecraft.world.level.Level;
 
-public class SheepAbility extends GrassEaterAbility<Sheep> {
+public class SheepAbility<T extends Sheep> extends GrassEaterAbility<T> {
     @Override
-    public void onUse(Player player, Sheep shape, Level world) {
+    public void onUse(Player player, T shape, Level world) {
         if (!shape.isSheared() && player.getMainHandItem().getItem() instanceof ShearsItem) {
             shape.shear(player.getSoundSource());
         } else {

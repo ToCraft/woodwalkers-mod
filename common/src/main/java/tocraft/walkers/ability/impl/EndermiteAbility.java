@@ -4,6 +4,7 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
+import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.monster.Endermite;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
@@ -11,10 +12,10 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import tocraft.walkers.ability.ShapeAbility;
 
-public class EndermiteAbility extends ShapeAbility<Endermite> {
+public class EndermiteAbility<T extends Mob> extends ShapeAbility<T> {
 
     @Override
-    public void onUse(Player player, Endermite shape, Level world) {
+    public void onUse(Player player, T shape, Level world) {
         double x = player.getX();
         double y = player.getY();
         double z = player.getZ();
