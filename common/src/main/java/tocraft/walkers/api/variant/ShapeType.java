@@ -23,7 +23,7 @@ public class ShapeType<T extends LivingEntity> {
     private final EntityType<T> type;
     private final int variantData;
 
-    private static <Z extends LivingEntity> int getDefaultVariantData(EntityType<Z> type) {
+    public static <Z extends LivingEntity> int getDefaultVariantData(EntityType<Z> type) {
         TypeProvider<Z> provider = TypeProviderRegistry.getProvider(type);
         if (provider != null) {
             return provider.getFallbackData();
@@ -32,9 +32,27 @@ public class ShapeType<T extends LivingEntity> {
         }
     }
 
-    private ShapeType(EntityType<T> type, int variantData) {
+    public ShapeType(EntityType<T> type) {
+        this.type = type;
+        variantData = getDefaultVariantData(type);
+    }
+
+    public ShapeType(EntityType<T> type, int variantData) {
         this.type = type;
         this.variantData = variantData;
+    }
+
+    public ShapeType(T entity) {
+        this.type = (EntityType<T>) entity.getType();
+
+        // Discover variant data based on entity NBT data.
+        @Nullable
+        TypeProvider<T> provider = TypeProviderRegistry.getProvider(type);
+        if (provider != null) {
+            variantData = provider.getVariantData(entity);
+        } else {
+            variantData = getDefaultVariantData(type);
+        }
     }
 
     public static <Z extends LivingEntity> @NotNull ShapeType<Z> from(EntityType<Z> entityType) {
