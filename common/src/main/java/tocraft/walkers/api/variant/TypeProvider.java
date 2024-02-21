@@ -9,7 +9,6 @@ import net.minecraft.world.level.Level;
 import java.util.Locale;
 
 public abstract class TypeProvider<T extends LivingEntity> {
-
     @SuppressWarnings("unchecked")
     public ShapeType<T> create(T entity) {
         return ShapeType.from((EntityType<T>) entity.getType(), getVariantData(entity));

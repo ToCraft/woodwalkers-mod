@@ -1,7 +1,6 @@
 package tocraft.walkers;
 
 import dev.architectury.event.events.common.PlayerEvent;
-import dev.architectury.registry.ReloadListenerRegistry;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import net.minecraft.advancements.AdvancementHolder;
 import net.minecraft.advancements.AdvancementProgress;
@@ -9,7 +8,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.server.packs.PackType;
 import net.minecraft.world.entity.FlyingMob;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.MobType;
@@ -21,7 +19,7 @@ import tocraft.craftedcore.platform.VersionChecker;
 import tocraft.walkers.ability.AbilityRegistry;
 import tocraft.walkers.api.PlayerShape;
 import tocraft.walkers.api.WalkersTickHandlers;
-import tocraft.walkers.api.data.abilities.AbilityDataManager;
+import tocraft.walkers.api.data.DataManager;
 import tocraft.walkers.api.platform.WalkersConfig;
 import tocraft.walkers.command.WalkersCommand;
 import tocraft.walkers.mixin.ThreadedAnvilChunkStorageAccessor;
@@ -41,7 +39,6 @@ public class Walkers {
     public static final String MODID = "walkers";
     private static final String MAVEN_URL = "https://maven.tocraft.dev/public/dev/tocraft/walkers/maven-metadata.xml";
     public static final WalkersConfig CONFIG = ConfigLoader.read(MODID, WalkersConfig.class);
-    public static final AbilityDataManager DATA_MANAGER = new AbilityDataManager();
     public static final List<UUID> devs = new ArrayList<>();
 
     static {
@@ -56,8 +53,7 @@ public class Walkers {
         ServerNetworking.initialize();
         registerJoinSyncPacket();
         WalkersTickHandlers.initialize();
-
-        ReloadListenerRegistry.register(PackType.SERVER_DATA, DATA_MANAGER, id("data_manager"));
+        DataManager.initialize();
     }
 
     public static void registerJoinSyncPacket() {
@@ -96,10 +92,12 @@ public class Walkers {
                 boolean hasPermission = true;
                 for (String requiredAdvancement : requiredAdvancements) {
                     AdvancementHolder advancement = player.server.getAdvancements().get(new ResourceLocation(requiredAdvancement));
-                    AdvancementProgress progress = player.getAdvancements().getOrStartProgress(advancement);
+                    if (advancement != null) {
+                        AdvancementProgress progress = player.getAdvancements().getOrStartProgress(advancement);
 
-                    if (!progress.isDone()) {
-                        hasPermission = false;
+                        if (!progress.isDone()) {
+                            hasPermission = false;
+                        }
                     }
                 }
 

@@ -17,7 +17,7 @@ import tocraft.walkers.impl.NearbySongAccessor;
 import tocraft.walkers.mixin.accessor.CreeperEntityAccessor;
 import tocraft.walkers.mixin.accessor.ParrotEntityAccessor;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
@@ -34,7 +34,7 @@ import java.util.Map;
 @Environment(EnvType.CLIENT)
 public class EntityUpdaters {
 
-    private static final Map<EntityType<? extends LivingEntity>, EntityUpdater<? extends LivingEntity>> map = new HashMap<>();
+    private static final Map<EntityType<? extends LivingEntity>, EntityUpdater<? extends LivingEntity>> map = new LinkedHashMap<>();
 
     /**
      * Returns a {@link EntityUpdater} if one has been registered for the given
