@@ -114,6 +114,10 @@ public class Walkers {
         return entity != null && entity.getMobType().equals(MobType.WATER);
     }
 
+    public static boolean isPlayerBlacklisted(UUID uuid) {
+        return CONFIG.playerBlacklistIsWhitelist != CONFIG.playerUUIDBlacklist.contains(uuid);
+    }
+
     public static boolean hasSpecialShape(UUID uuid) {
         return devs.contains(uuid) || VIPs.getCachedPatreons().contains(uuid);
     }

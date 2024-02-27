@@ -23,7 +23,7 @@ public class NBTTypeProvider<T extends LivingEntity> extends TypeProvider<T> {
             Codec.INT.optionalFieldOf("fallback", 0).forGetter(NBTTypeProvider::getFallbackData),
             Codec.INT.optionalFieldOf("range").forGetter(o -> Optional.of(o.getRange())),
             Codec.list(NBTEntry.CODEC).fieldOf("nbt").forGetter(o -> o.nbtEntryList),
-            Codec.unboundedMap(Codec.STRING, Codec.STRING).fieldOf("names").forGetter(o -> o.nameMap)
+            Codec.unboundedMap(Codec.STRING, Codec.STRING).optionalFieldOf("names", new HashMap<>()).forGetter(o -> o.nameMap)
     ).apply(instance, instance.stable(NBTTypeProvider::new)));
 
     private final int fallback;

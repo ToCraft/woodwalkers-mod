@@ -21,7 +21,7 @@ public class SwapPackets {
         NetworkManager.registerReceiver(NetworkManager.Side.C2S, NetworkHandler.SHAPE_REQUEST,
                 (buf, context) -> context.getPlayer().getServer().execute(() -> {
                     // check if player is blacklisted
-                    if (Walkers.CONFIG.playerUUIDBlacklist.contains(context.getPlayer().getUUID())) {
+                    if (Walkers.isPlayerBlacklisted(context.getPlayer().getUUID())) {
                         context.getPlayer().displayClientMessage(Component.translatable("walkers.player_blacklisted"), true);
                         return;
                     }
