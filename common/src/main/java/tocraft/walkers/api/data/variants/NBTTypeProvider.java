@@ -22,14 +22,16 @@ public class NBTTypeProvider<T extends LivingEntity> extends TypeProvider<T> {
     public static Codec<NBTTypeProvider<?>> CODEC = RecordCodecBuilder.create((instance) -> instance.group(
             Codec.INT.optionalFieldOf("fallback", 0).forGetter(NBTTypeProvider::getFallbackData),
             Codec.INT.optionalFieldOf("range").forGetter(o -> Optional.of(o.getRange())),
-            Codec.list(NBTEntry.CODEC).fieldOf("nbt").forGetter(o -> o.nbtEntryList)
+            Codec.list(NBTEntry.CODEC).fieldOf("nbt").forGetter(o -> o.nbtEntryList),
+            Codec.unboundedMap(Codec.STRING, Codec.STRING).fieldOf("names").forGetter(o -> o.nameMap)
     ).apply(instance, instance.stable(NBTTypeProvider::new)));
 
     private final int fallback;
     private final int range;
     private final List<NBTEntry<?>> nbtEntryList;
+    private final Map<String, String> nameMap;
 
-    NBTTypeProvider(int fallback, Optional<Integer> range, List<NBTEntry<?>> nbtEntryList) {
+    NBTTypeProvider(int fallback, Optional<Integer> range, List<NBTEntry<?>> nbtEntryList, Map<String, String> nameMap) {
         this(fallback, range.orElseGet(() -> {
             switch (nbtEntryList.get(0).nbtType) {
                 case "BOOL", "BOOLEAN" -> {
@@ -39,13 +41,14 @@ public class NBTTypeProvider<T extends LivingEntity> extends TypeProvider<T> {
                     return fallback;
                 }
             }
-        }), nbtEntryList);
+        }), nbtEntryList, nameMap);
     }
 
-    NBTTypeProvider(int fallback, int range, List<NBTEntry<?>> nbtEntryList) {
+    NBTTypeProvider(int fallback, int range, List<NBTEntry<?>> nbtEntryList, Map<String, String> nameMap) {
         this.fallback = fallback;
         this.range = range;
         this.nbtEntryList = nbtEntryList;
+        this.nameMap = nameMap;
     }
 
     @SuppressWarnings("unchecked")
@@ -113,8 +116,11 @@ public class NBTTypeProvider<T extends LivingEntity> extends TypeProvider<T> {
     }
 
     @Override
-    public Component modifyText(LivingEntity entity, MutableComponent text) {
-        return text;
+    public Component modifyText(T entity, MutableComponent text) {
+        if (nameMap.containsKey(String.valueOf(getVariantData(entity))))
+            return Component.translatable(nameMap.get(String.valueOf(getVariantData(entity))), text);
+        else
+            return text;
     }
 
     @SuppressWarnings("unchecked")
