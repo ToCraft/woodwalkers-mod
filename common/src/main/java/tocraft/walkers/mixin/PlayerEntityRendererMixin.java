@@ -68,6 +68,7 @@ public abstract class PlayerEntityRendererMixin
         if (shape != null) {
             shape.animationSpeedOld = player.animationSpeedOld;
             shape.animationSpeed = player.animationSpeed;
+            shape.animationPosition = player.animationPosition;
             shape.swinging = player.swinging;
             shape.swingTime = player.swingTime;
             shape.oAttackAnim = player.oAttackAnim;
