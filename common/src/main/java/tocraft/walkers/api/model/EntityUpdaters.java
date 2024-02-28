@@ -142,5 +142,7 @@ public class EntityUpdaters {
             boolean bl = blockState.is(BlockTags.STRIDER_WARM_BLOCKS) || player.getFluidHeight(FluidTags.LAVA) > 0.0;
             strider.setSuffocating(!bl);
         });
+
+        EntityUpdaters.register(EntityType.CAT, (player, cat) -> cat.setInSittingPose(false));
     }
 }
