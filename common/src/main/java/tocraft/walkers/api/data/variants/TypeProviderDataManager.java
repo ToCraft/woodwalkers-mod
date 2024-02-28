@@ -42,9 +42,11 @@ public class TypeProviderDataManager extends SimpleJsonResourceReloadListener {
         }
     }
 
+    @SuppressWarnings("unchecked")
     protected static Map.Entry<EntityType<?>, TypeProvider<?>> typeProviderFromJson(ResourceLocation id, JsonObject json) {
         Codec<Map.Entry<EntityType<?>, TypeProvider<?>>> codec = RecordCodecBuilder.create((instance) -> instance.group(
                 ResourceLocation.CODEC.fieldOf("entity_type").forGetter(o -> BuiltInRegistries.ENTITY_TYPE.getKey(o.getKey())),
+                ResourceLocation.CODEC.optionalFieldOf("parent").forGetter(o -> Optional.of(BuiltInRegistries.ENTITY_TYPE.getKey(o.getKey()))),
                 Codec.STRING.optionalFieldOf("type_provider_class").forGetter(o -> Optional.of(o.getValue().getClass().getName())),
                 NBTTypeProvider.CODEC.optionalFieldOf("type_provider").forGetter(o -> {
                     if (o.getValue() instanceof NBTTypeProvider<?> nbtTypeProvider)
@@ -52,17 +54,20 @@ public class TypeProviderDataManager extends SimpleJsonResourceReloadListener {
                     else
                         return Optional.empty();
                 })
-        ).apply(instance, instance.stable((entityType, typeProviderClassOptional, typeProviderOptional) -> {
-            Walkers.LOGGER.warn(entityType.toString());
+        ).apply(instance, instance.stable((entityType, parent, typeProviderClassOptional, typeProviderOptional) -> {
             if (BuiltInRegistries.ENTITY_TYPE.containsKey(entityType)) {
                 TypeProvider<?> typeProvider;
-                if (typeProviderClassOptional.isPresent()) {
+                if (parent.isPresent()) {
+                    typeProvider = TypeProviderRegistry.getProvider((EntityType<? extends LivingEntity>) BuiltInRegistries.ENTITY_TYPE.get(parent.get()));
+                }
+                else if (typeProviderClassOptional.isPresent()) {
                     try {
                         typeProvider = Class.forName(typeProviderClassOptional.get()).asSubclass(TypeProvider.class).getDeclaredConstructor().newInstance();
                     } catch (InstantiationException | IllegalAccessException | InvocationTargetException |
                              NoSuchMethodException | ClassNotFoundException e) {
                         Walkers.LOGGER.error("{}: No valid type provider class registered for {}", TypeProviderDataManager.class.getSimpleName(), id);
-                        return new SimpleEntry<>(BuiltInRegistries.ENTITY_TYPE.get(entityType), null);                    }
+                        return new SimpleEntry<>(BuiltInRegistries.ENTITY_TYPE.get(entityType), null);
+                    }
                 } else if (typeProviderOptional.isPresent()) {
                     typeProvider = typeProviderOptional.get();
                 } else {
