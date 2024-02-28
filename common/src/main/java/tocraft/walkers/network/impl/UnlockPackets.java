@@ -42,7 +42,7 @@ public class UnlockPackets {
     public static void registerShapeUnlockRequestPacketHandler() {
         NetworkManager.registerReceiver(NetworkManager.Side.C2S, NetworkHandler.UNLOCK_REQUEST, (buf, context) -> {
             // check if player is blacklisted
-            if (Walkers.CONFIG.playerUUIDBlacklist.contains(context.getPlayer().getUUID()))
+            if (Walkers.isPlayerBlacklisted(context.getPlayer().getUUID()))
                 return;
 
             boolean validType = buf.readBoolean();

@@ -4,6 +4,8 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.tags.BlockTags;
+import net.minecraft.tags.FluidTags;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -11,13 +13,14 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.animal.Parrot;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.state.BlockState;
 import tocraft.walkers.api.model.impl.ShulkerEntityUpdater;
 import tocraft.walkers.api.model.impl.SquidEntityUpdater;
 import tocraft.walkers.impl.NearbySongAccessor;
 import tocraft.walkers.mixin.accessor.CreeperEntityAccessor;
 import tocraft.walkers.mixin.accessor.ParrotEntityAccessor;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
@@ -34,7 +37,7 @@ import java.util.Map;
 @Environment(EnvType.CLIENT)
 public class EntityUpdaters {
 
-    private static final Map<EntityType<? extends LivingEntity>, EntityUpdater<? extends LivingEntity>> map = new HashMap<>();
+    private static final Map<EntityType<? extends LivingEntity>, EntityUpdater<? extends LivingEntity>> map = new LinkedHashMap<>();
 
     /**
      * Returns a {@link EntityUpdater} if one has been registered for the given
@@ -70,7 +73,7 @@ public class EntityUpdaters {
 
     public static void init() {
         // register specific entity animation handling
-        EntityUpdaters.register(EntityType.BAT, (player, bat) -> bat.setResting(player.onGround()));
+        EntityUpdaters.register(EntityType.BAT, (player, bat) -> bat.setResting(!player.level().getBlockState(player.blockPosition().above()).isAir()));
 
         EntityUpdaters.register(EntityType.PARROT, (player, parrot) -> {
             parrot.setRecordPlayingNearby(player.blockPosition(), ((NearbySongAccessor) player).shape_isNearbySongPlaying());
@@ -132,5 +135,14 @@ public class EntityUpdaters {
             chicken.flapping *= 0.9F;
             chicken.flap += chicken.flapping * 2.0F;
         });
+
+        // make strider shaking and purple when out of lava
+        EntityUpdaters.register(EntityType.STRIDER, (player, strider) -> {
+            BlockState blockState = player.level().getBlockState(player.blockPosition());
+            boolean bl = blockState.is(BlockTags.STRIDER_WARM_BLOCKS) || player.getFluidHeight(FluidTags.LAVA) > 0.0;
+            strider.setSuffocating(!bl);
+        });
+
+        EntityUpdaters.register(EntityType.CAT, (player, cat) -> cat.setInSittingPose(false));
     }
 }

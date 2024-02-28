@@ -30,6 +30,7 @@
     "RavagerEntityMixin",
     "ServerPlayerEntityMixin",
     "ServerPlayerGameModeMixin",
+    "SlimeMixin",
     "SweetBerryBushBlockMixin",
     "ThreadedAnvilChunkStorageAccessor",
     "TrackTargetGoalMixin",

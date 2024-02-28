@@ -212,7 +212,7 @@ public abstract class PlayerEntityRendererMixin extends LivingEntityRenderer<Abs
 
             if (renderer instanceof LivingEntityRenderer) {
                 LivingEntityRenderer<LivingEntity, ?> rendererCasted = (LivingEntityRenderer<LivingEntity, ?>) renderer;
-                EntityModel model = ((LivingEntityRenderer) renderer).getModel();
+                EntityModel model = ((LivingEntityRenderer<?, ?>) renderer).getModel();
 
                 // re-assign arm & sleeve models
                 arm = null;

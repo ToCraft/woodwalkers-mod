@@ -4,8 +4,11 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.animal.Dolphin;
 import net.minecraft.world.entity.animal.Pufferfish;
 import net.minecraft.world.entity.animal.Sheep;
 import net.minecraft.world.entity.player.Player;
@@ -97,6 +100,21 @@ public abstract class PlayerEntityTickMixin extends LivingEntity {
             }
         }
     }
+
+    @Inject(method = "tick", at = @At("HEAD"))
+    private void dolphinServerTick(CallbackInfo info) {
+        if (!level().isClientSide && this.isAlive()) {
+            Player player = (Player) (Object) this;
+            LivingEntity shape = PlayerShape.getCurrentShape(player);
+            if (shape instanceof Dolphin) {
+                Player nearestPlayer = player.level().getNearestPlayer(Dolphin.SWIM_WITH_PLAYER_TARGETING, player);
+                if (nearestPlayer != null && nearestPlayer.isSwimming()) {
+                    nearestPlayer.addEffect(new MobEffectInstance(MobEffects.DOLPHINS_GRACE, 100), player);
+                }
+            }
+        }
+    }
+
 
     @Unique
     private static final Predicate<BlockState> walkers$IS_TALL_GRASS = BlockStatePredicate.forBlock(Blocks.GRASS);

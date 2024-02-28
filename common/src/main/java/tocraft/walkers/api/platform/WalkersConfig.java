@@ -2,6 +2,7 @@ package tocraft.walkers.api.platform;
 
 import tocraft.craftedcore.config.Config;
 import tocraft.craftedcore.config.annotions.Synchronize;
+import tocraft.walkers.Walkers;
 
 import java.util.*;
 
@@ -75,4 +76,11 @@ public class WalkersConfig implements Config {
     public List<String> abilityBlacklist = new ArrayList<>();
     @Synchronize
     public List<UUID> playerUUIDBlacklist = new ArrayList<>();
+    @Synchronize
+    public boolean playerBlacklistIsWhitelist = false;
+
+    @Override
+    public String getName() {
+        return Walkers.MODID;
+    }
 }

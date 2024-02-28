@@ -90,7 +90,7 @@ public class WalkersEventHandlers {
     public static void registerLivingDeathHandler() {
         EntityEvent.LIVING_DEATH.register((entity, damageSource) -> {
             if (!entity.level().isClientSide()) {
-                if (entity instanceof Villager villager && damageSource.getEntity() instanceof Player player && PlayerShape.getCurrentShape(player) instanceof Zombie zombie) {
+                if (entity instanceof Villager villager && damageSource.getEntity() instanceof Player player && PlayerShape.getCurrentShape(player) instanceof Zombie) {
                     if (!(player.level().getDifficulty() != Difficulty.HARD && player.getRandom().nextBoolean())) {
                         ZombieVillager zombievillager = villager.convertTo(EntityType.ZOMBIE_VILLAGER, false);
                         if (zombievillager != null) {

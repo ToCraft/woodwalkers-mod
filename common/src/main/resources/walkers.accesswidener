@@ -5,3 +5,4 @@ accessible method net/minecraft/world/entity/monster/Shulker setRawPeekAmount (I
 accessible field net/minecraft/world/entity/animal/Pufferfish inflateCounter I
 accessible field net/minecraft/world/entity/animal/Pufferfish deflateTimer I
 accessible field net/minecraft/world/entity/animal/Sheep eatAnimationTick I
+accessible field net/minecraft/world/entity/animal/Dolphin SWIM_WITH_PLAYER_TARGETING Lnet/minecraft/world/entity/ai/targeting/TargetingConditions;

@@ -19,6 +19,7 @@ import tocraft.craftedcore.platform.VersionChecker;
 import tocraft.walkers.ability.AbilityRegistry;
 import tocraft.walkers.api.PlayerShape;
 import tocraft.walkers.api.WalkersTickHandlers;
+import tocraft.walkers.api.data.DataManager;
 import tocraft.walkers.api.platform.WalkersConfig;
 import tocraft.walkers.command.WalkersCommand;
 import tocraft.walkers.mixin.ThreadedAnvilChunkStorageAccessor;
@@ -36,7 +37,7 @@ public class Walkers {
 
     public static final Logger LOGGER = LoggerFactory.getLogger(Walkers.class);
     public static final String MODID = "walkers";
-    public static final String MAVEN_URL = "https://maven.tocraft.dev/public/dev/tocraft/walkers/maven-metadata.xml";
+    private static final String MAVEN_URL = "https://maven.tocraft.dev/public/dev/tocraft/walkers/maven-metadata.xml";
     public static final WalkersConfig CONFIG = ConfigLoader.read(MODID, WalkersConfig.class);
     public static final List<UUID> devs = new ArrayList<>();
 
@@ -52,8 +53,7 @@ public class Walkers {
         ServerNetworking.initialize();
         registerJoinSyncPacket();
         WalkersTickHandlers.initialize();
-
-        LOGGER.warn("TEST: " + CONFIG.revoke2ndShapeOnDeath);
+        DataManager.initialize();
     }
 
     public static void registerJoinSyncPacket() {
@@ -93,10 +93,12 @@ public class Walkers {
                 for (String requiredAdvancement : requiredAdvancements) {
                     Advancement advancement = player.server.getAdvancements()
 							.getAdvancement(new ResourceLocation(requiredAdvancement));
-                    AdvancementProgress progress = player.getAdvancements().getOrStartProgress(advancement);
+                    if (advancement != null) {
+                        AdvancementProgress progress = player.getAdvancements().getOrStartProgress(advancement);
 
-                    if (!progress.isDone()) {
-                        hasPermission = false;
+                        if (!progress.isDone()) {
+                            hasPermission = false;
+                        }
                     }
                 }
 
@@ -111,6 +113,10 @@ public class Walkers {
 
     public static boolean isAquatic(LivingEntity entity) {
         return entity != null && entity.getMobType().equals(MobType.WATER);
+    }
+
+    public static boolean isPlayerBlacklisted(UUID uuid) {
+        return CONFIG.playerBlacklistIsWhitelist != CONFIG.playerUUIDBlacklist.contains(uuid);
     }
 
     public static boolean hasSpecialShape(UUID uuid) {

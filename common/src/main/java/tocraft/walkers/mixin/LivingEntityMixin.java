@@ -11,6 +11,7 @@ import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ambient.Bat;
 import net.minecraft.world.entity.animal.Dolphin;
+import net.minecraft.world.entity.animal.Parrot;
 import net.minecraft.world.entity.animal.Sheep;
 import net.minecraft.world.entity.monster.Spider;
 import net.minecraft.world.entity.player.Player;
@@ -224,6 +225,19 @@ public abstract class LivingEntityMixin extends Entity implements NearbySongAcce
             if (shape instanceof Sheep sheepShape) {
                 if (sheepShape.isSheared())
                     sheepShape.setSheared(false);
+            }
+        }
+    }
+
+    @Inject(method = "eat", at = @At(value = "RETURN"))
+    private void dieFromCookies(Level level, ItemStack food, CallbackInfoReturnable<ItemStack> cir) {
+        if ((Object) this instanceof Player player) {
+            LivingEntity shape = PlayerShape.getCurrentShape(player);
+            if (shape instanceof Parrot) {
+                player.addEffect(new MobEffectInstance(MobEffects.POISON, 900));
+                if (player.isCreative() || !this.isInvulnerable()) {
+                    this.hurt(this.damageSources().playerAttack(player), Float.MAX_VALUE);
+                }
             }
         }
     }

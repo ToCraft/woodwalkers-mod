@@ -7,9 +7,9 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import tocraft.walkers.ability.ShapeAbility;
 
-public class PufferfishAbility extends ShapeAbility<Pufferfish> {
+public class PufferfishAbility<T extends Pufferfish> extends ShapeAbility<T> {
     @Override
-    public void onUse(Player player, Pufferfish shape, Level world) {
+    public void onUse(Player player, T shape, Level world) {
         if (!world.isClientSide()) {
             if (shape.getPuffState() == 0) {
                 shape.inflateCounter = 1;

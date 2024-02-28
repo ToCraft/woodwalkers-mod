@@ -17,5 +17,12 @@
   "walkers.switchShape_success": "Set the current shape of %s to %s.",
   "walkers.unlock_entity": "Unlocked %s as second shape.",
   "walkers.unlock_entity_blacklisted": "This Entity is not available for you.",
-  "walkers.unlock_progress": "You feel it tingling."
+  "walkers.unlock_progress": "You feel it tingling.",
+  "walkers.setIsWhitelist": "Config entry 'playerBlacklistIsWhitelist' is now %s",
+  "walkers.isWhitelist": "Config entry 'playerBlacklistIsWhitelist' is %s",
+  "walkers.addToList": "Added player %s to the blacklist/whitelist.",
+  "walkers.removeFromList": "Removed player %s from the blacklist/whitelist.",
+  "walkers.blacklistListPlayer": "Player %s is listed.",
+  "walkers.blacklistIsEmpty": "The blacklist/whitelist is empty.",
+  "walkers.variants.minecraft.snow_golem.0": "Headless %s"
 }

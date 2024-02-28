@@ -83,7 +83,7 @@ jobs:
         with:
           tag_name: "${{ env.version_name_git }}"
           files: |
-              fabric/build/libs/${{ env.archives_base_name }}-${{ env.mod_version }}-fabric.jar,
-              forge/build/libs/${{ env.archives_base_name }}-${{ env.mod_version }}-forge.jar,
-              neoforge/build/libs/${{ env.archives_base_name }}-${{ env.mod_version }}-neoforge.jar
-          generate_release_notes: true
+            fabric/build/libs/${{ env.archives_base_name }}-${{ env.mod_version }}-fabric.jar,
+            forge/build/libs/${{ env.archives_base_name }}-${{ env.mod_version }}-forge.jar,
+            neoforge/build/libs/${{ env.archives_base_name }}-${{ env.mod_version }}-neoforge.jar
+          body_path: ${{ github.workspace }}-CHANGELOG.md

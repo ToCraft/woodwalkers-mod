@@ -17,7 +17,10 @@ import net.minecraft.world.entity.monster.warden.Warden;
 import tocraft.walkers.Walkers;
 import tocraft.walkers.ability.impl.*;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.function.Predicate;
 
 public class AbilityRegistry {
@@ -30,32 +33,32 @@ public class AbilityRegistry {
 
     public static void init() {
         // Register generic Abilities first (since the last registered ability will be the used one
-        register((Predicate<LivingEntity>) livingEntity -> livingEntity instanceof NeutralMob, new AngerAbility<>(SoundEvents.PLAYER_BREATH, SoundEvents.PLAYER_ATTACK_CRIT));
+        register((Predicate<LivingEntity>) livingEntity -> livingEntity instanceof NeutralMob, new AngerAbility<>());
 
         // Register 'normal' Abilities
-        register(Blaze.class, new BlazeAbility());
-        register(Creeper.class, new CreeperAbility());
-        register(EnderDragon.class, new EnderDragonAbility());
-        register(EnderMan.class, new EndermanAbility());
-        register(Ghast.class, new GhastAbility());
-        register(SnowGolem.class, new SnowGolemAbility());
-        register(WitherBoss.class, new WitherAbility());
+        register(Blaze.class, new BlazeAbility<>());
+        register(Creeper.class, new CreeperAbility<>());
+        register(EnderDragon.class, new EnderDragonAbility<>());
+        register(EnderMan.class, new EndermanAbility<>());
+        register(Ghast.class, new GhastAbility<>());
+        register(SnowGolem.class, new SnowGolemAbility<>());
+        register(WitherBoss.class, new WitherAbility<>());
         register(Cow.class, new CowAbility<>());
         register(Goat.class, new CowAbility<>());
-        register(Endermite.class, new EndermiteAbility());
+        register(Endermite.class, new EndermiteAbility<>());
         register(Llama.class, new LlamaAbility<>());
-        register(Witch.class, new WitchAbility());
-        register(Evoker.class, new EvokerAbility());
-        register(Warden.class, new WardenAbility());
+        register(Witch.class, new WitchAbility<>());
+        register(Evoker.class, new EvokerAbility<>());
+        register(Warden.class, new WardenAbility<>());
         register(Wolf.class, new AngerAbility<>(SoundEvents.WOLF_PANT, SoundEvents.WOLF_GROWL));
-        register(Sheep.class, new SheepAbility());
-        register(Sniffer.class, new SnifferAbility());
+        register(Sheep.class, new SheepAbility<>());
+        register(Sniffer.class, new SnifferAbility<>());
         register(Chicken.class, new ChickenAbility<>());
-        register(MushroomCow.class, new MushroomCowAbility());
+        register(MushroomCow.class, new MushroomCowAbility<>());
         register(AbstractHorse.class, new HorseAbility<>());
         register(Bee.class, new AngerAbility<>(SoundEvents.BEE_LOOP, SoundEvents.BEE_LOOP_AGGRESSIVE));
-        register(Shulker.class, new ShulkerAbility());
-        register(Pufferfish.class, new PufferfishAbility());
+        register(Shulker.class, new ShulkerAbility<>());
+        register(Pufferfish.class, new PufferfishAbility<>());
     }
 
     /**
@@ -64,7 +67,8 @@ public class AbilityRegistry {
     @SuppressWarnings("unchecked")
     public static <L extends LivingEntity> ShapeAbility<L> get(L shape) {
         // check ability blacklist
-        if (Walkers.CONFIG.abilityBlacklist.contains(BuiltInRegistries.ENTITY_TYPE.getKey(shape.getType()).toString())) return null;
+        if (Walkers.CONFIG.abilityBlacklist.contains(BuiltInRegistries.ENTITY_TYPE.getKey(shape.getType()).toString()))
+            return null;
 
         List<ShapeAbility<?>> shapeAbilities = new ArrayList<>(abilities.entrySet().stream().filter(entry -> entry.getKey().test(shape)).map(Map.Entry::getValue).toList());
         return !shapeAbilities.isEmpty() ? (ShapeAbility<L>) shapeAbilities.get(shapeAbilities.size() - 1) : null;
@@ -91,7 +95,8 @@ public class AbilityRegistry {
     public static <L extends LivingEntity> boolean has(L shape) {
         // check ability blacklist
 
-        if (Walkers.CONFIG.abilityBlacklist.contains(BuiltInRegistries.ENTITY_TYPE.getKey(shape.getType()).toString())) return false;
+        if (Walkers.CONFIG.abilityBlacklist.contains(BuiltInRegistries.ENTITY_TYPE.getKey(shape.getType()).toString()))
+            return false;
         return abilities.keySet().stream().anyMatch(predicate -> predicate.test(shape));
     }
 }

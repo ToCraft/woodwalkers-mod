@@ -5,7 +5,7 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.world.entity.animal.sniffer.Sniffer;
+import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
@@ -16,10 +16,10 @@ import tocraft.walkers.ability.ShapeAbility;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SnifferAbility extends ShapeAbility<Sniffer> {
+public class SnifferAbility<T extends Mob> extends ShapeAbility<T> {
 
     @Override
-    public void onUse(Player player, Sniffer shape, Level world) {
+    public void onUse(Player player, T shape, Level world) {
         // Ensures, the player isn't in Water/Lava and touches the ground
         if (player.isInLava() || player.isInWater() || !player.onGround())
             return;

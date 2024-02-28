@@ -1,7 +1,6 @@
 package tocraft.walkers.mixin.player;
 
 import dev.architectury.event.EventResult;
-import dev.architectury.platform.Platform;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
@@ -69,9 +68,8 @@ public abstract class PlayerEntityDataMixin extends LivingEntity implements Play
         this.walkers$unlocked = ShapeType.from(unlockedShape);
 
         // Abilities
-        if (Platform.getOptionalMod("ycdm").isPresent()) {
-            walkers$abilityCooldown = Math.max(tag.getInt(ABILITY_COOLDOWN_KEY), tag.getCompound("ycdm").getInt("cooldown"));
-        }
+        walkers$abilityCooldown = tag.getInt(ABILITY_COOLDOWN_KEY);
+
         // Hostility
         walkers$remainingTime = tag.getInt("RemainingHostilityTime");
 

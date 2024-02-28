@@ -59,7 +59,7 @@ public class KeyPressHandler implements ClientTickEvent.Client {
     @SuppressWarnings("ConstantConditions")
     private void handleUnlockKey(Minecraft client) {
         // check if player is blacklisted
-        if (client.player != null && Walkers.CONFIG.playerUUIDBlacklist.contains(client.player.getUUID())) {
+        if (client.player != null && Walkers.isPlayerBlacklisted(client.player.getUUID())) {
             client.player.displayClientMessage(Component.translatable("walkers.player_blacklisted"), true);
             return;
         }
@@ -70,20 +70,22 @@ public class KeyPressHandler implements ClientTickEvent.Client {
             if (entityHit instanceof LivingEntity living) {
                 @Nullable ShapeType<?> type = ShapeType.from(living);
 
-                // Ensures, the mob isn't on the blacklist
-                if (type.getEntityType().is(WalkersEntityTags.BLACKLISTED))
-                    client.player.displayClientMessage(Component.translatable("walkers.unlock_entity_blacklisted"), true);
-                else {
-                    if (currentTimer <= 0) {
-                        // unlock shape
-                        UnlockPackets.sendUnlockRequest(type);
-                        // send unlock message
-                        Component name = Component.translatable(type.getEntityType().getDescriptionId());
-                        client.player.displayClientMessage(Component.translatable("walkers.unlock_entity", name), true);
-                        currentTimer = Walkers.CONFIG.unlockTimer;
-                    } else {
-                        client.player.displayClientMessage(Component.translatable("walkers.unlock_progress"), true);
-                        currentTimer -= 1;
+                if (type != null) {
+                    // Ensures, the mob isn't on the blacklist
+                    if (type.getEntityType().is(WalkersEntityTags.BLACKLISTED))
+                        client.player.displayClientMessage(Component.translatable("walkers.unlock_entity_blacklisted"), true);
+                    else {
+                        if (currentTimer <= 0) {
+                            // unlock shape
+                            UnlockPackets.sendUnlockRequest(type);
+                            // send unlock message
+                            Component name = Component.translatable(type.getEntityType().getDescriptionId());
+                            client.player.displayClientMessage(Component.translatable("walkers.unlock_entity", name), true);
+                            currentTimer = Walkers.CONFIG.unlockTimer;
+                        } else {
+                            client.player.displayClientMessage(Component.translatable("walkers.unlock_progress"), true);
+                            currentTimer -= 1;
+                        }
                     }
                 }
             }
