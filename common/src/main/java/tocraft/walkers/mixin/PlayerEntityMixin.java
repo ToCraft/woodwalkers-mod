@@ -375,8 +375,7 @@ public abstract class PlayerEntityMixin extends LivingEntityMixin {
                 if (shape instanceof TamableAnimal) {
                     ((TamableAnimal) shape).setInSittingPose(player.isShiftKeyDown());
                     ((TamableAnimal) shape).setOrderedToSit(player.isShiftKeyDown());
-                }
-                else if (shape instanceof Fox) {
+                } else if (shape instanceof Fox) {
                     ((Fox) shape).setSitting(player.isShiftKeyDown());
                     ((Fox) shape).setJumping(!player.onGround());
                 }

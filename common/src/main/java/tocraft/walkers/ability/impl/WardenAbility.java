@@ -1,7 +1,6 @@
 package tocraft.walkers.ability.impl;
 
 import net.minecraft.world.entity.Mob;
-import net.minecraft.world.entity.monster.warden.Warden;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;

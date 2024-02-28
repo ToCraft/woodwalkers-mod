@@ -110,9 +110,9 @@ public class WalkersCommand {
 
         if (((PlayerDataProvider) player).walkers$get2ndShape() != null) {
             if (Walkers.CONFIG.logCommands) {
+                ShapeType<?> type = ((PlayerDataProvider) player).walkers$get2ndShape();
                 source.sendSystemMessage(Component.translatable("walkers.show2ndShapeNot_positive",
-                        player.getDisplayName(), Component.translatable(
-                                ((PlayerDataProvider) player).walkers$get2ndShape().getEntityType().getDescriptionId())));
+                        player.getDisplayName(), type.createTooltipText(type.create(player.level()))));
             }
 
             return 1;
@@ -147,7 +147,7 @@ public class WalkersCommand {
             ServerLevel serverWorld = source.getLevel();
             Entity loaded = EntityType.loadEntityRecursive(copy, serverWorld, it -> it);
             if (loaded instanceof LivingEntity living) {
-                type =  ShapeType.from(living);
+                type = ShapeType.from(living);
                 name = type != null ? type.createTooltipText(living) : Component.nullToEmpty("");
             }
         }

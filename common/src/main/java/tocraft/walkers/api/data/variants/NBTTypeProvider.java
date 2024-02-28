@@ -63,7 +63,8 @@ public class NBTTypeProvider<T extends LivingEntity> extends TypeProvider<T> {
                 switch (nbtEntry.nbtType().toUpperCase()) {
                     case "BOOL", "BOOLEAN" ->
                             entryData = ((NBTEntry<Boolean>) nbtEntry).getIndex(tag.getBoolean(nbtEntry.nbtField()));
-                    case "STRING" -> entryData = ((NBTEntry<String>) nbtEntry).getIndex(tag.getString(nbtEntry.nbtField()));
+                    case "STRING" ->
+                            entryData = ((NBTEntry<String>) nbtEntry).getIndex(tag.getString(nbtEntry.nbtField()));
                     case "INT", "INTEGER" ->
                             entryData = ((NBTEntry<Integer>) nbtEntry).getIndex(tag.getInt(nbtEntry.nbtField()));
                 }
@@ -71,8 +72,7 @@ public class NBTTypeProvider<T extends LivingEntity> extends TypeProvider<T> {
             if (entryData.isPresent()) {
                 if (data.isPresent()) {
                     if (entryData.equals(data)) return entryData.get();
-                }
-                else {
+                } else {
                     data = entryData;
                 }
             }

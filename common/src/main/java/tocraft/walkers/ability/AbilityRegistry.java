@@ -17,7 +17,10 @@ import net.minecraft.world.entity.monster.warden.Warden;
 import tocraft.walkers.Walkers;
 import tocraft.walkers.ability.impl.*;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.function.Predicate;
 
 public class AbilityRegistry {
@@ -64,7 +67,8 @@ public class AbilityRegistry {
     @SuppressWarnings("unchecked")
     public static <L extends LivingEntity> ShapeAbility<L> get(L shape) {
         // check ability blacklist
-        if (Walkers.CONFIG.abilityBlacklist.contains(BuiltInRegistries.ENTITY_TYPE.getKey(shape.getType()).toString())) return null;
+        if (Walkers.CONFIG.abilityBlacklist.contains(BuiltInRegistries.ENTITY_TYPE.getKey(shape.getType()).toString()))
+            return null;
 
         List<ShapeAbility<?>> shapeAbilities = new ArrayList<>(abilities.entrySet().stream().filter(entry -> entry.getKey().test(shape)).map(Map.Entry::getValue).toList());
         return !shapeAbilities.isEmpty() ? (ShapeAbility<L>) shapeAbilities.get(shapeAbilities.size() - 1) : null;
@@ -91,7 +95,8 @@ public class AbilityRegistry {
     public static <L extends LivingEntity> boolean has(L shape) {
         // check ability blacklist
 
-        if (Walkers.CONFIG.abilityBlacklist.contains(BuiltInRegistries.ENTITY_TYPE.getKey(shape.getType()).toString())) return false;
+        if (Walkers.CONFIG.abilityBlacklist.contains(BuiltInRegistries.ENTITY_TYPE.getKey(shape.getType()).toString()))
+            return false;
         return abilities.keySet().stream().anyMatch(predicate -> predicate.test(shape));
     }
 }

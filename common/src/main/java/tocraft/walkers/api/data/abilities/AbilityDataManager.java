@@ -54,8 +54,7 @@ public class AbilityDataManager extends SimpleJsonResourceReloadListener {
                          IllegalAccessException | NoSuchMethodException e) {
                     throw new RuntimeException(e);
                 }
-            }
-            else {
+            } else {
                 Walkers.LOGGER.info("{}: EntityType not found for {}", TypeProviderDataManager.class.getSimpleName(), entityType);
                 return new SimpleEntry<>(null, null);
             }

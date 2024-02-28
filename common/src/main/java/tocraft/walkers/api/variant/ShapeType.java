@@ -170,12 +170,12 @@ public class ShapeType<T extends LivingEntity> {
         return Objects.hash(type, variantData);
     }
 
-    public Component createTooltipText(T entity) {
-        TypeProvider<T> provider = TypeProviderRegistry.getProvider(type);
+    public static <L extends LivingEntity> Component createTooltipText(L entity) {
+        TypeProvider<L> provider = TypeProviderRegistry.getProvider((EntityType<L>) entity.getType());
         if (provider != null) {
-            return provider.modifyText(entity, Component.translatable(type.getDescriptionId()));
+            return provider.modifyText(entity, Component.translatable(entity.getType().getDescriptionId()));
         }
 
-        return Component.translatable(type.getDescriptionId());
+        return Component.translatable(entity.getType().getDescriptionId());
     }
 }

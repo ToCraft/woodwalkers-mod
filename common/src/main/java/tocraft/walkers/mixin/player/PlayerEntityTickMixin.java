@@ -106,7 +106,7 @@ public abstract class PlayerEntityTickMixin extends LivingEntity {
         if (!level().isClientSide && this.isAlive()) {
             Player player = (Player) (Object) this;
             LivingEntity shape = PlayerShape.getCurrentShape(player);
-            if (shape instanceof Dolphin dolphinShape) {
+            if (shape instanceof Dolphin) {
                 Player nearestPlayer = player.level().getNearestPlayer(Dolphin.SWIM_WITH_PLAYER_TARGETING, player);
                 if (nearestPlayer != null && nearestPlayer.isSwimming()) {
                     nearestPlayer.addEffect(new MobEffectInstance(MobEffects.DOLPHINS_GRACE, 100), player);
