@@ -11,7 +11,6 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.FlyingMob;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.MobType;
-import net.minecraft.world.entity.animal.SnowGolem;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import tocraft.craftedcore.VIPs;
