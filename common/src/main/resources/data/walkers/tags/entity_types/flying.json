@@ -240,6 +240,78 @@
     {
       "id": "wildlife:wren_albino",
       "required": false
+    },
+    {
+      "id": "alexsmobs:crow",
+      "required": false
+    },
+    {
+      "id": "alexsmobs:spectre",
+      "required": false
+    },
+    {
+      "id": "alexsmobs:soul_vulture",
+      "required": false
+    },
+    {
+      "id": "alexsmobs:endergrade",
+      "required": false
+    },
+    {
+      "id": "alexsmobs:shoebill",
+      "required": false
+    },
+    {
+      "id": "alexsmobs:crimson_mosquito",
+      "required": false
+    },
+    {
+      "id": "alexsmobs:sunbird",
+      "required": false
+    },
+    {
+      "id": "alexsmobs:hummingbird",
+      "required": false
+    },
+    {
+      "id": "alexsmobs:fly",
+      "required": false
+    },
+    {
+      "id": "alexsmobs:flying_fish",
+      "required": false
+    },
+    {
+      "id": "alexsmobs:toucan",
+      "required": false
+    },
+    {
+      "id": "alexsmobs:seagull",
+      "required": false
+    },
+    {
+      "id": "alexsmobs:bald_eagle",
+      "required": false
+    },
+    {
+      "id": "alexsmobs:cosmaw",
+      "required": false
+    },
+    {
+      "id": "alexsmobs:blue_jay",
+      "required": false
+    },
+    {
+      "id": "alexsmobs:farseer",
+      "required": false
+    },
+    {
+      "id": "alexsmobs:void_worm",
+      "required": false
+    },
+    {
+      "id": "alexsmobs:tarantula_hawk",
+      "required": false
     }
   ]
 }
