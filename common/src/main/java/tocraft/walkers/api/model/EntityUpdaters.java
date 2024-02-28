@@ -4,6 +4,8 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.tags.BlockTags;
+import net.minecraft.tags.FluidTags;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -11,6 +13,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.animal.Parrot;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.state.BlockState;
 import tocraft.walkers.api.model.impl.ShulkerEntityUpdater;
 import tocraft.walkers.api.model.impl.SquidEntityUpdater;
 import tocraft.walkers.impl.NearbySongAccessor;
@@ -131,6 +134,13 @@ public class EntityUpdaters {
             }
             chicken.flapping *= 0.9F;
             chicken.flap += chicken.flapping * 2.0F;
+        });
+
+        // make strider shaking and purple when out of lava
+        EntityUpdaters.register(EntityType.STRIDER, (player, strider) -> {
+            BlockState blockState = player.level().getBlockState(player.blockPosition());
+            boolean bl = blockState.is(BlockTags.STRIDER_WARM_BLOCKS) || player.getFluidHeight(FluidTags.LAVA) > 0.0;
+            strider.setSuffocating(!bl);
         });
     }
 }
