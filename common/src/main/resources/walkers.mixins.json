@@ -9,6 +9,7 @@
     "AvoidEntityGoalMixin",
     "AxolotlAttackablesSensorMixin",
     "CreeperEntityMixin",
+    "EnderManMixin",
     "EntityMixin",
     "EntityTrackerAccessor",
     "FoxEntityMixin",
@@ -28,6 +29,7 @@
     "RavagerEntityMixin",
     "ServerPlayerEntityMixin",
     "ServerPlayerGameModeMixin",
+    "SlimeMixin",
     "SweetBerryBushBlockMixin",
     "ThreadedAnvilChunkStorageAccessor",
     "TrackTargetGoalMixin",
@@ -44,7 +46,9 @@
     "accessor.MobEntityAccessor",
     "accessor.ParrotEntityAccessor",
     "accessor.RavagerEntityAccessor",
+    "accessor.ShulkerAccessor",
     "accessor.SlimeEntityAccessor",
+    "accessor.SquidEntityAccessor",
     "entity.BowItemMixin",
     "player.PlayerEntityDataMixin",
     "player.PlayerEntityTickMixin",
@@ -70,6 +74,7 @@
     "accessor.RavagerEntityModelAccessor",
     "accessor.SpiderEntityModelAccessor",
     "accessor.SquidEntityModelAccessor",
+    "player.AbstractClientPlayerMixin",
     "player.ClientPlayerDataCacheMixin"
   ],
   "injectors": {

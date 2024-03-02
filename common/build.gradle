@@ -8,19 +8,14 @@ dependencies {
     // Do NOT use other classes from fabric loader
     modImplementation "net.fabricmc:fabric-loader:${rootProject.fabric_loader_version}"
 
-    // uses my own API
+    // APIs
+    modApi "dev.architectury:architectury:${rootProject.architectury_version}"
     modApi "dev.tocraft:craftedcore:${rootProject.minecraft_version}-${rootProject.craftedcore_version}"
 }
 
 architectury {
-    common("fabric", "forge", "neoforge")
+    common("fabric", "forge")
 }
-
-//afterEvaluate {
-//    remapJar {
-//        remapAccessWidener = false
-//    }
-//}
 
 configurations {
     dev

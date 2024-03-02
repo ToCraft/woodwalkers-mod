@@ -12,7 +12,7 @@ import tocraft.walkers.ability.ShapeAbility;
 public class CowAbility<T extends Mob> extends ShapeAbility<T> {
 
     @Override
-    public void onUse(Player player, Mob shape, Level world) {
+    public void onUse(Player player, T shape, Level world) {
         player.removeAllEffects();
         world.playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.GENERIC_DRINK, SoundSource.PLAYERS, 1.0F, 1.0F);
     }

@@ -1,6 +1,8 @@
 package tocraft.walkers.mixin;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.model.DrownedModel;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
@@ -14,6 +16,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+@Environment(EnvType.CLIENT)
 @Mixin(DrownedOuterLayer.class)
 public abstract class DrownedOverlayMixin extends RenderLayer<Drowned, DrownedModel<Drowned>> {
 
@@ -29,11 +32,6 @@ public abstract class DrownedOverlayMixin extends RenderLayer<Drowned, DrownedMo
             method = "render(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;ILnet/minecraft/world/entity/monster/Drowned;FFFFFF)V",
             at = @At("HEAD"))
     private void onRender(PoseStack matrixStack, MultiBufferSource buffer, int i, Drowned drownedEntity, float f, float g, float h, float j, float k, float l, CallbackInfo ci) {
-        DrownedModel<Drowned> model = getParentModel();
-
-        if (model != null) {
-            this.model.copyPropertiesTo(model);
-            model.crouching = drownedEntity.isShiftKeyDown();
-        }
+        this.model.crouching = drownedEntity.isShiftKeyDown();
     }
 }

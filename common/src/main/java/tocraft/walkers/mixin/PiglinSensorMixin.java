@@ -11,7 +11,6 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import tocraft.walkers.Walkers;
 import tocraft.walkers.api.PlayerShape;
 
 @Mixin(PiglinSpecificSensor.class)
@@ -21,7 +20,6 @@ public class PiglinSensorMixin {
         for (LivingEntity livingEntity : entity.getBrain().getMemory(MemoryModuleType.NEAREST_VISIBLE_LIVING_ENTITIES).orElse(NearestVisibleLivingEntities.empty()).findAll(livingEntity -> true)) {
             if (livingEntity instanceof Player player && PlayerShape.getCurrentShape(player) != null && PiglinAi.isZombified(PlayerShape.getCurrentShape(player).getType())) {
                 entity.getBrain().setMemory(MemoryModuleType.NEAREST_VISIBLE_ZOMBIFIED, player);
-                Walkers.LOGGER.warn("got that");
             }
         }
     }

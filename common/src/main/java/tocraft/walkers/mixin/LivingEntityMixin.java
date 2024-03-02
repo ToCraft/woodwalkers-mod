@@ -11,9 +11,13 @@ import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ambient.Bat;
 import net.minecraft.world.entity.animal.Dolphin;
+import net.minecraft.world.entity.animal.Parrot;
+import net.minecraft.world.entity.animal.Sheep;
 import net.minecraft.world.entity.monster.Spider;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.material.FluidState;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -42,22 +46,22 @@ public abstract class LivingEntityMixin extends Entity implements NearbySongAcce
     protected LivingEntityMixin(EntityType<?> type, Level world) {
         super(type, world);
     }
-	
-	@Redirect(method = "baseTick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;setAirSupply(I)V", ordinal = 2))
-	private void cancelAirIncrement(LivingEntity livingEntity, int air) {
-		// Aquatic creatures should not regenerate breath on land
-		if ((Object) this instanceof Player player) {
-			LivingEntity shape = PlayerShape.getCurrentShape(player);
 
-			if (shape != null) {
-				if (Walkers.isAquatic(shape)) {
-					return;
-				}
-			}
-		}
+    @Redirect(method = "baseTick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;setAirSupply(I)V", ordinal = 2))
+    private void cancelAirIncrement(LivingEntity livingEntity, int air) {
+        // Aquatic creatures should not regenerate breath on land
+        if ((Object) this instanceof Player player) {
+            LivingEntity shape = PlayerShape.getCurrentShape(player);
 
-		this.setAirSupply(this.increaseAirSupply(this.getAirSupply()));
-	}
+            if (shape != null) {
+                if (Walkers.isAquatic(shape)) {
+                    return;
+                }
+            }
+        }
+
+        this.setAirSupply(this.increaseAirSupply(this.getAirSupply()));
+    }
 
     @Redirect(method = "travel", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;hasEffect(Lnet/minecraft/world/effect/MobEffect;)Z", ordinal = 0))
     private boolean slowFall(LivingEntity livingEntity, MobEffect effect) {
@@ -186,7 +190,7 @@ public abstract class LivingEntityMixin extends Entity implements NearbySongAcce
     @Environment(EnvType.CLIENT)
     @Inject(method = "setRecordPlayingNearby", at = @At("RETURN"))
     protected void shape_setRecordPlayingNearby(BlockPos songPosition, boolean playing, CallbackInfo ci) {
-        if ((LivingEntity) (Object) this instanceof Player player) {
+        if ((LivingEntity) (Object) this instanceof Player) {
             walkers$nearbySongPlaying = playing;
         }
     }
@@ -224,10 +228,33 @@ public abstract class LivingEntityMixin extends Entity implements NearbySongAcce
             LivingEntity shape = PlayerShape.getCurrentShape(player);
 
             if (shape instanceof Spider) {
-                cir.setReturnValue(this.horizontalCollision);
+                cir.setReturnValue(this.horizontalCollision || this.level.getBlockState(this.blockPosition()).is(Blocks.COBWEB));
             }
         }
+    }
 
-        ((LivingEntity) (Object) this).isInWall();
+
+    @Inject(method = "eat", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;addEatEffect(Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/level/Level;Lnet/minecraft/world/entity/LivingEntity;)V"))
+    private void regenerateWoolFromFood(Level level, ItemStack food, CallbackInfoReturnable<ItemStack> cir) {
+        if ((Object) this instanceof Player player) {
+            LivingEntity shape = PlayerShape.getCurrentShape(player);
+            if (shape instanceof Sheep sheepShape) {
+                if (sheepShape.isSheared())
+                    sheepShape.setSheared(false);
+            }
+        }
+    }
+
+    @Inject(method = "eat", at = @At(value = "RETURN"))
+    private void dieFromCookies(Level level, ItemStack food, CallbackInfoReturnable<ItemStack> cir) {
+        if ((Object) this instanceof Player player) {
+            LivingEntity shape = PlayerShape.getCurrentShape(player);
+            if (shape instanceof Parrot) {
+                player.addEffect(new MobEffectInstance(MobEffects.POISON, 900));
+                if (player.isCreative() || !this.isInvulnerable()) {
+                    this.hurt(DamageSource.playerAttack(player), Float.MAX_VALUE);
+                }
+            }
+        }
     }
 }

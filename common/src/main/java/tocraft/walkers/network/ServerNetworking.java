@@ -2,7 +2,6 @@ package tocraft.walkers.network;
 
 import dev.architectury.networking.NetworkManager;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import tocraft.walkers.ability.AbilityRegistry;
@@ -18,9 +17,11 @@ public class ServerNetworking implements NetworkHandler {
         SwapPackets.registerWalkersRequestPacketHandler();
         UnlockPackets.registerShapeUnlockRequestPacketHandler();
         SpecialSwapPackets.registerDevRequestPacketHandler();
+        registerUseAbilityPacketHandler();
     }
 
-    public static void registerUseAbilityPacketHandler() {
+    @SuppressWarnings("ConstantConditions")
+    private static void registerUseAbilityPacketHandler() {
         NetworkManager.registerReceiver(NetworkManager.Side.C2S, USE_ABILITY, (buf, context) -> {
             Player player = context.getPlayer();
 
@@ -29,14 +30,11 @@ public class ServerNetworking implements NetworkHandler {
 
                 // Verify we should use ability for the player's current shape
                 if (shape != null) {
-                    EntityType<?> shapeType = shape.getType();
-
-                    if (AbilityRegistry.has(shapeType)) {
-
+                    if (AbilityRegistry.has(shape)) {
                         // Check cooldown
                         if (PlayerAbilities.canUseAbility(player)) {
-                            AbilityRegistry.get(shapeType).onUse(player, shape, context.getPlayer().level);
-                            PlayerAbilities.setCooldown(player, AbilityRegistry.get(shapeType).getCooldown(shape));
+                            AbilityRegistry.get(shape).onUse(player, shape, context.getPlayer().level);
+                            PlayerAbilities.setCooldown(player, AbilityRegistry.get(shape).getCooldown(shape));
                             PlayerAbilities.sync((ServerPlayer) player);
                         }
                     }

@@ -1,33 +1,23 @@
 package tocraft.walkers.mixin;
 
-import org.jetbrains.annotations.NotNull;
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.Unique;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.core.BlockPos;
+import net.minecraft.network.protocol.game.ClientboundGameEventPacket;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityDimensions;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.Mob;
-import net.minecraft.world.entity.Pose;
-import net.minecraft.world.entity.TamableAnimal;
+import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.animal.Bee;
+import net.minecraft.world.entity.animal.Fox;
 import net.minecraft.world.entity.animal.IronGolem;
+import net.minecraft.world.entity.animal.Pufferfish;
 import net.minecraft.world.entity.monster.Ravager;
+import net.minecraft.world.entity.monster.Slime;
 import net.minecraft.world.entity.monster.Spider;
 import net.minecraft.world.entity.monster.WitherSkeleton;
 import net.minecraft.world.entity.player.Player;
@@ -39,15 +29,20 @@ import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.NotNull;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import tocraft.walkers.Walkers;
 import tocraft.walkers.api.PlayerShape;
-import tocraft.walkers.mixin.accessor.EntityAccessor;
-import tocraft.walkers.mixin.accessor.IronGolemEntityAccessor;
-import tocraft.walkers.mixin.accessor.LivingEntityAccessor;
-import tocraft.walkers.mixin.accessor.MobEntityAccessor;
-import tocraft.walkers.mixin.accessor.RavagerEntityAccessor;
+import tocraft.walkers.mixin.accessor.*;
 import tocraft.walkers.registry.WalkersEntityTags;
 
+@SuppressWarnings("ConstantConditions")
 @Mixin(Player.class)
 public abstract class PlayerEntityMixin extends LivingEntityMixin {
 
@@ -121,8 +116,7 @@ public abstract class PlayerEntityMixin extends LivingEntityMixin {
             LivingEntity shape = PlayerShape.getCurrentShape((Player) (Object) this);
 
             if (shape != null) {
-                cir.setReturnValue(
-                        ((LivingEntityAccessor) shape).callGetEyeHeight(getPose(), getDimensions(getPose())));
+                cir.setReturnValue(((LivingEntityAccessor) shape).callGetEyeHeight(getPose(), getDimensions(getPose())));
             }
         } catch (Exception ignored) {
 
@@ -173,11 +167,9 @@ public abstract class PlayerEntityMixin extends LivingEntityMixin {
                     // By default, players can not hear their own ambient noises.
                     // This is because ambient noises can be very annoying.
                     if (Walkers.CONFIG.hearSelfAmbient) {
-                        this.level.playSound(null, this.getX(), this.getY(), this.getZ(), sound,
-                                this.getSoundSource(), volume, pitch);
+                        this.level.playSound(null, this.getX(), this.getY(), this.getZ(), sound, this.getSoundSource(), volume, pitch);
                     } else {
-                        this.level.playSound((Player) (Object) this, this.getX(), this.getY(), this.getZ(), sound,
-                                this.getSoundSource(), volume, pitch);
+                        this.level.playSound((Player) (Object) this, this.getX(), this.getY(), this.getZ(), sound, this.getSoundSource(), volume, pitch);
                     }
                 }
             }
@@ -214,6 +206,19 @@ public abstract class PlayerEntityMixin extends LivingEntityMixin {
             livingTarget.addEffect(new MobEffectInstance(MobEffects.WITHER, 200), this);
         } else if (shape instanceof Bee bee && bee.isAngry() && target instanceof LivingEntity livingTarget) {
             livingTarget.addEffect(new MobEffectInstance(MobEffects.POISON, 200), this);
+        } else if (shape instanceof Pufferfish pufferfish) {
+            int i = pufferfish.getPuffState();
+
+            if (target instanceof LivingEntity livingTarget) {
+                if (livingTarget.hurt(DamageSource.mobAttack((Player) (Object) this), (float) (1 + i))) {
+                    livingTarget.addEffect(new MobEffectInstance(MobEffects.POISON, 60 * i, 0), (Player) (Object) this);
+                    this.playSound(SoundEvents.PUFFER_FISH_STING, 1.0F, 1.0F);
+
+                    if (livingTarget instanceof ServerPlayer serverPlayerTarget && !this.isSilent()) {
+                        serverPlayerTarget.connection.send(new ClientboundGameEventPacket(ClientboundGameEventPacket.PUFFER_FISH_STING, 0.0F));
+                    }
+                }
+            }
         }
     }
 
@@ -298,8 +303,7 @@ public abstract class PlayerEntityMixin extends LivingEntityMixin {
                 daylightTestPosition = daylightTestPosition.above();
             }
 
-            return brightnessAtEyes > 0.5F && random.nextFloat() * 30.0F < (brightnessAtEyes - 0.4F) * 2.0F
-                    && level.canSeeSky(daylightTestPosition);
+            return brightnessAtEyes > 0.5F && random.nextFloat() * 30.0F < (brightnessAtEyes - 0.4F) * 2.0F && level.canSeeSky(daylightTestPosition);
         }
 
         return false;
@@ -351,6 +355,9 @@ public abstract class PlayerEntityMixin extends LivingEntityMixin {
                 if (shape instanceof TamableAnimal) {
                     ((TamableAnimal) shape).setInSittingPose(player.isShiftKeyDown());
                     ((TamableAnimal) shape).setOrderedToSit(player.isShiftKeyDown());
+                } else if (shape instanceof Fox) {
+                    ((Fox) shape).setSitting(player.isShiftKeyDown());
+                    ((Fox) shape).setJumping(!player.isOnGround());
                 }
 
                 ((EntityAccessor) shape).shape_callSetFlag(7, player.isFallFlying());
@@ -365,6 +372,18 @@ public abstract class PlayerEntityMixin extends LivingEntityMixin {
     private void onStuckInBlock(BlockState state, Vec3 motionMultiplier, CallbackInfo ci) {
         if (PlayerShape.getCurrentShape((Player) (Object) this) instanceof Spider && state.is(Blocks.COBWEB)) {
             ci.cancel();
+        }
+    }
+
+    @Inject(method = "touch", at = @At("HEAD"))
+    private void onTouch(Entity entity, CallbackInfo ci) {
+        Player ownPlayer = (Player) (Object) this;
+        if (ownPlayer.isAlive() && PlayerShape.getCurrentShape(ownPlayer) instanceof Slime slimeShape && (entity instanceof Player targetPlayer && !(PlayerShape.getCurrentShape(targetPlayer) instanceof Slime))) {
+            int i = slimeShape.getSize();
+            if (this.distanceToSqr(targetPlayer) < 0.6 * (double) i * 0.6 * (double) i && ownPlayer.hasLineOfSight(targetPlayer) && targetPlayer.hurt(DamageSource.mobAttack(ownPlayer), (float) ownPlayer.getAttributeValue(Attributes.ATTACK_DAMAGE))) {
+                this.playSound(SoundEvents.SLIME_ATTACK, 1.0F, (this.random.nextFloat() - this.random.nextFloat()) * 0.2F + 1.0F);
+                this.doEnchantDamageEffects(ownPlayer, targetPlayer);
+            }
         }
     }
 }

@@ -1,2 +1,12 @@
 accessWidener   v2  named
 accessible class net/minecraft/world/entity/animal/PolarBear$PolarBearAttackPlayersGoal
+accessible method net/minecraft/world/entity/monster/Shulker onPeekAmountChange ()V
+accessible method net/minecraft/world/entity/monster/Shulker setRawPeekAmount (I)V
+accessible field net/minecraft/world/entity/animal/Pufferfish inflateCounter I
+accessible field net/minecraft/world/entity/animal/Pufferfish deflateTimer I
+accessible field net/minecraft/world/entity/animal/Sheep eatAnimationTick I
+accessible field net/minecraft/world/entity/animal/Dolphin SWIM_WITH_PLAYER_TARGETING Lnet/minecraft/world/entity/ai/targeting/TargetingConditions;
+accessible method net/minecraft/world/entity/animal/horse/Horse setTypeVariant (I)V
+accessible class net/minecraft/world/entity/animal/TropicalFish$Pattern
+accessible method net/minecraft/world/entity/monster/Shulker setColor (Lnet/minecraft/world/item/DyeColor;)V
+

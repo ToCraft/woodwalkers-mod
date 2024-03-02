@@ -1,12 +1,7 @@
 package tocraft.walkers.impl.variant;
 
-import java.util.Map;
-
 import com.google.common.collect.ImmutableMap;
-import net.minecraft.core.Registry;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.entity.EntityType;

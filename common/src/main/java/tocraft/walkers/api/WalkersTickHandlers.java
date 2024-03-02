@@ -5,12 +5,12 @@ import net.minecraft.world.entity.LivingEntity;
 import tocraft.walkers.impl.tick.shapes.JumpBoostTickHandler;
 import tocraft.walkers.impl.tick.shapes.SnowGolemTickHandler;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class WalkersTickHandlers {
 
-    private static final Map<EntityType<?>, WalkersTickHandler<?>> HANDLERS = new HashMap<>();
+    private static final Map<EntityType<?>, WalkersTickHandler<?>> HANDLERS = new LinkedHashMap<>();
 
     public static void initialize() {
         register(EntityType.SNOW_GOLEM, new SnowGolemTickHandler());

@@ -28,7 +28,7 @@ import tocraft.walkers.impl.PlayerDataProvider;
 public class WalkersCommand {
 
     public static void register() {
-        CommandRegistrationEvent.EVENT.register(((dispatcher, b) -> {
+        CommandRegistrationEvent.EVENT.register((dispatcher, b) -> {
             LiteralCommandNode<CommandSourceStack> rootNode = Commands.literal("walkers")
                     .requires(source -> source.hasPermission(2)).build();
 
@@ -39,35 +39,18 @@ public class WalkersCommand {
                     .then(Commands.argument("player", EntityArgument.players()).executes(context -> {
                         remove2ndShape(context.getSource(), EntityArgument.getPlayer(context, "player"));
                         return 1;
-                    })).executes(context -> {
-                        remove2ndShape(context.getSource(), context.getSource().getPlayerOrException());
-                        return 1;
-                    }).build();
+                    })).build();
 
             /*
              * Used to give the specified shape to the specified Player.
              */
             LiteralCommandNode<CommandSourceStack> change2ndShape = Commands.literal("change2ndShape")
-                    .then(Commands.argument("shape", EntitySummonArgument.id())
-                            .executes(context -> {
-                                change2ndShape(context.getSource(), context.getSource().getPlayerOrException(),
-                                        EntitySummonArgument.getSummonableEntity(context, "shape"),
-                                        null);
-                                return 1;
-                            }).then(Commands.argument("nbt", CompoundTagArgument.compoundTag()).executes(context -> {
-                                CompoundTag nbt = CompoundTagArgument.getCompoundTag(context, "nbt");
-
-                                change2ndShape(context.getSource(), context.getSource().getPlayerOrException(),
-                                        EntitySummonArgument.getSummonableEntity(context, "shape"),
-                                        nbt);
-
-                                return 1;
-                            })))
                     .then(Commands.argument("player", EntityArgument.players())
                             .then(Commands.argument("shape", EntitySummonArgument.id())
                                     .suggests(SuggestionProviders.SUMMONABLE_ENTITIES).executes(context -> {
                                         change2ndShape(context.getSource(), EntityArgument.getPlayer(context, "player"),
-                                                EntitySummonArgument.getSummonableEntity(context, "shape"),
+                                                EntitySummonArgument
+                                                        .getSummonableEntity(context, "shape"),
                                                 null);
                                         return 1;
                                     }).then(Commands.argument("nbt", CompoundTagArgument.compoundTag())
@@ -76,37 +59,22 @@ public class WalkersCommand {
 
                                                 change2ndShape(context.getSource(),
                                                         EntityArgument.getPlayer(context, "player"),
-                                                        EntitySummonArgument.getSummonableEntity(context, "shape"),
+                                                        EntitySummonArgument
+                                                                .getSummonableEntity(context, "shape"),
                                                         nbt);
 
                                                 return 1;
                                             }))))
                     .build();
 
-            LiteralCommandNode<CommandSourceStack> switchShape = Commands.literal("switchShape")
-                    .then(Commands.argument("shape", EntitySummonArgument.id())
-                            .suggests(SuggestionProviders.SUMMONABLE_ENTITIES).executes(context -> {
-                                switchShape(context.getSource(), context.getSource().getPlayerOrException(),
-                                        EntitySummonArgument.getSummonableEntity(context, "shape"),
-                                        null);
-
-                                return 1;
-                            })).then(Commands.argument("nbt", CompoundTagArgument.compoundTag()).executes(context -> {
-                                CompoundTag nbt = CompoundTagArgument.getCompoundTag(context, "nbt");
-
-                                switchShape(context.getSource(), context.getSource().getPlayerOrException(),
-                                        EntitySummonArgument.getSummonableEntity(context, "shape"),
-                                        nbt);
-
-                                return 1;
-                            }))
-                    .then(Commands.argument("player", EntityArgument.players()).executes(context -> {
-                        switchShape(context.getSource(), EntityArgument.getPlayer(context, "player"));
+            LiteralCommandNode<CommandSourceStack> switchShape = Commands.literal("switchShape").then(Commands.argument("player", EntityArgument.players()).then(Commands.literal("normal").executes(context -> {
+                        switchShapeToNormal(context.getSource(), EntityArgument.getPlayer(context, "player"));
                         return 1;
-                    }).then(Commands.argument("shape", EntitySummonArgument.id())
+                    })).then(Commands.argument("shape", EntitySummonArgument.id())
                             .suggests(SuggestionProviders.SUMMONABLE_ENTITIES).executes(context -> {
                                 switchShape(context.getSource(), EntityArgument.getPlayer(context, "player"),
-                                        EntitySummonArgument.getSummonableEntity(context, "shape"),
+                                        EntitySummonArgument
+                                                .getSummonableEntity(context, "shape"),
                                         null);
 
                                 return 1;
@@ -114,7 +82,8 @@ public class WalkersCommand {
                                 CompoundTag nbt = CompoundTagArgument.getCompoundTag(context, "nbt");
 
                                 switchShape(context.getSource(), EntityArgument.getPlayer(context, "player"),
-                                        EntitySummonArgument.getSummonableEntity(context, "shape"),
+                                        EntitySummonArgument
+                                                .getSummonableEntity(context, "shape"),
                                         nbt);
 
                                 return 1;
@@ -122,7 +91,6 @@ public class WalkersCommand {
                     .build();
 
             LiteralCommandNode<CommandSourceStack> show2ndShape = Commands.literal("show2ndShape")
-                    .executes(context -> show2ndShape(context.getSource(), context.getSource().getPlayerOrException()))
                     .then(Commands.argument("player", EntityArgument.player())
                             .executes(context -> show2ndShape(context.getSource(), EntityArgument.getPlayer(context, "player"))))
                     .build();
@@ -132,17 +100,19 @@ public class WalkersCommand {
             rootNode.addChild(switchShape);
             rootNode.addChild(show2ndShape);
 
+            rootNode.addChild(BlacklistCommands.getRootNode());
+
             dispatcher.getRoot().addChild(rootNode);
-        }));
+        });
     }
 
     private static int show2ndShape(CommandSourceStack source, ServerPlayer player) {
 
         if (((PlayerDataProvider) player).walkers$get2ndShape() != null) {
             if (Walkers.CONFIG.logCommands) {
+                ShapeType<?> type = ((PlayerDataProvider) player).walkers$get2ndShape();
                 source.sendSuccess(new TranslatableComponent("walkers.show2ndShapeNot_positive",
-                        player.getDisplayName(),
-                                ((PlayerDataProvider) player).walkers$get2ndShape().getEntityType().getDescriptionId()), true);
+                        player.getDisplayName(), ShapeType.createTooltipText(type.create(player.level))), true);
             }
 
             return 1;
@@ -163,9 +133,10 @@ public class WalkersCommand {
         }
     }
 
+    @SuppressWarnings("unchecked")
     private static void change2ndShape(CommandSourceStack source, ServerPlayer player, ResourceLocation id,
                                        @Nullable CompoundTag nbt) {
-        ShapeType<LivingEntity> type = new ShapeType(Registry.ENTITY_TYPE.get(id));
+        ShapeType<LivingEntity> type = ShapeType.from((EntityType<LivingEntity>) Registry.ENTITY_TYPE.get(id));
         Component name = new TranslatableComponent(type.getEntityType().getDescriptionId());
 
         // If the specified granting NBT is not null, change the ShapeType to reflect
@@ -176,8 +147,8 @@ public class WalkersCommand {
             ServerLevel serverWorld = source.getLevel();
             Entity loaded = EntityType.loadEntityRecursive(copy, serverWorld, it -> it);
             if (loaded instanceof LivingEntity living) {
-                type = new ShapeType<>(living);
-                name = type.createTooltipText(living);
+                type = ShapeType.from(living);
+                name = type != null ? ShapeType.createTooltipText(living) : Component.nullToEmpty("");
             }
         }
 
@@ -224,7 +195,7 @@ public class WalkersCommand {
         }
     }
 
-    private static void switchShape(CommandSourceStack source, ServerPlayer player) {
+    private static void switchShapeToNormal(CommandSourceStack source, ServerPlayer player) {
         boolean result = PlayerShape.updateShapes(player, null);
 
         if (result && Walkers.CONFIG.logCommands) {

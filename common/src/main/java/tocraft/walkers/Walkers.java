@@ -4,12 +4,10 @@ import dev.architectury.event.events.common.PlayerEvent;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.AdvancementProgress;
-import net.minecraft.core.Registry;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.FlyingMob;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.MobType;
@@ -21,9 +19,9 @@ import tocraft.craftedcore.platform.VersionChecker;
 import tocraft.walkers.ability.AbilityRegistry;
 import tocraft.walkers.api.PlayerShape;
 import tocraft.walkers.api.WalkersTickHandlers;
+import tocraft.walkers.api.data.DataManager;
 import tocraft.walkers.api.platform.WalkersConfig;
 import tocraft.walkers.command.WalkersCommand;
-import tocraft.walkers.integrations.Integrations;
 import tocraft.walkers.mixin.ThreadedAnvilChunkStorageAccessor;
 import tocraft.walkers.network.ServerNetworking;
 import tocraft.walkers.registry.WalkersEntityTags;
@@ -49,17 +47,13 @@ public class Walkers {
     }
 
     public void initialize() {
-		WalkersEntityTags.init();
         AbilityRegistry.init();
         WalkersEventHandlers.initialize();
         WalkersCommand.register();
         ServerNetworking.initialize();
-        ServerNetworking.registerUseAbilityPacketHandler();
         registerJoinSyncPacket();
         WalkersTickHandlers.initialize();
-
-        // handle integrations
-        Integrations.initialize();
+        DataManager.initialize();
     }
 
     public static void registerJoinSyncPacket() {
@@ -83,6 +77,9 @@ public class Walkers {
     }
 
     public static boolean hasFlyingPermissions(ServerPlayer player) {
+        if (player.isCreative())
+            return true;
+
         LivingEntity shape = PlayerShape.getCurrentShape(player);
 
         if (shape != null && Walkers.CONFIG.enableFlight
@@ -95,11 +92,13 @@ public class Walkers {
                 boolean hasPermission = true;
                 for (String requiredAdvancement : requiredAdvancements) {
                     Advancement advancement = player.server.getAdvancements()
-							.getAdvancement(new ResourceLocation(requiredAdvancement));
-                    AdvancementProgress progress = player.getAdvancements().getOrStartProgress(advancement);
+                            .getAdvancement(new ResourceLocation(requiredAdvancement));
+                    if (advancement != null) {
+                        AdvancementProgress progress = player.getAdvancements().getOrStartProgress(advancement);
 
-                    if (!progress.isDone()) {
-                        hasPermission = false;
+                        if (!progress.isDone()) {
+                            hasPermission = false;
+                        }
                     }
                 }
 
@@ -116,12 +115,11 @@ public class Walkers {
         return entity != null && entity.getMobType().equals(MobType.WATER);
     }
 
-    public static int getCooldown(EntityType<?> type) {
-        String id = Registry.ENTITY_TYPE.getKey(type).toString();
-        return Walkers.CONFIG.abilityCooldownMap.getOrDefault(id, 20);
+    public static boolean isPlayerBlacklisted(UUID uuid) {
+        return CONFIG.playerBlacklistIsWhitelist != CONFIG.playerUUIDBlacklist.contains(uuid);
     }
 
     public static boolean hasSpecialShape(UUID uuid) {
-        return devs.contains(uuid) || VIPs.getPatreons().contains(uuid);
+        return devs.contains(uuid) || VIPs.getCachedPatreons().contains(uuid);
     }
 }
