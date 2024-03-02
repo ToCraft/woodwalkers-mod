@@ -1,5 +1,7 @@
 package tocraft.walkers.ability.impl;
 
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -26,6 +28,6 @@ public class GrassEaterAbility<T extends LivingEntity> extends ShapeAbility<T> {
 
     @Override
     public Item getIcon() {
-        return Items.GRASS;
+        return BuiltInRegistries.ITEM.get(new ResourceLocation("short_grass"));
     }
 }

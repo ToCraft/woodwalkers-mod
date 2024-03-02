@@ -10,6 +10,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import tocraft.walkers.Walkers;
 import tocraft.walkers.registry.WalkersEntityTags;
 
 import java.util.ArrayList;
@@ -105,9 +106,13 @@ public class ShapeType<T extends LivingEntity> {
     public static List<ShapeType<?>> getAllTypes(Level world, boolean includeVariants) {
         if (LIVING_TYPE_CASH.isEmpty()) {
             for (EntityType<?> type : BuiltInRegistries.ENTITY_TYPE) {
-                Entity instance = type.create(world);
-                if (instance instanceof LivingEntity) {
-                    LIVING_TYPE_CASH.add((EntityType<? extends LivingEntity>) type);
+                try {
+                    Entity instance = type.create(world);
+                    if (instance instanceof LivingEntity) {
+                        LIVING_TYPE_CASH.add((EntityType<? extends LivingEntity>) type);
+                    }
+                } catch(Exception e) {
+                    Walkers.LOGGER.error(e.getLocalizedMessage());
                 }
             }
         }
