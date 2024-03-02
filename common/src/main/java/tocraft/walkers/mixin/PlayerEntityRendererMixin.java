@@ -1,6 +1,9 @@
 package tocraft.walkers.mixin;
 
+import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.HumanoidModel;
@@ -21,6 +24,8 @@ import net.minecraft.world.entity.monster.Phantom;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.player.PlayerModelPart;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -35,40 +40,43 @@ import tocraft.walkers.api.model.ArmRenderingManipulator;
 import tocraft.walkers.api.model.EntityArms;
 import tocraft.walkers.api.model.EntityUpdater;
 import tocraft.walkers.api.model.EntityUpdaters;
+import tocraft.walkers.impl.PlayerDataProvider;
 import tocraft.walkers.mixin.accessor.EntityAccessor;
 import tocraft.walkers.mixin.accessor.LimbAnimatorAccessor;
 import tocraft.walkers.mixin.accessor.LivingEntityAccessor;
 import tocraft.walkers.mixin.accessor.LivingEntityRendererAccessor;
 
-@Mixin(PlayerRenderer.class)
-public abstract class PlayerEntityRendererMixin
-        extends LivingEntityRenderer<AbstractClientPlayer, PlayerModel<AbstractClientPlayer>> {
+import java.util.Optional;
+import java.util.UUID;
 
+@SuppressWarnings("ALL")
+@Environment(EnvType.CLIENT)
+@Mixin(PlayerRenderer.class)
+public abstract class PlayerEntityRendererMixin extends LivingEntityRenderer<AbstractClientPlayer, PlayerModel<AbstractClientPlayer>> {
+
+    @Contract(pure = true)
     @Shadow
-    private static HumanoidModel.ArmPose getArmPose(AbstractClientPlayer player, InteractionHand hand) {
+    private static HumanoidModel.@Nullable ArmPose getArmPose(AbstractClientPlayer player, InteractionHand hand) {
         return null;
     }
 
-    private PlayerEntityRendererMixin(EntityRendererProvider.Context ctx, PlayerModel<AbstractClientPlayer> model,
-                                      float shadowRadius) {
+    private PlayerEntityRendererMixin(EntityRendererProvider.Context ctx, PlayerModel<AbstractClientPlayer> model, float shadowRadius) {
         super(ctx, model, shadowRadius);
     }
 
-    @Redirect(
-            method = "render(Lnet/minecraft/client/player/AbstractClientPlayer;FFLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V",
-            at = @At(
-                    value = "INVOKE",
-                    target = "Lnet/minecraft/client/renderer/entity/LivingEntityRenderer;render(Lnet/minecraft/world/entity/LivingEntity;FFLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V"
-            )
-    )
-    private void redirectRender(LivingEntityRenderer<AbstractClientPlayer, EntityModel<AbstractClientPlayer>> renderer, LivingEntity player, float f, float g,
-                                PoseStack matrixStack, MultiBufferSource buffer, int i) {
+    @Redirect(method = "render(Lnet/minecraft/client/player/AbstractClientPlayer;FFLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/entity/LivingEntityRenderer;render(Lnet/minecraft/world/entity/LivingEntity;FFLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V"))
+    private void redirectRender(LivingEntityRenderer<AbstractClientPlayer, EntityModel<AbstractClientPlayer>> renderer, LivingEntity player, float f, float g, PoseStack matrixStack, MultiBufferSource buffer, int i) {
         LivingEntity shape = PlayerShape.getCurrentShape((Player) player);
+
+        Optional<UUID> vehiclePlayerId = ((PlayerDataProvider) player).walkers$getVehiclePlayerUUID();
+        if (vehiclePlayerId.isPresent()) {
+            Vec3 vehiclePos = player.getCommandSenderWorld().getPlayerByUUID(vehiclePlayerId.get()).position();
+            player.moveTo(new Vec3(vehiclePos.x, vehiclePos.y + 1, vehiclePos.z));
+        }
 
         // sync player data to shape
         if (shape != null) {
-            ((LimbAnimatorAccessor) shape.walkAnimation)
-                    .setPrevSpeed(((LimbAnimatorAccessor) player.walkAnimation).getPrevSpeed());
+            ((LimbAnimatorAccessor) shape.walkAnimation).setPrevSpeed(((LimbAnimatorAccessor) player.walkAnimation).getPrevSpeed());
             shape.walkAnimation.setSpeed(player.walkAnimation.speed());
             ((LimbAnimatorAccessor) shape.walkAnimation).setPos(player.walkAnimation.position());
             shape.swinging = player.swinging;
@@ -83,8 +91,10 @@ public abstract class PlayerEntityRendererMixin
             shape.swingingArm = player.swingingArm;
             shape.setOnGround(player.isOnGround());
             shape.setDeltaMovement(player.getDeltaMovement());
+            shape.setInvisible(player.isInvisibleTo(Minecraft.getInstance().player));
 
             ((EntityAccessor) shape).setVehicle(player.getVehicle());
+            ((EntityAccessor) shape).setPassengers(ImmutableList.copyOf(player.getPassengers()));
             ((EntityAccessor) shape).setTouchingWater(player.isInWater());
 
             // phantoms' pitch is inverse for whatever reason
@@ -118,35 +128,33 @@ public abstract class PlayerEntityRendererMixin
             shape.setPose(player.getPose());
 
             // set active hand after configuring held items
-            shape.startUsingItem(
-                    player.getUsedItemHand() == null ? InteractionHand.MAIN_HAND : player.getUsedItemHand());
+            shape.startUsingItem(player.getUsedItemHand() == null ? InteractionHand.MAIN_HAND : player.getUsedItemHand());
             ((LivingEntityAccessor) shape).callSetLivingEntityFlag(1, player.isUsingItem());
             shape.getTicksUsingItem();
             ((LivingEntityAccessor) shape).callUpdatingUsingItem();
             shape.hurtTime = player.hurtTime; // FIX: https://github.com/Draylar/identity/issues/424
 
             // update shape specific properties
-            EntityUpdater<LivingEntity> entityUpdater = EntityUpdaters
-                    .getUpdater((EntityType<LivingEntity>) shape.getType());
+            EntityUpdater<LivingEntity> entityUpdater = EntityUpdaters.getUpdater((EntityType<LivingEntity>) shape.getType());
             if (entityUpdater != null) {
                 entityUpdater.update((Player) player, shape);
             }
-        }
 
-        if (shape != null && !player.isInvisible() && !player.isInvisibleTo(Minecraft.getInstance().player)) {
-            EntityRenderer<LivingEntity> shapeRenderer = (EntityRenderer<LivingEntity>) Minecraft.getInstance().getEntityRenderDispatcher().getRenderer(shape);
+            if (!player.isInvisibleTo(Minecraft.getInstance().player)) {
+                EntityRenderer<LivingEntity> shapeRenderer = (EntityRenderer<LivingEntity>) Minecraft.getInstance().getEntityRenderDispatcher().getRenderer(shape);
 
-            // Sync biped information for stuff like bow drawing animation
-            if (shapeRenderer instanceof HumanoidMobRenderer) {
-                shape_setBipedShapeModelPose((AbstractClientPlayer) player, shape, (HumanoidMobRenderer<?, ?>) shapeRenderer);
-            }
+                // Sync biped information for stuff like bow drawing animation
+                if (shapeRenderer instanceof HumanoidMobRenderer) {
+                    shape_setBipedShapeModelPose((AbstractClientPlayer) player, shape, (HumanoidMobRenderer<?, ?>) shapeRenderer);
+                }
 
-            shapeRenderer.render(shape, f, g, matrixStack, buffer, i);
+                shapeRenderer.render(shape, f, g, matrixStack, buffer, i);
 
-            // Only render nametags if the server option is true and the entity being
-            // rendered is NOT this player/client
-            if (Walkers.CONFIG.showPlayerNametag && player != Minecraft.getInstance().player) {
-                renderNameTag((AbstractClientPlayer) player, player.getDisplayName(), matrixStack, buffer, i);
+                // Only render nametags if the server option is true and the entity being
+                // rendered is NOT this player/client
+                if (Walkers.CONFIG.showPlayerNametag && player != Minecraft.getInstance().player) {
+                    renderNameTag((AbstractClientPlayer) player, player.getDisplayName(), matrixStack, buffer, i);
+                }
             }
         } else {
             super.render((AbstractClientPlayer) player, f, g, matrixStack, buffer, i);
@@ -154,8 +162,7 @@ public abstract class PlayerEntityRendererMixin
     }
 
     @Unique
-    private void shape_setBipedShapeModelPose(AbstractClientPlayer player, LivingEntity shape,
-                                              LivingEntityRenderer<?, ?> shapeRenderer) {
+    private void shape_setBipedShapeModelPose(AbstractClientPlayer player, LivingEntity shape, LivingEntityRenderer<?, ?> shapeRenderer) {
         HumanoidModel<?> shapeBipedModel = (HumanoidModel<?>) shapeRenderer.getModel();
 
         if (shape.isSpectator()) {
@@ -171,8 +178,7 @@ public abstract class PlayerEntityRendererMixin
             HumanoidModel.ArmPose offHandPose = getArmPose(player, InteractionHand.OFF_HAND);
 
             if (mainHandPose != null && mainHandPose.isTwoHanded()) {
-                offHandPose = shape.getOffhandItem().isEmpty() ? HumanoidModel.ArmPose.EMPTY
-                        : HumanoidModel.ArmPose.ITEM;
+                offHandPose = shape.getOffhandItem().isEmpty() ? HumanoidModel.ArmPose.EMPTY : HumanoidModel.ArmPose.ITEM;
             }
 
             if ((mainHandPose != null && offHandPose != null) && shape.getMainArm() == HumanoidArm.RIGHT) {
@@ -197,8 +203,7 @@ public abstract class PlayerEntityRendererMixin
     }
 
     @Inject(method = "renderHand", at = @At("HEAD"), cancellable = true)
-    private void onRenderArm(PoseStack matrices, MultiBufferSource vertexConsumers, int light,
-                             AbstractClientPlayer player, ModelPart arm, ModelPart sleeve, CallbackInfo ci) {
+    private void onRenderArm(PoseStack matrices, MultiBufferSource vertexConsumers, int light, AbstractClientPlayer player, ModelPart arm, ModelPart sleeve, CallbackInfo ci) {
         LivingEntity shape = PlayerShape.getCurrentShape(player);
 
         // sync player data to shape
@@ -207,7 +212,7 @@ public abstract class PlayerEntityRendererMixin
 
             if (renderer instanceof LivingEntityRenderer) {
                 LivingEntityRenderer<LivingEntity, ?> rendererCasted = (LivingEntityRenderer<LivingEntity, ?>) renderer;
-                EntityModel model = ((LivingEntityRenderer) renderer).getModel();
+                EntityModel model = ((LivingEntityRenderer<?, ?>) renderer).getModel();
 
                 // re-assign arm & sleeve models
                 arm = null;
@@ -237,14 +242,12 @@ public abstract class PlayerEntityRendererMixin
                 // render
                 if (arm != null) {
                     arm.xRot = 0.0F;
-                    arm.render(matrices, vertexConsumers.getBuffer(((LivingEntityRendererAccessor) rendererCasted)
-                            .callGetRenderType(shape, true, false, true)), light, OverlayTexture.NO_OVERLAY);
+                    arm.render(matrices, vertexConsumers.getBuffer(((LivingEntityRendererAccessor) rendererCasted).callGetRenderType(shape, true, false, true)), light, OverlayTexture.NO_OVERLAY);
                 }
 
                 if (sleeve != null) {
                     sleeve.xRot = 0.0F;
-                    sleeve.render(matrices, vertexConsumers.getBuffer(((LivingEntityRendererAccessor) rendererCasted)
-                            .callGetRenderType(shape, true, false, true)), light, OverlayTexture.NO_OVERLAY);
+                    sleeve.render(matrices, vertexConsumers.getBuffer(((LivingEntityRendererAccessor) rendererCasted).callGetRenderType(shape, true, false, true)), light, OverlayTexture.NO_OVERLAY);
                 }
 
                 ci.cancel();

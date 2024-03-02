@@ -1,5 +1,7 @@
 package tocraft.walkers.mixin;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.tags.TagKey;
@@ -14,6 +16,7 @@ import tocraft.walkers.Walkers;
 import tocraft.walkers.api.PlayerShape;
 import tocraft.walkers.registry.WalkersEntityTags;
 
+@Environment(EnvType.CLIENT)
 @Mixin(Gui.class)
 public abstract class InGameHudMixin {
 

@@ -29,7 +29,6 @@ import tocraft.walkers.impl.SonicBoomUser;
 import java.util.HashSet;
 import java.util.Set;
 
-@SuppressWarnings("ConstantConditions")
 @Mixin(Player.class)
 public abstract class PlayerSonicBoomMixin extends LivingEntity implements SonicBoomUser {
 

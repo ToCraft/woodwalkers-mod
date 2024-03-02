@@ -13,7 +13,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import tocraft.walkers.Walkers;
 import tocraft.walkers.api.PlayerHostility;
 import tocraft.walkers.api.PlayerShape;
-import tocraft.walkers.registry.WalkersEntityTags;
 
 import java.util.Optional;
 
@@ -29,16 +28,15 @@ public class PiglinBruteBrainMixin {
                 if (shape != null) {
                     // Piglins should not attack Piglins or Piglin Brutes, unless they have
                     // hostility
-                    if (shape.getType().is(WalkersEntityTags.PIGLIN_FRIENDLY)) {
+                    if (shape instanceof AbstractPiglin) {
                         return false;
                     }
 
                     // Player has a shape but is not a piglin, check config for what to do
                     else {
                         if (Walkers.CONFIG.hostilesIgnoreHostileShapedPlayer && shape instanceof Enemy) {
-
                             // Check hostility for aggro on non-piglin hostiles
-                            if (PlayerHostility.hasHostility(player)) {
+                            if (!PlayerHostility.hasHostility(player)) {
                                 return false;
                             }
                         }

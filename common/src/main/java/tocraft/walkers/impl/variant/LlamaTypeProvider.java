@@ -7,17 +7,17 @@ import net.minecraft.world.entity.animal.horse.Llama;
 import net.minecraft.world.level.Level;
 import tocraft.walkers.api.variant.TypeProvider;
 
-public class LlamaTypeProvider extends TypeProvider<Llama> {
+public class LlamaTypeProvider<L extends Llama> extends TypeProvider<L> {
 
     @Override
-    public int getVariantData(Llama llama) {
+    public int getVariantData(L llama) {
         return llama.getVariant().getId();
     }
 
     @Override
-    public Llama create(EntityType<Llama> type, Level world, int data) {
-        Llama llama = new Llama(type, world);
-        llama.setVariant(Llama.Variant.byId(data));
+    public L create(EntityType<L> type, Level world, int data) {
+        L llama = type.create(world);
+        if (llama != null) llama.setVariant(L.Variant.byId(data));
         return llama;
     }
 
@@ -28,7 +28,7 @@ public class LlamaTypeProvider extends TypeProvider<Llama> {
 
     @Override
     public int getRange() {
-        return 3;
+        return L.Variant.values().length - 1;
     }
 
     @Override
