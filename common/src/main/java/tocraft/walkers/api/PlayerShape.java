@@ -8,7 +8,6 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import tocraft.walkers.api.variant.ShapeType;
 import tocraft.walkers.impl.PlayerDataProvider;
 import tocraft.walkers.network.NetworkHandler;
 
@@ -23,10 +22,6 @@ public class PlayerShape {
      */
     public static LivingEntity getCurrentShape(Player player) {
         return ((PlayerDataProvider) player).walkers$getCurrentShape();
-    }
-
-    public static ShapeType<?> getCurrentShapeType(Player player) {
-        return ((PlayerDataProvider) player).walkers$getCurrentShapeType();
     }
 
     /**

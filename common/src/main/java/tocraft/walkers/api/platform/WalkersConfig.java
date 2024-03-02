@@ -2,9 +2,11 @@ package tocraft.walkers.api.platform;
 
 import tocraft.craftedcore.config.Config;
 import tocraft.craftedcore.config.annotions.Synchronize;
+import tocraft.walkers.Walkers;
 
 import java.util.*;
 
+@SuppressWarnings("ConstantConditions")
 public class WalkersConfig implements Config {
 
     public boolean revoke2ndShapeOnDeath = false;
@@ -13,7 +15,7 @@ public class WalkersConfig implements Config {
     public boolean hostilesIgnoreHostileShapedPlayer = true;
     public boolean hostilesForgetNewHostileShapedPlayer = false;
     public boolean wolvesAttack2ndShapedPrey = true;
-    public boolean ownedwolvesAttack2ndShapedPrey = false;
+    public boolean ownedWolvesAttack2ndShapedPrey = false;
     public boolean villagersRunFrom2ndShapes = true;
     public boolean foxesAttack2ndShapedPrey = true;
     public boolean useShapeSounds = true;
@@ -35,7 +37,7 @@ public class WalkersConfig implements Config {
     public boolean wardenIsBlinded = true;
     public boolean wardenBlindsNearby = true;
     @Synchronize
-    public boolean unlockOveridesCurrentShape = false;
+    public boolean unlockOverridesCurrentShape = false;
     @Synchronize
     public float unlockTimer = 60f;
     public boolean specialShapeIsThirdShape = false;
@@ -54,9 +56,11 @@ public class WalkersConfig implements Config {
             put("minecraft:ghast", 60);
             put("minecraft:goat", 20);
             put("minecraft:horse", 40);
-            put("minecraft:mooshroom", 300);
             put("minecraft:llama", 20);
+            put("minecraft:mooshroom", 300);
+            put("minecraft:pufferfish", 20);
             put("minecraft:sheep", 20);
+            put("minecraft:shulker", 80);
             put("minecraft:skeleton_horse", 40);
             put("minecraft:sniffer", 9600);
             put("minecraft:snow_golem", 10);
@@ -69,5 +73,14 @@ public class WalkersConfig implements Config {
     };
 
     @Synchronize
+    public List<String> abilityBlacklist = new ArrayList<>();
+    @Synchronize
     public List<UUID> playerUUIDBlacklist = new ArrayList<>();
+    @Synchronize
+    public boolean playerBlacklistIsWhitelist = false;
+
+    @Override
+    public String getName() {
+        return Walkers.MODID;
+    }
 }

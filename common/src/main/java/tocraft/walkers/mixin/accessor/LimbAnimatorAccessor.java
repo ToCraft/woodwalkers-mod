@@ -1,9 +1,12 @@
 package tocraft.walkers.mixin.accessor;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.world.entity.WalkAnimationState;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Accessor;
 
+@Environment(EnvType.CLIENT)
 @Mixin(WalkAnimationState.class)
 public interface LimbAnimatorAccessor {
     @Accessor("speedOld")

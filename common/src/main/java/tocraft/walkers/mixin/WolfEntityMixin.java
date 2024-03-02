@@ -46,7 +46,7 @@ public abstract class WolfEntityMixin extends TamableAnimal {
                     // wolves should ignore players that look like their prey if they have an owner,
                     // unless the config option is turned to true
                     LivingEntity owner = this.getOwner();
-                    if (owner != null || Walkers.CONFIG.ownedwolvesAttack2ndShapedPrey) {
+                    if (owner != null || Walkers.CONFIG.ownedWolvesAttack2ndShapedPrey) {
                         return false;
                     }
 
@@ -54,6 +54,7 @@ public abstract class WolfEntityMixin extends TamableAnimal {
                 }));
     }
 
+    @SuppressWarnings("ConstantConditions")
     @Inject(method = "tick", at = @At("HEAD"))
     public void onTick(CallbackInfo ci) {
         if (this.hasCustomName() && this.getCustomName().getString().equalsIgnoreCase("Patreon"))

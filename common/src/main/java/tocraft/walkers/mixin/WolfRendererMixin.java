@@ -1,5 +1,7 @@
 package tocraft.walkers.mixin;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.renderer.entity.WolfRenderer;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
@@ -11,6 +13,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import tocraft.walkers.Walkers;
 
+@Environment(EnvType.CLIENT)
 @Mixin(WolfRenderer.class)
 public class WolfRendererMixin {
     @Unique

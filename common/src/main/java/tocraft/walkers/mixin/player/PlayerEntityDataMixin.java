@@ -1,7 +1,6 @@
 package tocraft.walkers.mixin.player;
 
 import dev.architectury.event.EventResult;
-import dev.architectury.platform.Platform;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
@@ -36,6 +35,7 @@ import tocraft.walkers.mixin.ThreadedAnvilChunkStorageAccessor;
 import tocraft.walkers.registry.WalkersEntityTags;
 
 import java.util.Optional;
+import java.util.UUID;
 
 @Mixin(Player.class)
 public abstract class PlayerEntityDataMixin extends LivingEntity implements PlayerDataProvider {
@@ -54,7 +54,7 @@ public abstract class PlayerEntityDataMixin extends LivingEntity implements Play
     @Unique
     private LivingEntity walkers$shape = null;
     @Unique
-    private ShapeType<?> walkers$shapeType = null;
+    private Optional<UUID> walkers$vehiclePlayerUUID = Optional.empty();
 
     private PlayerEntityDataMixin(EntityType<? extends LivingEntity> type, Level world) {
         super(type, world);
@@ -68,9 +68,8 @@ public abstract class PlayerEntityDataMixin extends LivingEntity implements Play
         this.walkers$unlocked = ShapeType.from(unlockedShape);
 
         // Abilities
-        if (Platform.getOptionalMod("ycdm").isPresent()) {
-            walkers$abilityCooldown = Math.max(tag.getInt(ABILITY_COOLDOWN_KEY), tag.getCompound("ycdm").getInt("cooldown"));
-        }
+        walkers$abilityCooldown = tag.getInt(ABILITY_COOLDOWN_KEY);
+
         // Hostility
         walkers$remainingTime = tag.getInt("RemainingHostilityTime");
 
@@ -103,9 +102,6 @@ public abstract class PlayerEntityDataMixin extends LivingEntity implements Play
         // serialize current shapeAttackDamage data to tag if it exists
         if (walkers$shape != null) {
             walkers$shape.saveWithoutId(entityTag);
-            if (walkers$shapeType != null) {
-                walkers$shapeType.writeEntityNbt(entityTag);
-            }
         }
 
         // put entity type ID under the key "id", or "minecraft:empty" if no shape is
@@ -131,7 +127,7 @@ public abstract class PlayerEntityDataMixin extends LivingEntity implements Play
             CompoundTag entityTag = tag.getCompound("EntityData");
 
             // ensure entity data exists
-            if (entityTag != null) {
+            if (!entityTag.isEmpty()) {
                 if (walkers$shape == null || !type.get().equals(walkers$shape.getType())) {
                     walkers$shape = (LivingEntity) type.get().create(level);
 
@@ -140,7 +136,6 @@ public abstract class PlayerEntityDataMixin extends LivingEntity implements Play
                 }
 
                 walkers$shape.load(entityTag);
-                walkers$shapeType = ShapeType.fromEntityNbt(tag);
             }
         }
     }
@@ -186,17 +181,13 @@ public abstract class PlayerEntityDataMixin extends LivingEntity implements Play
         return walkers$shape;
     }
 
-    @Override
-    public ShapeType<?> walkers$getCurrentShapeType() {
-        return walkers$shapeType;
-    }
-
     @Unique
     @Override
     public void walkers$setCurrentShape(LivingEntity shape) {
         this.walkers$shape = shape;
     }
 
+    @SuppressWarnings("ConstantConditions")
     @Unique
     @Override
     public boolean walkers$updateShapes(@Nullable LivingEntity shape) {
@@ -267,7 +258,7 @@ public abstract class PlayerEntityDataMixin extends LivingEntity implements Play
             FlightHelper.grantFlightTo(serverPlayer);
             player.getAbilities().setFlyingSpeed(Walkers.CONFIG.flySpeed);
             player.onUpdateAbilities();
-        } else {
+        } else if (!player.isCreative()) {
             FlightHelper.revokeFlight(serverPlayer);
             player.getAbilities().setFlyingSpeed(0.05f);
             player.onUpdateAbilities();
@@ -293,5 +284,17 @@ public abstract class PlayerEntityDataMixin extends LivingEntity implements Play
         }
 
         return true;
+    }
+
+    @Unique
+    @Override
+    public Optional<UUID> walkers$getVehiclePlayerUUID() {
+        return walkers$vehiclePlayerUUID;
+    }
+
+    @Unique
+    @Override
+    public void walkers$setVehiclePlayerUUID(UUID riddenPlayerUUID) {
+        walkers$vehiclePlayerUUID = Optional.ofNullable(riddenPlayerUUID);
     }
 }

@@ -1,0 +1,14 @@
+{
+  "entity_type": "minecraft:snow_golem",
+  "type_provider": {
+    "nbt": [
+      {
+        "nbt_type": "BOOLEAN",
+        "nbt_field": "Pumpkin"
+      }
+    ],
+    "names": {
+      "0": "walkers.variants.minecraft.snow_golem.0"
+    }
+  }
+}

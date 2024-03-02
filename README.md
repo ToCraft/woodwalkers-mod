@@ -46,7 +46,7 @@ Search for your favourite mob in your world/on your server. Once you found it, p
 while looking directly at it. While doing, you should notice the message "You feel it tingle" or something. In case you
 don't see it, reinstall the modpack your check your config. After pressing the key for 100 ticks (5 seconds), you will
 transform into a mob of the same type. Your Unlock progress is complete! ;D
-In case you want to change it again, change the config "unlockOveridesCurrentShape" to true, so you'll be able to
+In case you want to change it again, change the config "unlockOverridesCurrentShape" to true, so you'll be able to
 override it at any time.
 
 You can switch your shape by pressing the TRANSFORM_KEY (by default 'G'). Choose carefully! This choice is forever! Once

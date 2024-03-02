@@ -18,33 +18,31 @@ import tocraft.walkers.network.NetworkHandler;
 
 public class SpecialSwapPackets {
 
+    @SuppressWarnings("ConstantConditions")
     public static void registerDevRequestPacketHandler() {
-        NetworkManager.registerReceiver(NetworkManager.Side.C2S, NetworkHandler.SPECIAL_SHAPE_REQUEST, (buf, context) -> {
+        NetworkManager.registerReceiver(NetworkManager.Side.C2S, NetworkHandler.SPECIAL_SHAPE_REQUEST, (buf, context) -> context.getPlayer().getServer().execute(() -> {
+            ServerPlayer player = (ServerPlayer) context.getPlayer();
+            ResourceLocation shape = new ResourceLocation("minecraft:wolf");
 
-            context.getPlayer().getServer().execute(() -> {
-                ServerPlayer player = (ServerPlayer) context.getPlayer();
-                ResourceLocation shape = new ResourceLocation("minecraft:wolf");
+            // check if player has a special shape
+            if (!Walkers.hasSpecialShape(player.getUUID()) || (!Walkers.CONFIG.specialShapeIsThirdShape && (((PlayerDataProvider) player).walkers$get2ndShape() == null || !((PlayerDataProvider) player).walkers$get2ndShape().getEntityType().equals(EntityType.WOLF))))
+                return;
 
-                // check if player has a special shape
-                if (!Walkers.hasSpecialShape(player.getUUID()) || (!Walkers.CONFIG.specialShapeIsThirdShape && (((PlayerDataProvider) player).walkers$get2ndShape() == null || !((PlayerDataProvider) player).walkers$get2ndShape().getEntityType().equals(EntityType.WOLF))))
-                    return;
+            Entity created;
+            CompoundTag nbt = new CompoundTag();
 
-                Entity created;
-                CompoundTag nbt = new CompoundTag();
+            nbt.putBoolean("isSpecial", true);
+            nbt.putString("id", shape.toString());
+            ServerLevel serverWorld = player.getLevel();
+            created = EntityType.loadEntityRecursive(nbt, serverWorld, it -> it);
 
-                nbt.putBoolean("isSpecial", true);
-                nbt.putString("id", shape.toString());
-                ServerLevel serverWorld = player.getLevel();
-                created = EntityType.loadEntityRecursive(nbt, serverWorld, it -> it);
+            if (created instanceof LivingEntity living) {
+                PlayerShape.updateShapes(player, living);
+            }
 
-                if (created instanceof LivingEntity living) {
-                    PlayerShape.updateShapes(player, living);
-                }
-
-                // Refresh player dimensions
-                player.refreshDimensions();
-            });
-        });
+            // Refresh player dimensions
+            player.refreshDimensions();
+        }));
     }
 
     public static void sendSpecialSwapRequest() {

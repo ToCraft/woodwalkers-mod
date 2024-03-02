@@ -11,7 +11,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public class TropicalFishTypeProvider extends TypeProvider<TropicalFish> {
-    public static List<TropicalFish.Pattern> patternValues = Arrays.asList(TropicalFish.Pattern.values());
+    public static final List<TropicalFish.Pattern> patternValues = Arrays.asList(TropicalFish.Pattern.values());
 
     @Override
     public int getVariantData(TropicalFish entity) {

@@ -1,7 +1,7 @@
 package tocraft.walkers.ability.impl;
 
 import net.minecraft.sounds.SoundEvents;
-import net.minecraft.world.entity.monster.Witch;
+import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.ThrownPotion;
 import net.minecraft.world.item.Item;
@@ -17,12 +17,12 @@ import tocraft.walkers.ability.ShapeAbility;
 import java.util.Arrays;
 import java.util.List;
 
-public class WitchAbility extends ShapeAbility<Witch> {
+public class WitchAbility<T extends Mob> extends ShapeAbility<T> {
 
     public static final List<Potion> VALID_POTIONS = Arrays.asList(Potions.HARMING, Potions.POISON, Potions.SLOWNESS, Potions.WEAKNESS);
 
     @Override
-    public void onUse(Player player, Witch shape, Level world) {
+    public void onUse(Player player, T shape, Level world) {
         ThrownPotion potionEntity = new ThrownPotion(world, player);
         potionEntity.setItem(PotionUtils.setPotion(new ItemStack(Items.SPLASH_POTION), VALID_POTIONS.get(world.random.nextInt(VALID_POTIONS.size()))));
         potionEntity.setXRot(-20.0F);
@@ -37,5 +37,10 @@ public class WitchAbility extends ShapeAbility<Witch> {
     @Override
     public Item getIcon() {
         return Items.POTION;
+    }
+
+    @Override
+    public int getDefaultCooldown() {
+        return 200;
     }
 }

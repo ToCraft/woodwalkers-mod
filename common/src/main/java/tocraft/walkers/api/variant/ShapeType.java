@@ -8,7 +8,9 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import tocraft.walkers.Walkers;
 import tocraft.walkers.registry.WalkersEntityTags;
 
 import java.util.ArrayList;
@@ -22,18 +24,18 @@ public class ShapeType<T extends LivingEntity> {
     private final EntityType<T> type;
     private final int variantData;
 
-    public ShapeType(EntityType<T> type) {
-        this.type = type;
-        variantData = getDefaultVariantData(type);
-    }
-
-    private int getDefaultVariantData(EntityType<T> type) {
-        TypeProvider<T> provider = TypeProviderRegistry.getProvider(type);
+    public static <Z extends LivingEntity> int getDefaultVariantData(EntityType<Z> type) {
+        TypeProvider<Z> provider = TypeProviderRegistry.getProvider(type);
         if (provider != null) {
             return provider.getFallbackData();
         } else {
             return -1;
         }
+    }
+
+    public ShapeType(EntityType<T> type) {
+        this.type = type;
+        variantData = getDefaultVariantData(type);
     }
 
     public ShapeType(EntityType<T> type, int variantData) {
@@ -54,6 +56,10 @@ public class ShapeType<T extends LivingEntity> {
         }
     }
 
+    public static <Z extends LivingEntity> @NotNull ShapeType<Z> from(EntityType<Z> entityType) {
+        return new ShapeType<>(entityType, getDefaultVariantData(entityType));
+    }
+
     @Nullable
     public static <Z extends LivingEntity> ShapeType<Z> from(Z entity) {
         if (entity == null) {
@@ -63,10 +69,10 @@ public class ShapeType<T extends LivingEntity> {
         EntityType<Z> type = (EntityType<Z>) entity.getType();
         TypeProvider<Z> typeProvider = TypeProviderRegistry.getProvider(type);
         if (typeProvider != null) {
-            return typeProvider.create(type, entity);
+            return typeProvider.create(entity);
         }
 
-        return new ShapeType<>((EntityType<Z>) entity.getType());
+        return ShapeType.from(type);
     }
 
     @Nullable
@@ -76,7 +82,7 @@ public class ShapeType<T extends LivingEntity> {
             return null;
         }
 
-        return new ShapeType(BuiltInRegistries.ENTITY_TYPE.get(id),
+        return from((EntityType<? extends LivingEntity>) BuiltInRegistries.ENTITY_TYPE.get(id),
                 compound.contains("Variant") ? compound.getInt("Variant") : -1);
     }
 
@@ -89,7 +95,7 @@ public class ShapeType<T extends LivingEntity> {
             }
         }
 
-        return new ShapeType<>((EntityType<Z>) entityType, variant);
+        return new ShapeType<>(entityType, variant);
     }
 
     @Deprecated
@@ -100,9 +106,13 @@ public class ShapeType<T extends LivingEntity> {
     public static List<ShapeType<?>> getAllTypes(Level world, boolean includeVariants) {
         if (LIVING_TYPE_CASH.isEmpty()) {
             for (EntityType<?> type : BuiltInRegistries.ENTITY_TYPE) {
-                Entity instance = type.create(world);
-                if (instance instanceof LivingEntity) {
-                    LIVING_TYPE_CASH.add((EntityType<? extends LivingEntity>) type);
+                try {
+                    Entity instance = type.create(world);
+                    if (instance instanceof LivingEntity) {
+                        LIVING_TYPE_CASH.add((EntityType<? extends LivingEntity>) type);
+                    }
+                } catch(Exception e) {
+                    Walkers.LOGGER.error(e.getLocalizedMessage());
                 }
             }
         }
@@ -115,10 +125,10 @@ public class ShapeType<T extends LivingEntity> {
                 TypeProvider<?> variant = TypeProviderRegistry.getProvider(type);
                 if (variant != null && includeVariants) {
                     for (int i = 0; i <= variant.getRange(); i++) {
-                        types.add(new ShapeType(type, i));
+                        types.add(new ShapeType<>(type, i));
                     }
                 } else {
-                    types.add(new ShapeType(type));
+                    types.add(ShapeType.from(type));
                 }
             }
         }
@@ -165,21 +175,12 @@ public class ShapeType<T extends LivingEntity> {
         return Objects.hash(type, variantData);
     }
 
-    public void writeEntityNbt(CompoundTag tag) {
-        CompoundTag inner = writeCompound();
-        tag.put("ShapeType", inner);
-    }
-
-    public static ShapeType<?> fromEntityNbt(CompoundTag tag) {
-        return from(tag.getCompound("ShapeType"));
-    }
-
-    public Component createTooltipText(T entity) {
-        TypeProvider<T> provider = TypeProviderRegistry.getProvider(type);
+    public static <L extends LivingEntity> Component createTooltipText(L entity) {
+        TypeProvider<L> provider = TypeProviderRegistry.getProvider((EntityType<L>) entity.getType());
         if (provider != null) {
-            return provider.modifyText(entity, Component.translatable(type.getDescriptionId()));
+            return provider.modifyText(entity, Component.translatable(entity.getType().getDescriptionId()));
         }
 
-        return Component.translatable(type.getDescriptionId());
+        return Component.translatable(entity.getType().getDescriptionId());
     }
 }
