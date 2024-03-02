@@ -1,8 +1,6 @@
 package tocraft.walkers.api.variant;
 
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -11,9 +9,9 @@ import net.minecraft.world.level.Level;
 import java.util.Locale;
 
 public abstract class TypeProvider<T extends LivingEntity> {
-
-    public ShapeType<T> create(EntityType<T> type, T entity) {
-        return new ShapeType<>((EntityType<T>) entity.getType(), getVariantData(entity));
+    @SuppressWarnings("unchecked")
+    public ShapeType<T> create(T entity) {
+        return ShapeType.from((EntityType<T>) entity.getType(), getVariantData(entity));
     }
 
     public abstract int getVariantData(T entity);

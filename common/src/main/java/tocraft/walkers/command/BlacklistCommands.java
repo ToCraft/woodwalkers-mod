@@ -1,0 +1,123 @@
+package tocraft.walkers.command;
+
+import com.mojang.brigadier.arguments.BoolArgumentType;
+import com.mojang.brigadier.tree.LiteralCommandNode;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.commands.Commands;
+import net.minecraft.commands.arguments.EntityArgument;
+import net.minecraft.commands.arguments.UuidArgument;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.server.level.ServerPlayer;
+import tocraft.walkers.Walkers;
+
+import java.util.UUID;
+
+public class BlacklistCommands {
+    public static LiteralCommandNode<CommandSourceStack> getRootNode() {
+        LiteralCommandNode<CommandSourceStack> rootNode = Commands.literal("playerBlacklist").build();
+
+        LiteralCommandNode<CommandSourceStack> isWhitelist = Commands.literal("isWhitelist")
+                .executes(context -> isWhitelist(context.getSource()))
+                .then(Commands.argument("value", BoolArgumentType.bool())
+                        .executes(context -> setIsWhitelist(context.getSource(), BoolArgumentType.getBool(context, "value"))))
+                .build();
+
+        LiteralCommandNode<CommandSourceStack> addToList = Commands.literal("add")
+                .then(Commands.argument("players", EntityArgument.players())
+                        .executes(context -> {
+                            for (ServerPlayer player : EntityArgument.getPlayers(context, "players")) {
+                                addToList(context.getSource(), player.getUUID());
+                            }
+                            return 1;
+                        }))
+                .then(Commands.argument("playerUUID", UuidArgument.uuid())
+                        .executes(context -> {
+                            addToList(context.getSource(), UuidArgument.getUuid(context, "playerUUID"));
+                            return 1;
+                        }))
+                .build();
+        LiteralCommandNode<CommandSourceStack> removeFromList = Commands.literal("remove")
+                .then(Commands.argument("players", EntityArgument.players())
+                        .executes(context -> {
+                            for (ServerPlayer player : EntityArgument.getPlayers(context, "players")) {
+                                removeFromList(context.getSource(), player.getUUID());
+                            }
+                            return 1;
+                        })
+                        .then(Commands.argument("playerUUID", UuidArgument.uuid())
+                                .executes(context -> {
+                                    removeFromList(context.getSource(), UuidArgument.getUuid(context, "playerUUID"));
+                                    return 1;
+                                })))
+                .build();
+
+        LiteralCommandNode<CommandSourceStack> listList = Commands.literal("list")
+                .executes(context -> listPlayers(context.getSource()))
+                .build();
+
+
+        rootNode.addChild(isWhitelist);
+        rootNode.addChild(listList);
+        rootNode.addChild(addToList);
+        rootNode.addChild(removeFromList);
+        return rootNode;
+    }
+
+    private static int isWhitelist(CommandSourceStack source) {
+        source.sendSuccess(new TranslatableComponent("walkers.isWhitelist", Walkers.CONFIG.playerBlacklistIsWhitelist), true);
+        return 1;
+    }
+
+    private static int setIsWhitelist(CommandSourceStack source, boolean value) {
+        Walkers.CONFIG.playerBlacklistIsWhitelist = value;
+        Walkers.CONFIG.save();
+
+        for (ServerPlayer player : source.getServer().getPlayerList().getPlayers()) {
+            Walkers.CONFIG.sendToPlayer(player);
+        }
+
+        source.sendSuccess(new TranslatableComponent("walkers.setIsWhitelist", String.valueOf(value)), true);
+        return 1;
+    }
+
+    private static int listPlayers(CommandSourceStack source) {
+        for (UUID uuid : Walkers.CONFIG.playerUUIDBlacklist) {
+            ServerPlayer player = source.getServer().getPlayerList().getPlayer(uuid);
+            Component name = player != null ? player.getDisplayName() : new TextComponent(uuid.toString());
+            source.sendSuccess(new TranslatableComponent("walkers.blacklistListPlayer", name), true);
+        }
+
+        if (Walkers.CONFIG.playerUUIDBlacklist.isEmpty())
+            source.sendSuccess(new TranslatableComponent("walkers.blacklistIsEmpty"), true);
+
+        return 1;
+    }
+
+    private static void addToList(CommandSourceStack source, UUID uuid) {
+        Walkers.CONFIG.playerUUIDBlacklist.add(uuid);
+        Walkers.CONFIG.save();
+
+        for (ServerPlayer player : source.getServer().getPlayerList().getPlayers()) {
+            Walkers.CONFIG.sendToPlayer(player);
+        }
+
+        ServerPlayer player = source.getServer().getPlayerList().getPlayer(uuid);
+        Component name = player != null ? player.getDisplayName() : new TextComponent(uuid.toString());
+        source.sendSuccess(new TranslatableComponent("walkers.addToList", name), true);
+    }
+
+    private static void removeFromList(CommandSourceStack source, UUID uuid) {
+        Walkers.CONFIG.playerUUIDBlacklist.remove(uuid);
+        Walkers.CONFIG.save();
+
+        for (ServerPlayer player : source.getServer().getPlayerList().getPlayers()) {
+            Walkers.CONFIG.sendToPlayer(player);
+        }
+
+        ServerPlayer player = source.getServer().getPlayerList().getPlayer(uuid);
+        Component name = player != null ? player.getDisplayName() : new TextComponent(uuid.toString());
+        source.sendSuccess(new TranslatableComponent("walkers.removeFromList", name), true);
+    }
+}

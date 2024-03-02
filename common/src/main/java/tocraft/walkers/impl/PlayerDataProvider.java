@@ -4,6 +4,9 @@ import net.minecraft.world.entity.LivingEntity;
 import org.jetbrains.annotations.Nullable;
 import tocraft.walkers.api.variant.ShapeType;
 
+import java.util.Optional;
+import java.util.UUID;
+
 public interface PlayerDataProvider {
 
     ShapeType<?> walkers$get2ndShape();
@@ -24,5 +27,7 @@ public interface PlayerDataProvider {
 
     boolean walkers$updateShapes(@Nullable LivingEntity shape);
 
-    ShapeType<?> walkers$getCurrentShapeType();
+    Optional<UUID> walkers$getVehiclePlayerUUID();
+
+    void walkers$setVehiclePlayerUUID(@Nullable UUID riddenPlayerID);
 }

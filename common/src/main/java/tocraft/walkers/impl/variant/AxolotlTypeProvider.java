@@ -1,8 +1,6 @@
 package tocraft.walkers.impl.variant;
 
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.entity.EntityType;
@@ -18,6 +16,7 @@ public class AxolotlTypeProvider extends TypeProvider<Axolotl> {
         return entity.getVariant().getId();
     }
 
+    @SuppressWarnings("ConstantConditions")
     @Override
     public Axolotl create(EntityType<Axolotl> type, Level world, int data) {
         Axolotl axolotl = new Axolotl(type, world);

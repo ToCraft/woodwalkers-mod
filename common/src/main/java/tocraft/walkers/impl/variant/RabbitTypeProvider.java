@@ -12,8 +12,8 @@ import tocraft.walkers.api.variant.TypeProvider;
 import java.util.Map;
 
 public class RabbitTypeProvider extends TypeProvider<Rabbit> {
-	
-	private static final Map<Integer, String> PREFIX_BY_ID = ImmutableMap
+
+    private static final Map<Integer, String> PREFIX_BY_ID = ImmutableMap
             .<Integer, String>builder()
             .put(0, "Brown")
             .put(1, "White")
@@ -51,7 +51,7 @@ public class RabbitTypeProvider extends TypeProvider<Rabbit> {
 
     @Override
     public Component modifyText(Rabbit entity, MutableComponent text) {
-    	int variant = getVariantData(entity);
+        int variant = getVariantData(entity);
         return new TextComponent(PREFIX_BY_ID.containsKey(variant) ? PREFIX_BY_ID.get(variant) + " " : "").append(text);
     }
 }

@@ -24,7 +24,7 @@ public class PlayerAbilities {
     }
 
     public static boolean canUseAbility(Player player) {
-        return ((PlayerDataProvider) player).walkers$getAbilityCooldown() <= 0;
+        return !player.isSpectator() && ((PlayerDataProvider) player).walkers$getAbilityCooldown() <= 0;
     }
 
     public static void setCooldown(Player player, int cooldown) {
