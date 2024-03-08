@@ -20,6 +20,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import tocraft.walkers.Walkers;
 import tocraft.walkers.api.PlayerHostility;
 import tocraft.walkers.api.PlayerShape;
+import tocraft.walkers.integrations.Integrations;
+import tocraft.walkers.integrations.impl.MobBattleModIntegration;
 
 @Mixin(NearestAttackableTargetGoal.class)
 public abstract class ActiveTargetGoalMixin extends TrackTargetGoalMixin {
@@ -30,7 +32,7 @@ public abstract class ActiveTargetGoalMixin extends TrackTargetGoalMixin {
     @Inject(method = "start", at = @At("HEAD"), cancellable = true)
     private void ignoreShapedPlayers(CallbackInfo ci) {
         if (Walkers.CONFIG.hostilesIgnoreHostileShapedPlayer && this.mob instanceof Enemy
-                && this.target instanceof Player player) {
+                && this.target instanceof Player player && Integrations.mightAttackInnocent(this.mob, player)) {
             LivingEntity shape = PlayerShape.getCurrentShape(player);
 
             if (shape != null) {
@@ -87,7 +89,7 @@ public abstract class ActiveTargetGoalMixin extends TrackTargetGoalMixin {
     protected void shape_shouldContinue(CallbackInfoReturnable<Boolean> cir) {
         // check cancelling for hostiles
         if (Walkers.CONFIG.hostilesIgnoreHostileShapedPlayer && Walkers.CONFIG.hostilesForgetNewHostileShapedPlayer
-                && this.mob instanceof Enemy && this.target instanceof Player player) {
+                && this.mob instanceof Enemy && this.target instanceof Player player && Integrations.mightAttackInnocent(this.mob, player)) {
             LivingEntity shape = PlayerShape.getCurrentShape(player);
 
             if (shape != null) {
