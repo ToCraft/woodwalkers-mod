@@ -4,6 +4,7 @@ import com.google.gson.*;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.JsonOps;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import dev.architectury.platform.Platform;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
@@ -45,6 +46,7 @@ public class TypeProviderDataManager extends SimpleJsonResourceReloadListener {
     protected static Map.Entry<EntityType<?>, TypeProvider<?>> typeProviderFromJson(ResourceLocation id, JsonObject json) {
         Codec<Map.Entry<EntityType<?>, TypeProvider<?>>> codec = RecordCodecBuilder.create((instance) -> instance.group(
                 ResourceLocation.CODEC.fieldOf("entity_type").forGetter(o -> Registry.ENTITY_TYPE.getKey(o.getKey())),
+                Codec.STRING.optionalFieldOf("required_mod", "").forGetter(o -> ""),
                 ResourceLocation.CODEC.optionalFieldOf("parent").forGetter(o -> Optional.of(Registry.ENTITY_TYPE.getKey(o.getKey()))),
                 Codec.STRING.optionalFieldOf("type_provider_class").forGetter(o -> Optional.of(o.getValue().getClass().getName())),
                 NBTTypeProvider.CODEC.optionalFieldOf("type_provider").forGetter(o -> {
@@ -53,7 +55,7 @@ public class TypeProviderDataManager extends SimpleJsonResourceReloadListener {
                     else
                         return Optional.empty();
                 })
-        ).apply(instance, instance.stable((entityType, parent, typeProviderClassOptional, typeProviderOptional) -> {
+        ).apply(instance, instance.stable((entityType, requiredMod, parent, typeProviderClassOptional, typeProviderOptional) -> {
             if (Registry.ENTITY_TYPE.containsKey(entityType)) {
                 TypeProvider<?> typeProvider;
                 if (parent.isPresent()) {
@@ -73,10 +75,10 @@ public class TypeProviderDataManager extends SimpleJsonResourceReloadListener {
                     return new SimpleEntry<>(Registry.ENTITY_TYPE.get(entityType), null);
                 }
                 return new SimpleEntry<>(Registry.ENTITY_TYPE.get(entityType), typeProvider);
-            } else {
+            } else if (requiredMod.isBlank() || Platform.isModLoaded(requiredMod)) {
                 Walkers.LOGGER.info("{}: EntityType not found for {}", TypeProviderDataManager.class.getSimpleName(), id);
-                return new SimpleEntry<>(null, null);
             }
+            return new SimpleEntry<>(null, null);
         })));
         return codec.parse(JsonOps.INSTANCE, json).getOrThrow(false, JsonParseException::new);
     }

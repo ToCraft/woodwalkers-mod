@@ -34,7 +34,7 @@ public class NBTTypeProvider<T extends LivingEntity> extends TypeProvider<T> {
 
     NBTTypeProvider(int fallback, Optional<Integer> range, List<NBTEntry<?>> nbtEntryList, Map<String, String> nameMap) {
         this(fallback, range.orElseGet(() -> {
-            switch (nbtEntryList.get(0).nbtType) {
+            switch (nbtEntryList.get(0).nbtType.toUpperCase()) {
                 case "BOOL", "BOOLEAN" -> {
                     return 1;
                 }

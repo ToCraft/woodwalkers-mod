@@ -22,6 +22,7 @@ import tocraft.walkers.api.WalkersTickHandlers;
 import tocraft.walkers.api.data.DataManager;
 import tocraft.walkers.api.platform.WalkersConfig;
 import tocraft.walkers.command.WalkersCommand;
+import tocraft.walkers.integrations.Integrations;
 import tocraft.walkers.mixin.ThreadedAnvilChunkStorageAccessor;
 import tocraft.walkers.network.ServerNetworking;
 import tocraft.walkers.registry.WalkersEntityTags;
@@ -54,6 +55,7 @@ public class Walkers {
         registerJoinSyncPacket();
         WalkersTickHandlers.initialize();
         DataManager.initialize();
+        Integrations.initialize();
     }
 
     public static void registerJoinSyncPacket() {

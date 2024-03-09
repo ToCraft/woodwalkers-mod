@@ -4,60 +4,12 @@ plugins {
     id "me.shedaniel.unified-publishing" version "0.1.+" apply false
 }
 
-architectury {
-    minecraft = rootProject.minecraft_version
-}
+apply from: "https://raw.githubusercontent.com/ToCraft/GradleMaster/main/main.gradle"
 
-subprojects {
-    apply plugin: "dev.architectury.loom"
-    apply plugin: "maven-publish"
-
-    loom {
-        silentMojangMappingsLicense()
-    }
-
-    dependencies {
-        minecraft "com.mojang:minecraft:${rootProject.minecraft_version}"
-        mappings loom.layered() {
-            officialMojangMappings()
-            parchment("org.parchmentmc.data:parchment-${rootProject.minecraft_version}:${rootProject.parchmentmc_mappings}@zip")
-        }
-    }
-}
-
-allprojects {
-    apply plugin: "java"
-    apply plugin: "architectury-plugin"
-
-    archivesBaseName = rootProject.archives_base_name
-    version = rootProject.mod_version
-    group = rootProject.maven_group
-
-    repositories {
-        // Add repositories to retrieve artifacts from in here.
-        // You should only use this when depending on other mods because
-        // Loom adds the essential maven repositories to download Minecraft and libraries from automatically.
-        // See https://docs.gradle.org/current/userguide/declaring_repositories.html
-        // for more information about repositories.      
-        maven { url "https://maven.parchmentmc.org" }
-        maven {
-            name = "tocraftMavenPublic"
-            url "https://maven.tocraft.dev/public"
-        }
-    }
-
-    tasks.withType(JavaCompile).configureEach {
-        options.encoding = "UTF-8"
-        options.release = 17
-    }
-
-    ext {
-        releaseChangelog = {
-            return new File("CHANGELOG.md").getText("UTF-8")
-        }
-    }
-
-    java {
-        withSourcesJar()
-    }
+ext {
+    mod_meta = [
+            minecraft_version   : minecraft_version, version: version,
+            architectury_version: architectury_version,
+            craftedcore_version : craftedcore_version,
+    ]
 }

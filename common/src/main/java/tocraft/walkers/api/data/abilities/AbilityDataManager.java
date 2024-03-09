@@ -4,6 +4,7 @@ import com.google.gson.*;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.JsonOps;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import dev.architectury.platform.Platform;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
@@ -43,9 +44,10 @@ public class AbilityDataManager extends SimpleJsonResourceReloadListener {
     protected static Map.Entry<EntityType<?>, ShapeAbility<?>> abilityEntryFromJson(JsonObject json) {
         Codec<Map.Entry<EntityType<?>, ShapeAbility<?>>> codec = RecordCodecBuilder.create((instance) -> instance.group(
                 ResourceLocation.CODEC.fieldOf("entity_type").forGetter(o -> Registry.ENTITY_TYPE.getKey(o.getKey())),
+                Codec.STRING.optionalFieldOf("required_mod", "").forGetter(o -> ""),
                 Codec.STRING.fieldOf("ability_class").forGetter(o -> o.getValue().getClass().getName())
-        ).apply(instance, instance.stable((entityType, shapeAbility) -> {
-            if (Registry.ENTITY_TYPE.containsKey(entityType)) {
+        ).apply(instance, instance.stable((entityType, requiredMod, shapeAbility) -> {
+            if ((requiredMod.isBlank() || Platform.isModLoaded(requiredMod)) && Registry.ENTITY_TYPE.containsKey(entityType)) {
                 try {
                     String abilityClassName = shapeAbility.contains(".") ? shapeAbility : DEFAULT_PACKAGE + "." + shapeAbility;
                     return new SimpleEntry<EntityType<?>, ShapeAbility<?>>(Registry.ENTITY_TYPE.get(entityType), Class.forName(abilityClassName).asSubclass(ShapeAbility.class).getDeclaredConstructor().newInstance());
@@ -53,10 +55,10 @@ public class AbilityDataManager extends SimpleJsonResourceReloadListener {
                          IllegalAccessException | NoSuchMethodException e) {
                     throw new RuntimeException(e);
                 }
-            } else {
+            } else if (requiredMod.isBlank() || Platform.isModLoaded(requiredMod)) {
                 Walkers.LOGGER.info("{}: EntityType not found for {}", TypeProviderDataManager.class.getSimpleName(), entityType);
-                return new SimpleEntry<>(null, null);
             }
+            return new SimpleEntry<>(null, null);
         })));
         return codec.parse(JsonOps.INSTANCE, json).getOrThrow(false, JsonParseException::new);
     }
