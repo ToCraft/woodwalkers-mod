@@ -38,3 +38,6 @@ run/
 /server/
 /logs/
 /.architectury-transformer/debug.log
+
+# Changelog
+extracted.CHANGELOG.md

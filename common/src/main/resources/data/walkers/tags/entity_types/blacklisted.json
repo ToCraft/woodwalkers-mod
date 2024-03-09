@@ -320,6 +320,10 @@
     {
       "id": "xercamusic:music_spirit",
       "required": false
+    },
+    {
+      "id": "dragonmounts:dragon",
+      "required": false
     }
   ]
 }
