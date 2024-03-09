@@ -1,3 +1,10 @@
+walkers 3.1
+================
+- add optional field "required_mod" to datapack variants & datapack abilities
+- fix crash with 3+ player
+- blacklist Dragon Mounts: Legacy - Dragon to prevent crashes
+- add support for MobBattleMod (Teams work now as hostile, will work when MobBattleMob upgrades to 1.20.2+, too)
+
 walkers 3.0
 ================
 First of all, many background fixes, most players won't notice. Furthermore, you can't use abilities as spectator anymore.
