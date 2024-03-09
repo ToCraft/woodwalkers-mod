@@ -16,13 +16,13 @@ import java.util.UUID;
 
 public class VehiclePackets {
     public static void handleSyncPacket(FriendlyByteBuf packet, NetworkManager.PacketContext context) {
+        CompoundTag tag = packet.readNbt();
 
-        if (context.getPlayer() != null) {
-            UUID sender = packet.readUUID();
+        if (context.getPlayer() != null && tag != null) {
+            UUID sender = tag.getUUID("senderID");
             Player commandSender = context.getPlayer().getCommandSenderWorld().getPlayerByUUID(sender);
             if (commandSender != null) {
-                CompoundTag tag = packet.readNbt();
-                UUID playerVehicleID = tag != null && tag.getBoolean("isRidingPlayer") ? tag.getUUID("playerVehicleID") : null;
+                UUID playerVehicleID = tag.getBoolean("isRidingPlayer") ? tag.getUUID("playerVehicleID") : null;
 
                 ((PlayerDataProvider) commandSender).walkers$setVehiclePlayerUUID(playerVehicleID);
             }
@@ -32,12 +32,12 @@ public class VehiclePackets {
     public static void sync(ServerPlayer player) {
         CompoundTag tag = new CompoundTag();
         boolean isRidingPlayer = player.getVehicle() instanceof ServerPlayer;
+        tag.putUUID("senderID", player.getUUID());
         tag.putBoolean("isRidingPlayer", isRidingPlayer);
 
         if (isRidingPlayer) tag.putUUID("playerVehicleID", player.getVehicle().getUUID());
 
         FriendlyByteBuf packet = new FriendlyByteBuf(Unpooled.buffer());
-        packet.writeUUID(player.getUUID());
         packet.writeNbt(tag);
 
         Int2ObjectMap<Object> trackers = ((ThreadedAnvilChunkStorageAccessor) (player.getLevel()).getChunkSource().chunkMap).getEntityMap();

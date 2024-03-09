@@ -4,6 +4,7 @@ import com.mojang.blaze3d.platform.InputConstants;
 import dev.architectury.event.events.client.ClientTickEvent;
 import dev.architectury.registry.client.keymappings.KeyMappingRegistry;
 import net.minecraft.client.KeyMapping;
+import net.minecraft.client.Minecraft;
 import org.lwjgl.glfw.GLFW;
 import tocraft.walkers.ability.AbilityOverlayRenderer;
 import tocraft.walkers.api.model.EntityArms;
@@ -15,7 +16,7 @@ public class WalkersClient {
     public static final KeyMapping UNLOCK_KEY = new KeyMapping("key.walkers_unlock", InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_U, "key.categories.walkers");
     public static final KeyMapping TRANSFORM_KEY = new KeyMapping("key.walkers", InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_G, "key.categories.walkers");
     public static final KeyMapping ABILITY_KEY = new KeyMapping("key.walkers_ability", InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_R, "key.categories.walkers");
-    public static final KeyMapping SPECIAL_TRANSFORM_KEY = new KeyMapping("key.walkers_special", InputConstants.Type.KEYSYM, GLFW.GLFW_FALSE, "key.categories.walkers");
+    public static final KeyMapping SPECIAL_TRANSFORM_KEY = new KeyMapping("key.walkers_special", InputConstants.UNKNOWN.getValue(), "key.categories.walkers");
 
     public void initialize() {
         KeyMappingRegistry.register(ABILITY_KEY);

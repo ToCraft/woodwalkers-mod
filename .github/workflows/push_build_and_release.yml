@@ -39,7 +39,7 @@ jobs:
       - name: Setup and Build with Gradle
         uses: gradle/gradle-build-action@v3
         with:
-          arguments: check build --stacktrace --no-daemon
+          arguments: check build --no-daemon
 
       - name: Setting mod version
         run: |
@@ -67,7 +67,13 @@ jobs:
           CURSEFORGE_TOKEN: ${{ secrets.CURSEFORGE_TOKEN }}
           MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
         with:
-          arguments: publish publishUnified --stacktrace --no-daemon
+          arguments: publish publishUnified --no-daemon
+      - name: Extract Changelog for GitHub
+        uses: gradle/gradle-build-action@v3
+        if: |
+          !contains(github.event.head_commit.message, '[release]') && github.event.inputs.release == 'true'
+        with:
+          arguments: extractNewestChangelog --no-daemon
       - name: Create version name for GitHub
         run: echo "version_name_git=$minecraft_version-$mod_version" >> $GITHUB_ENV
       - name: Create GitHub Tag
@@ -86,4 +92,4 @@ jobs:
             fabric/build/libs/${{ env.archives_base_name }}-${{ env.mod_version }}-fabric.jar,
             forge/build/libs/${{ env.archives_base_name }}-${{ env.mod_version }}-forge.jar,
             neoforge/build/libs/${{ env.archives_base_name }}-${{ env.mod_version }}-neoforge.jar
-          body_path: ${{ github.workspace }}/CHANGELOG.md
+          body_path: ${{ github.workspace }}/extracted.CHANGELOG.md
