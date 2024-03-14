@@ -1,4 +1,4 @@
-package tocraft.walkers.mixin.player;
+package tocraft.walkers.mixin.client.player;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;

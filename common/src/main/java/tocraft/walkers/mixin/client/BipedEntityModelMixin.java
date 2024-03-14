@@ -1,4 +1,4 @@
-package tocraft.walkers.mixin;
+package tocraft.walkers.mixin.client;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.fabricmc.api.EnvType;

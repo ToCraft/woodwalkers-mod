@@ -1,14 +1,9 @@
 package tocraft.walkers.mixin;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -17,11 +12,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import tocraft.walkers.api.PlayerShape;
 import tocraft.walkers.impl.DimensionsRefresher;
-import tocraft.walkers.impl.PlayerDataProvider;
 import tocraft.walkers.registry.WalkersEntityTags;
-
-import java.util.Optional;
-import java.util.UUID;
 
 @SuppressWarnings("ConstantConditions")
 @Mixin(Entity.class)
@@ -53,10 +44,6 @@ public abstract class EntityMixin implements DimensionsRefresher {
 
     @Shadow
     protected abstract float getEyeHeight(Pose pose, EntityDimensions dimensions);
-
-    @Shadow
-    @Nullable
-    private Entity vehicle;
 
     @Inject(method = "getBbWidth", at = @At("HEAD"), cancellable = true)
     private void getBbWidth(CallbackInfoReturnable<Float> cir) {
@@ -124,16 +111,5 @@ public abstract class EntityMixin implements DimensionsRefresher {
     private void goThroughBlocks(CallbackInfo ci) {
         if ((Object) this instanceof Player player && PlayerShape.getCurrentShape(player) != null && PlayerShape.getCurrentShape(player).getType().is(WalkersEntityTags.FALL_THROUGH_BLOCKS))
             player.noPhysics = true;
-    }
-
-    @Environment(EnvType.CLIENT)
-    @Inject(method = "getVehicle", at = @At("RETURN"), cancellable = true)
-    private void getClientVehicle(CallbackInfoReturnable<Entity> cir) {
-        if ((Object) this instanceof AbstractClientPlayer clientPlayer && cir.getReturnValue() == null) {
-            Optional<UUID> vehiclePlayerID = ((PlayerDataProvider) clientPlayer).walkers$getVehiclePlayerUUID();
-            if (vehiclePlayerID.isPresent() && Minecraft.getInstance().isLocalPlayer(vehiclePlayerID.get())) {
-                cir.setReturnValue(Minecraft.getInstance().player);
-            }
-        }
     }
 }
