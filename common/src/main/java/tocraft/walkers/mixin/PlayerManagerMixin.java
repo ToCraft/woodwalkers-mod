@@ -31,21 +31,8 @@ public class PlayerManagerMixin {
                         .setBaseValue(Math.min(Walkers.CONFIG.maxHealth, shape.getMaxHealth()));
                 player.setHealth(player.getMaxHealth());
             }
-            // Re-sync attack damage for shapes
-            if (Walkers.CONFIG.scalingAttackDamage) {
-                // get shape attack damage, return 1D if value is lower than max or not existing
-                double shapeAttackDamage = 1D;
-                try {
-                    shapeAttackDamage = Math.max(shape.getAttribute(Attributes.ATTACK_DAMAGE).getBaseValue(),
-                            shapeAttackDamage);
-                } catch (Exception ignored) {
-                }
-                player.getAttribute(Attributes.ATTACK_DAMAGE)
-                        .setBaseValue(Math.min(Walkers.CONFIG.maxAttackDamage, shapeAttackDamage));
-            }
             // sync max health & attack damage with clients
-            if ((Walkers.CONFIG.scalingHealth || Walkers.CONFIG.percentScalingHealth)
-                    || Walkers.CONFIG.scalingAttackDamage) {
+            if ((Walkers.CONFIG.scalingHealth || Walkers.CONFIG.percentScalingHealth)) {
                 player.connection.send(new ClientboundUpdateAttributesPacket(player.getId(),
                         player.getAttributes().getSyncableAttributes()));
             }
