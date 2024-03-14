@@ -1,4 +1,4 @@
-package tocraft.walkers.mixin;
+package tocraft.walkers.mixin.client;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.fabricmc.api.EnvType;
@@ -18,7 +18,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import tocraft.walkers.api.PlayerShape;
-import tocraft.walkers.mixin.accessor.EntityShadowAccessor;
+import tocraft.walkers.mixin.client.accessor.EntityShadowAccessor;
 
 @Environment(EnvType.CLIENT)
 @Mixin(EntityRenderDispatcher.class)

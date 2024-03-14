@@ -99,12 +99,7 @@ public class ShapeType<T extends LivingEntity> {
         return new ShapeType<>(entityType, variant);
     }
 
-    @Deprecated
     public static List<ShapeType<?>> getAllTypes(Level world) {
-        return getAllTypes(world, true);
-    }
-
-    public static List<ShapeType<?>> getAllTypes(Level world, boolean includeVariants) {
         if (LIVING_TYPE_CASH.isEmpty()) {
             for (EntityType<?> type : Registry.ENTITY_TYPE) {
                 try {
@@ -124,7 +119,7 @@ public class ShapeType<T extends LivingEntity> {
             if (!type.is(WalkersEntityTags.BLACKLISTED)) {
                 // check variants
                 TypeProvider<?> variant = TypeProviderRegistry.getProvider(type);
-                if (variant != null && includeVariants) {
+                if (variant != null) {
                     for (int i = 0; i <= variant.getRange(); i++) {
                         types.add(new ShapeType<>(type, i));
                     }
@@ -135,6 +130,19 @@ public class ShapeType<T extends LivingEntity> {
         }
 
         return types;
+    }
+
+    @Deprecated
+    public static List<ShapeType<?>> getAllTypes(Level world, boolean includeVariants) {
+        List<ShapeType<?>> types = getAllTypes(world);
+        List<ShapeType<?>> filteredTypes = new ArrayList<>();
+        if (!includeVariants) {
+            for (ShapeType<?> type : types) {
+                if (filteredTypes.stream().noneMatch(fType -> fType.getEntityType() == type.getEntityType()))
+                    filteredTypes.add(type);
+            }
+        }
+        return filteredTypes;
     }
 
     public CompoundTag writeCompound() {

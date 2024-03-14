@@ -1,4 +1,4 @@
-package tocraft.walkers.mixin;
+package tocraft.walkers.mixin.client;
 
 import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -43,7 +43,7 @@ import tocraft.walkers.api.model.EntityUpdaters;
 import tocraft.walkers.impl.PlayerDataProvider;
 import tocraft.walkers.mixin.accessor.EntityAccessor;
 import tocraft.walkers.mixin.accessor.LivingEntityAccessor;
-import tocraft.walkers.mixin.accessor.LivingEntityRendererAccessor;
+import tocraft.walkers.mixin.client.accessor.LivingEntityRendererAccessor;
 
 import java.util.Optional;
 import java.util.UUID;

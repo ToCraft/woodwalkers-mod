@@ -1,4 +1,4 @@
-package tocraft.walkers.mixin.player;
+package tocraft.walkers.mixin.client.player;
 
 import com.mojang.util.UUIDTypeAdapter;
 import net.fabricmc.api.EnvType;

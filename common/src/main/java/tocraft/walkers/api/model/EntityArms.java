@@ -9,7 +9,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import org.jetbrains.annotations.Nullable;
 import tocraft.craftedcore.math.math;
-import tocraft.walkers.mixin.accessor.*;
+import tocraft.walkers.mixin.client.accessor.*;
 
 import java.util.LinkedHashMap;
 import java.util.Map;

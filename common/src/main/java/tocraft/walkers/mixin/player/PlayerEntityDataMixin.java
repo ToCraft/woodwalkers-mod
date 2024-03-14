@@ -217,17 +217,6 @@ public abstract class PlayerEntityDataMixin extends LivingEntity implements Play
                 else
                     player.setHealth(Math.min(player.getHealth(), player.getMaxHealth()));
             }
-            if (Walkers.CONFIG.scalingAttackDamage && attackAttribute != null) {
-                // get shape attack damage, return 1D if value is lower or not existing
-                double shapeAttackDamage = 1D;
-                try {
-                    shapeAttackDamage = Math.max(shape.getAttribute(Attributes.ATTACK_DAMAGE).getBaseValue(),
-                            shapeAttackDamage);
-                } catch (Exception ignored) {
-
-                }
-                attackAttribute.setBaseValue(Math.min(Walkers.CONFIG.maxAttackDamage, shapeAttackDamage));
-            }
         }
 
         // If the shape is null (going back to player), set the player's base health
@@ -237,10 +226,6 @@ public abstract class PlayerEntityDataMixin extends LivingEntity implements Play
 
             if (Walkers.CONFIG.scalingHealth && healthAttribute != null) {
                 healthAttribute.setBaseValue(20);
-            }
-
-            if (Walkers.CONFIG.scalingAttackDamage && attackAttribute != null) {
-                attackAttribute.setBaseValue(1D);
             }
 
             // Clear health value if needed
