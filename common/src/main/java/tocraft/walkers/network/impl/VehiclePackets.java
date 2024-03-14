@@ -37,13 +37,14 @@ public class VehiclePackets {
 
         if (isRidingPlayer) tag.putUUID("playerVehicleID", player.getVehicle().getUUID());
 
-        FriendlyByteBuf packet = new FriendlyByteBuf(Unpooled.buffer());
-        packet.writeNbt(tag);
-
         Int2ObjectMap<Object> trackers = ((ThreadedAnvilChunkStorageAccessor) (player.serverLevel()).getChunkSource().chunkMap).getEntityMap();
         Object tracking = trackers.get(player.getId());
         // Send to all clients
         if (tracking != null)
-            ((EntityTrackerAccessor) tracking).getSeenBy().forEach(listener -> NetworkManager.sendToPlayer(listener.getPlayer(), NetworkHandler.CHANGE_VEHICLE_STATE, packet));
+            ((EntityTrackerAccessor) tracking).getSeenBy().forEach(listener -> {
+                FriendlyByteBuf packet = new FriendlyByteBuf(Unpooled.buffer());
+                packet.writeNbt(tag);
+                NetworkManager.sendToPlayer(listener.getPlayer(), NetworkHandler.CHANGE_VEHICLE_STATE, packet);
+            });
     }
 }
