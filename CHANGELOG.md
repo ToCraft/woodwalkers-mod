@@ -1,3 +1,8 @@
+walkers 3.2
+================
+- fix crash with multiple clients
+- improve attacking mechanics (e.g. shapes like the iron golem work properly now)
+
 walkers 3.1
 ================
 - add optional field "required_mod" to datapack variants & datapack abilities

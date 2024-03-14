@@ -67,7 +67,7 @@ jobs:
           CURSEFORGE_TOKEN: ${{ secrets.CURSEFORGE_TOKEN }}
           MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
         with:
-          arguments: publish publishUnified --no-daemon
+          arguments: publish curseforge modrinth --no-daemon
       - name: Extract Changelog for GitHub
         uses: gradle/gradle-build-action@v3
         if: |
