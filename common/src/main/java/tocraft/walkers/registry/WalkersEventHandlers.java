@@ -81,6 +81,10 @@ public class WalkersEventHandlers {
                     Walkers.LOGGER.warn("Please merge to the new skills system. Found " + WalkersEntityTags.FALL_THROUGH_BLOCKS + " for " + entityType);
                     SkillRegistry.register((EntityType<LivingEntity>) entityType, new NoPhysicsSkill<>());
                 }
+                if (entityType.is(WalkersEntityTags.CANT_SWIM)) {
+                    Walkers.LOGGER.warn("Please merge to the new skills system. Found " + WalkersEntityTags.CANT_SWIM + " for " + entityType);
+                    SkillRegistry.register((EntityType<LivingEntity>) entityType, new CantSwimSkill<>());
+                }
             }
         });
     }

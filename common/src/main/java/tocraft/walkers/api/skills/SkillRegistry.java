@@ -42,6 +42,7 @@ public class SkillRegistry {
         registerCodec(RiderSkill.ID, RiderSkill.CODEC);
         registerCodec(StandOnFluidSkill.ID, StandOnFluidSkill.CODEC);
         registerCodec(NoPhysicsSkill.ID, NoPhysicsSkill.CODEC);
+        registerCodec(CantSwimSkill.ID, CantSwimSkill.CODEC);
         // register skills
         // mob effects
         register(Bat.class, new MobEffectSkill<>(new MobEffectInstance(MobEffects.NIGHT_VISION, 100000, 0, false, false)));
@@ -82,6 +83,8 @@ public class SkillRegistry {
         register(Strider.class, new StandOnFluidSkill<>(FluidTags.LAVA));
         // fall through blocks
         register(Vex.class, new NoPhysicsSkill<>());
+        // can't swim
+        register(IronGolem.class, new CantSwimSkill<>());
     }
 
     /**
