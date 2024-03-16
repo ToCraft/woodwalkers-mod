@@ -12,6 +12,8 @@ import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.MobSpawnType;
+import net.minecraft.world.entity.animal.Fox;
+import net.minecraft.world.entity.animal.Wolf;
 import net.minecraft.world.entity.animal.horse.AbstractHorse;
 import net.minecraft.world.entity.animal.horse.SkeletonHorse;
 import net.minecraft.world.entity.animal.horse.ZombieHorse;
@@ -26,6 +28,7 @@ import tocraft.walkers.api.skills.SkillRegistry;
 import tocraft.walkers.api.skills.impl.BurnInDaylightSkill;
 import tocraft.walkers.api.skills.impl.FlyingSkill;
 import tocraft.walkers.api.skills.impl.MobEffectSkill;
+import tocraft.walkers.api.skills.impl.PreySkill;
 import tocraft.walkers.impl.PlayerDataProvider;
 
 public class WalkersEventHandlers {
@@ -39,7 +42,7 @@ public class WalkersEventHandlers {
         registerHandlerForDeprecatedEntityTags();
     }
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({"unchecked", "deprecation"})
     public static void registerHandlerForDeprecatedEntityTags() {
         LifecycleEvent.SERVER_LEVEL_LOAD.register((serverLevel) -> {
             for (EntityType<?> entityType : BuiltInRegistries.ENTITY_TYPE) {
@@ -51,6 +54,12 @@ public class WalkersEventHandlers {
                 }
                 if (entityType.is(WalkersEntityTags.SLOW_FALLING)) {
                     SkillRegistry.register((EntityType<LivingEntity>) entityType, new MobEffectSkill<>(new MobEffectInstance(MobEffects.SLOW_FALLING, 0, 0), true));
+                }
+                if (entityType.is(WalkersEntityTags.WOLF_PREY)) {
+                    SkillRegistry.register((EntityType<LivingEntity>) entityType, (PreySkill<LivingEntity>) PreySkill.ofHunterClass(Wolf.class));
+                }
+                if (entityType.is(WalkersEntityTags.FOX_PREY)) {
+                    SkillRegistry.register((EntityType<LivingEntity>) entityType, (PreySkill<LivingEntity>) PreySkill.ofHunterClass(Fox.class));
                 }
             }
         });

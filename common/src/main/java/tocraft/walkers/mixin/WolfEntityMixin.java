@@ -18,7 +18,10 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import tocraft.walkers.Walkers;
 import tocraft.walkers.api.PlayerShape;
-import tocraft.walkers.registry.WalkersEntityTags;
+import tocraft.walkers.api.skills.SkillRegistry;
+import tocraft.walkers.api.skills.impl.PreySkill;
+
+import java.util.function.Predicate;
 
 @SuppressWarnings({})
 @Mixin(Wolf.class)
@@ -50,7 +53,19 @@ public abstract class WolfEntityMixin extends TamableAnimal {
                         return false;
                     }
 
-                    return shape != null && shape.getType().is(WalkersEntityTags.WOLF_PREY);
+                    boolean bool = false;
+                    if (shape != null) {
+                        for (PreySkill<?> preySkill : SkillRegistry.get(shape, PreySkill.ID).stream().map(entry -> (PreySkill<?>) entry).toList()) {
+                            for (Predicate<LivingEntity> hunterPredicate : preySkill.hunter) {
+                                Walkers.LOGGER.warn("" + bool);
+                                if (hunterPredicate.test((Wolf) (Object) this)) bool = true;
+                                break;
+                            }
+                            if (bool) break;
+                        }
+                    }
+
+                    return bool;
                 }));
     }
 
