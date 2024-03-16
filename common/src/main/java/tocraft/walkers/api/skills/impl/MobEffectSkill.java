@@ -28,7 +28,11 @@ public class MobEffectSkill<E extends LivingEntity> extends ShapeSkill<E> {
     public final int amountOfEntitiesToApplyTo;
 
     public MobEffectSkill(MobEffectInstance mobEffectInstance) {
-        this(mobEffectInstance, false, true, -1, -1, -1);
+        this(mobEffectInstance, false);
+    }
+
+    public MobEffectSkill(MobEffectInstance mobEffectInstance, boolean showInInventory) {
+        this(mobEffectInstance, showInInventory, true, -1, -1, -1);
     }
 
     /**

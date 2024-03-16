@@ -7,6 +7,8 @@ import dev.architectury.event.events.common.LifecycleEvent;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.world.Difficulty;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.MobSpawnType;
@@ -23,6 +25,7 @@ import tocraft.walkers.api.PlayerShape;
 import tocraft.walkers.api.skills.SkillRegistry;
 import tocraft.walkers.api.skills.impl.BurnInDaylightSkill;
 import tocraft.walkers.api.skills.impl.FlyingSkill;
+import tocraft.walkers.api.skills.impl.MobEffectSkill;
 import tocraft.walkers.impl.PlayerDataProvider;
 
 public class WalkersEventHandlers {
@@ -45,6 +48,9 @@ public class WalkersEventHandlers {
                 }
                 if (entityType.is(WalkersEntityTags.FLYING)) {
                     SkillRegistry.register((EntityType<LivingEntity>) entityType, new FlyingSkill<>());
+                }
+                if (entityType.is(WalkersEntityTags.SLOW_FALLING)) {
+                    SkillRegistry.register((EntityType<LivingEntity>) entityType, new MobEffectSkill<>(new MobEffectInstance(MobEffects.SLOW_FALLING, 0, 0), true));
                 }
             }
         });
