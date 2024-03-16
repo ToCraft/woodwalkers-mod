@@ -1,0 +1,77 @@
+package tocraft.walkers.api.data.skills;
+
+import com.google.gson.*;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.DataResult;
+import com.mojang.serialization.JsonOps;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
+import dev.architectury.platform.Platform;
+import net.minecraft.Util;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.packs.resources.ResourceManager;
+import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener;
+import net.minecraft.util.profiling.ProfilerFiller;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import tocraft.walkers.Walkers;
+import tocraft.walkers.api.skills.ShapeSkill;
+import tocraft.walkers.api.skills.SkillRegistry;
+
+import java.util.*;
+import java.util.function.Function;
+
+public class SkillDataManager extends SimpleJsonResourceReloadListener {
+    public static final Gson GSON = new GsonBuilder().registerTypeAdapter(ResourceLocation.class, new ResourceLocation.Serializer()).create();
+
+    public SkillDataManager() {
+        super(GSON, Walkers.MODID + "/skills");
+    }
+
+    @Override
+    protected void apply(Map<ResourceLocation, JsonElement> map, ResourceManager resourceManager, ProfilerFiller profiler) {
+        for (Map.Entry<ResourceLocation, JsonElement> mapEntry : map.entrySet()) {
+            Map.Entry<EntityType<?>, List<? extends ShapeSkill<?>>> convertedEntry = skillEntryFromJson(mapEntry.getValue().getAsJsonObject());
+
+            if (convertedEntry != null) {
+                for (ShapeSkill<?> shapeSkill : convertedEntry.getValue()) {
+                    SkillRegistry.register((EntityType<LivingEntity>) convertedEntry.getKey(), (ShapeSkill<LivingEntity>) shapeSkill);
+                }
+
+                Walkers.LOGGER.info("{}: {} registered for {}", getClass().getSimpleName(), convertedEntry.getKey(), convertedEntry.getValue());
+            }
+        }
+    }
+
+    protected static Map.Entry<EntityType<?>, List<? extends ShapeSkill<?>>> skillEntryFromJson(JsonObject json) {
+        Codec<Map.Entry<EntityType<?>, List<? extends ShapeSkill<?>>>> codec = RecordCodecBuilder.create((instance) -> instance.group(
+                ResourceLocation.CODEC.fieldOf("entity_type").forGetter(o -> BuiltInRegistries.ENTITY_TYPE.getKey(o.getKey())),
+                Codec.STRING.optionalFieldOf("required_mod", "").forGetter(o -> ""),
+                Codec.list(byNameCodec()).fieldOf("skills").forGetter(o -> new ArrayList<>())
+        ).apply(instance, instance.stable((entityType, requiredMod, shapeSkills) -> {
+            if (requiredMod.isBlank() || Platform.isModLoaded(requiredMod)) {
+                return new AbstractMap.SimpleEntry<>(BuiltInRegistries.ENTITY_TYPE.get(entityType), shapeSkills);
+            } else {
+                return new AbstractMap.SimpleEntry<>(null, null);
+            }
+        })));
+        Map.Entry<EntityType<?>, List<? extends ShapeSkill<?>>> entry = Util.getOrThrow(codec.parse(JsonOps.INSTANCE, json), JsonParseException::new);
+        if (entry.getValue() == null || entry.getKey() == null) {
+            return null;
+        } else {
+            return entry;
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    private static Codec<? extends ShapeSkill<?>> byNameCodec() {
+        return ResourceLocation.CODEC.flatXmap(
+                resourceLocation -> (DataResult) Optional.ofNullable(SkillRegistry.getSkillCodec(resourceLocation))
+                        .map(DataResult::success)
+                        .orElseGet(() -> DataResult.error(() -> "Unknown shape skill: " + resourceLocation)),
+                object -> Optional.ofNullable(SkillRegistry.getSkillId((ShapeSkill<?>) object))
+                        .map(DataResult::success)
+                        .orElseGet(() -> DataResult.error(() -> "Unknown shape skill:" + object))
+        ).dispatchStable(object -> ((ShapeSkill<?>) object).codec(), Function.identity());
+    }
+}
