@@ -22,6 +22,7 @@ import tocraft.walkers.api.PlayerHostility;
 import tocraft.walkers.api.PlayerShape;
 import tocraft.walkers.api.skills.SkillRegistry;
 import tocraft.walkers.api.skills.impl.BurnInDaylightSkill;
+import tocraft.walkers.api.skills.impl.FlyingSkill;
 import tocraft.walkers.impl.PlayerDataProvider;
 
 public class WalkersEventHandlers {
@@ -41,6 +42,9 @@ public class WalkersEventHandlers {
             for (EntityType<?> entityType : BuiltInRegistries.ENTITY_TYPE) {
                 if (entityType.is(WalkersEntityTags.BURNS_IN_DAYLIGHT)) {
                     SkillRegistry.register((EntityType<LivingEntity>) entityType, new BurnInDaylightSkill<>());
+                }
+                if (entityType.is(WalkersEntityTags.FLYING)) {
+                    SkillRegistry.register((EntityType<LivingEntity>) entityType, new FlyingSkill<>());
                 }
             }
         });

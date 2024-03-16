@@ -22,6 +22,7 @@ import tocraft.walkers.api.WalkersTickHandlers;
 import tocraft.walkers.api.data.DataManager;
 import tocraft.walkers.api.platform.WalkersConfig;
 import tocraft.walkers.api.skills.SkillRegistry;
+import tocraft.walkers.api.skills.impl.FlyingSkill;
 import tocraft.walkers.command.WalkersCommand;
 import tocraft.walkers.integrations.Integrations;
 import tocraft.walkers.mixin.ThreadedAnvilChunkStorageAccessor;
@@ -87,7 +88,7 @@ public class Walkers {
         LivingEntity shape = PlayerShape.getCurrentShape(player);
 
         if (shape != null && Walkers.CONFIG.enableFlight
-                && (shape.getType().is(WalkersEntityTags.FLYING) || shape instanceof FlyingMob)) {
+                && (SkillRegistry.has(shape, FlyingSkill.ID) || shape instanceof FlyingMob)) {
             List<String> requiredAdvancements = Walkers.CONFIG.advancementsRequiredForFlight;
 
             // requires at least 1 advancement, check if player has them

@@ -29,8 +29,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import tocraft.walkers.Walkers;
 import tocraft.walkers.api.PlayerShape;
-import tocraft.walkers.api.skills.ShapeSkill;
 import tocraft.walkers.api.skills.SkillRegistry;
+import tocraft.walkers.api.skills.impl.FlyingSkill;
 import tocraft.walkers.api.skills.impl.MobEffectSkill;
 import tocraft.walkers.impl.NearbySongAccessor;
 import tocraft.walkers.mixin.accessor.LivingEntityAccessor;
@@ -54,7 +54,14 @@ public abstract class LivingEntityMixin extends Entity implements NearbySongAcce
             LivingEntity shape = PlayerShape.getCurrentShape(player);
 
             if (shape != null) {
-                if (!this.isShiftKeyDown() && shape.getType().is(WalkersEntityTags.SLOW_FALLING)) {
+                boolean bool = false;
+                for (FlyingSkill<?> flyingSkill : SkillRegistry.get(shape, FlyingSkill.ID).stream().map(skill -> (FlyingSkill<?>) skill).toList()) {
+                    if (flyingSkill.slowFalling) {
+                        bool = true;
+                        break;
+                    }
+                }
+                if (!this.isShiftKeyDown() && (shape.getType().is(WalkersEntityTags.SLOW_FALLING) || bool)) {
                     return true;
                 }
             }
