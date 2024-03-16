@@ -44,50 +44,51 @@ public class SkillRegistry {
         registerCodec(NoPhysicsSkill.ID, NoPhysicsSkill.CODEC);
         registerCodec(CantSwimSkill.ID, CantSwimSkill.CODEC);
         registerCodec(UndrownableSkill.ID, UndrownableSkill.CODEC);
+        registerCodec(SlowFallingSkill.ID, SlowFallingSkill.CODEC);
         // register skills
         // mob effects
-        register(Bat.class, new MobEffectSkill<>(new MobEffectInstance(MobEffects.NIGHT_VISION, 100000, 0, false, false)));
+        registerByClass(Bat.class, new MobEffectSkill<>(new MobEffectInstance(MobEffects.NIGHT_VISION, 100000, 0, false, false)));
         // burn in daylight
-        register(Zombie.class, new BurnInDaylightSkill<>());
-        register(Skeleton.class, new BurnInDaylightSkill<>());
-        register(Stray.class, new BurnInDaylightSkill<>());
-        register(Phantom.class, new BurnInDaylightSkill<>());
+        registerByClass(Zombie.class, new BurnInDaylightSkill<>());
+        registerByClass(Skeleton.class, new BurnInDaylightSkill<>());
+        registerByClass(Stray.class, new BurnInDaylightSkill<>());
+        registerByClass(Phantom.class, new BurnInDaylightSkill<>());
         // flying
-        register(Allay.class, new FlyingSkill<>());
-        register(Bat.class, new FlyingSkill<>());
-        register(Bee.class, new FlyingSkill<>());
-        register(Blaze.class, new FlyingSkill<>());
-        register(EnderDragon.class, new FlyingSkill<>());
-        register(FlyingMob.class, new FlyingSkill<>());
-        register(Parrot.class, new FlyingSkill<>());
-        register(Vex.class, new FlyingSkill<>());
-        register(WitherBoss.class, new FlyingSkill<>());
+        registerByClass(Allay.class, new FlyingSkill<>());
+        registerByClass(Bat.class, new FlyingSkill<>());
+        registerByClass(Bee.class, new FlyingSkill<>());
+        registerByClass(Blaze.class, new FlyingSkill<>());
+        registerByClass(EnderDragon.class, new FlyingSkill<>());
+        registerByClass(FlyingMob.class, new FlyingSkill<>());
+        registerByClass(Parrot.class, new FlyingSkill<>());
+        registerByClass(Vex.class, new FlyingSkill<>());
+        registerByClass(WitherBoss.class, new FlyingSkill<>());
         // wolf prey
-        register(Bat.class, (PreySkill<Bat>) PreySkill.ofHunterClass(Wolf.class));
-        register(Fox.class, (PreySkill<Fox>) PreySkill.ofHunterClass(Wolf.class));
-        register(Sheep.class, (PreySkill<Sheep>) PreySkill.ofHunterClass(Wolf.class));
-        register(Skeleton.class, (PreySkill<Skeleton>) PreySkill.ofHunterClass(Wolf.class));
-        register(Parrot.class, (PreySkill<Parrot>) PreySkill.ofHunterClass(Wolf.class));
+        registerByClass(Bat.class, (PreySkill<Bat>) PreySkill.ofHunterClass(Wolf.class));
+        registerByClass(Fox.class, (PreySkill<Fox>) PreySkill.ofHunterClass(Wolf.class));
+        registerByClass(Sheep.class, (PreySkill<Sheep>) PreySkill.ofHunterClass(Wolf.class));
+        registerByClass(Skeleton.class, (PreySkill<Skeleton>) PreySkill.ofHunterClass(Wolf.class));
+        registerByClass(Parrot.class, (PreySkill<Parrot>) PreySkill.ofHunterClass(Wolf.class));
         // fox prey
-        register(Chicken.class, (PreySkill<Chicken>) PreySkill.ofHunterClass(Fox.class));
-        register(Rabbit.class, (PreySkill<Rabbit>) PreySkill.ofHunterClass(Fox.class));
-        register(entity -> entity instanceof Turtle && entity.isBaby(), PreySkill.ofHunterClass(Fox.class));
+        registerByClass(Chicken.class, (PreySkill<Chicken>) PreySkill.ofHunterClass(Fox.class));
+        registerByClass(Rabbit.class, (PreySkill<Rabbit>) PreySkill.ofHunterClass(Fox.class));
+        registerByPredicate(entity -> entity instanceof Turtle && entity.isBaby(), PreySkill.ofHunterClass(Fox.class));
         // hurt by high temperature
-        register(SnowGolem.class, new TemperatureSkill<>());
+        registerByClass(SnowGolem.class, new TemperatureSkill<>());
         // ravager riding
-        register(Evoker.class, (RiderSkill<Evoker>) RiderSkill.ofRideableClass(Ravager.class));
-        register(Pillager.class, (RiderSkill<Pillager>) RiderSkill.ofRideableClass(Ravager.class));
-        register(Vindicator.class, (RiderSkill<Vindicator>) RiderSkill.ofRideableClass(Ravager.class));
+        registerByClass(Evoker.class, (RiderSkill<Evoker>) RiderSkill.ofRideableClass(Ravager.class));
+        registerByClass(Pillager.class, (RiderSkill<Pillager>) RiderSkill.ofRideableClass(Ravager.class));
+        registerByClass(Vindicator.class, (RiderSkill<Vindicator>) RiderSkill.ofRideableClass(Ravager.class));
         // Zombie Horse and Skeleton Horse riding
-        register(entity -> entity instanceof Enemy, new RiderSkill<>(List.of(rideable -> rideable instanceof AbstractHorse && rideable instanceof Enemy)));
+        registerByPredicate(entity -> entity instanceof Enemy, new RiderSkill<>(List.of(rideable -> rideable instanceof AbstractHorse && rideable instanceof Enemy)));
         // lava walking
-        register(Strider.class, new StandOnFluidSkill<>(FluidTags.LAVA));
+        registerByClass(Strider.class, new StandOnFluidSkill<>(FluidTags.LAVA));
         // fall through blocks
-        register(Vex.class, new NoPhysicsSkill<>());
+        registerByClass(Vex.class, new NoPhysicsSkill<>());
         // can't swim
-        register(IronGolem.class, new CantSwimSkill<>());
+        registerByClass(IronGolem.class, new CantSwimSkill<>());
         // undrownable
-        register(IronGolem.class, new UndrownableSkill<>());
+        registerByClass(IronGolem.class, new UndrownableSkill<>());
     }
 
     /**
@@ -117,12 +118,12 @@ public class SkillRegistry {
     }
 
 
-    public static <A extends LivingEntity> void register(EntityType<A> type, ShapeSkill<A> skill) {
-        register(livingEntity -> type.equals(livingEntity.getType()), skill);
+    public static <A extends LivingEntity> void registerByType(EntityType<A> type, ShapeSkill<A> skill) {
+        registerByPredicate(livingEntity -> type.equals(livingEntity.getType()), skill);
     }
 
-    public static <A extends LivingEntity> void register(Class<A> entityClass, ShapeSkill<A> skill) {
-        register(entityClass::isInstance, skill);
+    public static <A extends LivingEntity> void registerByClass(Class<A> entityClass, ShapeSkill<A> skill) {
+        registerByPredicate(entityClass::isInstance, skill);
     }
 
     /**
@@ -131,7 +132,7 @@ public class SkillRegistry {
      * @param entityPredicate this should only be true, if the entity is the correct class for the ability!
      * @param skill           your {@link ShapeAbility}
      */
-    public static void register(Predicate<LivingEntity> entityPredicate, ShapeSkill<?> skill) {
+    public static void registerByPredicate(Predicate<LivingEntity> entityPredicate, ShapeSkill<?> skill) {
         skills.put(entityPredicate, skill);
     }
 

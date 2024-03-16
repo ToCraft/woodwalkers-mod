@@ -37,7 +37,7 @@ public class SkillDataManager extends SimpleJsonResourceReloadListener {
             if (!skillMap.isEmpty()) {
                 for (Map.Entry<EntityType<?>, List<? extends ShapeSkill<?>>> entitySkills : skillMap.entrySet()) {
                     for (ShapeSkill<?> shapeSkill : entitySkills.getValue()) {
-                        SkillRegistry.register((EntityType<LivingEntity>) entitySkills.getKey(), (ShapeSkill<LivingEntity>) shapeSkill);
+                        SkillRegistry.registerByType((EntityType<LivingEntity>) entitySkills.getKey(), (ShapeSkill<LivingEntity>) shapeSkill);
 
                     }
                     Walkers.LOGGER.info("{}: {} registered for {}", getClass().getSimpleName(), entitySkills.getKey(), entitySkills.getValue());

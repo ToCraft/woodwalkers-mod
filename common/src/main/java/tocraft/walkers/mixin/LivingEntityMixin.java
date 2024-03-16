@@ -29,10 +29,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import tocraft.walkers.Walkers;
 import tocraft.walkers.api.PlayerShape;
 import tocraft.walkers.api.skills.SkillRegistry;
-import tocraft.walkers.api.skills.impl.FlyingSkill;
-import tocraft.walkers.api.skills.impl.MobEffectSkill;
-import tocraft.walkers.api.skills.impl.StandOnFluidSkill;
-import tocraft.walkers.api.skills.impl.UndrownableSkill;
+import tocraft.walkers.api.skills.impl.*;
 import tocraft.walkers.impl.NearbySongAccessor;
 import tocraft.walkers.mixin.accessor.LivingEntityAccessor;
 import tocraft.walkers.registry.WalkersEntityTags;
@@ -62,7 +59,7 @@ public abstract class LivingEntityMixin extends Entity implements NearbySongAcce
                         break;
                     }
                 }
-                if (!this.isShiftKeyDown() && (shape.getType().is(WalkersEntityTags.SLOW_FALLING) || bool)) {
+                if (!this.isShiftKeyDown() && (shape.getType().is(WalkersEntityTags.SLOW_FALLING) || bool || SkillRegistry.has(shape, SlowFallingSkill.ID))) {
                     return true;
                 }
             }

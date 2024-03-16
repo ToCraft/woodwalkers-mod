@@ -56,7 +56,7 @@ public class WalkersEventHandlers {
                 }
                 if (entityType.is(WalkersEntityTags.SLOW_FALLING)) {
                     Walkers.LOGGER.warn("Please merge to the new skills system. Found " + WalkersEntityTags.SLOW_FALLING + " for " + entityType);
-                    SkillRegistry.registerByType((EntityType<LivingEntity>) entityType, new MobEffectSkill<>(new MobEffectInstance(MobEffects.SLOW_FALLING, 0, 0), true));
+                    SkillRegistry.registerByType((EntityType<LivingEntity>) entityType, new SlowFallingSkill<>());
                 }
                 if (entityType.is(WalkersEntityTags.WOLF_PREY)) {
                     Walkers.LOGGER.warn("Please merge to the new skills system. Found " + WalkersEntityTags.WOLF_PREY + " for " + entityType);
