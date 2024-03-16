@@ -11,11 +11,11 @@ import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.animal.Dolphin;
 import net.minecraft.world.entity.animal.Parrot;
 import net.minecraft.world.entity.animal.Sheep;
-import net.minecraft.world.entity.monster.Spider;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.FluidState;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -233,9 +233,26 @@ public abstract class LivingEntityMixin extends Entity implements NearbySongAcce
         if ((LivingEntity) (Object) this instanceof Player player) {
             LivingEntity shape = PlayerShape.getCurrentShape(player);
 
-            if (shape instanceof Spider) {
-                cir.setReturnValue(this.horizontalCollision || this.level().getBlockState(this.blockPosition()).is(Blocks.COBWEB));
+            BlockState blockState = this.level().getBlockState(this.blockPosition());
+            for (ClimbBlocksSkill<?> climbBlocksSkill : SkillRegistry.get(shape, ClimbBlocksSkill.ID).stream().map(entry -> (ClimbBlocksSkill<?>) entry).toList()) {
+                for (Block invalidBlock : climbBlocksSkill.invalidBlocks) {
+                    if (blockState.is(invalidBlock)) {
+                        return;
+                    }
+                }
+
+                if (climbBlocksSkill.validBlocks.isEmpty()) {
+                    cir.setReturnValue(this.horizontalCollision);
+                } else {
+                    for (Block validBlock : climbBlocksSkill.validBlocks) {
+                        if (blockState.is(validBlock)) {
+                            cir.setReturnValue(!climbBlocksSkill.horizontalCollision || this.horizontalCollision);
+                            return;
+                        }
+                    }
+                }
             }
+
         }
     }
 

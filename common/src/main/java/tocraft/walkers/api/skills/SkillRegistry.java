@@ -15,6 +15,7 @@ import net.minecraft.world.entity.animal.horse.AbstractHorse;
 import net.minecraft.world.entity.boss.enderdragon.EnderDragon;
 import net.minecraft.world.entity.boss.wither.WitherBoss;
 import net.minecraft.world.entity.monster.*;
+import net.minecraft.world.level.block.Blocks;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import tocraft.walkers.ability.ShapeAbility;
@@ -46,6 +47,7 @@ public class SkillRegistry {
         registerCodec(UndrownableSkill.ID, UndrownableSkill.CODEC);
         registerCodec(SlowFallingSkill.ID, SlowFallingSkill.CODEC);
         registerCodec(HunterSkill.ID, HunterSkill.CODEC);
+        registerCodec(ClimbBlocksSkill.ID, ClimbBlocksSkill.CODEC);
         // register skills
         // mob effects
         registerByClass(Bat.class, new MobEffectSkill<>(new MobEffectInstance(MobEffects.NIGHT_VISION, 100000, 0, false, false)));
@@ -93,6 +95,9 @@ public class SkillRegistry {
         // hunter
         registerByClass(Wolf.class, (HunterSkill<Wolf>) HunterSkill.ofPreyClass(AbstractSkeleton.class));
         registerByPredicate(entity -> entity instanceof Ocelot || entity instanceof Cat, HunterSkill.ofPreyClass(Creeper.class));
+        // climb blocks
+        registerByClass(Spider.class, new ClimbBlocksSkill<>());
+        registerByClass(Spider.class, new ClimbBlocksSkill<>(List.of(Blocks.COBWEB), new ArrayList<>()));
     }
 
     /**
