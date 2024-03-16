@@ -14,10 +14,9 @@ public class WalkersConfig implements Config {
     public boolean shapesEquipArmor = true;
     public boolean hostilesIgnoreHostileShapedPlayer = true;
     public boolean hostilesForgetNewHostileShapedPlayer = false;
-    public boolean wolvesAttack2ndShapedPrey = true;
-    public boolean ownedWolvesAttack2ndShapedPrey = false;
+    public boolean hunterAttackAsPreyMorphedPlayer = true;
+    public boolean ownedHunterAttackAsPreyMorphedPlayer = false;
     public boolean villagersRunFrom2ndShapes = true;
-    public boolean foxesAttack2ndShapedPrey = true;
     public boolean useShapeSounds = true;
     public boolean playAmbientSounds = true;
     public boolean hearSelfAmbient = false;

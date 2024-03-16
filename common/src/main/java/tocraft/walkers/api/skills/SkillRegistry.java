@@ -69,6 +69,7 @@ public class SkillRegistry {
         // fox prey
         register(Chicken.class, (PreySkill<Chicken>) PreySkill.ofHunterClass(Fox.class));
         register(Rabbit.class, (PreySkill<Rabbit>) PreySkill.ofHunterClass(Fox.class));
+        register(entity -> entity instanceof Turtle && entity.isBaby(), PreySkill.ofHunterClass(Fox.class));
         // hurt by high temperature
         register(SnowGolem.class, new TemperatureSkill<>());
         // ravager riding
