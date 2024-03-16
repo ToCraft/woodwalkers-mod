@@ -3,7 +3,6 @@ package tocraft.walkers.mixin;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.core.BlockPos;
-import net.minecraft.tags.FluidTags;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -32,6 +31,7 @@ import tocraft.walkers.api.PlayerShape;
 import tocraft.walkers.api.skills.SkillRegistry;
 import tocraft.walkers.api.skills.impl.FlyingSkill;
 import tocraft.walkers.api.skills.impl.MobEffectSkill;
+import tocraft.walkers.api.skills.impl.StandOnFluidSkill;
 import tocraft.walkers.impl.NearbySongAccessor;
 import tocraft.walkers.mixin.accessor.LivingEntityAccessor;
 import tocraft.walkers.registry.WalkersEntityTags;
@@ -215,8 +215,17 @@ public abstract class LivingEntityMixin extends Entity implements NearbySongAcce
         if ((LivingEntity) (Object) this instanceof Player player) {
             LivingEntity shape = PlayerShape.getCurrentShape(player);
 
-            if (shape != null && shape.getType().is(WalkersEntityTags.LAVA_WALKING) && state.is(FluidTags.LAVA)) {
-                cir.setReturnValue(true);
+            if (shape != null) {
+                if (shape.canStandOnFluid(state)) {
+                    cir.setReturnValue(true);
+                } else {
+                    for (StandOnFluidSkill<?> standOnFluidSkill : SkillRegistry.get(shape, StandOnFluidSkill.ID).stream().map(entry -> (StandOnFluidSkill<?>) entry).toList()) {
+                        if (state.is(standOnFluidSkill.fluidTagKey)) {
+                            cir.setReturnValue(true);
+                            return;
+                        }
+                    }
+                }
             }
         }
     }

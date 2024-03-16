@@ -6,6 +6,7 @@ import dev.architectury.event.events.common.InteractionEvent;
 import dev.architectury.event.events.common.LifecycleEvent;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.NbtOps;
+import net.minecraft.tags.FluidTags;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
@@ -15,7 +16,10 @@ import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.animal.Fox;
 import net.minecraft.world.entity.animal.Wolf;
 import net.minecraft.world.entity.animal.horse.AbstractHorse;
-import net.minecraft.world.entity.monster.*;
+import net.minecraft.world.entity.monster.Monster;
+import net.minecraft.world.entity.monster.Ravager;
+import net.minecraft.world.entity.monster.Zombie;
+import net.minecraft.world.entity.monster.ZombieVillager;
 import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.ServerLevelAccessor;
@@ -68,6 +72,10 @@ public class WalkersEventHandlers {
                 if (entityType.is(WalkersEntityTags.RAVAGER_RIDING)) {
                     Walkers.LOGGER.warn("Please merge to the new skills system. Found " + WalkersEntityTags.RAVAGER_RIDING + " for " + entityType);
                     SkillRegistry.register((EntityType<LivingEntity>) entityType, (RiderSkill<LivingEntity>) RiderSkill.ofRideableClass(Ravager.class));
+                }
+                if (entityType.is(WalkersEntityTags.LAVA_WALKING)) {
+                    Walkers.LOGGER.warn("Please merge to the new skills system. Found " + WalkersEntityTags.LAVA_WALKING + " for " + entityType);
+                    SkillRegistry.register((EntityType<LivingEntity>) entityType, new StandOnFluidSkill<>(FluidTags.LAVA));
                 }
             }
         });

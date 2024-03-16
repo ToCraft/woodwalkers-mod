@@ -27,7 +27,6 @@ import tocraft.walkers.command.WalkersCommand;
 import tocraft.walkers.integrations.Integrations;
 import tocraft.walkers.mixin.ThreadedAnvilChunkStorageAccessor;
 import tocraft.walkers.network.ServerNetworking;
-import tocraft.walkers.registry.WalkersEntityTags;
 import tocraft.walkers.registry.WalkersEventHandlers;
 
 import java.net.MalformedURLException;

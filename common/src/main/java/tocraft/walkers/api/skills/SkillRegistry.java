@@ -2,6 +2,7 @@ package tocraft.walkers.api.skills;
 
 import com.mojang.serialization.Codec;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.FluidTags;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EntityType;
@@ -11,8 +12,6 @@ import net.minecraft.world.entity.ambient.Bat;
 import net.minecraft.world.entity.animal.*;
 import net.minecraft.world.entity.animal.allay.Allay;
 import net.minecraft.world.entity.animal.horse.AbstractHorse;
-import net.minecraft.world.entity.animal.horse.SkeletonHorse;
-import net.minecraft.world.entity.animal.horse.ZombieHorse;
 import net.minecraft.world.entity.boss.enderdragon.EnderDragon;
 import net.minecraft.world.entity.boss.wither.WitherBoss;
 import net.minecraft.world.entity.monster.*;
@@ -41,6 +40,7 @@ public class SkillRegistry {
         registerCodec(PreySkill.ID, PreySkill.CODEC);
         registerCodec(TemperatureSkill.ID, TemperatureSkill.CODEC);
         registerCodec(RiderSkill.ID, RiderSkill.CODEC);
+        registerCodec(StandOnFluidSkill.ID, StandOnFluidSkill.CODEC);
         // register skills
         // mob effects
         register(Bat.class, new MobEffectSkill<>(new MobEffectInstance(MobEffects.NIGHT_VISION, 100000, 0, false, false)));
@@ -76,6 +76,8 @@ public class SkillRegistry {
         register(Vindicator.class, (RiderSkill<Vindicator>) RiderSkill.ofRideableClass(Ravager.class));
         // Zombie Horse and Skeleton Horse riding
         register(entity -> entity instanceof Enemy, new RiderSkill<>(List.of(rideable -> rideable instanceof AbstractHorse && rideable instanceof Enemy)));
+        // lava walking
+        register(Strider.class, new StandOnFluidSkill<>(FluidTags.LAVA));
     }
 
     /**
