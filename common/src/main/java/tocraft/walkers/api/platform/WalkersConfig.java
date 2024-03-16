@@ -62,6 +62,7 @@ public class WalkersConfig implements Config {
             put("minecraft:skeleton_horse", 40);
             put("minecraft:sniffer", 9600);
             put("minecraft:snow_golem", 10);
+            put("minecraft:trader_llama", 20);
             put("minecraft:warden", 200);
             put("minecraft:witch", 200);
             put("minecraft:wither", 200);
