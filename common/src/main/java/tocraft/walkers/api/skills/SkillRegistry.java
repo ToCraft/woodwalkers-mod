@@ -16,10 +16,7 @@ import net.minecraft.world.entity.monster.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import tocraft.walkers.ability.ShapeAbility;
-import tocraft.walkers.api.skills.impl.BurnInDaylightSkill;
-import tocraft.walkers.api.skills.impl.FlyingSkill;
-import tocraft.walkers.api.skills.impl.MobEffectSkill;
-import tocraft.walkers.api.skills.impl.PreySkill;
+import tocraft.walkers.api.skills.impl.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -66,6 +63,8 @@ public class SkillRegistry {
         // fox prey
         register(Chicken.class, (PreySkill<Chicken>) PreySkill.ofHunterClass(Fox.class));
         register(Rabbit.class, (PreySkill<Rabbit>) PreySkill.ofHunterClass(Fox.class));
+        // hurt by high temperature
+        register(SnowGolem.class, new TemperatureSkill<>());
     }
 
     /**

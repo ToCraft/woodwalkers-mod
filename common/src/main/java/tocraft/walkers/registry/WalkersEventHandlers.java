@@ -25,10 +25,7 @@ import tocraft.walkers.Walkers;
 import tocraft.walkers.api.PlayerHostility;
 import tocraft.walkers.api.PlayerShape;
 import tocraft.walkers.api.skills.SkillRegistry;
-import tocraft.walkers.api.skills.impl.BurnInDaylightSkill;
-import tocraft.walkers.api.skills.impl.FlyingSkill;
-import tocraft.walkers.api.skills.impl.MobEffectSkill;
-import tocraft.walkers.api.skills.impl.PreySkill;
+import tocraft.walkers.api.skills.impl.*;
 import tocraft.walkers.impl.PlayerDataProvider;
 
 public class WalkersEventHandlers {
@@ -47,19 +44,28 @@ public class WalkersEventHandlers {
         LifecycleEvent.SERVER_LEVEL_LOAD.register((serverLevel) -> {
             for (EntityType<?> entityType : BuiltInRegistries.ENTITY_TYPE) {
                 if (entityType.is(WalkersEntityTags.BURNS_IN_DAYLIGHT)) {
+                    Walkers.LOGGER.warn("Please merge to the new skills system. Found " + WalkersEntityTags.BURNS_IN_DAYLIGHT + " for " + entityType);
                     SkillRegistry.register((EntityType<LivingEntity>) entityType, new BurnInDaylightSkill<>());
                 }
                 if (entityType.is(WalkersEntityTags.FLYING)) {
+                    Walkers.LOGGER.warn("Please merge to the new skills system. Found " + WalkersEntityTags.FLYING + " for " + entityType);
                     SkillRegistry.register((EntityType<LivingEntity>) entityType, new FlyingSkill<>());
                 }
                 if (entityType.is(WalkersEntityTags.SLOW_FALLING)) {
+                    Walkers.LOGGER.warn("Please merge to the new skills system. Found " + WalkersEntityTags.SLOW_FALLING + " for " + entityType);
                     SkillRegistry.register((EntityType<LivingEntity>) entityType, new MobEffectSkill<>(new MobEffectInstance(MobEffects.SLOW_FALLING, 0, 0), true));
                 }
                 if (entityType.is(WalkersEntityTags.WOLF_PREY)) {
+                    Walkers.LOGGER.warn("Please merge to the new skills system. Found " + WalkersEntityTags.WOLF_PREY + " for " + entityType);
                     SkillRegistry.register((EntityType<LivingEntity>) entityType, (PreySkill<LivingEntity>) PreySkill.ofHunterClass(Wolf.class));
                 }
                 if (entityType.is(WalkersEntityTags.FOX_PREY)) {
+                    Walkers.LOGGER.warn("Please merge to the new skills system. Found " + WalkersEntityTags.FOX_PREY + " for " + entityType);
                     SkillRegistry.register((EntityType<LivingEntity>) entityType, (PreySkill<LivingEntity>) PreySkill.ofHunterClass(Fox.class));
+                }
+                if (entityType.is(WalkersEntityTags.HURT_BY_HIGH_TEMPERATURE)) {
+                    Walkers.LOGGER.warn("Please merge to the new skills system. Found " + WalkersEntityTags.HURT_BY_HIGH_TEMPERATURE + " for " + entityType);
+                    SkillRegistry.register((EntityType<LivingEntity>) entityType, new TemperatureSkill<>());
                 }
             }
         });

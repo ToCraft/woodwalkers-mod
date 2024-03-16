@@ -26,7 +26,6 @@ import net.minecraft.world.entity.vehicle.Boat;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
@@ -40,11 +39,10 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import tocraft.walkers.Walkers;
 import tocraft.walkers.api.PlayerShape;
-import tocraft.walkers.api.skills.ShapeSkill;
 import tocraft.walkers.api.skills.SkillRegistry;
 import tocraft.walkers.api.skills.impl.BurnInDaylightSkill;
+import tocraft.walkers.api.skills.impl.TemperatureSkill;
 import tocraft.walkers.mixin.accessor.*;
-import tocraft.walkers.registry.WalkersEntityTags;
 
 @SuppressWarnings("ConstantConditions")
 @Mixin(Player.class)
@@ -343,17 +341,16 @@ public abstract class PlayerEntityMixin extends LivingEntityMixin {
         Player player = (Player) (Object) this;
         LivingEntity shape = PlayerShape.getCurrentShape(player);
 
-        if (!player.isCreative() && !player.isSpectator()) {
-            // check if the player is shape
-            if (shape != null) {
-                EntityType<?> type = shape.getType();
 
-                // damage player if they are a shape that gets hurt by high temps (e.g. snow
-                // golem in nether)
-                if (type.is(WalkersEntityTags.HURT_BY_HIGH_TEMPERATURE)) {
-                    Biome biome = level().getBiome(blockPosition()).value();
-                    if (!biome.coldEnoughToSnow(blockPosition())) {
+        if (!player.isCreative() && !player.isSpectator()) {
+            // check if the player is morphed
+            if (shape != null) {
+                // damage player if they are a shape that gets hurt by low or high temperatures
+                final boolean couldEnoughToSnow = level().getBiome(blockPosition()).value().coldEnoughToSnow(blockPosition());
+                for (TemperatureSkill<?> temperatureSkill : SkillRegistry.get(shape, TemperatureSkill.ID).stream().map(entry -> (TemperatureSkill<?>) entry).toList()) {
+                    if (!temperatureSkill.coldEnoughToSnow == couldEnoughToSnow) {
                         player.hurt(level().damageSources().onFire(), 1.0f);
+                        break;
                     }
                 }
             }
