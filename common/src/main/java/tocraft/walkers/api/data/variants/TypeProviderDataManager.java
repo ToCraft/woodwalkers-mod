@@ -61,8 +61,7 @@ public class TypeProviderDataManager extends SimpleJsonResourceReloadListener {
                 TypeProvider<?> typeProvider;
                 if (parent.isPresent()) {
                     typeProvider = TypeProviderRegistry.getProvider((EntityType<? extends LivingEntity>) BuiltInRegistries.ENTITY_TYPE.get(parent.get()));
-                }
-                else if (typeProviderClassOptional.isPresent()) {
+                } else if (typeProviderClassOptional.isPresent()) {
                     try {
                         typeProvider = Class.forName(typeProviderClassOptional.get()).asSubclass(TypeProvider.class).getDeclaredConstructor().newInstance();
                     } catch (InstantiationException | IllegalAccessException | InvocationTargetException |

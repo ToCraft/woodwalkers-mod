@@ -13,7 +13,7 @@ public class Integrations {
     static {
         register("mobbattle", new MobBattleModIntegration());
     }
-    
+
     public static void initialize() {
         for (AbstractIntegration loadedIntegration : INTEGRATIONS.values()) {
             loadedIntegration.initialize();

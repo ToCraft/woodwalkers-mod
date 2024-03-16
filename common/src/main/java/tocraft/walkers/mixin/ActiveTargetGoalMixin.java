@@ -21,7 +21,6 @@ import tocraft.walkers.Walkers;
 import tocraft.walkers.api.PlayerHostility;
 import tocraft.walkers.api.PlayerShape;
 import tocraft.walkers.integrations.Integrations;
-import tocraft.walkers.integrations.impl.MobBattleModIntegration;
 
 @Mixin(NearestAttackableTargetGoal.class)
 public abstract class ActiveTargetGoalMixin extends TrackTargetGoalMixin {

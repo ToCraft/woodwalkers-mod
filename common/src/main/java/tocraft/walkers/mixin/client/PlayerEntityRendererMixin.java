@@ -42,8 +42,8 @@ import tocraft.walkers.api.model.EntityUpdater;
 import tocraft.walkers.api.model.EntityUpdaters;
 import tocraft.walkers.impl.PlayerDataProvider;
 import tocraft.walkers.mixin.accessor.EntityAccessor;
-import tocraft.walkers.mixin.client.accessor.LimbAnimatorAccessor;
 import tocraft.walkers.mixin.accessor.LivingEntityAccessor;
+import tocraft.walkers.mixin.client.accessor.LimbAnimatorAccessor;
 import tocraft.walkers.mixin.client.accessor.LivingEntityRendererAccessor;
 
 import java.util.Optional;

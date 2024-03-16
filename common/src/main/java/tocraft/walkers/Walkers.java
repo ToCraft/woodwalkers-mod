@@ -21,6 +21,7 @@ import tocraft.walkers.api.PlayerShape;
 import tocraft.walkers.api.WalkersTickHandlers;
 import tocraft.walkers.api.data.DataManager;
 import tocraft.walkers.api.platform.WalkersConfig;
+import tocraft.walkers.api.skills.SkillRegistry;
 import tocraft.walkers.command.WalkersCommand;
 import tocraft.walkers.integrations.Integrations;
 import tocraft.walkers.mixin.ThreadedAnvilChunkStorageAccessor;
@@ -49,6 +50,7 @@ public class Walkers {
 
     public void initialize() {
         AbilityRegistry.init();
+        SkillRegistry.init();
         WalkersEventHandlers.initialize();
         WalkersCommand.register();
         ServerNetworking.initialize();
