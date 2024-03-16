@@ -11,7 +11,7 @@ import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import tocraft.walkers.Walkers;
-import tocraft.walkers.registry.WalkersEntityTags;
+import tocraft.walkers.api.blacklist.EntityBlacklist;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -115,7 +115,7 @@ public class ShapeType<T extends LivingEntity> {
         List<ShapeType<? extends LivingEntity>> types = new ArrayList<>();
         for (EntityType<? extends LivingEntity> type : LIVING_TYPE_CASH) {
             // check blacklist
-            if (!type.is(WalkersEntityTags.BLACKLISTED)) {
+            if (!EntityBlacklist.isBlacklisted(type)) {
                 // check variants
                 TypeProvider<?> variant = TypeProviderRegistry.getProvider(type);
                 if (variant != null) {
