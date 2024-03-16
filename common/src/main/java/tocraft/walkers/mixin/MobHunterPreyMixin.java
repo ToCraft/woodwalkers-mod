@@ -2,11 +2,11 @@ package tocraft.walkers.mixin;
 
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.TamableAnimal;
+import net.minecraft.world.entity.ai.goal.AvoidEntityGoal;
 import net.minecraft.world.entity.ai.goal.GoalSelector;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
-import net.minecraft.world.entity.animal.Chicken;
-import net.minecraft.world.entity.animal.Fox;
 import net.minecraft.world.entity.player.Player;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -18,6 +18,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import tocraft.walkers.Walkers;
 import tocraft.walkers.api.PlayerShape;
 import tocraft.walkers.api.skills.SkillRegistry;
+import tocraft.walkers.api.skills.impl.HunterSkill;
 import tocraft.walkers.api.skills.impl.PreySkill;
 
 import java.util.function.Predicate;
@@ -27,9 +28,14 @@ public class MobHunterPreyMixin {
     @Shadow
     @Final
     protected GoalSelector targetSelector;
+    @Shadow
+    @Final
+    protected GoalSelector goalSelector;
 
     @Unique
     private boolean walkers$registeredAttackPreyGoals = false;
+    @Unique
+    private boolean walkers$registeredAvoidHunterGoals = false;
 
     @Inject(method = "tick", at = @At("HEAD"))
     public void registerGoals(CallbackInfo ci) {
@@ -56,14 +62,35 @@ public class MobHunterPreyMixin {
                                 }
                             }
 
-                            if (shape instanceof Chicken && ((Mob) (Object) this) instanceof Fox)
-                                Walkers.LOGGER.warn("bruh");
-
                             return false;
                         }));
             }
 
             walkers$registeredAttackPreyGoals = true;
+        }
+
+        if (!walkers$registeredAvoidHunterGoals && (Object) this instanceof PathfinderMob mob) {
+            goalSelector.addGoal(3, new AvoidEntityGoal<>(
+                    mob,
+                    Player.class,
+                    player -> {
+                        LivingEntity shape = PlayerShape.getCurrentShape((Player) player);
+                        if (shape != null) {
+                            for (HunterSkill<?> hunterSkill : SkillRegistry.get(shape, HunterSkill.ID).stream().map(entry -> (HunterSkill<?>) entry).toList()) {
+                                for (Predicate<LivingEntity> preyPredicate : hunterSkill.prey) {
+                                    if (preyPredicate.test(mob)) return true;
+                                }
+                            }
+                        }
+                        return false;
+
+                    },
+                    6.0F,
+                    1.0D,
+                    1.2D,
+                    player -> true
+            ));
+            walkers$registeredAvoidHunterGoals = true;
         }
     }
 }

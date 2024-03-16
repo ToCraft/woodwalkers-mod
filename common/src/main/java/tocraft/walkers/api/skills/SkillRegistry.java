@@ -45,6 +45,7 @@ public class SkillRegistry {
         registerCodec(CantSwimSkill.ID, CantSwimSkill.CODEC);
         registerCodec(UndrownableSkill.ID, UndrownableSkill.CODEC);
         registerCodec(SlowFallingSkill.ID, SlowFallingSkill.CODEC);
+        registerCodec(HunterSkill.ID, HunterSkill.CODEC);
         // register skills
         // mob effects
         registerByClass(Bat.class, new MobEffectSkill<>(new MobEffectInstance(MobEffects.NIGHT_VISION, 100000, 0, false, false)));
@@ -89,6 +90,9 @@ public class SkillRegistry {
         registerByClass(IronGolem.class, new CantSwimSkill<>());
         // undrownable
         registerByClass(IronGolem.class, new UndrownableSkill<>());
+        // hunter
+        registerByClass(Wolf.class, (HunterSkill<Wolf>) HunterSkill.ofPreyClass(AbstractSkeleton.class));
+        registerByPredicate(entity -> entity instanceof Ocelot || entity instanceof Cat, HunterSkill.ofPreyClass(Creeper.class));
     }
 
     /**

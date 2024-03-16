@@ -4,8 +4,6 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.MobType;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
-import net.minecraft.world.entity.animal.Cat;
-import net.minecraft.world.entity.animal.Ocelot;
 import net.minecraft.world.entity.animal.PolarBear;
 import net.minecraft.world.entity.boss.wither.WitherBoss;
 import net.minecraft.world.entity.monster.*;
@@ -20,7 +18,11 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import tocraft.walkers.Walkers;
 import tocraft.walkers.api.PlayerHostility;
 import tocraft.walkers.api.PlayerShape;
+import tocraft.walkers.api.skills.SkillRegistry;
+import tocraft.walkers.api.skills.impl.HunterSkill;
 import tocraft.walkers.integrations.Integrations;
+
+import java.util.function.Predicate;
 
 @Mixin(NearestAttackableTargetGoal.class)
 public abstract class ActiveTargetGoalMixin extends TrackTargetGoalMixin {
@@ -39,20 +41,18 @@ public abstract class ActiveTargetGoalMixin extends TrackTargetGoalMixin {
 
                 // only cancel if the player does not have hostility
                 if (!hasHostility) {
-                    // creepers should ignore cats
-                    if (this.mob instanceof Creeper && (shape instanceof Ocelot || shape instanceof Cat)) {
-                        this.stop();
-                        ci.cancel();
-                    }
-
-                    // skeletons should ignore wolfs
-                    else if (this.mob instanceof Skeleton && shape.getType().equals(EntityType.WOLF)) {
-                        this.stop();
-                        ci.cancel();
+                    // prey should ignore hunter
+                    for (HunterSkill<?> hunterSkill : SkillRegistry.get(shape, HunterSkill.ID).stream().map(entry -> (HunterSkill<?>) entry).toList()) {
+                        for (Predicate<LivingEntity> preyPredicate : hunterSkill.prey) {
+                            if (preyPredicate.test(mob)) {
+                                this.stop();
+                                ci.cancel();
+                            }
+                        }
                     }
 
                     // polar bears should ignore polar bears
-                    else if (this.mob instanceof PolarBear && shape.getType().equals(EntityType.POLAR_BEAR)) {
+                    if (this.mob instanceof PolarBear && shape.getType().equals(EntityType.POLAR_BEAR)) {
                         this.stop();
                         ci.cancel();
                     }

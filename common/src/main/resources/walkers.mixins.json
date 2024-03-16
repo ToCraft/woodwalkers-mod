@@ -4,11 +4,9 @@
   "package": "tocraft.walkers.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
-    "AbstractSkeletonEntityMixin",
     "ActiveTargetGoalMixin",
     "AvoidEntityGoalMixin",
     "AxolotlAttackablesSensorMixin",
-    "CreeperEntityMixin",
     "EnderManMixin",
     "EntityMixin",
     "EntityTrackerAccessor",

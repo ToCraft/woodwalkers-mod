@@ -18,13 +18,18 @@ public class PreySkill<E extends LivingEntity> extends ShapeSkill<E> {
     public static final ResourceLocation ID = Walkers.id("prey");
     public static final Codec<PreySkill<?>> CODEC = RecordCodecBuilder.create((instance) -> instance.group(
             Codec.list(ResourceLocation.CODEC).fieldOf("hunter").forGetter(o -> new ArrayList<>())
-    ).apply(instance, instance.stable(PreySkill::ofHunter)));
+    ).apply(instance, instance.stable(hunterLocations -> {
+                List<EntityType<?>> hunterTypes = new ArrayList<>();
+                for (ResourceLocation resourceLocation : hunterLocations) {
+                    if (BuiltInRegistries.ENTITY_TYPE.containsKey(resourceLocation)) {
+                        hunterTypes.add(BuiltInRegistries.ENTITY_TYPE.get(resourceLocation));
+                    }
+                }
+                return ofHunterType(hunterTypes.toArray(EntityType[]::new));
+            }
+    )));
 
     public final List<Predicate<LivingEntity>> hunter;
-
-    public static PreySkill<?> ofHunter(List<ResourceLocation> hunter) {
-        return new PreySkill<>(hunter.stream().map(entry -> (Predicate<LivingEntity>) entity -> BuiltInRegistries.ENTITY_TYPE.getKey(entity.getType()).equals(entry)).toList());
-    }
 
     public static PreySkill<?> ofHunterType(EntityType<?>... hunter) {
         return new PreySkill<>(Stream.of(hunter).map(entry -> (Predicate<LivingEntity>) entity -> entity.getType().equals(entry)).toList());
