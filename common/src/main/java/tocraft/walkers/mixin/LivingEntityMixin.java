@@ -107,9 +107,9 @@ public abstract class LivingEntityMixin extends Entity implements NearbySongAcce
         if ((Object) this instanceof Player player) {
             LivingEntity shape = PlayerShape.getCurrentShape(player);
             if (shape != null && SkillRegistry.has(shape, MobEffectSkill.ID)) {
-                List<ShapeSkill<LivingEntity>> skillList = SkillRegistry.get(shape, MobEffectSkill.ID);
-                for (ShapeSkill<LivingEntity> livingEntitySkill : skillList) {
-                    if (effect.equals(((MobEffectSkill<LivingEntity>) livingEntitySkill).effect)) {
+                List<MobEffectSkill<LivingEntity>> skillList = SkillRegistry.get(shape, MobEffectSkill.ID).stream().map(skill -> (MobEffectSkill<LivingEntity>) skill).toList();
+                for (MobEffectSkill<LivingEntity> mobEffectSkill : skillList) {
+                    if (!mobEffectSkill.showInInventory && mobEffectSkill.applyToSelf && effect.equals(mobEffectSkill.mobEffectInstance.getEffect())) {
                         cir.setReturnValue(true);
                         return;
                     }
@@ -125,9 +125,12 @@ public abstract class LivingEntityMixin extends Entity implements NearbySongAcce
             if (shape != null && SkillRegistry.has(shape, MobEffectSkill.ID)) {
                 List<MobEffectSkill<LivingEntity>> skillList = SkillRegistry.get(shape, MobEffectSkill.ID).stream().map(skill -> (MobEffectSkill<LivingEntity>) skill).toList();
                 for (MobEffectSkill<LivingEntity> mobEffectSkill : skillList) {
-                    if (effect.equals(mobEffectSkill.effect)) {
-                        cir.setReturnValue(new MobEffectInstance(mobEffectSkill.effect, mobEffectSkill.duration, mobEffectSkill.amplifier, mobEffectSkill.ambient, mobEffectSkill.visible, mobEffectSkill.showIcon));
-                        return;
+                    if (!mobEffectSkill.showInInventory && mobEffectSkill.applyToSelf) {
+                        MobEffectInstance mobEffectInstance = mobEffectSkill.mobEffectInstance;
+                        if (effect.equals(mobEffectInstance.getEffect())) {
+                            cir.setReturnValue(new MobEffectInstance(mobEffectInstance.getEffect(), mobEffectInstance.getDuration(), mobEffectInstance.getAmplifier(), mobEffectInstance.isAmbient(), mobEffectInstance.isVisible(), mobEffectInstance.showIcon()));
+                            return;
+                        }
                     }
                 }
             }

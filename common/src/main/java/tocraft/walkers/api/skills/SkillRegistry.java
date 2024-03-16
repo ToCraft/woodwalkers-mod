@@ -2,19 +2,18 @@ package tocraft.walkers.api.skills;
 
 import com.mojang.serialization.Codec;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ambient.Bat;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import tocraft.walkers.ability.ShapeAbility;
 import tocraft.walkers.api.skills.impl.MobEffectSkill;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Predicate;
 
 public class SkillRegistry {
@@ -24,9 +23,9 @@ public class SkillRegistry {
 
     public static void init() {
         // register skill codecs
-        //registerCodec(MobEffectSkill.ID, MobEffectSkill.CODEC);
+        registerCodec(MobEffectSkill.ID, MobEffectSkill.CODEC);
         // register skills
-        //register(Bat.class, new MobEffectSkill<>(MobEffects.NIGHT_VISION, 100000, 0, false, false));
+        register(Bat.class, new MobEffectSkill<>(new MobEffectInstance(MobEffects.NIGHT_VISION, 100000, 0, false, false)));
     }
 
     /**

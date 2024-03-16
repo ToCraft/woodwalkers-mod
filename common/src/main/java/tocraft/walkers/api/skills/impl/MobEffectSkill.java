@@ -2,48 +2,50 @@ package tocraft.walkers.api.skills.impl;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.effect.MobEffect;
+import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
 import tocraft.walkers.Walkers;
 import tocraft.walkers.api.skills.ShapeSkill;
 
-import java.util.Optional;
-
 public class MobEffectSkill<E extends LivingEntity> extends ShapeSkill<E> {
-    public static final ResourceLocation ID = Walkers.id("mob_effect_on_self");
+    public static final ResourceLocation ID = Walkers.id("mob_effect");
     public static final Codec<MobEffectSkill<?>> CODEC = RecordCodecBuilder.create((instance) -> instance.group(
-            ResourceLocation.CODEC.fieldOf("effect").forGetter(o -> BuiltInRegistries.MOB_EFFECT.getKey(o.effect)),
-            Codec.INT.fieldOf("duration").forGetter(o -> o.duration),
-            Codec.INT.fieldOf("amplifier").forGetter(o -> o.amplifier),
-            Codec.BOOL.optionalFieldOf("ambient", false).forGetter(o -> o.ambient),
-            Codec.BOOL.optionalFieldOf("visible", true).forGetter(o -> o.visible),
-            Codec.BOOL.optionalFieldOf("showIcon").forGetter(o -> Optional.of(o.showIcon))
-    ).apply(instance, instance.stable((effect, duration, amplifier, ambient, visible, showIconOptional) -> showIconOptional.<MobEffectSkill<?>>map(aBoolean -> new MobEffectSkill<>(BuiltInRegistries.MOB_EFFECT.get(effect), duration, amplifier, ambient, visible, aBoolean)).orElseGet(() -> new MobEffectSkill<>(BuiltInRegistries.MOB_EFFECT.get(effect), duration, amplifier, ambient, visible, visible)))));
+            CompoundTag.CODEC.fieldOf("mob_effect").forGetter(o -> o.mobEffectInstance.save(new CompoundTag())),
+            Codec.BOOL.optionalFieldOf("show_in_inventory", true).forGetter(o -> o.showInInventory),
+            Codec.BOOL.optionalFieldOf("apply_to_self", true).forGetter(o -> o.applyToSelf),
+            Codec.INT.optionalFieldOf("apply_to_nearby", -1).forGetter(o -> o.applyToNearby),
+            Codec.INT.optionalFieldOf("max_distance_for_entities", -1).forGetter(o -> o.maxDistanceForEntities),
+            Codec.INT.optionalFieldOf("amount_of_entities_to_apply_to", -1).forGetter(o -> o.amountOfEntitiesToApplyTo)
+    ).apply(instance, instance.stable((mobEffectNBT, showInInventory, applyToSelf, applyToNearby, maxDistanceForEntities, amountOfEntitiesToApplyTo) -> new MobEffectSkill<>(MobEffectInstance.load(mobEffectNBT), showInInventory, applyToSelf, applyToNearby, maxDistanceForEntities, amountOfEntitiesToApplyTo))));
 
-    public final MobEffect effect;
-    public final int duration;
-    public final int amplifier;
-    public final boolean ambient;
-    public final boolean visible;
-    public final boolean showIcon;
+    public final MobEffectInstance mobEffectInstance;
+    public final boolean showInInventory;
+    public final boolean applyToSelf;
+    public final int applyToNearby;
+    public final int maxDistanceForEntities;
+    public final int amountOfEntitiesToApplyTo;
 
-    public MobEffectSkill(MobEffect effect, int duration, int amplifier) {
-        this(effect, duration, amplifier, false, true);
+    public MobEffectSkill(MobEffectInstance mobEffectInstance) {
+        this(mobEffectInstance, false, true, -1, -1, -1);
     }
 
-    public MobEffectSkill(MobEffect effect, int duration, int amplifier, boolean ambient, boolean visible) {
-        this(effect, duration, amplifier, ambient, visible, visible);
-    }
-
-    public MobEffectSkill(MobEffect effect, int duration, int amplifier, boolean ambient, boolean visible, boolean showIcon) {
-        this.effect = effect;
-        this.duration = duration;
-        this.amplifier = amplifier;
-        this.ambient = ambient;
-        this.visible = visible;
-        this.showIcon = showIcon;
+    /**
+     * @param mobEffectInstance         the effect to apply
+     * @param showInInventory           should the effect be displayed to the player? Only for self
+     * @param applyToSelf               should the player get it?
+     * @param applyToNearby             should nearby entities get it? negative - no, 0 - player only, 1 - mobs only, 2 - players and mobs
+     * @param maxDistanceForEntities    only used when applyToNearby is true
+     * @param amountOfEntitiesToApplyTo only used when applyToNearby is true
+     */
+    public MobEffectSkill(MobEffectInstance mobEffectInstance, boolean showInInventory, boolean applyToSelf, int applyToNearby, int maxDistanceForEntities, int amountOfEntitiesToApplyTo) {
+        this.showInInventory = showInInventory;
+        this.mobEffectInstance = mobEffectInstance;
+        this.applyToSelf = applyToSelf;
+        this.applyToNearby = applyToNearby;
+        this.maxDistanceForEntities = maxDistanceForEntities;
+        this.amountOfEntitiesToApplyTo = amountOfEntitiesToApplyTo;
     }
 
     @Override
