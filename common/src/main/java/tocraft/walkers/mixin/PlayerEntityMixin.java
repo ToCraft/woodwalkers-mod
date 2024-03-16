@@ -40,6 +40,9 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import tocraft.walkers.Walkers;
 import tocraft.walkers.api.PlayerShape;
+import tocraft.walkers.api.skills.ShapeSkill;
+import tocraft.walkers.api.skills.SkillRegistry;
+import tocraft.walkers.api.skills.impl.BurnInDaylightSkill;
 import tocraft.walkers.mixin.accessor.*;
 import tocraft.walkers.registry.WalkersEntityTags;
 
@@ -278,8 +281,12 @@ public abstract class PlayerEntityMixin extends LivingEntityMixin {
                 EntityType<?> type = shape.getType();
 
                 // check if the player's current shape burns in sunlight
-                if (type.is(WalkersEntityTags.BURNS_IN_DAYLIGHT)) {
+                if (SkillRegistry.has(shape, BurnInDaylightSkill.ID)) {
                     boolean bl = this.walkers$isInDaylight();
+                    // handle night burning
+                    for (BurnInDaylightSkill<?> skill : SkillRegistry.get(shape, BurnInDaylightSkill.ID).stream().map(skill -> ((BurnInDaylightSkill<?>) skill)).toList()) {
+                        bl = (bl && !skill.burnInNightInstead) || (!this.walkers$isInDaylight() && skill.burnInNightInstead);
+                    }
                     if (bl) {
 
                         // Can't burn in the rain

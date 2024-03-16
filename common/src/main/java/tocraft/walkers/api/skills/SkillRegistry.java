@@ -6,14 +6,21 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ambient.Bat;
+import net.minecraft.world.entity.monster.Phantom;
+import net.minecraft.world.entity.monster.Skeleton;
+import net.minecraft.world.entity.monster.Stray;
+import net.minecraft.world.entity.monster.Zombie;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import tocraft.walkers.ability.ShapeAbility;
+import tocraft.walkers.api.skills.impl.BurnInDaylightSkill;
 import tocraft.walkers.api.skills.impl.MobEffectSkill;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.function.Predicate;
 
 public class SkillRegistry {
@@ -24,8 +31,15 @@ public class SkillRegistry {
     public static void init() {
         // register skill codecs
         registerCodec(MobEffectSkill.ID, MobEffectSkill.CODEC);
+        registerCodec(BurnInDaylightSkill.ID, BurnInDaylightSkill.CODEC);
         // register skills
+        // mob effects
         register(Bat.class, new MobEffectSkill<>(new MobEffectInstance(MobEffects.NIGHT_VISION, 100000, 0, false, false)));
+        // burn in daylight
+        register(Zombie.class, new BurnInDaylightSkill<>());
+        register(Skeleton.class, new BurnInDaylightSkill<>());
+        register(Stray.class, new BurnInDaylightSkill<>());
+        register(Phantom.class, new BurnInDaylightSkill<>());
     }
 
     /**

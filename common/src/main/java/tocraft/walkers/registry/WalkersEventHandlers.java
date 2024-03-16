@@ -3,6 +3,8 @@ package tocraft.walkers.registry;
 import dev.architectury.event.EventResult;
 import dev.architectury.event.events.common.EntityEvent;
 import dev.architectury.event.events.common.InteractionEvent;
+import dev.architectury.event.events.common.LifecycleEvent;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.entity.EntityType;
@@ -18,16 +20,30 @@ import net.minecraft.world.level.ServerLevelAccessor;
 import tocraft.walkers.Walkers;
 import tocraft.walkers.api.PlayerHostility;
 import tocraft.walkers.api.PlayerShape;
+import tocraft.walkers.api.skills.SkillRegistry;
+import tocraft.walkers.api.skills.impl.BurnInDaylightSkill;
 import tocraft.walkers.impl.PlayerDataProvider;
 
 public class WalkersEventHandlers {
 
     public static void initialize() {
-        WalkersEventHandlers.registerHostilityUpdateHandler();
-        WalkersEventHandlers.registerRavagerRidingHandler();
-        WalkersEventHandlers.registerHostileHorseRidingHandler();
-        WalkersEventHandlers.registerPlayerRidingHandler();
-        WalkersEventHandlers.registerLivingDeathHandler();
+        registerHostilityUpdateHandler();
+        registerRavagerRidingHandler();
+        registerHostileHorseRidingHandler();
+        registerPlayerRidingHandler();
+        registerLivingDeathHandler();
+        registerHandlerForDeprecatedEntityTags();
+    }
+
+    @SuppressWarnings("unchecked")
+    public static void registerHandlerForDeprecatedEntityTags() {
+        LifecycleEvent.SERVER_LEVEL_LOAD.register((serverLevel) -> {
+            for (EntityType<?> entityType : BuiltInRegistries.ENTITY_TYPE) {
+                if (entityType.is(WalkersEntityTags.BURNS_IN_DAYLIGHT)) {
+                    SkillRegistry.register((EntityType<LivingEntity>) entityType, new BurnInDaylightSkill<>());
+                }
+            }
+        });
     }
 
     public static void registerHostilityUpdateHandler() {
