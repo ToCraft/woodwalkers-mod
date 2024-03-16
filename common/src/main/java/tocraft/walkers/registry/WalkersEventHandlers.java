@@ -85,6 +85,10 @@ public class WalkersEventHandlers {
                     Walkers.LOGGER.warn("Please merge to the new skills system. Found " + WalkersEntityTags.CANT_SWIM + " for " + entityType);
                     SkillRegistry.register((EntityType<LivingEntity>) entityType, new CantSwimSkill<>());
                 }
+                if (entityType.is(WalkersEntityTags.UNDROWNABLE)) {
+                    Walkers.LOGGER.warn("Please merge to the new skills system. Found " + WalkersEntityTags.UNDROWNABLE + " for " + entityType);
+                    SkillRegistry.register((EntityType<LivingEntity>) entityType, new UndrownableSkill<>());
+                }
             }
         });
     }

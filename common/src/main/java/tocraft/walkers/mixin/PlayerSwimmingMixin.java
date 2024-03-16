@@ -11,7 +11,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import tocraft.walkers.api.PlayerShape;
 import tocraft.walkers.api.skills.SkillRegistry;
 import tocraft.walkers.api.skills.impl.CantSwimSkill;
-import tocraft.walkers.registry.WalkersEntityTags;
 
 @Mixin(LivingEntity.class)
 public class PlayerSwimmingMixin {

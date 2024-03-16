@@ -32,6 +32,7 @@ import tocraft.walkers.api.skills.SkillRegistry;
 import tocraft.walkers.api.skills.impl.FlyingSkill;
 import tocraft.walkers.api.skills.impl.MobEffectSkill;
 import tocraft.walkers.api.skills.impl.StandOnFluidSkill;
+import tocraft.walkers.api.skills.impl.UndrownableSkill;
 import tocraft.walkers.impl.NearbySongAccessor;
 import tocraft.walkers.mixin.accessor.LivingEntityAccessor;
 import tocraft.walkers.registry.WalkersEntityTags;
@@ -178,7 +179,7 @@ public abstract class LivingEntityMixin extends Entity implements NearbySongAcce
 
             if (entity != null) {
                 cir.setReturnValue(entity.canBreatheUnderwater() || entity instanceof Dolphin
-                        || entity.getType().is(WalkersEntityTags.UNDROWNABLE));
+                        || SkillRegistry.has(entity, UndrownableSkill.ID));
             }
         }
     }

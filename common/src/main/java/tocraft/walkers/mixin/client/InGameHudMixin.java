@@ -14,7 +14,8 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
 import tocraft.walkers.Walkers;
 import tocraft.walkers.api.PlayerShape;
-import tocraft.walkers.registry.WalkersEntityTags;
+import tocraft.walkers.api.skills.SkillRegistry;
+import tocraft.walkers.api.skills.impl.UndrownableSkill;
 
 @Environment(EnvType.CLIENT)
 @Mixin(Gui.class)
@@ -30,7 +31,7 @@ public abstract class InGameHudMixin {
 
         if (shape != null) {
             if (Walkers.isAquatic(shape)
-                    || shape.getType().is(WalkersEntityTags.UNDROWNABLE) && player.isEyeInFluid(FluidTags.WATER)) {
+                    || SkillRegistry.has(shape, UndrownableSkill.ID) && player.isEyeInFluid(FluidTags.WATER)) {
                 return FluidTags.LAVA; // will cause isEyeInFluid to return false, preventing air render
             }
         }

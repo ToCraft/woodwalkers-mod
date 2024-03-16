@@ -43,6 +43,7 @@ public class SkillRegistry {
         registerCodec(StandOnFluidSkill.ID, StandOnFluidSkill.CODEC);
         registerCodec(NoPhysicsSkill.ID, NoPhysicsSkill.CODEC);
         registerCodec(CantSwimSkill.ID, CantSwimSkill.CODEC);
+        registerCodec(UndrownableSkill.ID, UndrownableSkill.CODEC);
         // register skills
         // mob effects
         register(Bat.class, new MobEffectSkill<>(new MobEffectInstance(MobEffects.NIGHT_VISION, 100000, 0, false, false)));
@@ -85,6 +86,8 @@ public class SkillRegistry {
         register(Vex.class, new NoPhysicsSkill<>());
         // can't swim
         register(IronGolem.class, new CantSwimSkill<>());
+        // undrownable
+        register(IronGolem.class, new UndrownableSkill<>());
     }
 
     /**
