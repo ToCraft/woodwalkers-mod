@@ -33,7 +33,7 @@ public class AbilityRegistry {
 
     public static void init() {
         // Register generic Abilities first (since the last registered ability will be the used one
-        register((Predicate<LivingEntity>) livingEntity -> livingEntity instanceof NeutralMob, new AngerAbility<>());
+        register(livingEntity -> livingEntity instanceof NeutralMob, new AngerAbility<>());
 
         // Register 'normal' Abilities
         register(Blaze.class, new BlazeAbility<>());
@@ -74,12 +74,12 @@ public class AbilityRegistry {
         return !shapeAbilities.isEmpty() ? (ShapeAbility<L>) shapeAbilities.get(shapeAbilities.size() - 1) : null;
     }
 
-    public static <A extends LivingEntity, T extends EntityType<A>> void register(T type, ShapeAbility<A> ability) {
-        register((Predicate<LivingEntity>) livingEntity -> type.equals(livingEntity.getType()), ability);
+    public static <A extends LivingEntity> void register(EntityType<A> type, ShapeAbility<A> ability) {
+        register(livingEntity -> type.equals(livingEntity.getType()), ability);
     }
 
     public static <A extends LivingEntity> void register(Class<A> entityClass, ShapeAbility<A> ability) {
-        register((Predicate<LivingEntity>) entityClass::isInstance, ability);
+        register(entityClass::isInstance, ability);
     }
 
     /**
