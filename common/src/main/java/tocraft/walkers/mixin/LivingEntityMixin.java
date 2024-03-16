@@ -9,7 +9,6 @@ import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.*;
-import net.minecraft.world.entity.ambient.Bat;
 import net.minecraft.world.entity.animal.Dolphin;
 import net.minecraft.world.entity.animal.Parrot;
 import net.minecraft.world.entity.animal.Sheep;
@@ -30,15 +29,17 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import tocraft.walkers.Walkers;
 import tocraft.walkers.api.PlayerShape;
+import tocraft.walkers.api.skills.ShapeSkill;
+import tocraft.walkers.api.skills.SkillRegistry;
+import tocraft.walkers.api.skills.impl.MobEffectSkill;
 import tocraft.walkers.impl.NearbySongAccessor;
 import tocraft.walkers.mixin.accessor.LivingEntityAccessor;
 import tocraft.walkers.registry.WalkersEntityTags;
 
+import java.util.List;
+
 @Mixin(LivingEntity.class)
 public abstract class LivingEntityMixin extends Entity implements NearbySongAccessor {
-
-    @Shadow
-    protected abstract int increaseAirSupply(int air);
 
     @Shadow
     public abstract boolean hasEffect(MobEffect effect);
@@ -104,12 +105,14 @@ public abstract class LivingEntityMixin extends Entity implements NearbySongAcce
     @Inject(method = "hasEffect", at = @At("HEAD"), cancellable = true)
     private void returnHasNightVision(MobEffect effect, CallbackInfoReturnable<Boolean> cir) {
         if ((Object) this instanceof Player player) {
-            if (effect.equals(MobEffects.NIGHT_VISION)) {
-                LivingEntity shape = PlayerShape.getCurrentShape(player);
-
-                // Apply 'Night Vision' status effect to player if they are a Bat
-                if (shape instanceof Bat) {
-                    cir.setReturnValue(true);
+            LivingEntity shape = PlayerShape.getCurrentShape(player);
+            if (shape != null && SkillRegistry.has(shape, MobEffectSkill.ID)) {
+                List<ShapeSkill<LivingEntity>> skillList = SkillRegistry.get(shape, MobEffectSkill.ID);
+                for (ShapeSkill<LivingEntity> livingEntitySkill : skillList) {
+                    if (effect.equals(((MobEffectSkill<LivingEntity>) livingEntitySkill).effect)) {
+                        cir.setReturnValue(true);
+                        return;
+                    }
                 }
             }
         }
@@ -118,12 +121,14 @@ public abstract class LivingEntityMixin extends Entity implements NearbySongAcce
     @Inject(method = "getEffect", at = @At("HEAD"), cancellable = true)
     private void returnNightVisionInstance(MobEffect effect, CallbackInfoReturnable<MobEffectInstance> cir) {
         if ((Object) this instanceof Player player) {
-            if (effect.equals(MobEffects.NIGHT_VISION)) {
-                LivingEntity shape = PlayerShape.getCurrentShape(player);
-
-                // Apply 'Night Vision' status effect to player if they are a Bat
-                if (shape instanceof Bat) {
-                    cir.setReturnValue(new MobEffectInstance(MobEffects.NIGHT_VISION, 100000, 0, false, false));
+            LivingEntity shape = PlayerShape.getCurrentShape(player);
+            if (shape != null && SkillRegistry.has(shape, MobEffectSkill.ID)) {
+                List<MobEffectSkill<LivingEntity>> skillList = SkillRegistry.get(shape, MobEffectSkill.ID).stream().map(skill -> (MobEffectSkill<LivingEntity>) skill).toList();
+                for (MobEffectSkill<LivingEntity> mobEffectSkill : skillList) {
+                    if (effect.equals(mobEffectSkill.effect)) {
+                        cir.setReturnValue(new MobEffectInstance(mobEffectSkill.effect, mobEffectSkill.duration, mobEffectSkill.amplifier, mobEffectSkill.ambient, mobEffectSkill.visible, mobEffectSkill.showIcon));
+                        return;
+                    }
                 }
             }
         }
