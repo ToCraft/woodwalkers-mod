@@ -15,8 +15,6 @@ import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.animal.Fox;
 import net.minecraft.world.entity.animal.Wolf;
 import net.minecraft.world.entity.animal.horse.AbstractHorse;
-import net.minecraft.world.entity.animal.horse.SkeletonHorse;
-import net.minecraft.world.entity.animal.horse.ZombieHorse;
 import net.minecraft.world.entity.monster.*;
 import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.entity.player.Player;
@@ -26,14 +24,14 @@ import tocraft.walkers.api.PlayerHostility;
 import tocraft.walkers.api.PlayerShape;
 import tocraft.walkers.api.skills.SkillRegistry;
 import tocraft.walkers.api.skills.impl.*;
-import tocraft.walkers.impl.PlayerDataProvider;
+
+import java.util.function.Predicate;
 
 public class WalkersEventHandlers {
 
     public static void initialize() {
         registerHostilityUpdateHandler();
-        registerRavagerRidingHandler();
-        registerHostileHorseRidingHandler();
+        registerEntityRidingHandler();
         registerPlayerRidingHandler();
         registerLivingDeathHandler();
         registerHandlerForDeprecatedEntityTags();
@@ -67,6 +65,10 @@ public class WalkersEventHandlers {
                     Walkers.LOGGER.warn("Please merge to the new skills system. Found " + WalkersEntityTags.HURT_BY_HIGH_TEMPERATURE + " for " + entityType);
                     SkillRegistry.register((EntityType<LivingEntity>) entityType, new TemperatureSkill<>());
                 }
+                if (entityType.is(WalkersEntityTags.RAVAGER_RIDING)) {
+                    Walkers.LOGGER.warn("Please merge to the new skills system. Found " + WalkersEntityTags.RAVAGER_RIDING + " for " + entityType);
+                    SkillRegistry.register((EntityType<LivingEntity>) entityType, (RiderSkill<LivingEntity>) RiderSkill.ofRideableClass(Ravager.class));
+                }
             }
         });
     }
@@ -84,34 +86,20 @@ public class WalkersEventHandlers {
     // Players with an equipped Walkers inside the `ravager_riding` entity tag
     // should
     // be able to ride Ravagers.
-    public static void registerRavagerRidingHandler() {
+    public static void registerEntityRidingHandler() {
         InteractionEvent.INTERACT_ENTITY.register((player, entity, hand) -> {
-            // checks, if selected entity is a Ravager or a Player, shaped as a Ravager
-            if (entity instanceof Ravager || entity instanceof Player targetedPlayer && ((PlayerDataProvider) targetedPlayer).walkers$getCurrentShape() instanceof Ravager) {
-                LivingEntity shape = PlayerShape.getCurrentShape(player);
-                if (shape != null) {
-                    if (shape.getType().is(WalkersEntityTags.RAVAGER_RIDING)) {
-                        player.startRiding(entity);
+            LivingEntity shape = PlayerShape.getCurrentShape(player);
+            if (shape != null && entity instanceof LivingEntity livingEntity) {
+                // checks, if selected entity is rideable
+                for (RiderSkill<?> riderSkill : SkillRegistry.get(shape, RiderSkill.ID).stream().map(entry -> (RiderSkill<?>) entry).toList()) {
+                    for (Predicate<LivingEntity> rideable : riderSkill.rideable) {
+                        if (rideable.test(livingEntity) || (livingEntity instanceof Player rideablePlayer && rideable.test(PlayerShape.getCurrentShape(rideablePlayer)))) {
+                            player.startRiding(entity);
+                            return EventResult.pass();
+                        }
                     }
                 }
             }
-
-            return EventResult.pass();
-        });
-    }
-
-    // hostile players should be able to ride hostile horses
-    public static void registerHostileHorseRidingHandler() {
-        InteractionEvent.INTERACT_ENTITY.register((player, entity, hand) -> {
-            // checks, if selected entity is a Ravager or a Player, shaped as a Ravager
-            if (entity instanceof SkeletonHorse || entity instanceof ZombieHorse) {
-                LivingEntity shape = PlayerShape.getCurrentShape(player);
-
-                if (shape instanceof Enemy) {
-                    player.startRiding(entity);
-                }
-            }
-
             return EventResult.pass();
         });
     }
