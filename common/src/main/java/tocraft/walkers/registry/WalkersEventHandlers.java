@@ -77,6 +77,10 @@ public class WalkersEventHandlers {
                     Walkers.LOGGER.warn("Please merge to the new skills system. Found " + WalkersEntityTags.LAVA_WALKING + " for " + entityType);
                     SkillRegistry.register((EntityType<LivingEntity>) entityType, new StandOnFluidSkill<>(FluidTags.LAVA));
                 }
+                if (entityType.is(WalkersEntityTags.FALL_THROUGH_BLOCKS)) {
+                    Walkers.LOGGER.warn("Please merge to the new skills system. Found " + WalkersEntityTags.FALL_THROUGH_BLOCKS + " for " + entityType);
+                    SkillRegistry.register((EntityType<LivingEntity>) entityType, new NoPhysicsSkill<>());
+                }
             }
         });
     }

@@ -41,6 +41,7 @@ public class SkillRegistry {
         registerCodec(TemperatureSkill.ID, TemperatureSkill.CODEC);
         registerCodec(RiderSkill.ID, RiderSkill.CODEC);
         registerCodec(StandOnFluidSkill.ID, StandOnFluidSkill.CODEC);
+        registerCodec(NoPhysicsSkill.ID, NoPhysicsSkill.CODEC);
         // register skills
         // mob effects
         register(Bat.class, new MobEffectSkill<>(new MobEffectInstance(MobEffects.NIGHT_VISION, 100000, 0, false, false)));
@@ -78,6 +79,8 @@ public class SkillRegistry {
         register(entity -> entity instanceof Enemy, new RiderSkill<>(List.of(rideable -> rideable instanceof AbstractHorse && rideable instanceof Enemy)));
         // lava walking
         register(Strider.class, new StandOnFluidSkill<>(FluidTags.LAVA));
+        // fall through blocks
+        register(Vex.class, new NoPhysicsSkill<>());
     }
 
     /**

@@ -11,8 +11,9 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import tocraft.walkers.api.PlayerShape;
+import tocraft.walkers.api.skills.SkillRegistry;
+import tocraft.walkers.api.skills.impl.NoPhysicsSkill;
 import tocraft.walkers.impl.DimensionsRefresher;
-import tocraft.walkers.registry.WalkersEntityTags;
 
 @SuppressWarnings("ConstantConditions")
 @Mixin(Entity.class)
@@ -109,7 +110,13 @@ public abstract class EntityMixin implements DimensionsRefresher {
 
     @Inject(method = "tick", at = @At("HEAD"))
     private void goThroughBlocks(CallbackInfo ci) {
-        if ((Object) this instanceof Player player && PlayerShape.getCurrentShape(player) != null && PlayerShape.getCurrentShape(player).getType().is(WalkersEntityTags.FALL_THROUGH_BLOCKS))
-            player.noPhysics = true;
+        if ((Object) this instanceof Player player) {
+            LivingEntity shape = PlayerShape.getCurrentShape(player);
+            if (shape != null) {
+                if (SkillRegistry.has(shape, NoPhysicsSkill.ID)) {
+                    player.noPhysics = true;
+                }
+            }
+        }
     }
 }
