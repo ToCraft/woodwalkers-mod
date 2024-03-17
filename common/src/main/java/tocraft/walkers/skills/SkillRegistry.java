@@ -1,4 +1,4 @@
-package tocraft.walkers.api.skills;
+package tocraft.walkers.skills;
 
 import com.mojang.serialization.Codec;
 import net.minecraft.resources.ResourceLocation;
@@ -19,7 +19,7 @@ import net.minecraft.world.level.block.Blocks;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import tocraft.walkers.ability.ShapeAbility;
-import tocraft.walkers.api.skills.impl.*;
+import tocraft.walkers.skills.impl.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;

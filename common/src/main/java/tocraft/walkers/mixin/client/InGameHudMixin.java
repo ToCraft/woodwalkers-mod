@@ -14,8 +14,8 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
 import tocraft.walkers.Walkers;
 import tocraft.walkers.api.PlayerShape;
-import tocraft.walkers.api.skills.SkillRegistry;
-import tocraft.walkers.api.skills.impl.UndrownableSkill;
+import tocraft.walkers.skills.SkillRegistry;
+import tocraft.walkers.skills.impl.UndrownableSkill;
 
 @Environment(EnvType.CLIENT)
 @Mixin(Gui.class)

@@ -36,8 +36,8 @@ import tocraft.walkers.api.PlayerAbilities;
 import tocraft.walkers.api.PlayerShape;
 import tocraft.walkers.api.WalkersTickHandler;
 import tocraft.walkers.api.WalkersTickHandlers;
-import tocraft.walkers.api.skills.SkillRegistry;
-import tocraft.walkers.api.skills.impl.MobEffectSkill;
+import tocraft.walkers.skills.SkillRegistry;
+import tocraft.walkers.skills.impl.MobEffectSkill;
 import tocraft.walkers.impl.PlayerDataProvider;
 import tocraft.walkers.network.impl.VehiclePackets;
 

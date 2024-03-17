@@ -11,8 +11,8 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import tocraft.walkers.api.PlayerShape;
-import tocraft.walkers.api.skills.SkillRegistry;
-import tocraft.walkers.api.skills.impl.NoPhysicsSkill;
+import tocraft.walkers.skills.SkillRegistry;
+import tocraft.walkers.skills.impl.NoPhysicsSkill;
 import tocraft.walkers.impl.DimensionsRefresher;
 
 @SuppressWarnings("ConstantConditions")

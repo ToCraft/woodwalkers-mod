@@ -39,9 +39,9 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import tocraft.walkers.Walkers;
 import tocraft.walkers.api.PlayerShape;
-import tocraft.walkers.api.skills.SkillRegistry;
-import tocraft.walkers.api.skills.impl.BurnInDaylightSkill;
-import tocraft.walkers.api.skills.impl.TemperatureSkill;
+import tocraft.walkers.skills.SkillRegistry;
+import tocraft.walkers.skills.impl.BurnInDaylightSkill;
+import tocraft.walkers.skills.impl.TemperatureSkill;
 import tocraft.walkers.mixin.accessor.*;
 
 @SuppressWarnings("ConstantConditions")

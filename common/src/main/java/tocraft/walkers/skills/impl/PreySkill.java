@@ -1,4 +1,4 @@
-package tocraft.walkers.api.skills.impl;
+package tocraft.walkers.skills.impl;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -7,7 +7,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import tocraft.walkers.Walkers;
-import tocraft.walkers.api.skills.ShapeSkill;
+import tocraft.walkers.skills.ShapeSkill;
 
 import java.util.ArrayList;
 import java.util.List;

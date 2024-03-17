@@ -1,4 +1,4 @@
-package tocraft.walkers.api.skills;
+package tocraft.walkers.skills;
 
 import com.mojang.serialization.Codec;
 import net.minecraft.resources.ResourceLocation;

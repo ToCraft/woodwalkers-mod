@@ -15,8 +15,8 @@ import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import tocraft.walkers.Walkers;
-import tocraft.walkers.api.skills.ShapeSkill;
-import tocraft.walkers.api.skills.SkillRegistry;
+import tocraft.walkers.skills.ShapeSkill;
+import tocraft.walkers.skills.SkillRegistry;
 
 import java.util.*;
 import java.util.function.Function;

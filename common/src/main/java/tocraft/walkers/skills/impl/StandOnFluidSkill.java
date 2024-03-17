@@ -1,4 +1,4 @@
-package tocraft.walkers.api.skills.impl;
+package tocraft.walkers.skills.impl;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -9,7 +9,7 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.material.Fluid;
 import tocraft.walkers.Walkers;
-import tocraft.walkers.api.skills.ShapeSkill;
+import tocraft.walkers.skills.ShapeSkill;
 
 public class StandOnFluidSkill<E extends LivingEntity> extends ShapeSkill<E> {
     public static final ResourceLocation ID = Walkers.id("stand_on_fluid");
