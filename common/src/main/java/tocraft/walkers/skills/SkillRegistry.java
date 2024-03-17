@@ -77,6 +77,8 @@ public class SkillRegistry {
         registerByClass(Chicken.class, (PreySkill<Chicken>) PreySkill.ofHunterClass(Fox.class));
         registerByClass(Rabbit.class, (PreySkill<Rabbit>) PreySkill.ofHunterClass(Fox.class));
         registerByPredicate(entity -> entity instanceof Turtle && entity.isBaby(), PreySkill.ofHunterClass(Fox.class));
+        // hostile attacked by iron golem
+        registerByPredicate(entity -> entity instanceof Enemy && !(entity instanceof Creeper), PreySkill.ofHunterClass(IronGolem.class));
         // hurt by high temperature
         registerByClass(SnowGolem.class, new TemperatureSkill<>());
         // ravager riding
