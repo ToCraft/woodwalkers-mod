@@ -60,6 +60,7 @@ public class AbilityRegistry {
         register(Shulker.class, new ShulkerAbility<>());
         register(Pufferfish.class, new PufferfishAbility<>());
         register(Turtle.class, new TurtleAbility<>());
+        register(Rabbit.class, new RabbitAbility<>());
     }
 
     /**

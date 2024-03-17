@@ -26,7 +26,7 @@ public class TurtleAbility<T extends Mob> extends ShapeAbility<T> {
 
     @Override
     public Item getIcon() {
-        return Items.EGG;
+        return Items.TURTLE_EGG;
     }
 
     @Override

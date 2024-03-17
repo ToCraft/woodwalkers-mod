@@ -56,6 +56,7 @@ public class WalkersConfig implements Config {
             put("minecraft:llama", 20);
             put("minecraft:mooshroom", 300);
             put("minecraft:pufferfish", 20);
+            put("minecraft:rabbit", 40);
             put("minecraft:sheep", 20);
             put("minecraft:shulker", 80);
             put("minecraft:skeleton_horse", 40);
