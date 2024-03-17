@@ -285,4 +285,14 @@ public abstract class LivingEntityMixin extends Entity implements NearbySongAcce
             }
         }
     }
+
+    @Inject(method = "isSensitiveToWater", at = @At(value = "RETURN"), cancellable = true)
+    private void handleWaterSensitivity(CallbackInfoReturnable<Boolean> cir) {
+        if ((Object) this instanceof Player player) {
+            LivingEntity shape = PlayerShape.getCurrentShape(player);
+            if (shape != null) {
+                cir.setReturnValue(shape.isSensitiveToWater());
+            }
+        }
+    }
 }
