@@ -11,9 +11,6 @@ public class SlowFallingSkill<E extends LivingEntity> extends ShapeSkill<E> {
     public static final ResourceLocation ID = Walkers.id("slow_falling");
     public static final Codec<SlowFallingSkill<?>> CODEC = RecordCodecBuilder.create((instance) -> instance.stable(new SlowFallingSkill<>()));
 
-    public SlowFallingSkill() {
-    }
-
     @Override
     public ResourceLocation getId() {
         return ID;

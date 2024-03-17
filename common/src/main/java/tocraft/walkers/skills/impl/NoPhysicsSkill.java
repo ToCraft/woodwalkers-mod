@@ -11,9 +11,6 @@ public class NoPhysicsSkill<E extends LivingEntity> extends ShapeSkill<E> {
     public static final ResourceLocation ID = Walkers.id("no_physics");
     public static final Codec<NoPhysicsSkill<?>> CODEC = RecordCodecBuilder.create((instance) -> instance.stable(new NoPhysicsSkill<>()));
 
-    public NoPhysicsSkill() {
-    }
-
     @Override
     public ResourceLocation getId() {
         return ID;

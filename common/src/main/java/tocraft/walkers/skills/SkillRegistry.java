@@ -48,6 +48,7 @@ public class SkillRegistry {
         registerCodec(SlowFallingSkill.ID, SlowFallingSkill.CODEC);
         registerCodec(HunterSkill.ID, HunterSkill.CODEC);
         registerCodec(ClimbBlocksSkill.ID, ClimbBlocksSkill.CODEC);
+        registerCodec(ReinforcementsSkill.ID, ReinforcementsSkill.CODEC);
         // register skills
         // mob effects
         registerByClass(Bat.class, new MobEffectSkill<>(new MobEffectInstance(MobEffects.NIGHT_VISION, 100000, 0, false, false)));
@@ -98,6 +99,8 @@ public class SkillRegistry {
         // climb blocks
         registerByClass(Spider.class, new ClimbBlocksSkill<>());
         registerByClass(Spider.class, new ClimbBlocksSkill<>(List.of(Blocks.COBWEB), new ArrayList<>()));
+        // reinforcements
+        registerByClass(Wolf.class, new ReinforcementsSkill<>());
     }
 
     /**

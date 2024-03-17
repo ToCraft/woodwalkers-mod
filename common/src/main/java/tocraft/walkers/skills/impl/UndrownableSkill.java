@@ -11,9 +11,6 @@ public class UndrownableSkill<E extends LivingEntity> extends ShapeSkill<E> {
     public static final ResourceLocation ID = Walkers.id("undrownable");
     public static final Codec<UndrownableSkill<?>> CODEC = RecordCodecBuilder.create((instance) -> instance.stable(new UndrownableSkill<>()));
 
-    public UndrownableSkill() {
-    }
-
     @Override
     public ResourceLocation getId() {
         return ID;

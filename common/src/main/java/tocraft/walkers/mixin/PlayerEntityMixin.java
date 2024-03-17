@@ -28,6 +28,7 @@ import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Mixin;
@@ -39,10 +40,14 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import tocraft.walkers.Walkers;
 import tocraft.walkers.api.PlayerShape;
+import tocraft.walkers.mixin.accessor.*;
+import tocraft.walkers.skills.ShapeSkill;
 import tocraft.walkers.skills.SkillRegistry;
 import tocraft.walkers.skills.impl.BurnInDaylightSkill;
+import tocraft.walkers.skills.impl.ReinforcementsSkill;
 import tocraft.walkers.skills.impl.TemperatureSkill;
-import tocraft.walkers.mixin.accessor.*;
+
+import java.util.Iterator;
 
 @SuppressWarnings("ConstantConditions")
 @Mixin(Player.class)
@@ -411,6 +416,40 @@ public abstract class PlayerEntityMixin extends LivingEntityMixin {
                     && targetPlayer.hurt(ownPlayer.damageSources().mobAttack(ownPlayer), (float) ownPlayer.getAttributeValue(Attributes.ATTACK_DAMAGE))) {
                 this.playSound(SoundEvents.SLIME_ATTACK, 1.0F, (this.random.nextFloat() - this.random.nextFloat()) * 0.2F + 1.0F);
                 this.doEnchantDamageEffects(ownPlayer, targetPlayer);
+            }
+        }
+    }
+
+    @Inject(method = "hurt", at = @At("HEAD"))
+    private void onHurt(DamageSource source, float amount, CallbackInfoReturnable<Boolean> cir) {
+        Player player = (Player) (Object) this;
+        LivingEntity shape = PlayerShape.getCurrentShape(player);
+        if (source.getEntity() instanceof LivingEntity livingAttacker && shape != null) {
+            for (ShapeSkill<LivingEntity> reinforcementSkill : SkillRegistry.get(shape, ReinforcementsSkill.ID)) {
+                double d = ((ReinforcementsSkill<LivingEntity>) reinforcementSkill).range;
+                AABB aABB = AABB.unitCubeFromLowerCorner(this.position()).inflate(d, 10.0, d);
+                Iterator<? extends LivingEntity> var5 = this.level().getEntitiesOfClass(shape.getClass(), aABB, EntitySelector.NO_SPECTATORS).iterator();
+
+                while (true) {
+                    Mob mob;
+                    while (true) {
+                        if (!var5.hasNext()) {
+                            return;
+                        }
+
+                        mob = (Mob) var5.next();
+                        if (shape != mob && mob.getTarget() == null) {
+
+                            boolean bl = false;
+
+                            if (!bl) {
+                                break;
+                            }
+                        }
+                    }
+
+                    mob.setTarget(livingAttacker);
+                }
             }
         }
     }

@@ -11,9 +11,6 @@ public class CantSwimSkill<E extends LivingEntity> extends ShapeSkill<E> {
     public static final ResourceLocation ID = Walkers.id("cant_swim");
     public static final Codec<CantSwimSkill<?>> CODEC = RecordCodecBuilder.create((instance) -> instance.stable(new CantSwimSkill<>()));
 
-    public CantSwimSkill() {
-    }
-
     @Override
     public ResourceLocation getId() {
         return ID;
