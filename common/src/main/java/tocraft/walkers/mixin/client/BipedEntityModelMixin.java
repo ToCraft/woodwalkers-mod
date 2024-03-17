@@ -25,20 +25,17 @@ public abstract class BipedEntityModelMixin extends LivingEntityRenderer<LivingE
         super(ctx, model, shadowRadius);
     }
 
-    @SuppressWarnings("ConstantConditions")
     @Inject(
             method = "render(Lnet/minecraft/world/entity/Mob;FFLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V",
             at = @At("HEAD"))
     private void onRender(Mob mobEntity, float f, float g, PoseStack matrixStack, MultiBufferSource buffer, int i, CallbackInfo ci) {
         // Only apply to Biped Entities
-        if (!((Object) this instanceof HumanoidMobRenderer)) {
-            return;
-        }
+        if (((Object) this instanceof HumanoidMobRenderer)) {
+            HumanoidModel<?> model = (HumanoidModel<?>) getModel();
 
-        HumanoidModel<?> model = (HumanoidModel<?>) getModel();
-
-        if (model != null) {
-            model.crouching = mobEntity.isCrouching();
+            if (model != null) {
+                model.crouching = mobEntity.isShiftKeyDown();
+            }
         }
     }
 }

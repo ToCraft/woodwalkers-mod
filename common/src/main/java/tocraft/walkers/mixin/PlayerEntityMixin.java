@@ -364,13 +364,15 @@ public abstract class PlayerEntityMixin extends LivingEntityMixin {
 
     @Inject(method = "tick", at = @At("HEAD"))
     private void tickWalkers(CallbackInfo ci) {
-        if (!level().isClientSide) {
-            Player player = (Player) (Object) this;
-            LivingEntity shape = PlayerShape.getCurrentShape(player);
+        Player player = (Player) (Object) this;
+        LivingEntity shape = PlayerShape.getCurrentShape(player);
 
-            // assign basic data to entity from player on server; most data transferring
-            // occurs on client
-            if (shape != null) {
+        // assign basic data to entity from player on server; most data transferring
+        // occurs on client
+        if (shape != null) {
+            shape.setShiftKeyDown(player.isShiftKeyDown());
+
+            if (!level().isClientSide) {
                 shape.setPosRaw(player.getX(), player.getY(), player.getZ());
                 shape.setYHeadRot(player.getYHeadRot());
                 shape.setJumping(((LivingEntityAccessor) player).isJumping());
@@ -378,7 +380,6 @@ public abstract class PlayerEntityMixin extends LivingEntityMixin {
                 shape.setArrowCount(player.getArrowCount());
                 shape.setInvulnerable(true);
                 shape.setNoGravity(true);
-                shape.setShiftKeyDown(player.isShiftKeyDown());
                 shape.setSwimming(player.isSwimming());
                 shape.startUsingItem(player.getUsedItemHand());
                 shape.setPose(player.getPose());

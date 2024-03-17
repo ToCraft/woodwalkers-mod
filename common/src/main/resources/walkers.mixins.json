@@ -61,11 +61,10 @@
   "client": [
     "client.BipedEntityModelMixin",
     "client.ClientEntityMixin",
-    "client.DrownedOverlayMixin",
     "client.InGameHudMixin",
     "client.PlayerEntityRendererMixin",
+    "client.RenderLayerMixin",
     "client.ShadowMixin",
-    "client.StrayOverlayMixin",
     "client.WolfRendererMixin",
     "client.accessor.BlazeEntityModelAccessor",
     "client.accessor.EntityShadowAccessor",
