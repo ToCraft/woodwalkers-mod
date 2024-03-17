@@ -50,6 +50,7 @@ public class SkillRegistry {
         registerCodec(ReinforcementsSkill.ID, ReinforcementsSkill.CODEC);
         registerCodec(InstantDieOnDamageTypeSkill.ID, InstantDieOnDamageTypeSkill.CODEC);
         registerCodec(AquaticSkill.ID, AquaticSkill.CODEC);
+        registerCodec(WalkOnPowderSnow.ID, WalkOnPowderSnow.CODEC);
         // register skills
         // mob effects
         registerByClass(Bat.class, new MobEffectSkill<>(new MobEffectInstance(MobEffects.NIGHT_VISION, 100000, 0, false, false)));
@@ -117,6 +118,8 @@ public class SkillRegistry {
         registerByPredicate(entity -> entity instanceof Mob mob && mob.getMobType().equals(MobType.WATER) && !(mob instanceof WaterAnimal), new AquaticSkill<>(1));
         // dolphin don't like sun
         registerByClass(Dolphin.class, new BurnInDaylightSkill<>());
+        // walk on powder snow
+        registerByClass(Rabbit.class, new WalkOnPowderSnow<>());
     }
 
     /**

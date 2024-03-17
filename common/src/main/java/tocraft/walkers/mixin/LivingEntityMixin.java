@@ -32,6 +32,7 @@ import tocraft.walkers.api.PlayerShape;
 import tocraft.walkers.impl.NearbySongAccessor;
 import tocraft.walkers.mixin.accessor.LivingEntityAccessor;
 import tocraft.walkers.registry.WalkersEntityTags;
+import tocraft.walkers.skills.ShapeSkill;
 import tocraft.walkers.skills.SkillRegistry;
 import tocraft.walkers.skills.impl.*;
 
@@ -295,6 +296,20 @@ public abstract class LivingEntityMixin extends Entity implements NearbySongAcce
             LivingEntity shape = PlayerShape.getCurrentShape(player);
             if (shape != null) {
                 cir.setReturnValue(shape.isSensitiveToWater());
+            }
+        }
+    }
+
+    @Inject(method = "canFreeze", at = @At("RETURN"), cancellable = true)
+    private void temperatureSkillPreventFreeze(CallbackInfoReturnable<Boolean> cir) {
+        if (cir.getReturnValue()) {
+            if ((Object) this instanceof Player) {
+                LivingEntity shape = PlayerShape.getCurrentShape((Player) (Object) this);
+                for (ShapeSkill<LivingEntity> temperatureSkill : SkillRegistry.get(shape, TemperatureSkill.ID)) {
+                    if (((TemperatureSkill<LivingEntity>) temperatureSkill).coldEnoughToSnow) {
+                        cir.setReturnValue(false);
+                    }
+                }
             }
         }
     }
