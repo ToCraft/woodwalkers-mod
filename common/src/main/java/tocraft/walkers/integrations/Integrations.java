@@ -2,6 +2,7 @@ package tocraft.walkers.integrations;
 
 import dev.architectury.platform.Platform;
 import net.minecraft.world.entity.Entity;
+import tocraft.walkers.integrations.impl.GuardVillagersIntegration;
 import tocraft.walkers.integrations.impl.MobBattleModIntegration;
 
 import java.util.HashMap;
@@ -11,7 +12,8 @@ public class Integrations {
     private static final Map<String, AbstractIntegration> INTEGRATIONS = new HashMap<>();
 
     static {
-        register("mobbattle", new MobBattleModIntegration());
+        register(MobBattleModIntegration.MODID, new MobBattleModIntegration());
+        register(GuardVillagersIntegration.MODID, new GuardVillagersIntegration());
     }
 
     public static void initialize() {
