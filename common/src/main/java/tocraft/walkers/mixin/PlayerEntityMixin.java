@@ -3,6 +3,7 @@ package tocraft.walkers.mixin;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.network.protocol.game.ClientboundGameEventPacket;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
@@ -44,6 +45,7 @@ import tocraft.walkers.mixin.accessor.*;
 import tocraft.walkers.skills.ShapeSkill;
 import tocraft.walkers.skills.SkillRegistry;
 import tocraft.walkers.skills.impl.BurnInDaylightSkill;
+import tocraft.walkers.skills.impl.InstantDieOnDamageTypeSkill;
 import tocraft.walkers.skills.impl.ReinforcementsSkill;
 import tocraft.walkers.skills.impl.TemperatureSkill;
 
@@ -61,6 +63,9 @@ public abstract class PlayerEntityMixin extends LivingEntityMixin {
 
     @Shadow
     public abstract boolean isSwimming();
+
+    @Shadow
+    public abstract void die(DamageSource damageSource);
 
     private PlayerEntityMixin(EntityType<? extends LivingEntity> type, Level world) {
         super(type, world);
@@ -431,7 +436,7 @@ public abstract class PlayerEntityMixin extends LivingEntityMixin {
     }
 
     @Inject(method = "hurt", at = @At("HEAD"))
-    private void onHurt(DamageSource source, float amount, CallbackInfoReturnable<Boolean> cir) {
+    private void handeReinforcementsSkill(DamageSource source, float amount, CallbackInfoReturnable<Boolean> cir) {
         Player player = (Player) (Object) this;
         LivingEntity shape = PlayerShape.getCurrentShape(player);
         if (source.getEntity() instanceof LivingEntity livingAttacker && shape != null) {
@@ -460,6 +465,16 @@ public abstract class PlayerEntityMixin extends LivingEntityMixin {
 
                     mob.setTarget(livingAttacker);
                 }
+            }
+        }
+    }
+
+    @Inject(method = "hurt", at = @At("HEAD"))
+    private void instantDieOnDamageTypeSkill(DamageSource source, float amount, CallbackInfoReturnable<Boolean> cir) {
+        LivingEntity shape = PlayerShape.getCurrentShape((Player) (Object) this);
+        for (ShapeSkill<LivingEntity> instantDieOnDamageTypeSkill : SkillRegistry.get(shape, InstantDieOnDamageTypeSkill.ID)) {
+            if (source.type() == level().registryAccess().registryOrThrow(Registries.DAMAGE_TYPE).get(((InstantDieOnDamageTypeSkill<LivingEntity>) instantDieOnDamageTypeSkill).damageType)) {
+                this.die(source);
             }
         }
     }

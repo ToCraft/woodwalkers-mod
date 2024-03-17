@@ -3,6 +3,7 @@ package tocraft.walkers.skills;
 import com.mojang.serialization.Codec;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.FluidTags;
+import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EntityType;
@@ -49,6 +50,7 @@ public class SkillRegistry {
         registerCodec(FearedSkill.ID, FearedSkill.CODEC);
         registerCodec(ClimbBlocksSkill.ID, ClimbBlocksSkill.CODEC);
         registerCodec(ReinforcementsSkill.ID, ReinforcementsSkill.CODEC);
+        registerCodec(InstantDieOnDamageTypeSkill.ID, InstantDieOnDamageTypeSkill.CODEC);
         // register skills
         // mob effects
         registerByClass(Bat.class, new MobEffectSkill<>(new MobEffectInstance(MobEffects.NIGHT_VISION, 100000, 0, false, false)));
@@ -107,6 +109,8 @@ public class SkillRegistry {
         registerByClass(Spider.class, new ClimbBlocksSkill<>(List.of(Blocks.COBWEB), new ArrayList<>()));
         // reinforcements
         registerByClass(Wolf.class, new ReinforcementsSkill<>());
+        // instant die on lightning
+        registerByClass(Turtle.class, new InstantDieOnDamageTypeSkill<>(DamageTypes.LIGHTNING_BOLT));
     }
 
     /**

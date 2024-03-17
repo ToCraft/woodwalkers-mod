@@ -47,6 +47,9 @@ public abstract class LivingEntityMixin extends Entity implements NearbySongAcce
     @Nullable
     public abstract LivingEntity getLastHurtByMob();
 
+    @Shadow
+    public abstract void kill();
+
     protected LivingEntityMixin(EntityType<?> type, Level world) {
         super(type, world);
     }
