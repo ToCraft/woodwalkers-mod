@@ -73,6 +73,7 @@ public class SkillRegistry {
         registerByClass(Sheep.class, (PreySkill<Sheep>) PreySkill.ofHunterClass(Wolf.class));
         registerByClass(Skeleton.class, (PreySkill<Skeleton>) PreySkill.ofHunterClass(Wolf.class));
         registerByClass(Parrot.class, (PreySkill<Parrot>) PreySkill.ofHunterClass(Wolf.class));
+        registerByClass(Rabbit.class, (PreySkill<Rabbit>) PreySkill.ofHunterClass(Wolf.class));
         // fox prey
         registerByClass(Chicken.class, (PreySkill<Chicken>) PreySkill.ofHunterClass(Fox.class));
         registerByClass(Rabbit.class, (PreySkill<Rabbit>) PreySkill.ofHunterClass(Fox.class));
