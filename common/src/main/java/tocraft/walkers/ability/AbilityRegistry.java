@@ -59,6 +59,7 @@ public class AbilityRegistry {
         register(Bee.class, new AngerAbility<>(SoundEvents.BEE_LOOP, SoundEvents.BEE_LOOP_AGGRESSIVE));
         register(Shulker.class, new ShulkerAbility<>());
         register(Pufferfish.class, new PufferfishAbility<>());
+        register(Turtle.class, new TurtleAbility<>());
     }
 
     /**
