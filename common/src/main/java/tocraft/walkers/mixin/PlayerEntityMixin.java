@@ -50,6 +50,7 @@ import tocraft.walkers.skills.impl.ReinforcementsSkill;
 import tocraft.walkers.skills.impl.TemperatureSkill;
 
 import java.util.Iterator;
+import java.util.List;
 
 @SuppressWarnings("ConstantConditions")
 @Mixin(Player.class)
@@ -442,8 +443,9 @@ public abstract class PlayerEntityMixin extends LivingEntityMixin {
         if (source.getEntity() instanceof LivingEntity livingAttacker && shape != null) {
             for (ShapeSkill<LivingEntity> reinforcementSkill : SkillRegistry.get(shape, ReinforcementsSkill.ID)) {
                 double d = ((ReinforcementsSkill<LivingEntity>) reinforcementSkill).range;
+                List<EntityType<?>> reinforcements = ((ReinforcementsSkill<LivingEntity>) reinforcementSkill).reinforcements;
                 AABB aABB = AABB.unitCubeFromLowerCorner(this.position()).inflate(d, 10.0, d);
-                Iterator<? extends LivingEntity> var5 = this.level().getEntitiesOfClass(shape.getClass(), aABB, EntitySelector.NO_SPECTATORS).iterator();
+                Iterator<? extends LivingEntity> var5 = this.level().getEntitiesOfClass(Mob.class, aABB, EntitySelector.NO_SPECTATORS.and(entity -> reinforcements.contains(entity.getType()) || (reinforcements.isEmpty() && shape.getClass().isInstance(entity)))).iterator();
 
                 while (true) {
                     Mob mob;

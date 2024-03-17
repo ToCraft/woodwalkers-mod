@@ -109,6 +109,7 @@ public class SkillRegistry {
         registerByClass(Spider.class, new ClimbBlocksSkill<>(List.of(Blocks.COBWEB), new ArrayList<>()));
         // reinforcements
         registerByClass(Wolf.class, new ReinforcementsSkill<>());
+        registerByClass(Bee.class, new ReinforcementsSkill<>());
         // instant die on lightning
         registerByClass(Turtle.class, new InstantDieOnDamageTypeSkill<>(DamageTypes.LIGHTNING_BOLT));
     }
