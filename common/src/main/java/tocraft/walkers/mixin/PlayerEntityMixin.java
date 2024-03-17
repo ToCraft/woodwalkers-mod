@@ -91,29 +91,32 @@ public abstract class PlayerEntityMixin extends LivingEntityMixin {
         LivingEntity shape = PlayerShape.getCurrentShape((Player) (Object) this);
 
         if (shape != null) {
-            if (Walkers.isAquatic(shape)) {
+            int isAquatic = Walkers.isAquatic(shape);
+            if (isAquatic < 2) {
                 int air = this.getAirSupply();
 
                 // copy of WaterCreatureEntity#tickWaterBreathingAir
                 if (this.isAlive() && !this.isInWaterOrBubble()) {
-                    int i = EnchantmentHelper.getRespiration((LivingEntity) (Object) this);
+                    if (isAquatic < 1) {
+                        int i = EnchantmentHelper.getRespiration((LivingEntity) (Object) this);
 
-                    // If the player has respiration, 50% chance to not consume air
-                    if (i > 0) {
-                        if (random.nextInt(i + 1) <= 0) {
+                        // If the player has respiration, 50% chance to not consume air
+                        if (i > 0) {
+                            if (random.nextInt(i + 1) <= 0) {
+                                this.setAirSupply(air - 1);
+                            }
+                        }
+
+                        // No respiration, decrease air as normal
+                        else {
                             this.setAirSupply(air - 1);
                         }
-                    }
 
-                    // No respiration, decrease air as normal
-                    else {
-                        this.setAirSupply(air - 1);
-                    }
-
-                    // Air has run out, start drowning
-                    if (this.getAirSupply() == -20) {
-                        this.setAirSupply(0);
-                        this.hurt(damageSources().fall(), 2.0F);
+                        // Air has run out, start drowning
+                        if (this.getAirSupply() == -20) {
+                            this.setAirSupply(0);
+                            this.hurt(damageSources().fall(), 2.0F);
+                        }
                     }
                 } else {
                     this.setAirSupply(air + 1);

@@ -30,7 +30,7 @@ public abstract class InGameHudMixin {
         LivingEntity shape = PlayerShape.getCurrentShape(player);
 
         if (shape != null) {
-            if (Walkers.isAquatic(shape)
+            if (Walkers.isAquatic(shape) < 2
                     || SkillRegistry.has(shape, UndrownableSkill.ID) && player.isEyeInFluid(FluidTags.WATER)) {
                 return FluidTags.LAVA; // will cause isEyeInFluid to return false, preventing air render
             }

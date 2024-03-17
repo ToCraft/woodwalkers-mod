@@ -83,7 +83,7 @@ public abstract class LivingEntityMixin extends Entity implements NearbySongAcce
 
             // Apply 'Dolphin's Grace' status effect benefits if the player's shape is a
             // water creature
-            if (Walkers.isAquatic(shape)) {
+            if (Walkers.isAquatic(shape) < 2) {
                 return .96f;
             }
         }

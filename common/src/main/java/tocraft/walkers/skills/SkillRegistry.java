@@ -6,9 +6,7 @@ import net.minecraft.tags.FluidTags;
 import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.FlyingMob;
-import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ambient.Bat;
 import net.minecraft.world.entity.animal.*;
 import net.minecraft.world.entity.animal.allay.Allay;
@@ -51,6 +49,7 @@ public class SkillRegistry {
         registerCodec(ClimbBlocksSkill.ID, ClimbBlocksSkill.CODEC);
         registerCodec(ReinforcementsSkill.ID, ReinforcementsSkill.CODEC);
         registerCodec(InstantDieOnDamageTypeSkill.ID, InstantDieOnDamageTypeSkill.CODEC);
+        registerCodec(AquaticSkill.ID, AquaticSkill.CODEC);
         // register skills
         // mob effects
         registerByClass(Bat.class, new MobEffectSkill<>(new MobEffectInstance(MobEffects.NIGHT_VISION, 100000, 0, false, false)));
@@ -114,6 +113,10 @@ public class SkillRegistry {
         registerByClass(Turtle.class, new InstantDieOnDamageTypeSkill<>(DamageTypes.LIGHTNING_BOLT));
         // cats hunt rabbits
         registerByClass(Rabbit.class, new PreySkill<>(List.of(entity -> entity instanceof Cat cat && !cat.isTame())));
+        // aquatic
+        registerByPredicate(entity -> entity instanceof Mob mob && mob.getMobType().equals(MobType.WATER) && !(mob instanceof WaterAnimal), new AquaticSkill<>(1));
+        // dolphin don't like sun
+        registerByClass(Dolphin.class, new BurnInDaylightSkill<>());
     }
 
     /**

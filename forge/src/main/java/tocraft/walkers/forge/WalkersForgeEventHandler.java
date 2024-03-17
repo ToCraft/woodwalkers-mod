@@ -18,7 +18,7 @@ public class WalkersForgeEventHandler {
             LivingEntity shape = PlayerShape.getCurrentShape((Player) event.getEntity());
 
             if (shape != null) {
-                if (Walkers.isAquatic(shape)) {
+                if (Walkers.isAquatic(shape) < 1) {
                     event.setCanBreathe(false);
 
                 }

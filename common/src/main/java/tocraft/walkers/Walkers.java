@@ -21,13 +21,15 @@ import tocraft.walkers.api.PlayerShape;
 import tocraft.walkers.api.WalkersTickHandlers;
 import tocraft.walkers.api.data.DataManager;
 import tocraft.walkers.api.platform.WalkersConfig;
-import tocraft.walkers.skills.SkillRegistry;
-import tocraft.walkers.skills.impl.FlyingSkill;
 import tocraft.walkers.command.WalkersCommand;
 import tocraft.walkers.integrations.Integrations;
 import tocraft.walkers.mixin.ThreadedAnvilChunkStorageAccessor;
 import tocraft.walkers.network.ServerNetworking;
 import tocraft.walkers.registry.WalkersEventHandlers;
+import tocraft.walkers.skills.ShapeSkill;
+import tocraft.walkers.skills.SkillRegistry;
+import tocraft.walkers.skills.impl.AquaticSkill;
+import tocraft.walkers.skills.impl.FlyingSkill;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -114,8 +116,19 @@ public class Walkers {
         return false;
     }
 
-    public static boolean isAquatic(LivingEntity entity) {
-        return entity != null && entity.getMobType().equals(MobType.WATER);
+    /**
+     * @param entity the shape to be checked
+     * @return 0 - water mob, 1 - land and water mob, 2 - land mob
+     */
+    public static int isAquatic(LivingEntity entity) {
+        if (entity != null) {
+            for (ShapeSkill<LivingEntity> aquaticSkill : SkillRegistry.get(entity, AquaticSkill.ID)) {
+                return ((AquaticSkill<LivingEntity>) aquaticSkill).isAquatic;
+            }
+            return entity.getMobType().equals(MobType.WATER) ? 0 : 2;
+        } else {
+            return 2;
+        }
     }
 
     public static boolean isPlayerBlacklisted(UUID uuid) {
