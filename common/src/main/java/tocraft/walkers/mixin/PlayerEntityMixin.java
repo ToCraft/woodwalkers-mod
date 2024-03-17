@@ -186,6 +186,15 @@ public abstract class PlayerEntityMixin extends LivingEntityMixin {
         }
     }
 
+    @Inject(method = "playStepSound", at = @At("HEAD"))
+    private void handleSpeSounds(BlockPos pos, BlockState state, CallbackInfo ci) {
+        LivingEntity shape = PlayerShape.getCurrentShape((Player) (Object) this);
+
+        if (shape != null) {
+            ((EntityAccessor) shape).shape_callPlayStepSound(pos, state);
+        }
+    }
+
     @Inject(method = "getDeathSound", at = @At("HEAD"), cancellable = true)
     private void getDeathSound(CallbackInfoReturnable<SoundEvent> cir) {
         LivingEntity shape = PlayerShape.getCurrentShape((Player) (Object) this);
