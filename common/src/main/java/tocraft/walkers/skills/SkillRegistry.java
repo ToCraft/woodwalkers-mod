@@ -112,6 +112,8 @@ public class SkillRegistry {
         registerByClass(Bee.class, new ReinforcementsSkill<>());
         // instant die on lightning
         registerByClass(Turtle.class, new InstantDieOnDamageTypeSkill<>(DamageTypes.LIGHTNING_BOLT));
+        // cats hunt rabbits
+        registerByClass(Rabbit.class, new PreySkill<>(List.of(entity -> entity instanceof Cat cat && !cat.isTame())));
     }
 
     /**
