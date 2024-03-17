@@ -14,10 +14,10 @@ import java.util.List;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
-public class HunterSkill<E extends LivingEntity> extends ShapeSkill<E> {
-    public static final ResourceLocation ID = Walkers.id("hunter");
-    public static final Codec<HunterSkill<?>> CODEC = RecordCodecBuilder.create((instance) -> instance.group(
-            Codec.list(ResourceLocation.CODEC).fieldOf("prey").forGetter(o -> new ArrayList<>())
+public class FearedSkill<E extends LivingEntity> extends ShapeSkill<E> {
+    public static final ResourceLocation ID = Walkers.id("feared");
+    public static final Codec<FearedSkill<?>> CODEC = RecordCodecBuilder.create((instance) -> instance.group(
+            Codec.list(ResourceLocation.CODEC).fieldOf("fearful").forGetter(o -> new ArrayList<>())
     ).apply(instance, instance.stable(preyLocations -> {
         List<EntityType<?>> preyTypes = new ArrayList<>();
         for (ResourceLocation resourceLocation : preyLocations) {
@@ -25,22 +25,22 @@ public class HunterSkill<E extends LivingEntity> extends ShapeSkill<E> {
                 preyTypes.add(BuiltInRegistries.ENTITY_TYPE.get(resourceLocation));
             }
         }
-        return ofPreyType(preyTypes.toArray(EntityType[]::new));
+        return ofFearfulType(preyTypes.toArray(EntityType[]::new));
     })));
 
-    public final List<Predicate<LivingEntity>> prey;
+    public final List<Predicate<LivingEntity>> fearful;
 
-    public static HunterSkill<?> ofPreyType(EntityType<?>... prey) {
-        return new HunterSkill<>(Stream.of(prey).map(entry -> (Predicate<LivingEntity>) entity -> entity.getType().equals(entry)).toList());
+    public static FearedSkill<?> ofFearfulType(EntityType<?>... fearful) {
+        return new FearedSkill<>(Stream.of(fearful).map(entry -> (Predicate<LivingEntity>) entity -> entity.getType().equals(entry)).toList());
     }
 
     @SafeVarargs
-    public static HunterSkill<?> ofPreyClass(Class<? extends LivingEntity>... prey) {
-        return new HunterSkill<>(Stream.of(prey).map(entry -> (Predicate<LivingEntity>) entry::isInstance).toList());
+    public static FearedSkill<?> ofFearfulClass(Class<? extends LivingEntity>... fearful) {
+        return new FearedSkill<>(Stream.of(fearful).map(entry -> (Predicate<LivingEntity>) entry::isInstance).toList());
     }
 
-    public HunterSkill(List<Predicate<LivingEntity>> prey) {
-        this.prey = prey;
+    public FearedSkill(List<Predicate<LivingEntity>> fearful) {
+        this.fearful = fearful;
     }
 
     @Override

@@ -19,7 +19,7 @@ import tocraft.walkers.Walkers;
 import tocraft.walkers.api.PlayerHostility;
 import tocraft.walkers.api.PlayerShape;
 import tocraft.walkers.skills.SkillRegistry;
-import tocraft.walkers.skills.impl.HunterSkill;
+import tocraft.walkers.skills.impl.FearedSkill;
 import tocraft.walkers.integrations.Integrations;
 
 import java.util.function.Predicate;
@@ -42,9 +42,9 @@ public abstract class ActiveTargetGoalMixin extends TrackTargetGoalMixin {
                 // only cancel if the player does not have hostility
                 if (!hasHostility) {
                     // prey should ignore hunter
-                    for (HunterSkill<?> hunterSkill : SkillRegistry.get(shape, HunterSkill.ID).stream().map(entry -> (HunterSkill<?>) entry).toList()) {
-                        for (Predicate<LivingEntity> preyPredicate : hunterSkill.prey) {
-                            if (preyPredicate.test(mob)) {
+                    for (FearedSkill<?> fearedSkill : SkillRegistry.get(shape, FearedSkill.ID).stream().map(entry -> (FearedSkill<?>) entry).toList()) {
+                        for (Predicate<LivingEntity> fearPredicate : fearedSkill.fearful) {
+                            if (fearPredicate.test(mob)) {
                                 this.stop();
                                 ci.cancel();
                             }

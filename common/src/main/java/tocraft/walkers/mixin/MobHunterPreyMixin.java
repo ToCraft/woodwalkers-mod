@@ -18,7 +18,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import tocraft.walkers.Walkers;
 import tocraft.walkers.api.PlayerShape;
 import tocraft.walkers.skills.SkillRegistry;
-import tocraft.walkers.skills.impl.HunterSkill;
+import tocraft.walkers.skills.impl.FearedSkill;
 import tocraft.walkers.skills.impl.PreySkill;
 
 import java.util.function.Predicate;
@@ -76,8 +76,8 @@ public class MobHunterPreyMixin {
                     player -> {
                         LivingEntity shape = PlayerShape.getCurrentShape((Player) player);
                         if (shape != null) {
-                            for (HunterSkill<?> hunterSkill : SkillRegistry.get(shape, HunterSkill.ID).stream().map(entry -> (HunterSkill<?>) entry).toList()) {
-                                for (Predicate<LivingEntity> preyPredicate : hunterSkill.prey) {
+                            for (FearedSkill<?> fearedSkill : SkillRegistry.get(shape, FearedSkill.ID).stream().map(entry -> (FearedSkill<?>) entry).toList()) {
+                                for (Predicate<LivingEntity> preyPredicate : fearedSkill.fearful) {
                                     if (preyPredicate.test(mob)) return true;
                                 }
                             }

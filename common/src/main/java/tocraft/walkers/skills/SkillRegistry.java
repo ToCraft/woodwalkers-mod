@@ -46,7 +46,7 @@ public class SkillRegistry {
         registerCodec(CantSwimSkill.ID, CantSwimSkill.CODEC);
         registerCodec(UndrownableSkill.ID, UndrownableSkill.CODEC);
         registerCodec(SlowFallingSkill.ID, SlowFallingSkill.CODEC);
-        registerCodec(HunterSkill.ID, HunterSkill.CODEC);
+        registerCodec(FearedSkill.ID, FearedSkill.CODEC);
         registerCodec(ClimbBlocksSkill.ID, ClimbBlocksSkill.CODEC);
         registerCodec(ReinforcementsSkill.ID, ReinforcementsSkill.CODEC);
         // register skills
@@ -77,6 +77,8 @@ public class SkillRegistry {
         registerByClass(Chicken.class, (PreySkill<Chicken>) PreySkill.ofHunterClass(Fox.class));
         registerByClass(Rabbit.class, (PreySkill<Rabbit>) PreySkill.ofHunterClass(Fox.class));
         registerByPredicate(entity -> entity instanceof Turtle && entity.isBaby(), PreySkill.ofHunterClass(Fox.class));
+        // ocelot prey
+        registerByClass(Chicken.class, (PreySkill<Chicken>) PreySkill.ofHunterClass(Ocelot.class));
         // hostile attacked by iron golem
         registerByPredicate(entity -> entity instanceof Enemy && !(entity instanceof Creeper), PreySkill.ofHunterClass(IronGolem.class));
         // hurt by high temperature
@@ -95,9 +97,10 @@ public class SkillRegistry {
         registerByClass(IronGolem.class, new CantSwimSkill<>());
         // undrownable
         registerByClass(IronGolem.class, new UndrownableSkill<>());
-        // hunter
-        registerByClass(Wolf.class, (HunterSkill<Wolf>) HunterSkill.ofPreyClass(AbstractSkeleton.class));
-        registerByPredicate(entity -> entity instanceof Ocelot || entity instanceof Cat, HunterSkill.ofPreyClass(Creeper.class));
+        // feared
+        registerByClass(Wolf.class, (FearedSkill<Wolf>) FearedSkill.ofFearfulClass(AbstractSkeleton.class));
+        registerByPredicate(entity -> entity instanceof Ocelot || entity instanceof Cat, FearedSkill.ofFearfulClass(Creeper.class));
+        registerByClass(Ocelot.class, (FearedSkill<Ocelot>) FearedSkill.ofFearfulClass(Chicken.class));
         // climb blocks
         registerByClass(Spider.class, new ClimbBlocksSkill<>());
         registerByClass(Spider.class, new ClimbBlocksSkill<>(List.of(Blocks.COBWEB), new ArrayList<>()));
