@@ -160,6 +160,25 @@ public abstract class LivingEntityMixin extends Entity implements NearbySongAcce
                 LivingEntity shape = PlayerShape.getCurrentShape(player);
 
                 if (shape != null) {
+                    if (pose == Pose.CROUCHING) {
+                        List<HumanoidSkill<LivingEntity>> humanoidSkillList = SkillRegistry.get(shape, HumanoidSkill.ID).stream().map(skill -> ((HumanoidSkill<LivingEntity>) skill)).toList();
+                        if (!humanoidSkillList.isEmpty()) {
+                            float crouchingEyePos = -1;
+                            for (HumanoidSkill<LivingEntity> humanoidSkill : humanoidSkillList) {
+                                if (humanoidSkill.crouchingEyePos != -1) {
+                                    crouchingEyePos = humanoidSkill.crouchingEyePos;
+                                    break;
+                                }
+                            }
+                            // apply player factor
+                            if (crouchingEyePos == -1) {
+                                cir.setReturnValue(shape.getEyeHeight(Pose.CROUCHING) * 1.27F / 1.62F);
+                            } else {
+                                cir.setReturnValue(crouchingEyePos);
+                            }
+                        }
+                    }
+
                     cir.setReturnValue(shape.getEyeHeight(pose));
                 }
             } catch (Exception ignored) {
@@ -242,26 +261,27 @@ public abstract class LivingEntityMixin extends Entity implements NearbySongAcce
         if ((LivingEntity) (Object) this instanceof Player player) {
             LivingEntity shape = PlayerShape.getCurrentShape(player);
 
-            BlockState blockState = this.level().getBlockState(this.blockPosition());
-            for (ClimbBlocksSkill<?> climbBlocksSkill : SkillRegistry.get(shape, ClimbBlocksSkill.ID).stream().map(entry -> (ClimbBlocksSkill<?>) entry).toList()) {
-                for (Block invalidBlock : climbBlocksSkill.invalidBlocks) {
-                    if (blockState.is(invalidBlock)) {
-                        return;
-                    }
-                }
-
-                if (climbBlocksSkill.validBlocks.isEmpty()) {
-                    cir.setReturnValue(this.horizontalCollision);
-                } else {
-                    for (Block validBlock : climbBlocksSkill.validBlocks) {
-                        if (blockState.is(validBlock)) {
-                            cir.setReturnValue(!climbBlocksSkill.horizontalCollision || this.horizontalCollision);
+            if (shape != null) {
+                BlockState blockState = this.level().getBlockState(this.blockPosition());
+                for (ClimbBlocksSkill<?> climbBlocksSkill : SkillRegistry.get(shape, ClimbBlocksSkill.ID).stream().map(entry -> (ClimbBlocksSkill<?>) entry).toList()) {
+                    for (Block invalidBlock : climbBlocksSkill.invalidBlocks) {
+                        if (blockState.is(invalidBlock)) {
                             return;
+                        }
+                    }
+
+                    if (climbBlocksSkill.validBlocks.isEmpty()) {
+                        cir.setReturnValue(this.horizontalCollision);
+                    } else {
+                        for (Block validBlock : climbBlocksSkill.validBlocks) {
+                            if (blockState.is(validBlock)) {
+                                cir.setReturnValue(!climbBlocksSkill.horizontalCollision || this.horizontalCollision);
+                                return;
+                            }
                         }
                     }
                 }
             }
-
         }
     }
 

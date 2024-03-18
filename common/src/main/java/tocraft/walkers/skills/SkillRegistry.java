@@ -51,6 +51,7 @@ public class SkillRegistry {
         registerCodec(InstantDieOnDamageTypeSkill.ID, InstantDieOnDamageTypeSkill.CODEC);
         registerCodec(AquaticSkill.ID, AquaticSkill.CODEC);
         registerCodec(WalkOnPowderSnow.ID, WalkOnPowderSnow.CODEC);
+        registerCodec(HumanoidSkill.ID, HumanoidSkill.CODEC);
         // register skills
         // mob effects
         registerByClass(Bat.class, new MobEffectSkill<>(new MobEffectInstance(MobEffects.NIGHT_VISION, 100000, 0, false, false)));

@@ -1,7 +1,5 @@
 package tocraft.walkers.mixin;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.protocol.game.ClientboundGameEventPacket;
@@ -44,10 +42,7 @@ import tocraft.walkers.api.PlayerShape;
 import tocraft.walkers.mixin.accessor.*;
 import tocraft.walkers.skills.ShapeSkill;
 import tocraft.walkers.skills.SkillRegistry;
-import tocraft.walkers.skills.impl.BurnInDaylightSkill;
-import tocraft.walkers.skills.impl.InstantDieOnDamageTypeSkill;
-import tocraft.walkers.skills.impl.ReinforcementsSkill;
-import tocraft.walkers.skills.impl.TemperatureSkill;
+import tocraft.walkers.skills.impl.*;
 
 import java.util.Iterator;
 import java.util.List;
@@ -77,7 +72,27 @@ public abstract class PlayerEntityMixin extends LivingEntityMixin {
         LivingEntity entity = PlayerShape.getCurrentShape((Player) (Object) this);
 
         if (entity != null) {
-            cir.setReturnValue(entity.getDimensions(pose));
+            EntityDimensions shapeDimensions = entity.getDimensions(pose);
+            if (pose == Pose.CROUCHING) {
+                List<HumanoidSkill<LivingEntity>> humanoidSkillList = SkillRegistry.get(entity, HumanoidSkill.ID).stream().map(skill -> ((HumanoidSkill<LivingEntity>) skill)).toList();
+                if (!humanoidSkillList.isEmpty()) {
+                    float crouchingHitboxHeight = -1;
+                    for (HumanoidSkill<LivingEntity> humanoidSkill : humanoidSkillList) {
+                        if (humanoidSkill.crouchingHeight != -1) {
+                            crouchingHitboxHeight = humanoidSkill.crouchingHeight;
+                            break;
+                        }
+                    }
+                    // apply player factor
+                    if (crouchingHitboxHeight == -1) {
+                        cir.setReturnValue(EntityDimensions.scalable(shapeDimensions.width, shapeDimensions.height * 1.5F / 1.8F));
+                    } else {
+                        cir.setReturnValue(EntityDimensions.scalable(shapeDimensions.width, crouchingHitboxHeight));
+                    }
+                }
+            } else {
+                cir.setReturnValue(shapeDimensions);
+            }
         }
     }
 
@@ -132,23 +147,10 @@ public abstract class PlayerEntityMixin extends LivingEntityMixin {
             LivingEntity shape = PlayerShape.getCurrentShape((Player) (Object) this);
 
             if (shape != null) {
-                cir.setReturnValue(
-                        ((LivingEntityAccessor) shape).callGetEyeHeight(getPose(), getDimensions(getPose())));
+                cir.setReturnValue(((LivingEntityAccessor) shape).callGetEyeHeight(getPose(), getDimensions(getPose())));
             }
         } catch (Exception ignored) {
 
-        }
-    }
-
-    @Environment(EnvType.CLIENT)
-    @Override
-    public float getEyeHeight(Pose pose) {
-        LivingEntity shape = PlayerShape.getCurrentShape((Player) (Object) this);
-
-        if (shape != null) {
-            return shape.getEyeHeight(pose);
-        } else {
-            return this.getEyeHeight(pose, this.getDimensions(pose));
         }
     }
 
@@ -389,6 +391,7 @@ public abstract class PlayerEntityMixin extends LivingEntityMixin {
         // occurs on client
         if (shape != null) {
             shape.setShiftKeyDown(player.isShiftKeyDown());
+            shape.setPose(player.getPose());
 
             if (!level().isClientSide) {
                 shape.setPosRaw(player.getX(), player.getY(), player.getZ());
@@ -400,7 +403,6 @@ public abstract class PlayerEntityMixin extends LivingEntityMixin {
                 shape.setNoGravity(true);
                 shape.setSwimming(player.isSwimming());
                 shape.startUsingItem(player.getUsedItemHand());
-                shape.setPose(player.getPose());
 
                 if (shape instanceof TamableAnimal) {
                     ((TamableAnimal) shape).setInSittingPose(player.isShiftKeyDown());

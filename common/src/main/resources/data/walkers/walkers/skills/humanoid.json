@@ -1,0 +1,14 @@
+{
+  "entity_types": [
+    "minecraft:zombie",
+    "minecraft:skeleton",
+    "minecraft:wither_skeleton",
+    "minecraft:drowned",
+    "minecraft:stray"
+  ],
+  "skills": [
+    {
+      "type": "walkers:humanoid"
+    }
+  ]
+}

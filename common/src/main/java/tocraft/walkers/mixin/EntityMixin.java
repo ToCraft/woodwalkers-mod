@@ -11,9 +11,12 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import tocraft.walkers.api.PlayerShape;
-import tocraft.walkers.skills.SkillRegistry;
-import tocraft.walkers.skills.impl.NoPhysicsSkill;
 import tocraft.walkers.impl.DimensionsRefresher;
+import tocraft.walkers.skills.SkillRegistry;
+import tocraft.walkers.skills.impl.HumanoidSkill;
+import tocraft.walkers.skills.impl.NoPhysicsSkill;
+
+import java.util.List;
 
 @SuppressWarnings("ConstantConditions")
 @Mixin(Entity.class)
@@ -45,6 +48,9 @@ public abstract class EntityMixin implements DimensionsRefresher {
 
     @Shadow
     protected abstract float getEyeHeight(Pose pose, EntityDimensions dimensions);
+
+    @Shadow
+    public abstract boolean isCrouching();
 
     @Inject(method = "getBbWidth", at = @At("HEAD"), cancellable = true)
     private void getBbWidth(CallbackInfoReturnable<Float> cir) {
@@ -92,6 +98,26 @@ public abstract class EntityMixin implements DimensionsRefresher {
             LivingEntity shape = PlayerShape.getCurrentShape(player);
 
             if (shape != null) {
+                if (this.isCrouching()) {
+                    List<HumanoidSkill<LivingEntity>> humanoidSkillList = SkillRegistry.get(shape, HumanoidSkill.ID).stream().map(skill -> ((HumanoidSkill<LivingEntity>) skill)).toList();
+                    if (!humanoidSkillList.isEmpty()) {
+                        float crouchingEyePos = -1;
+                        for (HumanoidSkill<LivingEntity> humanoidSkill : humanoidSkillList) {
+                            if (humanoidSkill.crouchingEyePos != -1) {
+                                crouchingEyePos = humanoidSkill.crouchingEyePos;
+                                break;
+                            }
+                        }
+                        // apply player factor
+                        if (crouchingEyePos == -1) {
+                            cir.setReturnValue(shape.getEyeHeight(Pose.CROUCHING) * 1.27F / 1.62F);
+                        } else {
+                            cir.setReturnValue(crouchingEyePos);
+                        }
+                        return;
+                    }
+                }
+
                 cir.setReturnValue(shape.getEyeHeight());
             }
         }

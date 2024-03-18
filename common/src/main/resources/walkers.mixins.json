@@ -60,7 +60,6 @@
     "player.RespawnDataCopyMixin"
   ],
   "client": [
-    "client.BipedEntityModelMixin",
     "client.ClientEntityMixin",
     "client.InGameHudMixin",
     "client.PlayerEntityRendererMixin",
