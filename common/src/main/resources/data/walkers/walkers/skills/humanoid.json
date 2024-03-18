@@ -1,10 +1,15 @@
 {
   "entity_types": [
-    "minecraft:zombie",
-    "minecraft:skeleton",
-    "minecraft:wither_skeleton",
     "minecraft:drowned",
-    "minecraft:stray"
+    "minecraft:husk",
+    "minecraft:piglin",
+    "minecraft:piglin_brute",
+    "minecaft:skeleton",
+    "minecraft:stray",
+    "minecraft:wither_skeleton",
+    "minecraft:zombie",
+    "minecraft:zombie_villager",
+    "minecraft:zombified_villager"
   ],
   "skills": [
     {

@@ -73,23 +73,8 @@ public abstract class PlayerEntityMixin extends LivingEntityMixin {
 
         if (entity != null) {
             EntityDimensions shapeDimensions = entity.getDimensions(pose);
-            if (pose == Pose.CROUCHING) {
-                List<HumanoidSkill<LivingEntity>> humanoidSkillList = SkillRegistry.get(entity, HumanoidSkill.ID).stream().map(skill -> ((HumanoidSkill<LivingEntity>) skill)).toList();
-                if (!humanoidSkillList.isEmpty()) {
-                    float crouchingHitboxHeight = -1;
-                    for (HumanoidSkill<LivingEntity> humanoidSkill : humanoidSkillList) {
-                        if (humanoidSkill.crouchingHeight != -1) {
-                            crouchingHitboxHeight = humanoidSkill.crouchingHeight;
-                            break;
-                        }
-                    }
-                    // apply player factor
-                    if (crouchingHitboxHeight == -1) {
-                        cir.setReturnValue(EntityDimensions.scalable(shapeDimensions.width, shapeDimensions.height * 1.5F / 1.8F));
-                    } else {
-                        cir.setReturnValue(EntityDimensions.scalable(shapeDimensions.width, crouchingHitboxHeight));
-                    }
-                }
+            if (pose == Pose.CROUCHING && SkillRegistry.has(entity, HumanoidSkill.ID)) {
+                cir.setReturnValue(EntityDimensions.scalable(shapeDimensions.width, shapeDimensions.height * 1.5F / 1.8F));
             } else {
                 cir.setReturnValue(shapeDimensions);
             }
@@ -392,6 +377,7 @@ public abstract class PlayerEntityMixin extends LivingEntityMixin {
         if (shape != null) {
             shape.setShiftKeyDown(player.isShiftKeyDown());
             shape.setPose(player.getPose());
+            shape.setSwimming(player.isSwimming());
 
             if (!level().isClientSide) {
                 shape.setPosRaw(player.getX(), player.getY(), player.getZ());

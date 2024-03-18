@@ -16,8 +16,6 @@ import tocraft.walkers.skills.SkillRegistry;
 import tocraft.walkers.skills.impl.HumanoidSkill;
 import tocraft.walkers.skills.impl.NoPhysicsSkill;
 
-import java.util.List;
-
 @SuppressWarnings("ConstantConditions")
 @Mixin(Entity.class)
 public abstract class EntityMixin implements DimensionsRefresher {
@@ -98,26 +96,10 @@ public abstract class EntityMixin implements DimensionsRefresher {
             LivingEntity shape = PlayerShape.getCurrentShape(player);
 
             if (shape != null) {
-                if (this.isCrouching()) {
-                    List<HumanoidSkill<LivingEntity>> humanoidSkillList = SkillRegistry.get(shape, HumanoidSkill.ID).stream().map(skill -> ((HumanoidSkill<LivingEntity>) skill)).toList();
-                    if (!humanoidSkillList.isEmpty()) {
-                        float crouchingEyePos = -1;
-                        for (HumanoidSkill<LivingEntity> humanoidSkill : humanoidSkillList) {
-                            if (humanoidSkill.crouchingEyePos != -1) {
-                                crouchingEyePos = humanoidSkill.crouchingEyePos;
-                                break;
-                            }
-                        }
-                        // apply player factor
-                        if (crouchingEyePos == -1) {
-                            cir.setReturnValue(shape.getEyeHeight(Pose.CROUCHING) * 1.27F / 1.62F);
-                        } else {
-                            cir.setReturnValue(crouchingEyePos);
-                        }
-                        return;
-                    }
+                if (this.isCrouching() && SkillRegistry.has(shape, HumanoidSkill.ID)) {
+                    cir.setReturnValue(shape.getEyeHeight(Pose.CROUCHING) * 1.27F / 1.62F);
+                    return;
                 }
-
                 cir.setReturnValue(shape.getEyeHeight());
             }
         }

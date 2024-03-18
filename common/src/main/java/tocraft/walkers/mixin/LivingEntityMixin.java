@@ -160,26 +160,13 @@ public abstract class LivingEntityMixin extends Entity implements NearbySongAcce
                 LivingEntity shape = PlayerShape.getCurrentShape(player);
 
                 if (shape != null) {
-                    if (pose == Pose.CROUCHING) {
-                        List<HumanoidSkill<LivingEntity>> humanoidSkillList = SkillRegistry.get(shape, HumanoidSkill.ID).stream().map(skill -> ((HumanoidSkill<LivingEntity>) skill)).toList();
-                        if (!humanoidSkillList.isEmpty()) {
-                            float crouchingEyePos = -1;
-                            for (HumanoidSkill<LivingEntity> humanoidSkill : humanoidSkillList) {
-                                if (humanoidSkill.crouchingEyePos != -1) {
-                                    crouchingEyePos = humanoidSkill.crouchingEyePos;
-                                    break;
-                                }
-                            }
-                            // apply player factor
-                            if (crouchingEyePos == -1) {
-                                cir.setReturnValue(shape.getEyeHeight(Pose.CROUCHING) * 1.27F / 1.62F);
-                            } else {
-                                cir.setReturnValue(crouchingEyePos);
-                            }
-                        }
+                    float shapeEyeHeight = shape.getEyeHeight(pose);
+                    if (pose == Pose.CROUCHING && SkillRegistry.has(shape, HumanoidSkill.ID)) {
+                        cir.setReturnValue(shapeEyeHeight * 1.27F / 1.62F);
+                        return;
                     }
 
-                    cir.setReturnValue(shape.getEyeHeight(pose));
+                    cir.setReturnValue(shapeEyeHeight);
                 }
             } catch (Exception ignored) {
             }

@@ -89,6 +89,8 @@ public abstract class PlayerEntityRendererMixin extends LivingEntityRenderer<Abs
             shape.yHeadRotO = player.yHeadRotO;
             shape.tickCount = player.tickCount;
             shape.swingingArm = player.swingingArm;
+            ((LivingEntityAccessor) shape).setSwimAmount(((LivingEntityAccessor) player).getSwimAmount());
+            ((LivingEntityAccessor) shape).setSwimAmountO(((LivingEntityAccessor) player).getSwimAmountO());
             shape.setOnGround(player.onGround());
             shape.setDeltaMovement(player.getDeltaMovement());
             shape.setInvisible(player.isInvisibleTo(Minecraft.getInstance().player));
