@@ -36,6 +36,7 @@ public class AbilityRegistry {
         register(livingEntity -> livingEntity instanceof NeutralMob, new AngerAbility<>());
 
         // Register 'normal' Abilities
+        register(AbstractHorse.class, new HorseAbility<>());
         register(Blaze.class, new BlazeAbility<>());
         register(Creeper.class, new CreeperAbility<>());
         register(EnderDragon.class, new EnderDragonAbility<>());
@@ -55,7 +56,6 @@ public class AbilityRegistry {
         register(Sniffer.class, new SnifferAbility<>());
         register(Chicken.class, new ChickenAbility<>());
         register(MushroomCow.class, new MushroomCowAbility<>());
-        register(AbstractHorse.class, new HorseAbility<>());
         register(Bee.class, new AngerAbility<>(SoundEvents.BEE_LOOP, SoundEvents.BEE_LOOP_AGGRESSIVE));
         register(Shulker.class, new ShulkerAbility<>());
         register(Pufferfish.class, new PufferfishAbility<>());
