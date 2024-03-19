@@ -312,9 +312,11 @@ public abstract class LivingEntityMixin extends Entity implements NearbySongAcce
         if (cir.getReturnValue()) {
             if ((Object) this instanceof Player) {
                 LivingEntity shape = PlayerShape.getCurrentShape((Player) (Object) this);
-                for (ShapeSkill<LivingEntity> temperatureSkill : SkillRegistry.get(shape, TemperatureSkill.ID)) {
-                    if (((TemperatureSkill<LivingEntity>) temperatureSkill).coldEnoughToSnow) {
-                        cir.setReturnValue(false);
+                if (shape != null) {
+                    for (ShapeSkill<LivingEntity> temperatureSkill : SkillRegistry.get(shape, TemperatureSkill.ID)) {
+                        if (((TemperatureSkill<LivingEntity>) temperatureSkill).coldEnoughToSnow) {
+                            cir.setReturnValue(false);
+                        }
                     }
                 }
             }

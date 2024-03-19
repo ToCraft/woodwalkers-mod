@@ -127,11 +127,13 @@ public class SkillRegistry {
      * @return a list of every available skill for the specified entity
      */
     @SuppressWarnings("unchecked")
-    public static <L extends LivingEntity> List<ShapeSkill<L>> getAll(@NotNull L shape) {
+    public static <L extends LivingEntity> List<ShapeSkill<L>> getAll(L shape) {
         List<ShapeSkill<L>> skillList = new ArrayList<>();
-        List<ShapeSkill<?>> unformulatedSkills = new ArrayList<>(skills.entrySet().stream().filter(entry -> entry.getKey().test(shape)).map(Map.Entry::getValue).toList());
-        for (ShapeSkill<?> unformatedSkill : unformulatedSkills) {
-            skillList.add((ShapeSkill<L>) unformatedSkill);
+        if (shape != null) {
+            List<ShapeSkill<?>> unformulatedSkills = new ArrayList<>(skills.entrySet().stream().filter(entry -> entry.getKey().test(shape)).map(Map.Entry::getValue).toList());
+            for (ShapeSkill<?> unformatedSkill : unformulatedSkills) {
+                skillList.add((ShapeSkill<L>) unformatedSkill);
+            }
         }
         return skillList;
     }
@@ -139,7 +141,7 @@ public class SkillRegistry {
     /**
      * @return a list of every available skill for the specified entity
      */
-    public static <L extends LivingEntity> List<ShapeSkill<L>> get(@NotNull L shape, ResourceLocation skillId) {
+    public static <L extends LivingEntity> List<ShapeSkill<L>> get(L shape, ResourceLocation skillId) {
         List<ShapeSkill<L>> skillList = new ArrayList<>();
         for (ShapeSkill<L> skill : getAll(shape)) {
             if (skill.getId() == skillId) {

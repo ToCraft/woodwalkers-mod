@@ -465,9 +465,11 @@ public abstract class PlayerEntityMixin extends LivingEntityMixin {
     @Inject(method = "hurt", at = @At("HEAD"))
     private void instantDieOnDamageTypeSkill(DamageSource source, float amount, CallbackInfoReturnable<Boolean> cir) {
         LivingEntity shape = PlayerShape.getCurrentShape((Player) (Object) this);
-        for (ShapeSkill<LivingEntity> instantDieOnDamageTypeSkill : SkillRegistry.get(shape, InstantDieOnDamageTypeSkill.ID)) {
-            if (source.type() == level().registryAccess().registryOrThrow(Registries.DAMAGE_TYPE).get(((InstantDieOnDamageTypeSkill<LivingEntity>) instantDieOnDamageTypeSkill).damageType)) {
-                this.die(source);
+        if (shape != null) {
+            for (ShapeSkill<LivingEntity> instantDieOnDamageTypeSkill : SkillRegistry.get(shape, InstantDieOnDamageTypeSkill.ID)) {
+                if (source.type() == level().registryAccess().registryOrThrow(Registries.DAMAGE_TYPE).get(((InstantDieOnDamageTypeSkill<LivingEntity>) instantDieOnDamageTypeSkill).damageType)) {
+                    this.die(source);
+                }
             }
         }
     }
