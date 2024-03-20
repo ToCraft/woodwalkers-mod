@@ -31,8 +31,6 @@ import tocraft.walkers.skills.SkillRegistry;
 import tocraft.walkers.skills.impl.AquaticSkill;
 import tocraft.walkers.skills.impl.FlyingSkill;
 
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -41,7 +39,6 @@ public class Walkers {
 
     public static final Logger LOGGER = LoggerFactory.getLogger(Walkers.class);
     public static final String MODID = "walkers";
-    private static final String MAVEN_URL = "https://maven.tocraft.dev/public/dev/tocraft/walkers/maven-metadata.xml";
     public static final WalkersConfig CONFIG = ConfigLoader.read(MODID, WalkersConfig.class);
     public static final List<UUID> devs = new ArrayList<>();
 
@@ -63,17 +60,15 @@ public class Walkers {
     }
 
     public static void registerJoinSyncPacket() {
-        try {
-            VersionChecker.registerMavenChecker(MODID, new URL(MAVEN_URL), Component.translatable("key.categories.walkers"));
-        } catch (MalformedURLException ignored) {
-        }
+        VersionChecker.registerDefaultGitHubChecker(MODID, "ToCraft", "woodwalkers-mod", Component.literal("Woodwalkers"));
 
         PlayerEvent.PLAYER_JOIN.register(player -> {
             Int2ObjectMap<Object> trackers = ((ThreadedAnvilChunkStorageAccessor) ((ServerLevel) player.level())
                     .getChunkSource().chunkMap).getEntityMap();
             trackers.forEach((entityid, tracking) -> {
-                if (player.level().getEntity(entityid) instanceof ServerPlayer)
+                if (player.level().getEntity(entityid) instanceof ServerPlayer) {
                     PlayerShape.sync(((ServerPlayer) player.serverLevel().getEntity(entityid)), player);
+                }
             });
         });
     }

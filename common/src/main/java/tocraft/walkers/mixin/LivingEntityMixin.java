@@ -45,10 +45,6 @@ public abstract class LivingEntityMixin extends Entity implements NearbySongAcce
     public abstract boolean hasEffect(MobEffect effect);
 
     @Shadow
-    @Nullable
-    public abstract LivingEntity getLastHurtByMob();
-
-    @Shadow
     public abstract void kill();
 
     protected LivingEntityMixin(EntityType<?> type, Level world) {
@@ -68,7 +64,7 @@ public abstract class LivingEntityMixin extends Entity implements NearbySongAcce
                         break;
                     }
                 }
-                if (!this.isShiftKeyDown() && (shape.getType().is(WalkersEntityTags.SLOW_FALLING) || bool || SkillRegistry.has(shape, SlowFallingSkill.ID))) {
+                if (!this.isShiftKeyDown() && (bool || SkillRegistry.has(shape, SlowFallingSkill.ID))) {
                     return true;
                 }
             }
