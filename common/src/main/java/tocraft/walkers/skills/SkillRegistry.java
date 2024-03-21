@@ -15,7 +15,6 @@ import net.minecraft.world.entity.boss.enderdragon.EnderDragon;
 import net.minecraft.world.entity.boss.wither.WitherBoss;
 import net.minecraft.world.entity.monster.*;
 import net.minecraft.world.level.block.Blocks;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import tocraft.walkers.ability.ShapeAbility;
 import tocraft.walkers.skills.impl.*;
@@ -130,10 +129,7 @@ public class SkillRegistry {
     public static <L extends LivingEntity> List<ShapeSkill<L>> getAll(L shape) {
         List<ShapeSkill<L>> skillList = new ArrayList<>();
         if (shape != null) {
-            List<ShapeSkill<?>> unformulatedSkills = new ArrayList<>(skills.entrySet().stream().filter(entry -> entry.getKey().test(shape)).map(Map.Entry::getValue).toList());
-            for (ShapeSkill<?> unformatedSkill : unformulatedSkills) {
-                skillList.add((ShapeSkill<L>) unformatedSkill);
-            }
+            skillList.addAll(skills.entrySet().stream().filter(entry -> entry.getKey().test(shape)).map(entry -> (ShapeSkill<L>) entry.getValue()).toList());
         }
         return skillList;
     }
@@ -141,11 +137,15 @@ public class SkillRegistry {
     /**
      * @return a list of every available skill for the specified entity
      */
+    @SuppressWarnings("unchecked")
     public static <L extends LivingEntity> List<ShapeSkill<L>> get(L shape, ResourceLocation skillId) {
         List<ShapeSkill<L>> skillList = new ArrayList<>();
-        for (ShapeSkill<L> skill : getAll(shape)) {
-            if (skill.getId() == skillId) {
-                skillList.add(skill);
+        if (shape != null) {
+            for (Map.Entry<Predicate<LivingEntity>, ShapeSkill<?>> skillEntry : skills.entrySet()) {
+                ShapeSkill<?> skill = skillEntry.getValue();
+                if (skill.getId() == skillId && skillEntry.getKey().test(shape)) {
+                    skillList.add((ShapeSkill<L>) skill);
+                }
             }
         }
         return skillList;
@@ -189,10 +189,12 @@ public class SkillRegistry {
         return null;
     }
 
-    public static <L extends LivingEntity> boolean has(@NotNull L shape, ResourceLocation skillId) {
-        for (ShapeSkill<L> skill : getAll(shape)) {
-            if (skill.getId() == skillId) {
-                return true;
+    public static <L extends LivingEntity> boolean has(L shape, ResourceLocation skillId) {
+        if (shape != null) {
+            for (Map.Entry<Predicate<LivingEntity>, ShapeSkill<?>> skillEntry : skills.entrySet()) {
+                if (skillEntry.getValue().getId() == skillId && skillEntry.getKey().test(shape)) {
+                    return true;
+                }
             }
         }
         return false;
