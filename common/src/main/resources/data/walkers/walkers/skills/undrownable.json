@@ -1,6 +1,7 @@
 {
   "entity_types": [
-    "friendsandfoes:copper_golem"
+    "friendsandfoes:copper_golem",
+    "friendsandfoes:tuff_golem"
   ],
   "skills": [
     {
