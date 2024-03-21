@@ -52,6 +52,7 @@
     "accessor.ShulkerAccessor",
     "accessor.SlimeEntityAccessor",
     "accessor.SquidEntityAccessor",
+    "accessor.TropicalFishAccessor",
     "entity.BowItemMixin",
     "player.PlayerEntityDataMixin",
     "player.PlayerEntityTickMixin",

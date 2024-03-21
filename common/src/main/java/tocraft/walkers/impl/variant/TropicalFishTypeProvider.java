@@ -1,14 +1,19 @@
 package tocraft.walkers.impl.variant;
 
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.animal.TropicalFish;
+import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.Level;
+import tocraft.walkers.Walkers;
 import tocraft.walkers.api.variant.TypeProvider;
+import tocraft.walkers.mixin.accessor.TropicalFishAccessor;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Random;
 
 public class TropicalFishTypeProvider extends TypeProvider<TropicalFish> {
     public static final List<TropicalFish.Pattern> patternValues = Arrays.asList(TropicalFish.Pattern.values());
@@ -21,7 +26,16 @@ public class TropicalFishTypeProvider extends TypeProvider<TropicalFish> {
     @Override
     public TropicalFish create(EntityType<TropicalFish> type, Level world, int data) {
         TropicalFish fish = new TropicalFish(type, world);
-        fish.setVariant(patternValues.get(data));
+        TropicalFish.Pattern pattern = patternValues.get(data);
+        if (Walkers.CONFIG.multiVectorVariants > 0) {
+            DyeColor baseColor = DyeColor.byId(new Random().nextInt(0, 15));
+            DyeColor patternColor = DyeColor.byId(new Random().nextInt(0, 15));;
+            ((TropicalFishAccessor) fish).callSetPackedVariant(new TropicalFish.Variant(pattern, baseColor, patternColor).getPackedId());
+
+        }
+        else {
+            fish.setVariant(pattern);
+        }
         return fish;
     }
 

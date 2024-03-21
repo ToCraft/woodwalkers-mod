@@ -73,6 +73,9 @@ public class WalkersConfig implements Config {
         }
     };
 
+    // 0 - none, 1 - completely random
+    public int multiVectorVariants = 1;
+
     @Synchronize
     public List<String> abilityBlacklist = new ArrayList<>();
     @Synchronize

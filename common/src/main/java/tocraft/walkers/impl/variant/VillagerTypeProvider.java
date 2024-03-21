@@ -6,7 +6,10 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.level.Level;
+import tocraft.walkers.Walkers;
 import tocraft.walkers.api.variant.TypeProvider;
+
+import java.util.Random;
 
 public class VillagerTypeProvider extends TypeProvider<Villager> {
 
@@ -18,6 +21,9 @@ public class VillagerTypeProvider extends TypeProvider<Villager> {
     @Override
     public Villager create(EntityType<Villager> type, Level level, int data) {
         Villager villager = new Villager(type, level);
+        if (Walkers.CONFIG.multiVectorVariants > 0) {
+            villager.setVillagerData(villager.getVillagerData().setProfession(BuiltInRegistries.VILLAGER_PROFESSION.byId(new Random().nextInt(0, BuiltInRegistries.VILLAGER_PROFESSION.size() - 1))));
+        }
         villager.setVariant(BuiltInRegistries.VILLAGER_TYPE.byId(data));
         return villager;
     }
