@@ -1,0 +1,33 @@
+{
+  "entity_type": "friendsandfoes:moobloom",
+  "required_mod": "flowerymooblooms",
+  "type_provider": {
+    "fallback": 0,
+    "range": 16,
+    "nbt": [
+      {
+        "nbt_type": "STRING",
+        "nbt_field": "Variant",
+        "parameters": {
+          "0": "allium",
+          "1": "azure_bluet",
+          "2": "blue_orchid",
+          "3": "cornflower",
+          "4": "dandelion",
+          "5": "lilac",
+          "6": "lily_of_the_valley",
+          "7": "orange_tulip",
+          "8": "oxeye_daisy",
+          "9": "peony",
+          "10": "pink_tulip",
+          "11": "poppy",
+          "12": "red_tulip",
+          "13": "rose_bush",
+          "14": "sunflower",
+          "15": "white_tulip",
+          "16": "buttercup"
+        }
+      }
+    ]
+  }
+}
