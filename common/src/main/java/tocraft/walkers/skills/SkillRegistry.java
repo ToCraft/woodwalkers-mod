@@ -90,6 +90,7 @@ public class SkillRegistry {
         registerByClass(Evoker.class, (RiderSkill<Evoker>) RiderSkill.ofRideableClass(Ravager.class));
         registerByClass(Pillager.class, (RiderSkill<Pillager>) RiderSkill.ofRideableClass(Ravager.class));
         registerByClass(Vindicator.class, (RiderSkill<Vindicator>) RiderSkill.ofRideableClass(Ravager.class));
+        registerByClass(Skeleton.class, (RiderSkill<Skeleton>) RiderSkill.ofRideableClass(Spider.class));
         // Zombie Horse and Skeleton Horse riding
         registerByPredicate(entity -> entity instanceof Enemy, new RiderSkill<>(List.of(rideable -> rideable instanceof AbstractHorse && rideable instanceof Enemy)));
         // lava walking

@@ -33,34 +33,34 @@ public class AbilityRegistry {
 
     public static void init() {
         // Register generic Abilities first (since the last registered ability will be the used one
-        register(livingEntity -> livingEntity instanceof NeutralMob, new AngerAbility<>());
+        registerByPredicate(livingEntity -> livingEntity instanceof NeutralMob, new AngerAbility<>());
 
         // Register 'normal' Abilities
-        register(AbstractHorse.class, new HorseAbility<>());
-        register(Blaze.class, new BlazeAbility<>());
-        register(Creeper.class, new CreeperAbility<>());
-        register(EnderDragon.class, new EnderDragonAbility<>());
-        register(EnderMan.class, new EndermanAbility<>());
-        register(Ghast.class, new GhastAbility<>());
-        register(SnowGolem.class, new SnowGolemAbility<>());
-        register(WitherBoss.class, new WitherAbility<>());
-        register(Cow.class, new CowAbility<>());
-        register(Goat.class, new CowAbility<>());
-        register(Endermite.class, new EndermiteAbility<>());
-        register(Llama.class, new LlamaAbility<>());
-        register(Witch.class, new WitchAbility<>());
-        register(Evoker.class, new EvokerAbility<>());
-        register(Warden.class, new WardenAbility<>());
-        register(Wolf.class, new AngerAbility<>(SoundEvents.WOLF_PANT, SoundEvents.WOLF_GROWL));
-        register(Sheep.class, new SheepAbility<>());
-        register(Sniffer.class, new SnifferAbility<>());
-        register(Chicken.class, new ChickenAbility<>());
-        register(MushroomCow.class, new MushroomCowAbility<>());
-        register(Bee.class, new AngerAbility<>(SoundEvents.BEE_LOOP, SoundEvents.BEE_LOOP_AGGRESSIVE));
-        register(Shulker.class, new ShulkerAbility<>());
-        register(Pufferfish.class, new PufferfishAbility<>());
-        register(Turtle.class, new TurtleAbility<>());
-        register(Rabbit.class, new RabbitAbility<>());
+        registerByClass(AbstractHorse.class, new HorseAbility<>());
+        registerByClass(Blaze.class, new BlazeAbility<>());
+        registerByClass(Creeper.class, new CreeperAbility<>());
+        registerByClass(EnderDragon.class, new EnderDragonAbility<>());
+        registerByClass(EnderMan.class, new EndermanAbility<>());
+        registerByClass(Ghast.class, new GhastAbility<>());
+        registerByClass(SnowGolem.class, new SnowGolemAbility<>());
+        registerByClass(WitherBoss.class, new WitherAbility<>());
+        registerByClass(Cow.class, new CowAbility<>());
+        registerByClass(Goat.class, new CowAbility<>());
+        registerByClass(Endermite.class, new EndermiteAbility<>());
+        registerByClass(Llama.class, new LlamaAbility<>());
+        registerByClass(Witch.class, new WitchAbility<>());
+        registerByClass(Evoker.class, new EvokerAbility<>());
+        registerByClass(Warden.class, new WardenAbility<>());
+        registerByClass(Wolf.class, new AngerAbility<>(SoundEvents.WOLF_PANT, SoundEvents.WOLF_GROWL));
+        registerByClass(Sheep.class, new SheepAbility<>());
+        registerByClass(Sniffer.class, new SnifferAbility<>());
+        registerByClass(Chicken.class, new ChickenAbility<>());
+        registerByClass(MushroomCow.class, new MushroomCowAbility<>());
+        registerByClass(Bee.class, new AngerAbility<>(SoundEvents.BEE_LOOP, SoundEvents.BEE_LOOP_AGGRESSIVE));
+        registerByClass(Shulker.class, new ShulkerAbility<>());
+        registerByClass(Pufferfish.class, new PufferfishAbility<>());
+        registerByClass(Turtle.class, new TurtleAbility<>());
+        registerByClass(Rabbit.class, new RabbitAbility<>());
     }
 
     /**
@@ -76,12 +76,12 @@ public class AbilityRegistry {
         return !shapeAbilities.isEmpty() ? (ShapeAbility<L>) shapeAbilities.get(shapeAbilities.size() - 1) : null;
     }
 
-    public static <A extends LivingEntity> void register(EntityType<A> type, ShapeAbility<A> ability) {
-        register(livingEntity -> type.equals(livingEntity.getType()), ability);
+    public static <A extends LivingEntity> void registerByType(EntityType<A> type, ShapeAbility<A> ability) {
+        registerByPredicate(livingEntity -> type.equals(livingEntity.getType()), ability);
     }
 
-    public static <A extends LivingEntity> void register(Class<A> entityClass, ShapeAbility<A> ability) {
-        register(entityClass::isInstance, ability);
+    public static <A extends LivingEntity> void registerByClass(Class<A> entityClass, ShapeAbility<A> ability) {
+        registerByPredicate(entityClass::isInstance, ability);
     }
 
     /**
@@ -90,7 +90,7 @@ public class AbilityRegistry {
      * @param entityPredicate this should only be true, if the entity is the correct class for the ability!
      * @param ability         your {@link ShapeAbility}
      */
-    public static void register(Predicate<LivingEntity> entityPredicate, ShapeAbility<?> ability) {
+    public static void registerByPredicate(Predicate<LivingEntity> entityPredicate, ShapeAbility<?> ability) {
         abilities.put(entityPredicate, ability);
     }
 
