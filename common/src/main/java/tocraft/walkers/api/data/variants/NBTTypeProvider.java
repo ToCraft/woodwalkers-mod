@@ -74,7 +74,6 @@ public class NBTTypeProvider<T extends LivingEntity> extends TypeProvider<T> {
             if (validData.size() > 1) {
                 Walkers.LOGGER.error("{}: found too much valid variant ids: {} for entity: {}", getClass().getSimpleName(), validData.size(), entity.getType().getDescriptionId());
             }
-            Walkers.LOGGER.warn("got " + validData.get(0));
             return validData.get(0);
         }
         Walkers.LOGGER.error("{}: parameter for the Variant not found.", getClass().getSimpleName());
