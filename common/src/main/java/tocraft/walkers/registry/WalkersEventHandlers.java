@@ -98,7 +98,7 @@ public class WalkersEventHandlers {
 
     public static void registerHostilityUpdateHandler() {
         InteractionEvent.INTERACT_ENTITY.register((player, entity, hand) -> {
-            if (!player.level().isClientSide && entity instanceof Monster) {
+            if (!player.level().isClientSide && Walkers.CONFIG.playerCanTriggerHostiles && entity instanceof Monster) {
                 PlayerHostility.set(player, Walkers.CONFIG.hostilityTime);
             }
 

@@ -12,6 +12,7 @@ public class WalkersConfig implements Config {
     public boolean revoke2ndShapeOnDeath = false;
     public boolean shapesEquipItems = true;
     public boolean shapesEquipArmor = true;
+    public boolean playerCanTriggerHostiles = true;
     public boolean hostilesIgnoreHostileShapedPlayer = true;
     public boolean hostilesForgetNewHostileShapedPlayer = false;
     public boolean hunterAttackAsPreyMorphedPlayer = true;
