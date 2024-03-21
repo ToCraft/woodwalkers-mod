@@ -5,6 +5,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.biome.Biome;
 
@@ -19,6 +20,13 @@ public abstract class TypeProvider<T extends LivingEntity> {
     public abstract int getVariantData(T entity);
 
     public abstract T create(EntityType<T> type, Level world, int data);
+
+    /**
+     * Create the entity based on player data
+     */
+    public T create(EntityType<T> type, Level world, int data, Player player) {
+        return create(type, world, data);
+    }
 
     public abstract int getFallbackData();
 

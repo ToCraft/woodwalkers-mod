@@ -7,6 +7,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -159,6 +160,18 @@ public class ShapeType<T extends LivingEntity> {
         TypeProvider<T> typeProvider = TypeProviderRegistry.getProvider(type);
         if (typeProvider != null) {
             return typeProvider.create(type, world, variantData);
+        }
+
+        return type.create(world);
+    }
+
+    /**
+     * Create the entity based on player data
+     */
+    public T create(Level world, Player player) {
+        TypeProvider<T> typeProvider = TypeProviderRegistry.getProvider(type);
+        if (typeProvider != null) {
+            return typeProvider.create(type, world, variantData, player);
         }
 
         return type.create(world);

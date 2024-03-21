@@ -38,7 +38,7 @@ public class SwapPackets {
                     if (type != null) {
                         // update Player
                         PlayerShape.updateShapes((ServerPlayer) context.getPlayer(),
-                                type.create(context.getPlayer().level()));
+                                type.create(context.getPlayer().level(), context.getPlayer()));
                     } else {
                         // Swap back to player if server allows it
                         PlayerShape.updateShapes((ServerPlayer) context.getPlayer(), null);
