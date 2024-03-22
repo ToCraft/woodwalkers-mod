@@ -21,7 +21,7 @@ import tocraft.walkers.api.PlayerShape;
 import tocraft.walkers.mixin.client.accessor.EntityShadowAccessor;
 
 @Environment(EnvType.CLIENT)
-@Mixin(EntityRenderDispatcher.class)
+@Mixin(value = EntityRenderDispatcher.class, priority = 999)
 public abstract class ShadowMixin {
 
     @Unique

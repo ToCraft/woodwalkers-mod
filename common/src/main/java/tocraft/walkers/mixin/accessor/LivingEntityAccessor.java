@@ -40,4 +40,16 @@ public interface LivingEntityAccessor {
 
     @Invoker
     void callSetLivingEntityFlag(int mask, boolean value);
+
+    @Accessor
+    float getSwimAmount();
+
+    @Accessor
+    void setSwimAmount(float swimAmount);
+
+    @Accessor
+    float getSwimAmountO();
+
+    @Accessor
+    void setSwimAmountO(float swimAmount);
 }

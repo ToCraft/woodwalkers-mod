@@ -13,11 +13,11 @@ import org.jetbrains.annotations.Nullable;
 import tocraft.walkers.Walkers;
 import tocraft.walkers.api.PlayerShape;
 import tocraft.walkers.api.PlayerShapeChanger;
+import tocraft.walkers.api.blacklist.EntityBlacklist;
 import tocraft.walkers.api.variant.ShapeType;
 import tocraft.walkers.impl.PlayerDataProvider;
 import tocraft.walkers.network.ClientNetworking;
 import tocraft.walkers.network.NetworkHandler;
-import tocraft.walkers.registry.WalkersEntityTags;
 
 public class UnlockPackets {
 
@@ -55,13 +55,13 @@ public class UnlockPackets {
                 context.getPlayer().getServer().execute(() -> {
                     @Nullable
                     ShapeType<? extends LivingEntity> type = ShapeType.from(entityType, variant);
-                    if (type != null && !type.getEntityType().is(WalkersEntityTags.BLACKLISTED) && (Walkers.CONFIG.unlockOverridesCurrentShape || ((PlayerDataProvider) context.getPlayer()).walkers$get2ndShape() == null)) {
+                    if (type != null && !EntityBlacklist.isBlacklisted(type.getEntityType()) && (Walkers.CONFIG.unlockOverridesCurrentShape || ((PlayerDataProvider) context.getPlayer()).walkers$get2ndShape() == null)) {
                         // set 2nd shape
                         boolean result = PlayerShapeChanger.change2ndShape((ServerPlayer) context.getPlayer(), type);
                         // update Player
                         if (result)
                             PlayerShape.updateShapes((ServerPlayer) context.getPlayer(),
-                                    type.create(context.getPlayer().level()));
+                                    type.create(context.getPlayer().level(), context.getPlayer()));
                     }
                 });
             } else {

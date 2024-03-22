@@ -1,0 +1,13 @@
+{
+  "entity_type": "friendsandfoes:copper_golem",
+  "type_provider": {
+    "fallback": 0,
+    "range": 3,
+    "nbt": [
+      {
+        "nbt_type": "INTEGER",
+        "nbt_field": "OxidationLevel"
+      }
+    ]
+  }
+}

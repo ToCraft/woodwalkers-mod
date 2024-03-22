@@ -1,0 +1,49 @@
+{
+  "entity_types": [
+    "amethyst_imbuement:basic_hamster",
+    "naturalist:bluejay",
+    "naturalist:canary",
+    "naturalist:cardinal",
+    "naturalist:duck",
+    "naturalist:finch",
+    "naturalist:robin",
+    "naturalist:sparrow",
+    "wildlife:bluebird",
+    "wildlife:bluebird_albino",
+    "wildlife:chickadee",
+    "wildlife:chickadee_albino",
+    "wildlife:cottonbird",
+    "wildlife:cottonbird_albino",
+    "wildlife:flycatcher",
+    "wildlife:flycatcher_albino",
+    "wildlife:goldfinch",
+    "wildlife:goldfinch_albino",
+    "wildlife:lark",
+    "wildlife:lark_albino",
+    "wildlife:meadowlark",
+    "wildlife:meadowlark_albino",
+    "wildlife:phoebe",
+    "wildlife:phoebe_albino",
+    "wildlife:robin",
+    "wildlife:robin_albino",
+    "wildlife:sparrow",
+    "wildlife:sparrow_albino",
+    "wildlife:swallow",
+    "wildlife:swallow_albino",
+    "wildlife:tiger_butterfly",
+    "wildlife:towhee",
+    "wildlife:towhee_albino",
+    "wildlife:white_eye",
+    "wildlife:white_eye_albino",
+    "wildlife:wren",
+    "wildlife:wren_albino"
+  ],
+  "skills": [
+    {
+      "type": "walkers:prey",
+      "hunter": [
+        "minecraft:fox"
+      ]
+    }
+  ]
+}

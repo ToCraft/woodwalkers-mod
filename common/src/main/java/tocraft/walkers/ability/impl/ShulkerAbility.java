@@ -27,4 +27,9 @@ public class ShulkerAbility<T extends Shulker> extends ShapeAbility<T> {
     public Item getIcon() {
         return Items.SHULKER_SHELL;
     }
+
+    @Override
+    public int getDefaultCooldown() {
+        return 80;
+    }
 }

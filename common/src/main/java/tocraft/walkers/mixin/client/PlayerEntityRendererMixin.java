@@ -42,8 +42,8 @@ import tocraft.walkers.api.model.EntityUpdater;
 import tocraft.walkers.api.model.EntityUpdaters;
 import tocraft.walkers.impl.PlayerDataProvider;
 import tocraft.walkers.mixin.accessor.EntityAccessor;
-import tocraft.walkers.mixin.client.accessor.LimbAnimatorAccessor;
 import tocraft.walkers.mixin.accessor.LivingEntityAccessor;
+import tocraft.walkers.mixin.client.accessor.LimbAnimatorAccessor;
 import tocraft.walkers.mixin.client.accessor.LivingEntityRendererAccessor;
 
 import java.util.Optional;
@@ -89,6 +89,8 @@ public abstract class PlayerEntityRendererMixin extends LivingEntityRenderer<Abs
             shape.yHeadRotO = player.yHeadRotO;
             shape.tickCount = player.tickCount;
             shape.swingingArm = player.swingingArm;
+            ((LivingEntityAccessor) shape).setSwimAmount(((LivingEntityAccessor) player).getSwimAmount());
+            ((LivingEntityAccessor) shape).setSwimAmountO(((LivingEntityAccessor) player).getSwimAmountO());
             shape.setOnGround(player.onGround());
             shape.setDeltaMovement(player.getDeltaMovement());
             shape.setInvisible(player.isInvisibleTo(Minecraft.getInstance().player));
@@ -140,7 +142,7 @@ public abstract class PlayerEntityRendererMixin extends LivingEntityRenderer<Abs
                 entityUpdater.update((Player) player, shape);
             }
 
-            if (!player.isInvisibleTo(Minecraft.getInstance().player)) {
+            if (!player.isInvisibleTo(Minecraft.getInstance().player) && !player.isSpectator()) {
                 EntityRenderer<LivingEntity> shapeRenderer = (EntityRenderer<LivingEntity>) Minecraft.getInstance().getEntityRenderDispatcher().getRenderer(shape);
 
                 // Sync biped information for stuff like bow drawing animation

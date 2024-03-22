@@ -30,7 +30,7 @@ public abstract class LivingEntityMixin extends Entity {
             LivingEntity shape = PlayerShape.getCurrentShape(player);
 
             if (shape != null) {
-                if (Walkers.isAquatic(shape)) {
+                if (Walkers.isAquatic(shape) < 1) {
                     return;
                 }
             }
