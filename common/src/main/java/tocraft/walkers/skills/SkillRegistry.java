@@ -116,6 +116,7 @@ public class SkillRegistry {
         // cats hunt rabbits
         registerByClass(Rabbit.class, new PreySkill<>(List.of(entity -> entity instanceof Cat cat && !cat.isTame())));
         // aquatic
+        registerByPredicate(entity -> entity instanceof Mob mob && mob.getMobType().equals(MobType.WATER) && mob instanceof WaterAnimal, new AquaticSkill<>(0));
         registerByPredicate(entity -> entity instanceof Mob mob && mob.getMobType().equals(MobType.WATER) && !(mob instanceof WaterAnimal), new AquaticSkill<>(1));
         // dolphin don't like sun
         registerByClass(Dolphin.class, new BurnInDaylightSkill<>());

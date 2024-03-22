@@ -17,4 +17,14 @@ public abstract class ShapeSkill<E extends LivingEntity> {
     public @Nullable TextureAtlasSprite getIcon() {
         return null;
     }
+
+    @Environment(EnvType.CLIENT)
+    public @Nullable ResourceLocation getIconId() {
+        TextureAtlasSprite icon = getIcon();
+        if (icon != null) {
+            return icon.atlasLocation();
+        } else {
+            return null;
+        }
+    }
 }
