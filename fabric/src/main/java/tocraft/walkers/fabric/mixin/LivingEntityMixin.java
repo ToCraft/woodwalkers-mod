@@ -1,5 +1,6 @@
 package tocraft.walkers.fabric.mixin;
 
+import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -23,19 +24,17 @@ public abstract class LivingEntityMixin extends Entity {
         super(type, world);
     }
 
-    @Redirect(method = "baseTick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;setAirSupply(I)V", ordinal = 2))
-    private void cancelAirIncrement(LivingEntity livingEntity, int air) {
+    @WrapWithCondition(method = "baseTick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;setAirSupply(I)V", ordinal = 2))
+    private boolean cancelAirIncrement(LivingEntity livingEntity, int air) {
         // Aquatic creatures should not regenerate breath on land
         if ((Object) this instanceof Player player) {
             LivingEntity shape = PlayerShape.getCurrentShape(player);
 
             if (shape != null) {
-                if (Walkers.isAquatic(shape) < 1) {
-                    return;
-                }
+                return Walkers.isAquatic(shape) >= 1;
             }
         }
 
-        this.setAirSupply(this.increaseAirSupply(this.getAirSupply()));
+        return true;
     }
 }

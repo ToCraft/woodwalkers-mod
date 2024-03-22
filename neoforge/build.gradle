@@ -11,4 +11,5 @@ apply from: "https://raw.githubusercontent.com/ToCraft/GradleMaster/main/neoforg
 dependencies {
     modApi "dev.architectury:architectury-neoforge:${rootProject.architectury_version}"
     modApi "dev.tocraft:craftedcore-neoforge:${rootProject.minecraft_version}-${rootProject.craftedcore_version}"
+    implementation(include("io.github.llamalad7:mixinextras-neoforge:0.3.5"))
 }
