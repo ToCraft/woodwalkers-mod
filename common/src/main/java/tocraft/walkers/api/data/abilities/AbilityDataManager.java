@@ -36,7 +36,7 @@ public class AbilityDataManager extends SimpleJsonResourceReloadListener {
         for (Map.Entry<ResourceLocation, JsonElement> mapEntry : map.entrySet()) {
             Map.Entry<EntityType<?>, ShapeAbility<?>> convertedEntry = abilityEntryFromJson(mapEntry.getValue().getAsJsonObject());
 
-            AbilityRegistry.register((Predicate<LivingEntity>) entity -> entity.getType().equals(convertedEntry.getKey()), convertedEntry.getValue());
+            AbilityRegistry.registerByPredicate((Predicate<LivingEntity>) entity -> entity.getType().equals(convertedEntry.getKey()), convertedEntry.getValue());
 
             Walkers.LOGGER.info("{}: {} registered for {}", getClass().getSimpleName(), convertedEntry.getKey(), convertedEntry.getValue());
         }

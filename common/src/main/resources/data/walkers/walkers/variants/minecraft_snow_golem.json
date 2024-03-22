@@ -1,6 +1,7 @@
 {
   "entity_type": "minecraft:snow_golem",
   "type_provider": {
+    "fallback": 1,
     "nbt": [
       {
         "nbt_type": "BOOLEAN",

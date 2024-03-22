@@ -13,7 +13,6 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.animal.horse.AbstractHorse;
-import net.minecraft.world.entity.monster.Ravager;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
@@ -32,10 +31,12 @@ import tocraft.walkers.impl.DimensionsRefresher;
 import tocraft.walkers.impl.PlayerDataProvider;
 import tocraft.walkers.mixin.EntityTrackerAccessor;
 import tocraft.walkers.mixin.ThreadedAnvilChunkStorageAccessor;
-import tocraft.walkers.registry.WalkersEntityTags;
+import tocraft.walkers.skills.SkillRegistry;
+import tocraft.walkers.skills.impl.RiderSkill;
 
 import java.util.Optional;
 import java.util.UUID;
+import java.util.function.Predicate;
 
 @Mixin(Player.class)
 public abstract class PlayerEntityDataMixin extends LivingEntity implements PlayerDataProvider {
@@ -193,7 +194,6 @@ public abstract class PlayerEntityDataMixin extends LivingEntity implements Play
     public boolean walkers$updateShapes(@Nullable LivingEntity shape) {
         Player player = (Player) (Object) this;
         AttributeInstance healthAttribute = player.getAttribute(Attributes.MAX_HEALTH);
-        AttributeInstance attackAttribute = player.getAttribute(Attributes.ATTACK_DAMAGE);
         EventResult result = ShapeEvents.SWAP_SHAPE.invoker().swap((ServerPlayer) player, shape);
         if (result.isFalse()) {
             return false;
@@ -249,16 +249,38 @@ public abstract class PlayerEntityDataMixin extends LivingEntity implements Play
             player.onUpdateAbilities();
         }
 
-		// If the player is riding a Ravager and changes into a Walkers that cannot
-		// ride Ravagers, kick them off.
-		if (player.getVehicle() instanceof Ravager
-				&& (shape == null || !shape.getType().is(WalkersEntityTags.RAVAGER_RIDING))) {
-			player.stopRiding();
-		}
+        // If the player is riding a Ravager and changes into a Walkers that cannot
+        // ride Ravagers, kick them off.
+        if (player.getVehicle() instanceof LivingEntity livingVehicle) {
+            // checks, if the player can continue riding
+            boolean b1 = false;
+            boolean b2 = false;
+            for (RiderSkill<?> riderSkill : SkillRegistry.get(shape, RiderSkill.ID).stream().map(entry -> (RiderSkill<?>) entry).toList()) {
+                for (Predicate<LivingEntity> rideable : riderSkill.rideable) {
+                    if (rideable.test(livingVehicle) || (livingVehicle instanceof Player rideablePlayer && rideable.test(PlayerShape.getCurrentShape(rideablePlayer)))) {
+                        b1 = true;
+                        b2 = true;
+                        break;
+                    }
+                }
+                if (b2) break;
+            }
+            if (!b1) {
+                player.stopRiding();
+            }
+        }
 
-		// sync with client
-		if (!player.level.isClientSide) {
-			PlayerShape.sync((ServerPlayer) player);
+        // If the player is riding another Player that switches into another shape that cannot
+        // be ridden, the riding player stops riding
+        if (!(shape instanceof AbstractHorse)) {
+            for (Entity passenger : player.getPassengers()) {
+                passenger.stopRiding();
+            }
+        }
+
+        // sync with client
+        if (!player.level.isClientSide) {
+            PlayerShape.sync((ServerPlayer) player);
 
             Int2ObjectMap<Object> trackers = ((ThreadedAnvilChunkStorageAccessor) ((ServerLevel) player.level)
                     .getChunkSource().chunkMap).getEntityMap();

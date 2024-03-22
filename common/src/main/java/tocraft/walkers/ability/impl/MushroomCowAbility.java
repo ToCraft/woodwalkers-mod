@@ -22,4 +22,9 @@ public class MushroomCowAbility<T extends Mob> extends ShapeAbility<T> {
     public Item getIcon() {
         return Items.MUSHROOM_STEW;
     }
+
+    @Override
+    public int getDefaultCooldown() {
+        return 300;
+    }
 }

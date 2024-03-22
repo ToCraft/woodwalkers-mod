@@ -9,13 +9,11 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.NotNull;
 import tocraft.walkers.Walkers;
 import tocraft.walkers.api.variant.TypeProvider;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 // this is amazing
 public class NBTTypeProvider<T extends LivingEntity> extends TypeProvider<T> {
@@ -56,32 +54,50 @@ public class NBTTypeProvider<T extends LivingEntity> extends TypeProvider<T> {
     public int getVariantData(T entity) {
         CompoundTag tag = new CompoundTag();
         entity.save(tag);
-        Optional<Integer> data = Optional.empty();
+        List<List<Integer>> validValues = new ArrayList<>();
         for (NBTEntry<?> nbtEntry : nbtEntryList) {
-            Optional<Integer> entryData = Optional.empty();
             if (tag.contains(nbtEntry.nbtField())) {
                 switch (nbtEntry.nbtType().toUpperCase()) {
                     case "BOOL", "BOOLEAN" ->
-                            entryData = ((NBTEntry<Boolean>) nbtEntry).getIndex(tag.getBoolean(nbtEntry.nbtField()));
+                            validValues.add(((NBTEntry<Boolean>) nbtEntry).getIndex(tag.getBoolean(nbtEntry.nbtField())));
                     case "STRING" ->
-                            entryData = ((NBTEntry<String>) nbtEntry).getIndex(tag.getString(nbtEntry.nbtField()));
+                            validValues.add(((NBTEntry<String>) nbtEntry).getIndex(tag.getString(nbtEntry.nbtField())));
                     case "INT", "INTEGER" ->
-                            entryData = ((NBTEntry<Integer>) nbtEntry).getIndex(tag.getInt(nbtEntry.nbtField()));
-                }
-            }
-            if (entryData.isPresent()) {
-                if (data.isPresent()) {
-                    if (entryData.equals(data)) return entryData.get();
-                } else {
-                    data = entryData;
+                            validValues.add(((NBTEntry<Integer>) nbtEntry).getIndex(tag.getInt(nbtEntry.nbtField())));
                 }
             }
         }
-        if (data.isPresent()) return data.get();
-        else {
-            Walkers.LOGGER.error("{}: parameter for the Variant not found.", getClass().getSimpleName());
-            return getFallbackData();
+
+        // check if data applies to all nbt fields
+        List<Integer> validData = getValidDataValues(validValues);
+        if (!validData.isEmpty()) {
+            if (validData.size() > 1) {
+                Walkers.LOGGER.error("{}: found too much valid variant ids: {} for entity: {}", getClass().getSimpleName(), validData.size(), entity.getType().getDescriptionId());
+            }
+            return validData.get(0);
         }
+        Walkers.LOGGER.error("{}: parameter for the Variant not found.", getClass().getSimpleName());
+        return getFallbackData();
+    }
+
+    @NotNull
+    private static List<Integer> getValidDataValues(List<List<Integer>> validValues) {
+        List<Integer> validData = new ArrayList<>();
+        for (List<Integer> validValue : validValues) {
+            for (Integer i : validValue) {
+                boolean invalid = false;
+                for (List<Integer> value : validValues) {
+                    if (!value.contains(i)) {
+                        invalid = true;
+                        break;
+                    }
+                }
+                if (!invalid) {
+                    validData.add(i);
+                }
+            }
+        }
+        return validData;
     }
 
     @SuppressWarnings("unchecked")
@@ -157,17 +173,15 @@ public class NBTTypeProvider<T extends LivingEntity> extends TypeProvider<T> {
         })));
 
         public T getValue(int index) {
-            if (!parameterList.isEmpty()) {
-                if (parameterList.containsKey(index)) {
-                    return parameterList.get(index);
-                } else
-                    Walkers.LOGGER.warn("{}: variant parameter in list not found.", getClass().getSimpleName());
+            if (parameterList.containsKey(index)) {
+                return parameterList.get(index);
             }
             switch (nbtType.toUpperCase()) {
                 case "INT", "INTEGER" -> {
                     return (T) (Object) index;
                 }
                 case "BOOL", "BOOLEAN" -> {
+                    // check if index is odd
                     if (index == 1) return (T) (Object) true;
                     else return (T) (Object) false;
                 }
@@ -176,8 +190,8 @@ public class NBTTypeProvider<T extends LivingEntity> extends TypeProvider<T> {
             return null;
         }
 
-        public Optional<Integer> getIndex(T value) {
-            Optional<Integer> index = Optional.empty();
+        public List<Integer> getIndex(T value) {
+            List<Integer> index = new ArrayList<>();
             if (!parameterList.isEmpty()) {
                 if (isMutable && value instanceof String) {
                     MutableComponent tagDataMutable = Component.Serializer.fromJsonLenient((String) value);
@@ -194,8 +208,7 @@ public class NBTTypeProvider<T extends LivingEntity> extends TypeProvider<T> {
                         }
                     }
                     if (value.equals(parameterT)) {
-                        index = Optional.of(i);
-                        break;
+                        index.add(i);
                     }
                 }
             }
@@ -203,10 +216,10 @@ public class NBTTypeProvider<T extends LivingEntity> extends TypeProvider<T> {
                 switch (nbtType.toUpperCase()) {
                     case "BOOL", "BOOLEAN" -> {
                         if ((Boolean) value) {
-                            index = Optional.of(1);
-                        } else index = Optional.of(0);
+                            index.add(1);
+                        } else index.add(0);
                     }
-                    case "INT", "INTEGER" -> index = Optional.of((Integer) value);
+                    case "INT", "INTEGER" -> index.add((Integer) value);
                 }
             }
             return index;

@@ -1,0 +1,15 @@
+{
+  "entity_types": [
+    "minecraft:chicken",
+    "minecraft:rabbit",
+    "minecraft:frog"
+  ],
+  "skills": [
+    {
+      "type": "walkers:prey",
+      "hunter": [
+        "friendsandfoes:mauler"
+      ]
+    }
+  ]
+}

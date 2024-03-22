@@ -112,7 +112,7 @@ public class WalkersCommand {
             if (Walkers.CONFIG.logCommands) {
                 ShapeType<?> type = ((PlayerDataProvider) player).walkers$get2ndShape();
                 source.sendSystemMessage(Component.translatable("walkers.show2ndShapeNot_positive",
-                        player.getDisplayName(), type.createTooltipText(type.create(player.level))));
+                        player.getDisplayName(), type.createTooltipText(type.create(player.level, player))));
             }
 
             return 1;
