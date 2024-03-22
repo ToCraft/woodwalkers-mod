@@ -14,7 +14,7 @@ import tocraft.walkers.skills.ShapeSkill;
 public class StandOnFluidSkill<E extends LivingEntity> extends ShapeSkill<E> {
     public static final ResourceLocation ID = Walkers.id("stand_on_fluid");
     public static final Codec<StandOnFluidSkill<?>> CODEC = RecordCodecBuilder.create((instance) -> instance.group(
-            ResourceLocation.CODEC.fieldOf("fluid").forGetter(o -> FluidTags.WATER.location())
+            ResourceLocation.CODEC.fieldOf("fluid").forGetter(o -> o.fluidTagKey.location())
     ).apply(instance, instance.stable(fluid -> new StandOnFluidSkill<>(TagKey.create(Registries.FLUID, fluid)))));
 
     public final TagKey<Fluid> fluidTagKey;

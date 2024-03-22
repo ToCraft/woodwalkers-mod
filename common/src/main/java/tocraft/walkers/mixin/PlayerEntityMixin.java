@@ -293,7 +293,7 @@ public abstract class PlayerEntityMixin extends LivingEntityMixin {
                     boolean bl = this.walkers$isInDaylight();
                     // handle night burning
                     for (BurnInDaylightSkill<?> skill : SkillRegistry.get(shape, BurnInDaylightSkill.ID).stream().map(skill -> ((BurnInDaylightSkill<?>) skill)).toList()) {
-                        bl = (bl && !skill.burnInNightInstead) || (!this.walkers$isInDaylight() && skill.burnInNightInstead);
+                        bl = (bl && !skill.burnInMoonlightInstead) || (!this.walkers$isInDaylight() && skill.burnInMoonlightInstead);
                     }
                     if (bl) {
 

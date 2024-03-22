@@ -10,18 +10,18 @@ import tocraft.walkers.skills.ShapeSkill;
 public class BurnInDaylightSkill<E extends LivingEntity> extends ShapeSkill<E> {
     public static final ResourceLocation ID = Walkers.id("burn_in_daylight");
     public static final Codec<BurnInDaylightSkill<?>> CODEC = RecordCodecBuilder.create((instance) -> instance.group(
-            Codec.BOOL.optionalFieldOf("burn_in_night_instead", false).forGetter(o -> o.burnInNightInstead)
+            Codec.BOOL.optionalFieldOf("burn_in_moonlight_instead", false).forGetter(o -> o.burnInMoonlightInstead)
     ).apply(instance, instance.stable(BurnInDaylightSkill::new)));
 
     public BurnInDaylightSkill() {
-        this.burnInNightInstead = false;
+        this.burnInMoonlightInstead = false;
     }
 
-    public BurnInDaylightSkill(boolean burnInNightInstead) {
-        this.burnInNightInstead = burnInNightInstead;
+    public BurnInDaylightSkill(boolean burnInMoonlightInstead) {
+        this.burnInMoonlightInstead = burnInMoonlightInstead;
     }
 
-    public final boolean burnInNightInstead;
+    public final boolean burnInMoonlightInstead;
 
     @Override
     public ResourceLocation getId() {
