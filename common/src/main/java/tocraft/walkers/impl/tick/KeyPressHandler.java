@@ -13,13 +13,13 @@ import tocraft.walkers.Walkers;
 import tocraft.walkers.WalkersClient;
 import tocraft.walkers.ability.AbilityRegistry;
 import tocraft.walkers.api.PlayerShape;
+import tocraft.walkers.api.blacklist.EntityBlacklist;
 import tocraft.walkers.api.variant.ShapeType;
 import tocraft.walkers.impl.PlayerDataProvider;
 import tocraft.walkers.network.ClientNetworking;
 import tocraft.walkers.network.impl.SpecialSwapPackets;
 import tocraft.walkers.network.impl.SwapPackets;
 import tocraft.walkers.network.impl.UnlockPackets;
-import tocraft.walkers.registry.WalkersEntityTags;
 
 public class KeyPressHandler implements ClientTickEvent.Client {
     private float currentTimer = 0f;
@@ -73,7 +73,7 @@ public class KeyPressHandler implements ClientTickEvent.Client {
 
                 if (type != null) {
                     // Ensures, the mob isn't on the blacklist
-                    if (type.getEntityType().is(WalkersEntityTags.BLACKLISTED))
+                    if (EntityBlacklist.isBlacklisted(type.getEntityType()))
                         client.player.displayClientMessage(new TranslatableComponent("walkers.unlock_entity_blacklisted"), true);
                     else {
                         if (currentTimer <= 0) {

@@ -6,21 +6,44 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.monster.ZombieVillager;
+import net.minecraft.world.entity.npc.VillagerType;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import tocraft.walkers.Walkers;
 import tocraft.walkers.api.variant.TypeProvider;
+
+import java.util.Random;
 
 public class ZombieVillagerTypeProvider extends TypeProvider<ZombieVillager> {
 
     @Override
     public int getVariantData(ZombieVillager entity) {
-        return Registry.VILLAGER_TYPE.getId(entity.getVillagerData().getType());
+        return Registry.VILLAGER_PROFESSION.getId(entity.getVillagerData().getProfession());
     }
 
     @Override
     public ZombieVillager create(EntityType<ZombieVillager> type, Level level, int data) {
         ZombieVillager villager = new ZombieVillager(type, level);
-        villager.getVillagerData().setType(Registry.VILLAGER_TYPE.byId(data));
+        villager.setVillagerData(villager.getVillagerData().setProfession(Registry.VILLAGER_PROFESSION.byId(data)));
         return villager;
+    }
+
+    @Override
+    public ZombieVillager create(EntityType<ZombieVillager> type, Level level, int data, Player player) {
+        if (player != null && Walkers.CONFIG.multiVectorVariants > 0) {
+            ZombieVillager villager = new ZombieVillager(type, level);
+            VillagerType villagerType;
+            if (Walkers.CONFIG.multiVectorVariants == 2) {
+                villagerType = VillagerType.byBiome(level.getBiome(player.blockPosition()));
+            } else {
+                villagerType = Registry.VILLAGER_TYPE.byId(new Random().nextInt(0, Registry.VILLAGER_TYPE.size() - 1));
+            }
+            villager.setVillagerData(villager.getVillagerData().setType(villagerType));
+            villager.setVillagerData(villager.getVillagerData().setProfession(Registry.VILLAGER_PROFESSION.byId(data)));
+            return villager;
+        } else {
+            return create(type, level, data);
+        }
     }
 
     @Override
@@ -30,7 +53,7 @@ public class ZombieVillagerTypeProvider extends TypeProvider<ZombieVillager> {
 
     @Override
     public int getRange() {
-        return Registry.VILLAGER_TYPE.size() - 1;
+        return Registry.VILLAGER_PROFESSION.size() - 1;
     }
 
     @Override

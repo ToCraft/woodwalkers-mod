@@ -22,6 +22,12 @@ public abstract class ShapeAbility<E extends LivingEntity> {
      */
     public int getCooldown(E entity) {
         String id = Registry.ENTITY_TYPE.getKey(entity.getType()).toString();
+
+        // put default cool-down into config if it's not already present
+        if (!entity.level.isClientSide() && !Walkers.CONFIG.abilityCooldownMap.containsKey(id)) {
+            Walkers.CONFIG.abilityCooldownMap.put(id, this.getDefaultCooldown());
+            Walkers.CONFIG.save();
+        }
         return Walkers.CONFIG.abilityCooldownMap.getOrDefault(id, getDefaultCooldown());
     }
 

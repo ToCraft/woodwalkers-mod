@@ -26,6 +26,8 @@ public class TypeProviderRegistry {
         register(EntityType.VILLAGER, new VillagerTypeProvider());
         register(EntityType.ZOMBIE_VILLAGER, new ZombieVillagerTypeProvider());
         register(EntityType.SHULKER, new ShulkerTypeProvider());
+        register(EntityType.TROPICAL_FISH, new TropicalFishTypeProvider());
+        register(EntityType.MOOSHROOM, new MushroomCowTypeProvider());
     }
 
     public static <T extends LivingEntity> void register(EntityType<T> type, TypeProvider<T> provider) {

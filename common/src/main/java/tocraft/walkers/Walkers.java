@@ -4,7 +4,7 @@ import dev.architectury.event.events.common.PlayerEvent;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.AdvancementProgress;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.TextComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -25,11 +25,12 @@ import tocraft.walkers.command.WalkersCommand;
 import tocraft.walkers.integrations.Integrations;
 import tocraft.walkers.mixin.ThreadedAnvilChunkStorageAccessor;
 import tocraft.walkers.network.ServerNetworking;
-import tocraft.walkers.registry.WalkersEntityTags;
 import tocraft.walkers.registry.WalkersEventHandlers;
+import tocraft.walkers.skills.ShapeSkill;
+import tocraft.walkers.skills.SkillRegistry;
+import tocraft.walkers.skills.impl.AquaticSkill;
+import tocraft.walkers.skills.impl.FlyingSkill;
 
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -38,9 +39,8 @@ public class Walkers {
 
     public static final Logger LOGGER = LoggerFactory.getLogger(Walkers.class);
     public static final String MODID = "walkers";
-    public static final String MAVEN_URL = "https://maven.tocraft.dev/public/dev/tocraft/walkers/maven-metadata.xml";
     public static final WalkersConfig CONFIG = ConfigLoader.read(MODID, WalkersConfig.class);
-    public static List<UUID> devs = new ArrayList<>();
+    public static final List<UUID> devs = new ArrayList<>();
 
     static {
         devs.add(UUID.fromString("1f63e38e-4059-4a4f-b7c4-0fac4a48e744"));
@@ -49,6 +49,7 @@ public class Walkers {
 
     public void initialize() {
         AbilityRegistry.init();
+        SkillRegistry.init();
         WalkersEventHandlers.initialize();
         WalkersCommand.register();
         ServerNetworking.initialize();
@@ -59,10 +60,7 @@ public class Walkers {
     }
 
     public static void registerJoinSyncPacket() {
-        try {
-            VersionChecker.registerMavenChecker(MODID, new URL(MAVEN_URL), new TranslatableComponent("key.categories.walkers"));
-        } catch (MalformedURLException ignored) {
-        }
+        VersionChecker.registerDefaultGitHubChecker(MODID, "ToCraft", "woodwalkers-mod", new TextComponent("Woodwalkers"));
 
         PlayerEvent.PLAYER_JOIN.register(player -> {
             Int2ObjectMap<Object> trackers = ((ThreadedAnvilChunkStorageAccessor) ((ServerLevel) player.level)
@@ -85,7 +83,7 @@ public class Walkers {
         LivingEntity shape = PlayerShape.getCurrentShape(player);
 
         if (shape != null && Walkers.CONFIG.enableFlight
-                && (shape.getType().is(WalkersEntityTags.FLYING) || shape instanceof FlyingMob)) {
+                && (SkillRegistry.has(shape, FlyingSkill.ID) || shape instanceof FlyingMob)) {
             List<String> requiredAdvancements = Walkers.CONFIG.advancementsRequiredForFlight;
 
             // requires at least 1 advancement, check if player has them
@@ -113,8 +111,19 @@ public class Walkers {
         return false;
     }
 
-    public static boolean isAquatic(LivingEntity entity) {
-        return entity != null && entity.getMobType().equals(MobType.WATER);
+    /**
+     * @param entity the shape to be checked
+     * @return 0 - water mob, 1 - land and water mob, 2 - land mob
+     */
+    public static int isAquatic(LivingEntity entity) {
+        if (entity != null) {
+            for (ShapeSkill<LivingEntity> aquaticSkill : SkillRegistry.get(entity, AquaticSkill.ID)) {
+                return ((AquaticSkill<LivingEntity>) aquaticSkill).isAquatic;
+            }
+            return entity.getMobType().equals(MobType.WATER) ? 0 : 2;
+        } else {
+            return 2;
+        }
     }
 
     public static boolean isPlayerBlacklisted(UUID uuid) {

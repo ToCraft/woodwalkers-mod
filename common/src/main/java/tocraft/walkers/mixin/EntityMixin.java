@@ -1,7 +1,11 @@
 package tocraft.walkers.mixin;
 
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.spongepowered.asm.mixin.Mixin;
@@ -12,7 +16,10 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import tocraft.walkers.api.PlayerShape;
 import tocraft.walkers.impl.DimensionsRefresher;
-import tocraft.walkers.registry.WalkersEntityTags;
+import tocraft.walkers.mixin.accessor.EntityAccessor;
+import tocraft.walkers.skills.SkillRegistry;
+import tocraft.walkers.skills.impl.HumanoidSkill;
+import tocraft.walkers.skills.impl.NoPhysicsSkill;
 
 @SuppressWarnings("ConstantConditions")
 @Mixin(Entity.class)
@@ -44,6 +51,12 @@ public abstract class EntityMixin implements DimensionsRefresher {
 
     @Shadow
     protected abstract float getEyeHeight(Pose pose, EntityDimensions dimensions);
+
+    @Shadow
+    public abstract boolean isCrouching();
+
+    @Shadow
+    public abstract InteractionResult interact(Player player, InteractionHand hand);
 
     @Inject(method = "getBbWidth", at = @At("HEAD"), cancellable = true)
     private void getBbWidth(CallbackInfoReturnable<Float> cir) {
@@ -91,6 +104,10 @@ public abstract class EntityMixin implements DimensionsRefresher {
             LivingEntity shape = PlayerShape.getCurrentShape(player);
 
             if (shape != null) {
+                if (this.isCrouching() && SkillRegistry.has(shape, HumanoidSkill.ID)) {
+                    cir.setReturnValue(shape.getEyeHeight(Pose.CROUCHING) * 1.27F / 1.62F);
+                    return;
+                }
                 cir.setReturnValue(shape.getEyeHeight());
             }
         }
@@ -109,7 +126,24 @@ public abstract class EntityMixin implements DimensionsRefresher {
 
     @Inject(method = "tick", at = @At("HEAD"))
     private void goThroughBlocks(CallbackInfo ci) {
-        if ((Object) this instanceof Player player && PlayerShape.getCurrentShape(player) != null && PlayerShape.getCurrentShape(player).getType().is(WalkersEntityTags.FALL_THROUGH_BLOCKS))
-            player.noPhysics = true;
+        if ((Object) this instanceof Player player) {
+            LivingEntity shape = PlayerShape.getCurrentShape(player);
+            if (shape != null) {
+                if (SkillRegistry.has(shape, NoPhysicsSkill.ID)) {
+                    player.noPhysics = true;
+                }
+            }
+        }
+    }
+
+    @Inject(method = "playStepSound", at = @At("HEAD"))
+    private void handleStepSounds(BlockPos pos, BlockState state, CallbackInfo ci) {
+        if ((Object) this instanceof Player player) {
+            LivingEntity shape = PlayerShape.getCurrentShape(player);
+
+            if (shape != null) {
+                ((EntityAccessor) shape).shape_callPlayStepSound(pos, state);
+            }
+        }
     }
 }

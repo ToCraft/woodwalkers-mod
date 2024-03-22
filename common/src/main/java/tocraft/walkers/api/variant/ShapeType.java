@@ -8,11 +8,12 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import tocraft.walkers.Walkers;
-import tocraft.walkers.registry.WalkersEntityTags;
+import tocraft.walkers.api.blacklist.EntityBlacklist;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -116,7 +117,7 @@ public class ShapeType<T extends LivingEntity> {
         List<ShapeType<? extends LivingEntity>> types = new ArrayList<>();
         for (EntityType<? extends LivingEntity> type : LIVING_TYPE_CASH) {
             // check blacklist
-            if (!type.is(WalkersEntityTags.BLACKLISTED)) {
+            if (!EntityBlacklist.isBlacklisted(type)) {
                 // check variants
                 TypeProvider<?> variant = TypeProviderRegistry.getProvider(type);
                 if (variant != null) {
@@ -160,6 +161,18 @@ public class ShapeType<T extends LivingEntity> {
         TypeProvider<T> typeProvider = TypeProviderRegistry.getProvider(type);
         if (typeProvider != null) {
             return typeProvider.create(type, world, variantData);
+        }
+
+        return type.create(world);
+    }
+
+    /**
+     * Create the entity based on player data
+     */
+    public T create(Level world, Player player) {
+        TypeProvider<T> typeProvider = TypeProviderRegistry.getProvider(type);
+        if (typeProvider != null) {
+            return typeProvider.create(type, world, variantData, player);
         }
 
         return type.create(world);
