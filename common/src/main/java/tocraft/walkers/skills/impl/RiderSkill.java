@@ -9,6 +9,7 @@ import net.minecraft.world.entity.LivingEntity;
 import tocraft.walkers.Walkers;
 import tocraft.walkers.skills.ShapeSkill;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
@@ -16,7 +17,7 @@ import java.util.stream.Stream;
 public class RiderSkill<E extends LivingEntity> extends ShapeSkill<E> {
     public static final ResourceLocation ID = Walkers.id("rider");
     public static final Codec<RiderSkill<?>> CODEC = RecordCodecBuilder.create((instance) -> instance.group(
-            Codec.list(ResourceLocation.CODEC).fieldOf("rideable").forGetter(o -> null)
+            Codec.list(ResourceLocation.CODEC).fieldOf("rideable").forGetter(o -> new ArrayList<>())
     ).apply(instance, instance.stable(RiderSkill::ofRideable)));
 
     public final List<Predicate<LivingEntity>> rideable;

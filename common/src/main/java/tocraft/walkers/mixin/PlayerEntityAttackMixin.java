@@ -18,7 +18,7 @@ public abstract class PlayerEntityAttackMixin extends LivingEntity {
         super(entityType, world);
     }
 
-    @Inject(method = "attack", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/player/Player;setLastHurtMob(Lnet/minecraft/world/entity/Entity;)V"), cancellable = true)
+    @Inject(method = "attack", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;skipAttackInteraction(Lnet/minecraft/world/entity/Entity;)Z"), cancellable = true)
     private void shapeAttack(Entity target, CallbackInfo ci) {
         LivingEntity shape = PlayerShape.getCurrentShape((Player) (Object) this);
 
@@ -27,7 +27,7 @@ public abstract class PlayerEntityAttackMixin extends LivingEntity {
                 try {
                     shape.doHurtTarget(target);
                     ci.cancel();
-                } catch (Exception e) {
+                } catch (Exception ignored) {
                     // FALL BACK TO DEFAULT BEHAVIOR.
                     // Some mobs do not override, so it defaults to attack damage attribute, but the identity does not have any
                 }
