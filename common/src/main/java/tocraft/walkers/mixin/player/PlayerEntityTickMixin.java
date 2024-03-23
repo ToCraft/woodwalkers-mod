@@ -37,6 +37,7 @@ import tocraft.walkers.api.PlayerShape;
 import tocraft.walkers.api.WalkersTickHandler;
 import tocraft.walkers.api.WalkersTickHandlers;
 import tocraft.walkers.impl.PlayerDataProvider;
+import tocraft.walkers.impl.ShapeDataProvider;
 import tocraft.walkers.network.impl.VehiclePackets;
 import tocraft.walkers.skills.SkillRegistry;
 import tocraft.walkers.skills.impl.MobEffectSkill;
@@ -76,6 +77,17 @@ public abstract class PlayerEntityTickMixin extends LivingEntity {
             PlayerAbilities.sync(player);
 
             VehiclePackets.sync((ServerPlayer) (Object) this);
+        }
+    }
+
+    @Inject(method = "tick", at = @At("HEAD"))
+    private void setShapeData(CallbackInfo ci) {
+        LivingEntity shape = PlayerShape.getCurrentShape((Player) (Object) this);
+        if (shape instanceof ShapeDataProvider shapeData) {
+            if (!shapeData.walkers$isShape()) {
+                shapeData.walkers$setIsShape(true);
+            }
+            shapeData.walkers$setPlayerDamageSource(this.damageSources().playerAttack((Player) (Object) this));
         }
     }
 

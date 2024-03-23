@@ -1,5 +1,6 @@
 package tocraft.walkers;
 
+import com.llamalad7.mixinextras.MixinExtrasBootstrap;
 import dev.architectury.event.events.common.PlayerEvent;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import net.minecraft.advancements.Advancement;
@@ -48,6 +49,8 @@ public class Walkers {
     }
 
     public void initialize() {
+        MixinExtrasBootstrap.init();
+
         AbilityRegistry.init();
         SkillRegistry.init();
         WalkersEventHandlers.initialize();
