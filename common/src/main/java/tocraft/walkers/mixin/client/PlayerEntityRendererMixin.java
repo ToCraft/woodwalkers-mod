@@ -1,6 +1,7 @@
 package tocraft.walkers.mixin.client;
 
 import com.google.common.collect.ImmutableList;
+import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -31,7 +32,6 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import tocraft.walkers.Walkers;
@@ -63,8 +63,8 @@ public abstract class PlayerEntityRendererMixin extends LivingEntityRenderer<Abs
         super(ctx, model, shadowRadius);
     }
 
-    @Redirect(method = "render(Lnet/minecraft/client/player/AbstractClientPlayer;FFLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/entity/LivingEntityRenderer;render(Lnet/minecraft/world/entity/LivingEntity;FFLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V"))
-    private void redirectRender(LivingEntityRenderer<AbstractClientPlayer, EntityModel<AbstractClientPlayer>> renderer, LivingEntity player, float f, float g, PoseStack matrixStack, MultiBufferSource buffer, int i) {
+    @WrapWithCondition(method = "render(Lnet/minecraft/client/player/AbstractClientPlayer;FFLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/entity/LivingEntityRenderer;render(Lnet/minecraft/world/entity/LivingEntity;FFLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V"))
+    private boolean redirectRender(LivingEntityRenderer<AbstractClientPlayer, EntityModel<AbstractClientPlayer>> renderer, LivingEntity player, float f, float g, PoseStack matrixStack, MultiBufferSource buffer, int i) {
         LivingEntity shape = PlayerShape.getCurrentShape((Player) player);
 
         Optional<UUID> vehiclePlayerId = ((PlayerDataProvider) player).walkers$getVehiclePlayerUUID();
@@ -157,8 +157,10 @@ public abstract class PlayerEntityRendererMixin extends LivingEntityRenderer<Abs
                     renderNameTag((AbstractClientPlayer) player, player.getDisplayName(), matrixStack, buffer, i);
                 }
             }
+
+            return false;
         } else {
-            super.render((AbstractClientPlayer) player, f, g, matrixStack, buffer, i);
+            return true;
         }
     }
 

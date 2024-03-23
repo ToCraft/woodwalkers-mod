@@ -29,6 +29,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import tocraft.walkers.Walkers;
 import tocraft.walkers.api.PlayerShape;
 import tocraft.walkers.impl.NearbySongAccessor;
+import tocraft.walkers.impl.ShapeDataProvider;
 import tocraft.walkers.mixin.accessor.LivingEntityAccessor;
 import tocraft.walkers.skills.ShapeSkill;
 import tocraft.walkers.skills.SkillRegistry;
@@ -47,6 +48,9 @@ public abstract class LivingEntityMixin extends Entity implements NearbySongAcce
 
     @Shadow
     protected abstract int increaseAirSupply(int currentAir);
+
+    @Shadow
+    public abstract boolean hurt(DamageSource source, float amount);
 
     protected LivingEntityMixin(EntityType<?> type, Level world) {
         super(type, world);
@@ -331,6 +335,19 @@ public abstract class LivingEntityMixin extends Entity implements NearbySongAcce
                             cir.setReturnValue(false);
                         }
                     }
+                }
+            }
+        }
+    }
+
+    @Inject(method = "hurt", at = @At("HEAD"), cancellable = true)
+    private void setPlayerSource(DamageSource source, float amount, CallbackInfoReturnable<Boolean> cir) {
+        Entity attacker = source.getEntity();
+        if (attacker instanceof Mob mobEntity) {
+            if (((ShapeDataProvider) mobEntity).walkers$isShape()) {
+                DamageSource playerDamageSource = ((ShapeDataProvider) mobEntity).walkers$playerDamageSource();
+                if (playerDamageSource != null) {
+                    cir.setReturnValue(this.hurt(playerDamageSource, amount));
                 }
             }
         }

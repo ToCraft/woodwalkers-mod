@@ -1,3 +1,9 @@
+walkers 4.1
+================
+- improve rendering mechanic for better mod compatibility
+- add more skill icons
+- fix mobs not fighting back
+
 walkers 4.0
 ================
 I'll start with the small changes. If a mob has an Ability but isn't listed in the abilityCooldownMap in the Config,

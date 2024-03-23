@@ -6,6 +6,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EntityType;
@@ -37,6 +38,7 @@ import tocraft.walkers.api.PlayerShape;
 import tocraft.walkers.api.WalkersTickHandler;
 import tocraft.walkers.api.WalkersTickHandlers;
 import tocraft.walkers.impl.PlayerDataProvider;
+import tocraft.walkers.impl.ShapeDataProvider;
 import tocraft.walkers.network.impl.VehiclePackets;
 import tocraft.walkers.skills.SkillRegistry;
 import tocraft.walkers.skills.impl.MobEffectSkill;
@@ -76,6 +78,17 @@ public abstract class PlayerEntityTickMixin extends LivingEntity {
             PlayerAbilities.sync(player);
 
             VehiclePackets.sync((ServerPlayer) (Object) this);
+        }
+    }
+
+    @Inject(method = "tick", at = @At("HEAD"))
+    private void setShapeData(CallbackInfo ci) {
+        LivingEntity shape = PlayerShape.getCurrentShape((Player) (Object) this);
+        if (shape instanceof ShapeDataProvider shapeData) {
+            if (!shapeData.walkers$isShape()) {
+                shapeData.walkers$setIsShape(true);
+            }
+            shapeData.walkers$setPlayerDamageSource(DamageSource.playerAttack((Player) (Object) this));
         }
     }
 

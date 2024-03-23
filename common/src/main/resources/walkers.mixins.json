@@ -15,6 +15,7 @@
     "LivingEntityFoodMixin",
     "LivingEntityMixin",
     "LookAtPlayerGoalMixin",
+    "MobEntityDataMixin",
     "MobHunterPreyMixin",
     "PiglinBrainMixin",
     "PiglinBruteBrainMixin",
