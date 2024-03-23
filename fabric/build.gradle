@@ -11,4 +11,5 @@ apply from: "https://raw.githubusercontent.com/ToCraft/GradleMaster/main/fabric.
 dependencies {
     modApi "dev.architectury:architectury-fabric:${rootProject.architectury_version}"
     modApi "dev.tocraft:craftedcore-fabric:${rootProject.minecraft_version}-${rootProject.craftedcore_version}"
+    include(implementation(annotationProcessor("io.github.llamalad7:mixinextras-fabric:0.3.5")))
 }

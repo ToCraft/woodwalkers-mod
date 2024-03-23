@@ -17,7 +17,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.FluidState;
-import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -30,8 +29,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import tocraft.walkers.Walkers;
 import tocraft.walkers.api.PlayerShape;
 import tocraft.walkers.impl.NearbySongAccessor;
+import tocraft.walkers.impl.ShapeDataProvider;
 import tocraft.walkers.mixin.accessor.LivingEntityAccessor;
-import tocraft.walkers.registry.WalkersEntityTags;
 import tocraft.walkers.skills.ShapeSkill;
 import tocraft.walkers.skills.SkillRegistry;
 import tocraft.walkers.skills.impl.*;
@@ -46,6 +45,9 @@ public abstract class LivingEntityMixin extends Entity implements NearbySongAcce
 
     @Shadow
     public abstract void kill();
+
+    @Shadow
+    public abstract boolean hurt(DamageSource source, float amount);
 
     protected LivingEntityMixin(EntityType<?> type, Level world) {
         super(type, world);
@@ -314,6 +316,19 @@ public abstract class LivingEntityMixin extends Entity implements NearbySongAcce
                             cir.setReturnValue(false);
                         }
                     }
+                }
+            }
+        }
+    }
+
+    @Inject(method = "hurt", at = @At("HEAD"), cancellable = true)
+    private void setPlayerSource(DamageSource source, float amount, CallbackInfoReturnable<Boolean> cir) {
+        Entity attacker = source.getEntity();
+        if (attacker instanceof Mob mobEntity) {
+            if (((ShapeDataProvider) mobEntity).walkers$isShape()) {
+                DamageSource playerDamageSource = ((ShapeDataProvider) mobEntity).walkers$playerDamageSource();
+                if (playerDamageSource != null) {
+                    cir.setReturnValue(this.hurt(playerDamageSource, amount));
                 }
             }
         }
