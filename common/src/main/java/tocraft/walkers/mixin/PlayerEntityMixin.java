@@ -94,7 +94,6 @@ public abstract class PlayerEntityMixin extends LivingEntityMixin {
             int isAquatic = Walkers.isAquatic(shape);
             if (isAquatic < 2) {
                 int air = this.getAirSupply();
-
                 // copy of WaterCreatureEntity#tickWaterBreathingAir
                 if (this.isAlive() && !this.isInWaterOrBubble()) {
                     if (isAquatic < 1) {
@@ -103,23 +102,23 @@ public abstract class PlayerEntityMixin extends LivingEntityMixin {
                         // If the player has respiration, 50% chance to not consume air
                         if (i > 0) {
                             if (random.nextInt(i + 1) <= 0) {
-                                this.setAirSupply(air - 1);
+                                this.setAirSupply(this.decreaseAirSupply(air));
                             }
                         }
 
                         // No respiration, decrease air as normal
                         else {
-                            this.setAirSupply(air - 1);
+                            this.setAirSupply(this.decreaseAirSupply(air));
                         }
 
                         // Air has run out, start drowning
                         if (this.getAirSupply() == -20) {
                             this.setAirSupply(0);
-                            this.hurt(damageSources().fall(), 2.0F);
+                            this.hurt(damageSources().dryOut(), 2.0F);
                         }
                     }
-                } else {
-                    this.setAirSupply(air + 1);
+                } else if (this.getAirSupply() < this.getMaxAirSupply()) {
+                    this.setAirSupply(this.increaseAirSupply(air));
                 }
             }
         }
@@ -286,8 +285,6 @@ public abstract class PlayerEntityMixin extends LivingEntityMixin {
         if (!player.level().isClientSide && !player.isCreative() && !player.isSpectator()) {
             // check if the player is shape
             if (shape != null) {
-                EntityType<?> type = shape.getType();
-
                 // check if the player's current shape burns in sunlight
                 if (SkillRegistry.has(shape, BurnInDaylightSkill.ID)) {
                     boolean bl = this.walkers$isInDaylight();
@@ -328,6 +325,7 @@ public abstract class PlayerEntityMixin extends LivingEntityMixin {
         }
     }
 
+    @SuppressWarnings("deprecation")
     @Unique
     private boolean walkers$isInDaylight() {
         if (level().isDay() && !level().isClientSide) {

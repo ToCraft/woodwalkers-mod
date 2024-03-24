@@ -7,18 +7,13 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Redirect;
 import tocraft.walkers.Walkers;
 import tocraft.walkers.api.PlayerShape;
 
 @SuppressWarnings("ConstantConditions")
 @Mixin(LivingEntity.class)
 public abstract class LivingEntityMixin extends Entity {
-
-    @Shadow
-    protected abstract int increaseAirSupply(int air);
 
     protected LivingEntityMixin(EntityType<?> type, Level world) {
         super(type, world);
@@ -31,10 +26,9 @@ public abstract class LivingEntityMixin extends Entity {
             LivingEntity shape = PlayerShape.getCurrentShape(player);
 
             if (shape != null) {
-                return Walkers.isAquatic(shape) >= 1;
+                return Walkers.isAquatic(shape) >= 2;
             }
         }
-
         return true;
     }
 }
