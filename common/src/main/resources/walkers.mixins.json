@@ -22,10 +22,10 @@
     "PiglinSensorMixin",
     "PlayerAdvancementTrackerMixin",
     "PlayerByteStatusMixin",
-    "PlayerEntityAttackMixin",
-    "PlayerEntityMixin",
+    "player.PlayerEntityAttackMixin",
+    "player.PlayerEntityMixin",
     "PlayerManagerMixin",
-    "PlayerSonicBoomMixin",
+    "player.PlayerSonicBoomMixin",
     "PlayerSwimmingMixin",
     "PolarBearAttackPlayersGoalMixin",
     "PowderSnowBlockMixin",
@@ -58,6 +58,7 @@
     "player.PlayerEntityDataMixin",
     "player.PlayerEntityTickMixin",
     "player.PlayerManagerMixin",
+    "player.PlayerSoundMixin",
     "player.PlayerTrackingMixin",
     "player.RespawnDataCopyMixin"
   ],
@@ -80,7 +81,7 @@
     "client.accessor.SpiderEntityModelAccessor",
     "client.accessor.SquidEntityModelAccessor",
     "client.player.AbstractClientPlayerMixin",
-    "client.player.ClientPlayerDataCacheMixin"
+    "client.ClientPlayerDataCacheMixin"
   ],
   "injectors": {
     "defaultRequire": 1
