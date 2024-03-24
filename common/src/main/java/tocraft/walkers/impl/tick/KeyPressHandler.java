@@ -18,6 +18,7 @@ import tocraft.walkers.impl.PlayerDataProvider;
 import tocraft.walkers.network.ClientNetworking;
 import tocraft.walkers.network.impl.SpecialSwapPackets;
 import tocraft.walkers.network.impl.SwapPackets;
+import tocraft.walkers.network.impl.SwapVariantPackets;
 import tocraft.walkers.network.impl.UnlockPackets;
 
 public class KeyPressHandler implements ClientTickEvent.Client {
@@ -36,6 +37,25 @@ public class KeyPressHandler implements ClientTickEvent.Client {
         if (WalkersClient.SPECIAL_TRANSFORM_KEY.consumeClick()) {
             if (Walkers.hasSpecialShape(client.player.getUUID())) SpecialSwapPackets.sendSpecialSwapRequest();
             else client.player.displayClientMessage(Component.translatable("walkers.not_special"), true);
+        }
+
+        if (WalkersClient.VARIANTS_MENU_KEY.consumeClick() && Walkers.CONFIG.unlockEveryVariant) {
+            LivingEntity shape = PlayerShape.getCurrentShape(client.player);
+            if (shape != null) {
+                ShapeType<?> shapeType = ShapeType.from(shape);
+                if (shapeType != null) {
+                    if (WalkersClient.renderVariantsMenu) {
+                        SwapVariantPackets.sendSwapRequest(shapeType.getVariantData() + WalkersClient.variantOffset);
+                    }
+                }
+                WalkersClient.variantOffset = 0;
+                WalkersClient.renderVariantsMenu = !WalkersClient.renderVariantsMenu;
+            }
+        }
+
+        if (WalkersClient.renderVariantsMenu) {
+            if (client.options.hideGui || !Walkers.CONFIG.unlockEveryVariant || client.screen != null || PlayerShape.getCurrentShape(client.player) == null)
+                WalkersClient.renderVariantsMenu = false;
         }
 
         if (WalkersClient.UNLOCK_KEY.isDown()) handleUnlockKey(client);

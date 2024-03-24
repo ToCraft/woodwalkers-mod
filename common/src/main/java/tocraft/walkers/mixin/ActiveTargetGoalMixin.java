@@ -18,9 +18,9 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import tocraft.walkers.Walkers;
 import tocraft.walkers.api.PlayerHostility;
 import tocraft.walkers.api.PlayerShape;
+import tocraft.walkers.integrations.Integrations;
 import tocraft.walkers.skills.SkillRegistry;
 import tocraft.walkers.skills.impl.FearedSkill;
-import tocraft.walkers.integrations.Integrations;
 
 import java.util.function.Predicate;
 

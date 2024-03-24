@@ -28,11 +28,11 @@ public class TropicalFishTypeProvider extends TypeProvider<TropicalFish> {
         TropicalFish.Pattern pattern = patternValues.get(data);
         if (Walkers.CONFIG.multiVectorVariants > 0) {
             DyeColor baseColor = DyeColor.byId(new Random().nextInt(0, 15));
-            DyeColor patternColor = DyeColor.byId(new Random().nextInt(0, 15));;
+            DyeColor patternColor = DyeColor.byId(new Random().nextInt(0, 15));
+            ;
             ((TropicalFishAccessor) fish).callSetPackedVariant(new TropicalFish.Variant(pattern, baseColor, patternColor).getPackedId());
 
-        }
-        else {
+        } else {
             fish.setVariant(pattern);
         }
         return fish;

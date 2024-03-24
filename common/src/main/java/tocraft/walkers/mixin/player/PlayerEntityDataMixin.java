@@ -26,13 +26,13 @@ import tocraft.walkers.Walkers;
 import tocraft.walkers.api.FlightHelper;
 import tocraft.walkers.api.PlayerShape;
 import tocraft.walkers.api.event.ShapeEvents;
-import tocraft.walkers.skills.SkillRegistry;
-import tocraft.walkers.skills.impl.RiderSkill;
 import tocraft.walkers.api.variant.ShapeType;
 import tocraft.walkers.impl.DimensionsRefresher;
 import tocraft.walkers.impl.PlayerDataProvider;
 import tocraft.walkers.mixin.EntityTrackerAccessor;
 import tocraft.walkers.mixin.ThreadedAnvilChunkStorageAccessor;
+import tocraft.walkers.skills.SkillRegistry;
+import tocraft.walkers.skills.impl.RiderSkill;
 
 import java.util.Optional;
 import java.util.UUID;

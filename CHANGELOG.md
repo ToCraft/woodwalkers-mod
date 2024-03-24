@@ -1,16 +1,21 @@
 walkers 4.1
 ================
+
 - improve rendering mechanic for better mod compatibility
 - add more skill icons
 - fix mobs not fighting back
 
 walkers 4.0
 ================
-I'll start with the small changes. If a mob has an Ability but isn't listed in the abilityCooldownMap in the Config, it'll be added to it.
-Mobs, that are sensitive to water (get hurt by it) also pass this to the player. There are also many more Friends & Foes Abilities.
+I'll start with the small changes. If a mob has an Ability but isn't listed in the abilityCooldownMap in the Config,
+it'll be added to it.
+Mobs, that are sensitive to water (get hurt by it) also pass this to the player. There are also many more Friends & Foes
+Abilities.
 The shape isn't rendered as spectator anymore, too.
 For 1.20.1 and below, the First Person Model Mod doesn't crash anymore and should work fine with Walkers.
-Now, let's get to the greatest change: <strong>The SkillSystem</strong>. This allows datapack creators to change the bahavior of mob shapes! There are also some new features, such as The ReinforcementsSkill or the HumanoidSkill. I hope you like it!
+Now, let's get to the greatest change: <strong>The SkillSystem</strong>. This allows datapack creators to change the
+bahavior of mob shapes! There are also some new features, such as The ReinforcementsSkill or the HumanoidSkill. I hope
+you like it!
 Of course there are some background improvements and new minor features, too.
 Special Thanks to Yoananas_gang for supporting the project.
 

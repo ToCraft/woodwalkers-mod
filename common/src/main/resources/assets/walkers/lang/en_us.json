@@ -4,6 +4,7 @@
   "key.walkers_ability": "Use an Shape Ability",
   "key.walkers_special": "Transform into something special",
   "key.walkers_unlock": "Scan a mob",
+  "key.walkers_variants": "Open the Variants Menu",
   "walkers.already_has": "%s already has %s as shape!",
   "walkers.deletion_success": "Removed the second shape of %s.",
   "walkers.does_not_have": "%s does not have second shapes!",

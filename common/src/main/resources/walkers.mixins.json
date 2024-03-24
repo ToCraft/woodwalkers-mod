@@ -22,10 +22,7 @@
     "PiglinSensorMixin",
     "PlayerAdvancementTrackerMixin",
     "PlayerByteStatusMixin",
-    "player.PlayerEntityAttackMixin",
-    "player.PlayerEntityMixin",
     "PlayerManagerMixin",
-    "player.PlayerSonicBoomMixin",
     "PlayerSwimmingMixin",
     "PolarBearAttackPlayersGoalMixin",
     "PowderSnowBlockMixin",
@@ -55,16 +52,21 @@
     "accessor.SquidEntityAccessor",
     "accessor.TropicalFishAccessor",
     "entity.BowItemMixin",
+    "player.PlayerEntityAttackMixin",
     "player.PlayerEntityDataMixin",
+    "player.PlayerEntityMixin",
     "player.PlayerEntityTickMixin",
     "player.PlayerManagerMixin",
+    "player.PlayerSonicBoomMixin",
     "player.PlayerSoundMixin",
     "player.PlayerTrackingMixin",
     "player.RespawnDataCopyMixin"
   ],
   "client": [
     "client.ClientEntityMixin",
+    "client.ClientPlayerDataCacheMixin",
     "client.InGameHudMixin",
+    "client.MouseHandlerMixin",
     "client.PlayerEntityRendererMixin",
     "client.RenderLayerMixin",
     "client.ShadowMixin",
@@ -80,8 +82,7 @@
     "client.accessor.RavagerEntityModelAccessor",
     "client.accessor.SpiderEntityModelAccessor",
     "client.accessor.SquidEntityModelAccessor",
-    "client.player.AbstractClientPlayerMixin",
-    "client.ClientPlayerDataCacheMixin"
+    "client.player.AbstractClientPlayerMixin"
   ],
   "injectors": {
     "defaultRequire": 1

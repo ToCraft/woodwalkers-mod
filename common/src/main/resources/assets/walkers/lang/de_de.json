@@ -4,6 +4,7 @@
   "key.walkers_ability": "Verwende eine Fähigkeit",
   "key.walkers_special": "Verwandle dich in etwas besonderes",
   "key.walkers_unlock": "Scanne einen Mob",
+  "key.walkers_variants": "Öffne das Varianten-Menü",
   "walkers.already_has": "%s hat bereits %s als zweite Gestalt!",
   "walkers.deletion_success": "Die zweite Gestalt von %s wurde entfernt.",
   "walkers.does_not_have": "%s hat keine zweite Gestalt!",
