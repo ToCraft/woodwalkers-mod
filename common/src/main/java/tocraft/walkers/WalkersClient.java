@@ -1,6 +1,7 @@
 package tocraft.walkers;
 
 import com.mojang.blaze3d.platform.InputConstants;
+import dev.architectury.event.events.client.ClientGuiEvent;
 import dev.architectury.event.events.client.ClientTickEvent;
 import dev.architectury.registry.client.keymappings.KeyMappingRegistry;
 import net.minecraft.client.KeyMapping;
@@ -10,6 +11,7 @@ import tocraft.walkers.api.model.EntityArms;
 import tocraft.walkers.api.model.EntityUpdaters;
 import tocraft.walkers.impl.tick.KeyPressHandler;
 import tocraft.walkers.network.ClientNetworking;
+import tocraft.walkers.screen.hud.VariantMenu;
 
 public class WalkersClient {
     public static boolean renderVariantsMenu = false;
@@ -36,6 +38,7 @@ public class WalkersClient {
 
         // Register event handlers
         ClientTickEvent.CLIENT_PRE.register(new KeyPressHandler());
+        ClientGuiEvent.RENDER_HUD.register((guiGraphics, tickDelta) -> new VariantMenu().render(guiGraphics));
         ClientNetworking.registerPacketHandlers();
     }
 }
