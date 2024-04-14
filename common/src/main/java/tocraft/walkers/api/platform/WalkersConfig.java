@@ -38,7 +38,6 @@ public class WalkersConfig implements Config {
     public boolean unlockOverridesCurrentShape = false;
     @Synchronize
     public float unlockTimer = 60f;
-    public boolean specialShapeIsThirdShape = false;
     @Synchronize
     public boolean unlockEveryVariant = true;
 

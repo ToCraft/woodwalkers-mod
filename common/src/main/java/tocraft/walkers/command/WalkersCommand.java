@@ -167,8 +167,7 @@ public class WalkersCommand {
         }
     }
 
-    private static void switchShape(CommandSourceStack source, ServerPlayer player, ResourceLocation shape,
-                                    @Nullable CompoundTag nbt) {
+    private static void switchShape(CommandSourceStack source, ServerPlayer player, ResourceLocation shape, @Nullable CompoundTag nbt) {
         Entity created;
 
         if (nbt != null) {
@@ -181,16 +180,11 @@ public class WalkersCommand {
             created = entity.create(player.level());
         }
 
-        if (created instanceof LivingEntity living) {
-            @Nullable
-            ShapeType<?> defaultType = ShapeType.from(living);
-
-            if (defaultType != null) {
-                boolean result = PlayerShape.updateShapes(player, (LivingEntity) created);
-                if (result && Walkers.CONFIG.logCommands) {
-                    source.sendSystemMessage(Component.translatable("walkers.switchShape_success",
-                            player.getDisplayName(), Component.translatable(created.getType().getDescriptionId())));
-                }
+        if (created instanceof LivingEntity) {
+            boolean result = PlayerShape.updateShapes(player, (LivingEntity) created);
+            if (result && Walkers.CONFIG.logCommands) {
+                source.sendSystemMessage(Component.translatable("walkers.switchShape_success",
+                        player.getDisplayName(), Component.translatable(created.getType().getDescriptionId())));
             }
         }
     }

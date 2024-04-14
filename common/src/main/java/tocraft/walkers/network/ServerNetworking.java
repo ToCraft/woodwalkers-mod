@@ -7,7 +7,6 @@ import net.minecraft.world.entity.player.Player;
 import tocraft.walkers.ability.AbilityRegistry;
 import tocraft.walkers.api.PlayerAbilities;
 import tocraft.walkers.api.PlayerShape;
-import tocraft.walkers.network.impl.SpecialSwapPackets;
 import tocraft.walkers.network.impl.SwapPackets;
 import tocraft.walkers.network.impl.SwapVariantPackets;
 import tocraft.walkers.network.impl.UnlockPackets;
@@ -17,7 +16,6 @@ public class ServerNetworking implements NetworkHandler {
     public static void initialize() {
         SwapPackets.registerWalkersRequestPacketHandler();
         UnlockPackets.registerShapeUnlockRequestPacketHandler();
-        SpecialSwapPackets.registerDevRequestPacketHandler();
         SwapVariantPackets.registerSwapVariantPacketHandler();
         registerUseAbilityPacketHandler();
     }

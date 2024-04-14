@@ -22,7 +22,7 @@ public class MouseHandlerMixin {
 
     @WrapWithCondition(method = "onScroll", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/player/Inventory;swapPaint(D)V"))
     private boolean handleScrollInVariantsMenu(Inventory instance, double direction) {
-        if (!minecraft.options.hideGui && WalkersClient.renderVariantsMenu && Walkers.CONFIG.unlockEveryVariant && minecraft.screen == null) {
+        if (!minecraft.options.hideGui && WalkersClient.isRenderingVariantsMenu && Walkers.CONFIG.unlockEveryVariant && minecraft.screen == null) {
             WalkersClient.variantOffset -= (int) direction;
             return false;
         } else {
