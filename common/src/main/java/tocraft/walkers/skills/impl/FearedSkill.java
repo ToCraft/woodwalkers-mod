@@ -3,7 +3,9 @@ package tocraft.walkers.skills.impl;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import tocraft.walkers.Walkers;
@@ -19,19 +21,26 @@ public class FearedSkill<E extends LivingEntity> extends ShapeSkill<E> {
     public static final Codec<FearedSkill<?>> CODEC = RecordCodecBuilder.create((instance) -> instance.group(
             Codec.list(ResourceLocation.CODEC).fieldOf("fearful").forGetter(o -> new ArrayList<>())
     ).apply(instance, instance.stable(preyLocations -> {
-        List<EntityType<?>> preyTypes = new ArrayList<>();
+        List<Predicate<LivingEntity>> fearful = new ArrayList<>();
         for (ResourceLocation resourceLocation : preyLocations) {
             if (BuiltInRegistries.ENTITY_TYPE.containsKey(resourceLocation)) {
-                preyTypes.add(BuiltInRegistries.ENTITY_TYPE.get(resourceLocation));
+                fearful.add(entity -> entity.getType().equals(BuiltInRegistries.ENTITY_TYPE.get(resourceLocation)));
+            } else {
+                fearful.add(entity -> entity.getType().is(TagKey.create(Registries.ENTITY_TYPE, resourceLocation)));
             }
         }
-        return ofFearfulType(preyTypes.toArray(EntityType[]::new));
+        return new FearedSkill<>(fearful);
     })));
 
     public final List<Predicate<LivingEntity>> fearful;
 
     public static FearedSkill<?> ofFearfulType(EntityType<?>... fearful) {
         return new FearedSkill<>(Stream.of(fearful).map(entry -> (Predicate<LivingEntity>) entity -> entity.getType().equals(entry)).toList());
+    }
+
+    @SafeVarargs
+    public static FearedSkill<?> ofFearfulTag(TagKey<EntityType<?>>... fearful) {
+        return new FearedSkill<>(Stream.of(fearful).map(entry -> (Predicate<LivingEntity>) entity -> entity.getType().is(entry)).toList());
     }
 
     @SafeVarargs

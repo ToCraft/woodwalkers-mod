@@ -5,6 +5,7 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.network.protocol.game.ClientboundGameEventPacket;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
@@ -366,8 +367,16 @@ public abstract class PlayerEntityMixin extends LivingEntityMixin {
             for (ShapeSkill<LivingEntity> reinforcementSkill : SkillRegistry.get(shape, ReinforcementsSkill.ID)) {
                 double d = ((ReinforcementsSkill<LivingEntity>) reinforcementSkill).range;
                 List<EntityType<?>> reinforcements = ((ReinforcementsSkill<LivingEntity>) reinforcementSkill).reinforcements;
+                List<TagKey<EntityType<?>>> reinforcementTags = ((ReinforcementsSkill<LivingEntity>) reinforcementSkill).reinforcementTags;
                 AABB aABB = AABB.unitCubeFromLowerCorner(this.position()).inflate(d, 10.0, d);
-                Iterator<? extends LivingEntity> var5 = this.level().getEntitiesOfClass(Mob.class, aABB, EntitySelector.NO_SPECTATORS.and(entity -> reinforcements.contains(entity.getType()) || (reinforcements.isEmpty() && shape.getClass().isInstance(entity)))).iterator();
+                Iterator<? extends LivingEntity> var5 = this.level().getEntitiesOfClass(Mob.class, aABB, EntitySelector.NO_SPECTATORS.and(entity -> {
+                    boolean bool = false;
+                    for (TagKey<EntityType<?>> reinforcementTag : reinforcementTags) {
+                        if (entity.getType().is(reinforcementTag)) bool = true;
+                        break;
+                    }
+                    return reinforcements.contains(entity.getType()) || ((reinforcements.isEmpty() && shape.getClass().isInstance(entity)) || bool);
+                })).iterator();
 
                 while (true) {
                     Mob mob;

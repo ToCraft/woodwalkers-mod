@@ -4,6 +4,8 @@ walkers 4.1
 - improve rendering mechanic for better mod compatibility
 - add more skill icons
 - fix mobs not fighting back
+- fix skeleton not "humanoid"
+- entity tags can now be used for skills & blacklist
 
 walkers 4.0
 ================
