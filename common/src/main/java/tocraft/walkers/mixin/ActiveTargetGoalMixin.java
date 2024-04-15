@@ -122,4 +122,13 @@ public abstract class ActiveTargetGoalMixin extends TrackTargetGoalMixin {
             }
         }
     }
+
+    @Inject(method = "canUse", at = @At("RETURN"), cancellable = true)
+    private void onCanUse(CallbackInfoReturnable<Boolean> cir) {
+        if (cir.getReturnValue()) {
+            if (this.target instanceof Player player && PlayerShape.getCurrentShape(player) instanceof PolarBear) {
+                cir.setReturnValue(false);
+            }
+        }
+    }
 }

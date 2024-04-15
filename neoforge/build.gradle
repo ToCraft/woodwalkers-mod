@@ -1,7 +1,3 @@
-loom {
-    accessWidenerPath = project(":common").loom.accessWidenerPath
-}
-
 apply from: "https://raw.githubusercontent.com/ToCraft/GradleMaster/main/neoforge.gradle"
 
 dependencies {

@@ -10,6 +10,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import tocraft.walkers.ability.ShapeAbility;
+import tocraft.walkers.mixin.accessor.ShulkerAccessor;
 
 public class ShulkerAbility<T extends Shulker> extends ShapeAbility<T> {
 
@@ -20,7 +21,7 @@ public class ShulkerAbility<T extends Shulker> extends ShapeAbility<T> {
         player.level().addFreshEntity(new ShulkerBullet(player.level(), player, target, player.getDirection().getAxis()));
         player.playSound(SoundEvents.SHULKER_SHOOT, 2.0F, (player.getRandom().nextFloat() - player.getRandom().nextFloat()) * 0.2F + 1.0F);
 
-        shape.setRawPeekAmount(100);
+        ((ShulkerAccessor) shape).callSetRawPeekAmount(100);
     }
 
     @Override

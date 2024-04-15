@@ -6,16 +6,17 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import tocraft.walkers.ability.ShapeAbility;
+import tocraft.walkers.mixin.accessor.PufferfishAccessor;
 
 public class PufferfishAbility<T extends Pufferfish> extends ShapeAbility<T> {
     @Override
     public void onUse(Player player, T shape, Level world) {
         if (!world.isClientSide()) {
             if (shape.getPuffState() == 0) {
-                shape.inflateCounter = 1;
-                shape.deflateTimer = 0;
+                ((PufferfishAccessor) shape).setInflateCounter(1);
+                ((PufferfishAccessor) shape).setDeflateTimer(0);
             } else {
-                shape.inflateCounter = 0;
+                ((PufferfishAccessor) shape).setInflateCounter(0);
             }
         }
     }
