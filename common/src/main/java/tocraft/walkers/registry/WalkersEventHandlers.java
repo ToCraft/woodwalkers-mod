@@ -45,51 +45,51 @@ public class WalkersEventHandlers {
         LifecycleEvent.SERVER_LEVEL_LOAD.register((serverLevel) -> {
             for (EntityType<?> entityType : BuiltInRegistries.ENTITY_TYPE) {
                 if (entityType.is(WalkersEntityTags.BURNS_IN_DAYLIGHT)) {
-                    Walkers.LOGGER.warn("Please merge to the new skills system. Found " + WalkersEntityTags.BURNS_IN_DAYLIGHT + " for " + entityType);
+                    Walkers.LOGGER.warn("Woodwalkers Warning: Please merge to the new skills system. Found " + WalkersEntityTags.BURNS_IN_DAYLIGHT + " for " + entityType);
                     SkillRegistry.registerByType((EntityType<LivingEntity>) entityType, new BurnInDaylightSkill<>());
                 }
                 if (entityType.is(WalkersEntityTags.FLYING)) {
-                    Walkers.LOGGER.warn("Please merge to the new skills system. Found " + WalkersEntityTags.FLYING + " for " + entityType);
+                    Walkers.LOGGER.warn("Woodwalkers Warning: Please merge to the new skills system. Found " + WalkersEntityTags.FLYING + " for " + entityType);
                     SkillRegistry.registerByType((EntityType<LivingEntity>) entityType, new FlyingSkill<>());
                 }
                 if (entityType.is(WalkersEntityTags.SLOW_FALLING)) {
-                    Walkers.LOGGER.warn("Please merge to the new skills system. Found " + WalkersEntityTags.SLOW_FALLING + " for " + entityType);
+                    Walkers.LOGGER.warn("Woodwalkers Warning: Please merge to the new skills system. Found " + WalkersEntityTags.SLOW_FALLING + " for " + entityType);
                     SkillRegistry.registerByType((EntityType<LivingEntity>) entityType, new SlowFallingSkill<>());
                 }
                 if (entityType.is(WalkersEntityTags.WOLF_PREY)) {
-                    Walkers.LOGGER.warn("Please merge to the new skills system. Found " + WalkersEntityTags.WOLF_PREY + " for " + entityType);
+                    Walkers.LOGGER.warn("Woodwalkers Warning: Please merge to the new skills system. Found " + WalkersEntityTags.WOLF_PREY + " for " + entityType);
                     SkillRegistry.registerByType((EntityType<LivingEntity>) entityType, (PreySkill<LivingEntity>) PreySkill.ofHunterClass(Wolf.class));
                 }
                 if (entityType.is(WalkersEntityTags.FOX_PREY)) {
-                    Walkers.LOGGER.warn("Please merge to the new skills system. Found " + WalkersEntityTags.FOX_PREY + " for " + entityType);
+                    Walkers.LOGGER.warn("Woodwalkers Warning: Please merge to the new skills system. Found " + WalkersEntityTags.FOX_PREY + " for " + entityType);
                     SkillRegistry.registerByType((EntityType<LivingEntity>) entityType, (PreySkill<LivingEntity>) PreySkill.ofHunterClass(Fox.class));
                 }
                 if (entityType.is(WalkersEntityTags.HURT_BY_HIGH_TEMPERATURE)) {
-                    Walkers.LOGGER.warn("Please merge to the new skills system. Found " + WalkersEntityTags.HURT_BY_HIGH_TEMPERATURE + " for " + entityType);
+                    Walkers.LOGGER.warn("Woodwalkers Warning: Please merge to the new skills system. Found " + WalkersEntityTags.HURT_BY_HIGH_TEMPERATURE + " for " + entityType);
                     SkillRegistry.registerByType((EntityType<LivingEntity>) entityType, new TemperatureSkill<>());
                 }
                 if (entityType.is(WalkersEntityTags.RAVAGER_RIDING)) {
-                    Walkers.LOGGER.warn("Please merge to the new skills system. Found " + WalkersEntityTags.RAVAGER_RIDING + " for " + entityType);
+                    Walkers.LOGGER.warn("Woodwalkers Warning: Please merge to the new skills system. Found " + WalkersEntityTags.RAVAGER_RIDING + " for " + entityType);
                     SkillRegistry.registerByType((EntityType<LivingEntity>) entityType, (RiderSkill<LivingEntity>) RiderSkill.ofRideableClass(Ravager.class));
                 }
                 if (entityType.is(WalkersEntityTags.LAVA_WALKING)) {
-                    Walkers.LOGGER.warn("Please merge to the new skills system. Found " + WalkersEntityTags.LAVA_WALKING + " for " + entityType);
+                    Walkers.LOGGER.warn("Woodwalkers Warning: Please merge to the new skills system. Found " + WalkersEntityTags.LAVA_WALKING + " for " + entityType);
                     SkillRegistry.registerByType((EntityType<LivingEntity>) entityType, new StandOnFluidSkill<>(FluidTags.LAVA));
                 }
                 if (entityType.is(WalkersEntityTags.FALL_THROUGH_BLOCKS)) {
-                    Walkers.LOGGER.warn("Please merge to the new skills system. Found " + WalkersEntityTags.FALL_THROUGH_BLOCKS + " for " + entityType);
+                    Walkers.LOGGER.warn("Woodwalkers Warning: Please merge to the new skills system. Found " + WalkersEntityTags.FALL_THROUGH_BLOCKS + " for " + entityType);
                     SkillRegistry.registerByType((EntityType<LivingEntity>) entityType, new NoPhysicsSkill<>());
                 }
                 if (entityType.is(WalkersEntityTags.CANT_SWIM)) {
-                    Walkers.LOGGER.warn("Please merge to the new skills system. Found " + WalkersEntityTags.CANT_SWIM + " for " + entityType);
+                    Walkers.LOGGER.warn("Woodwalkers Warning: Please merge to the new skills system. Found " + WalkersEntityTags.CANT_SWIM + " for " + entityType);
                     SkillRegistry.registerByType((EntityType<LivingEntity>) entityType, new CantSwimSkill<>());
                 }
                 if (entityType.is(WalkersEntityTags.UNDROWNABLE)) {
-                    Walkers.LOGGER.warn("Please merge to the new skills system. Found " + WalkersEntityTags.UNDROWNABLE + " for " + entityType);
+                    Walkers.LOGGER.warn("Woodwalkers Warning: Please merge to the new skills system. Found " + WalkersEntityTags.UNDROWNABLE + " for " + entityType);
                     SkillRegistry.registerByType((EntityType<LivingEntity>) entityType, new UndrownableSkill<>());
                 }
                 if (entityType.is(WalkersEntityTags.BLACKLISTED)) {
-                    Walkers.LOGGER.warn("Please merge to the new skills system. Found " + WalkersEntityTags.BLACKLISTED + " for " + entityType);
+                    Walkers.LOGGER.warn("Woodwalkers Warning: Please merge to the new skills system. Found " + WalkersEntityTags.BLACKLISTED + " for " + entityType);
                     EntityBlacklist.registerByType(entityType);
                 }
             }
