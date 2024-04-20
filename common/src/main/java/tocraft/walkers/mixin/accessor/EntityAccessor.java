@@ -21,6 +21,7 @@ public interface EntityAccessor {
 
     @Invoker("setSharedFlag")
     void shape_callSetFlag(int index, boolean value);
+
     @Invoker("playStepSound")
     void shape_callPlayStepSound(BlockPos pos, BlockState state);
 }

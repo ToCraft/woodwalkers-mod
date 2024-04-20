@@ -6,7 +6,9 @@ import net.minecraft.world.entity.MobType;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.animal.PolarBear;
 import net.minecraft.world.entity.boss.wither.WitherBoss;
-import net.minecraft.world.entity.monster.*;
+import net.minecraft.world.entity.monster.EnderMan;
+import net.minecraft.world.entity.monster.Enemy;
+import net.minecraft.world.entity.monster.WitherSkeleton;
 import net.minecraft.world.entity.monster.piglin.AbstractPiglin;
 import net.minecraft.world.entity.player.Player;
 import org.spongepowered.asm.mixin.Mixin;
@@ -18,11 +20,9 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import tocraft.walkers.Walkers;
 import tocraft.walkers.api.PlayerHostility;
 import tocraft.walkers.api.PlayerShape;
+import tocraft.walkers.integrations.Integrations;
 import tocraft.walkers.skills.SkillRegistry;
 import tocraft.walkers.skills.impl.FearedSkill;
-import tocraft.walkers.integrations.Integrations;
-
-import java.util.function.Predicate;
 
 @Mixin(NearestAttackableTargetGoal.class)
 public abstract class ActiveTargetGoalMixin extends TrackTargetGoalMixin {
@@ -43,11 +43,9 @@ public abstract class ActiveTargetGoalMixin extends TrackTargetGoalMixin {
                 if (!hasHostility) {
                     // prey should ignore hunter
                     for (FearedSkill<?> fearedSkill : SkillRegistry.get(shape, FearedSkill.ID).stream().map(entry -> (FearedSkill<?>) entry).toList()) {
-                        for (Predicate<LivingEntity> fearPredicate : fearedSkill.fearful) {
-                            if (fearPredicate.test(mob)) {
-                                this.stop();
-                                ci.cancel();
-                            }
+                        if (fearedSkill.isFeared(mob)) {
+                            this.stop();
+                            ci.cancel();
                         }
                     }
 
@@ -96,18 +94,16 @@ public abstract class ActiveTargetGoalMixin extends TrackTargetGoalMixin {
 
                 // only cancel if the player does not have hostility
                 if (!hasHostility) {
-                    // creepers should ignore cats
-                    if (this.mob instanceof Creeper && shape.getType().equals(EntityType.OCELOT)) {
-                        cir.setReturnValue(false);
-                    }
-
-                    // skeletons should ignore wolfs
-                    if (this.mob instanceof Skeleton && shape.getType().equals(EntityType.WOLF)) {
-                        cir.setReturnValue(false);
+                    // prey should ignore hunter
+                    for (FearedSkill<?> fearedSkill : SkillRegistry.get(shape, FearedSkill.ID).stream().map(entry -> (FearedSkill<?>) entry).toList()) {
+                        if (fearedSkill.isFeared(mob)) {
+                            cir.setReturnValue(false);
+                            return;
+                        }
                     }
 
                     // withers should ignore undead
-                    else if (this.mob instanceof WitherBoss && shape.getMobType().equals(MobType.UNDEAD)) {
+                    if (this.mob instanceof WitherBoss && shape.getMobType().equals(MobType.UNDEAD)) {
                         cir.setReturnValue(false);
                     }
 
@@ -117,6 +113,15 @@ public abstract class ActiveTargetGoalMixin extends TrackTargetGoalMixin {
                         cir.setReturnValue(false);
                     }
                 }
+            }
+        }
+    }
+
+    @Inject(method = "canUse", at = @At("RETURN"), cancellable = true)
+    private void onCanUse(CallbackInfoReturnable<Boolean> cir) {
+        if (cir.getReturnValue()) {
+            if (this.target instanceof Player player && PlayerShape.getCurrentShape(player) instanceof PolarBear) {
+                cir.setReturnValue(false);
             }
         }
     }

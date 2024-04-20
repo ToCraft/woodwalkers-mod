@@ -22,7 +22,7 @@ public class PlayerSwimmingMixin {
         if (thisEntity instanceof Player player) {
             LivingEntity shape = PlayerShape.getCurrentShape(player);
 
-            if (shape != null && SkillRegistry.has(shape, CantSwimSkill.ID)) {
+            if (SkillRegistry.has(shape, CantSwimSkill.ID)) {
                 ci.cancel();
             }
         }

@@ -41,10 +41,11 @@ body:
       placeholder: "e.g. 48.2.0"
     validations:
       required: true
-  - type: input
+  - type: textarea
     attributes:
       label: "The latest.log file"
-      description: "Please use [gist](https://gist.github.com/)"
+      description: "Drag-and-Drop your latest.log file or append a link to a Gist-file."
+      placeholder: "Your latest.log file"
     validations:
       required: true
   - type: textarea

@@ -26,17 +26,16 @@ import tocraft.walkers.Walkers;
 import tocraft.walkers.api.FlightHelper;
 import tocraft.walkers.api.PlayerShape;
 import tocraft.walkers.api.event.ShapeEvents;
-import tocraft.walkers.skills.SkillRegistry;
-import tocraft.walkers.skills.impl.RiderSkill;
 import tocraft.walkers.api.variant.ShapeType;
 import tocraft.walkers.impl.DimensionsRefresher;
 import tocraft.walkers.impl.PlayerDataProvider;
 import tocraft.walkers.mixin.EntityTrackerAccessor;
 import tocraft.walkers.mixin.ThreadedAnvilChunkStorageAccessor;
+import tocraft.walkers.skills.SkillRegistry;
+import tocraft.walkers.skills.impl.RiderSkill;
 
 import java.util.Optional;
 import java.util.UUID;
-import java.util.function.Predicate;
 
 @Mixin(Player.class)
 public abstract class PlayerEntityDataMixin extends LivingEntity implements PlayerDataProvider {
@@ -256,12 +255,9 @@ public abstract class PlayerEntityDataMixin extends LivingEntity implements Play
             boolean b1 = false;
             boolean b2 = false;
             for (RiderSkill<?> riderSkill : SkillRegistry.get(shape, RiderSkill.ID).stream().map(entry -> (RiderSkill<?>) entry).toList()) {
-                for (Predicate<LivingEntity> rideable : riderSkill.rideable) {
-                    if (rideable.test(livingVehicle) || (livingVehicle instanceof Player rideablePlayer && rideable.test(PlayerShape.getCurrentShape(rideablePlayer)))) {
-                        b1 = true;
-                        b2 = true;
-                        break;
-                    }
+                if (riderSkill.isRideable(livingVehicle) || (livingVehicle instanceof Player rideablePlayer && riderSkill.isRideable(PlayerShape.getCurrentShape(rideablePlayer)))) {
+                    b1 = true;
+                    b2 = true;
                 }
                 if (b2) break;
             }

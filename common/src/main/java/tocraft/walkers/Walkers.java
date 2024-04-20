@@ -20,6 +20,7 @@ import tocraft.craftedcore.platform.VersionChecker;
 import tocraft.walkers.ability.AbilityRegistry;
 import tocraft.walkers.api.PlayerShape;
 import tocraft.walkers.api.WalkersTickHandlers;
+import tocraft.walkers.api.blacklist.EntityBlacklist;
 import tocraft.walkers.api.data.DataManager;
 import tocraft.walkers.api.platform.WalkersConfig;
 import tocraft.walkers.command.WalkersCommand;
@@ -51,6 +52,7 @@ public class Walkers {
     public void initialize() {
         MixinExtrasBootstrap.init();
 
+        EntityBlacklist.init();
         AbilityRegistry.init();
         SkillRegistry.init();
         WalkersEventHandlers.initialize();
@@ -96,7 +98,7 @@ public class Walkers {
                 boolean hasPermission = true;
                 for (String requiredAdvancement : requiredAdvancements) {
                     Advancement advancement = player.server.getAdvancements()
-							.getAdvancement(new ResourceLocation(requiredAdvancement));
+                            .getAdvancement(new ResourceLocation(requiredAdvancement));
                     if (advancement != null) {
                         AdvancementProgress progress = player.getAdvancements().getOrStartProgress(advancement);
 

@@ -174,7 +174,7 @@ public class NBTTypeProvider<T extends LivingEntity> extends TypeProvider<T> {
 
         public T getValue(int index) {
             if (parameterList.containsKey(index)) {
-                    return parameterList.get(index);
+                return parameterList.get(index);
             }
             switch (nbtType.toUpperCase()) {
                 case "INT", "INTEGER" -> {
