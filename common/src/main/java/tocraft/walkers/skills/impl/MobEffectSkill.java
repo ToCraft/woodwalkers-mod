@@ -69,6 +69,12 @@ public class MobEffectSkill<E extends LivingEntity> extends ShapeSkill<E> {
 
     @Override
     @Environment(EnvType.CLIENT)
+    public boolean iconMightDiffer() {
+        return true;
+    }
+
+    @Override
+    @Environment(EnvType.CLIENT)
     public @Nullable TextureAtlasSprite getIcon() {
         return Minecraft.getInstance().getMobEffectTextures().get(mobEffectInstance.getEffect());
     }

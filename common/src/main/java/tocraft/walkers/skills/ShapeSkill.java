@@ -8,10 +8,16 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
 import org.jetbrains.annotations.Nullable;
 
+@SuppressWarnings("unused")
 public abstract class ShapeSkill<E extends LivingEntity> {
     public abstract ResourceLocation getId();
 
     public abstract Codec<? extends ShapeSkill<?>> codec();
+
+    @Environment(EnvType.CLIENT)
+    public boolean iconMightDiffer() {
+        return false;
+    };
 
     @Environment(EnvType.CLIENT)
     public @Nullable TextureAtlasSprite getIcon() {
