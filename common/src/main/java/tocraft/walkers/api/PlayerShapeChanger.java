@@ -14,7 +14,7 @@ public class PlayerShapeChanger {
         PlayerDataProvider provider = (PlayerDataProvider) player;
         EventResult unlock = ShapeEvents.UNLOCK_SHAPE.invoker().unlock(player, newShape);
 
-        if (unlock.asMinecraft() != InteractionResult.FAIL && provider.walkers$get2ndShape() != newShape) {
+        if (unlock.asMinecraft() != InteractionResult.FAIL) {
             provider.walkers$set2ndShape(newShape);
             sync(player);
             PlayerAbilities.sync(player);

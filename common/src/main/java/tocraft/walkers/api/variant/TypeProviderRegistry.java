@@ -2,6 +2,7 @@ package tocraft.walkers.api.variant;
 
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import org.jetbrains.annotations.Nullable;
 import tocraft.walkers.impl.variant.*;
 
 import java.util.LinkedHashMap;
@@ -36,7 +37,12 @@ public class TypeProviderRegistry {
         VARIANT_BY_TYPE.put(type, provider);
     }
 
+    public static <T extends LivingEntity> boolean hasProvider(EntityType<T> type) {
+        return VARIANT_BY_TYPE.containsKey(type);
+    }
+
     @SuppressWarnings("unchecked")
+    @Nullable
     public static <T extends LivingEntity> TypeProvider<T> getProvider(EntityType<T> type) {
         return (TypeProvider<T>) VARIANT_BY_TYPE.get(type);
     }

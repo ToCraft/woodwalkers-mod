@@ -38,6 +38,9 @@ import tocraft.walkers.api.WalkersTickHandler;
 import tocraft.walkers.api.WalkersTickHandlers;
 import tocraft.walkers.impl.PlayerDataProvider;
 import tocraft.walkers.impl.ShapeDataProvider;
+import tocraft.walkers.mixin.accessor.DolphinAccessor;
+import tocraft.walkers.mixin.accessor.PufferfishAccessor;
+import tocraft.walkers.mixin.accessor.SheepAccessor;
 import tocraft.walkers.network.impl.VehiclePackets;
 import tocraft.walkers.skills.SkillRegistry;
 import tocraft.walkers.skills.impl.MobEffectSkill;
@@ -96,26 +99,26 @@ public abstract class PlayerEntityTickMixin extends LivingEntity {
         if (!level.isClientSide && this.isAlive()) {
             LivingEntity shape = PlayerShape.getCurrentShape((Player) (Object) this);
             if (shape instanceof Pufferfish pufferfishShape) {
-                if (pufferfishShape.inflateCounter > 0) {
+                if (((PufferfishAccessor) pufferfishShape).getInflateCounter() > 0) {
                     if (pufferfishShape.getPuffState() == 0) {
                         this.playSound(SoundEvents.PUFFER_FISH_BLOW_UP, this.getSoundVolume(), this.getVoicePitch());
                         pufferfishShape.setPuffState(1);
-                    } else if (pufferfishShape.inflateCounter > 40 && pufferfishShape.getPuffState() == 1) {
+                    } else if (((PufferfishAccessor) pufferfishShape).getInflateCounter() > 40 && pufferfishShape.getPuffState() == 1) {
                         this.playSound(SoundEvents.PUFFER_FISH_BLOW_UP, this.getSoundVolume(), this.getVoicePitch());
                         pufferfishShape.setPuffState(2);
                     }
 
-                    ++pufferfishShape.inflateCounter;
+                    ((PufferfishAccessor) pufferfishShape).setInflateCounter(((PufferfishAccessor) pufferfishShape).getInflateCounter() + 1);
                 } else if (pufferfishShape.getPuffState() != 0) {
-                    if (pufferfishShape.deflateTimer > 60 && pufferfishShape.getPuffState() == 2) {
+                    if (((PufferfishAccessor) pufferfishShape).getDeflateTimer() > 60 && pufferfishShape.getPuffState() == 2) {
                         this.playSound(SoundEvents.PUFFER_FISH_BLOW_OUT, this.getSoundVolume(), this.getVoicePitch());
                         pufferfishShape.setPuffState(1);
-                    } else if (pufferfishShape.deflateTimer > 100 && pufferfishShape.getPuffState() == 1) {
+                    } else if (((PufferfishAccessor) pufferfishShape).getDeflateTimer() > 100 && pufferfishShape.getPuffState() == 1) {
                         this.playSound(SoundEvents.PUFFER_FISH_BLOW_OUT, this.getSoundVolume(), this.getVoicePitch());
                         pufferfishShape.setPuffState(0);
                     }
 
-                    ++pufferfishShape.deflateTimer;
+                    ((PufferfishAccessor) pufferfishShape).setDeflateTimer(((PufferfishAccessor) pufferfishShape).getDeflateTimer() + 1);
                 }
             }
         }
@@ -127,7 +130,7 @@ public abstract class PlayerEntityTickMixin extends LivingEntity {
             Player player = (Player) (Object) this;
             LivingEntity shape = PlayerShape.getCurrentShape(player);
             if (shape instanceof Dolphin) {
-                Player nearestPlayer = player.level.getNearestPlayer(Dolphin.SWIM_WITH_PLAYER_TARGETING, player);
+                Player nearestPlayer = player.level.getNearestPlayer(((DolphinAccessor) shape).getSWIM_WITH_PLAYER_TARGETING(), player);
                 if (nearestPlayer != null && nearestPlayer.isSwimming()) {
                     nearestPlayer.addEffect(new MobEffectInstance(MobEffects.DOLPHINS_GRACE, 100), player);
                 }
@@ -203,7 +206,7 @@ public abstract class PlayerEntityTickMixin extends LivingEntity {
                     grassEaterAbility.eatTick.put(serverPlayer.getUUID(), Math.max(0, grassEaterAbility.eatTick.get(serverPlayer.getUUID()) - 1));
 
                     if (shape instanceof Sheep sheepShape)
-                        sheepShape.eatAnimationTick = grassEaterAbility.eatTick.get(serverPlayer.getUUID());
+                        ((SheepAccessor) sheepShape).setEatAnimationTick(grassEaterAbility.eatTick.get(serverPlayer.getUUID()));
 
                     if (grassEaterAbility.eatTick.get(serverPlayer.getUUID()) == Mth.positiveCeilDiv(4, 2)) {
                         BlockPos blockPos = serverPlayer.blockPosition();

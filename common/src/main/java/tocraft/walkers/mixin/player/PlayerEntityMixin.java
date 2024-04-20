@@ -1,10 +1,8 @@
-package tocraft.walkers.mixin;
+package tocraft.walkers.mixin.player;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.network.protocol.game.ClientboundGameEventPacket;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -39,13 +37,16 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import tocraft.walkers.Walkers;
 import tocraft.walkers.api.PlayerShape;
-import tocraft.walkers.mixin.accessor.*;
+import tocraft.walkers.mixin.LivingEntityMixin;
+import tocraft.walkers.mixin.accessor.EntityAccessor;
+import tocraft.walkers.mixin.accessor.IronGolemEntityAccessor;
+import tocraft.walkers.mixin.accessor.LivingEntityAccessor;
+import tocraft.walkers.mixin.accessor.RavagerEntityAccessor;
 import tocraft.walkers.skills.ShapeSkill;
 import tocraft.walkers.skills.SkillRegistry;
 import tocraft.walkers.skills.impl.*;
 
 import java.util.Iterator;
-import java.util.List;
 
 @SuppressWarnings("ConstantConditions")
 @Mixin(Player.class)
@@ -61,7 +62,7 @@ public abstract class PlayerEntityMixin extends LivingEntityMixin {
     public abstract boolean isSwimming();
 
     @Shadow
-    public abstract void die(DamageSource damageSource);
+    public abstract boolean hurt(DamageSource source, float amount);
 
     private PlayerEntityMixin(EntityType<? extends LivingEntity> type, Level world) {
         super(type, world);
@@ -94,7 +95,6 @@ public abstract class PlayerEntityMixin extends LivingEntityMixin {
             int isAquatic = Walkers.isAquatic(shape);
             if (isAquatic < 2) {
                 int air = this.getAirSupply();
-
                 // copy of WaterCreatureEntity#tickWaterBreathingAir
                 if (this.isAlive() && !this.isInWaterOrBubble()) {
                     if (isAquatic < 1) {
@@ -103,23 +103,23 @@ public abstract class PlayerEntityMixin extends LivingEntityMixin {
                         // If the player has respiration, 50% chance to not consume air
                         if (i > 0) {
                             if (random.nextInt(i + 1) <= 0) {
-                                this.setAirSupply(air - 1);
+                                this.setAirSupply(this.decreaseAirSupply(air));
                             }
                         }
 
                         // No respiration, decrease air as normal
                         else {
-                            this.setAirSupply(air - 1);
+                            this.setAirSupply(this.decreaseAirSupply(air));
                         }
 
                         // Air has run out, start drowning
                         if (this.getAirSupply() == -20) {
                             this.setAirSupply(0);
-                            this.hurt(damageSources().fall(), 2.0F);
+                            this.hurt(damageSources().dryOut(), 2.0F);
                         }
                     }
-                } else {
-                    this.setAirSupply(air + 1);
+                } else if (this.getAirSupply() < this.getMaxAirSupply()) {
+                    this.setAirSupply(this.increaseAirSupply(air));
                 }
             }
         }
@@ -136,67 +136,6 @@ public abstract class PlayerEntityMixin extends LivingEntityMixin {
             }
         } catch (Exception ignored) {
 
-        }
-    }
-
-    @Inject(method = "getHurtSound", at = @At("HEAD"), cancellable = true)
-    private void getHurtSound(DamageSource source, CallbackInfoReturnable<SoundEvent> cir) {
-        LivingEntity shape = PlayerShape.getCurrentShape((Player) (Object) this);
-
-        if (Walkers.CONFIG.useShapeSounds && shape != null) {
-            cir.setReturnValue(((LivingEntityAccessor) shape).callGetHurtSound(source));
-        }
-    }
-
-    // todo: separate mixin for ambient sounds
-    @Unique
-    private int shape_ambientSoundChance = 0;
-
-    @Inject(method = "tick", at = @At("HEAD"))
-    private void tickAmbientSounds(CallbackInfo ci) {
-        LivingEntity shape = PlayerShape.getCurrentShape((Player) (Object) this);
-
-        if (!level.isClientSide && Walkers.CONFIG.playAmbientSounds && shape instanceof Mob mobShape) {
-
-            if (this.isAlive() && this.random.nextInt(1000) < this.shape_ambientSoundChance++) {
-                // reset sound delay
-                this.shape_ambientSoundChance = -mobShape.getAmbientSoundInterval();
-
-                // play ambient sound
-                SoundEvent sound = ((MobEntityAccessor) mobShape).callGetAmbientSound();
-                if (sound != null) {
-                    float volume = ((LivingEntityAccessor) mobShape).callGetSoundVolume();
-                    float pitch = ((LivingEntityAccessor) mobShape).callGetVoicePitch();
-
-                    // By default, players can not hear their own ambient noises.
-                    // This is because ambient noises can be very annoying.
-                    if (Walkers.CONFIG.hearSelfAmbient) {
-                        this.level.playSound(null, this.getX(), this.getY(), this.getZ(), sound,
-                                this.getSoundSource(), volume, pitch);
-                    } else {
-                        this.level.playSound((Player) (Object) this, this.getX(), this.getY(), this.getZ(), sound,
-                                this.getSoundSource(), volume, pitch);
-                    }
-                }
-            }
-        }
-    }
-
-    @Inject(method = "getDeathSound", at = @At("HEAD"), cancellable = true)
-    private void getDeathSound(CallbackInfoReturnable<SoundEvent> cir) {
-        LivingEntity shape = PlayerShape.getCurrentShape((Player) (Object) this);
-
-        if (Walkers.CONFIG.useShapeSounds && shape != null) {
-            cir.setReturnValue(((LivingEntityAccessor) shape).callGetDeathSound());
-        }
-    }
-
-    @Inject(method = "getFallSounds", at = @At("HEAD"), cancellable = true)
-    private void getFallSounds(CallbackInfoReturnable<LivingEntity.Fallsounds> cir) {
-        LivingEntity shape = PlayerShape.getCurrentShape((Player) (Object) this);
-
-        if (Walkers.CONFIG.useShapeSounds && shape != null) {
-            cir.setReturnValue(shape.getFallSounds());
         }
     }
 
@@ -277,8 +216,6 @@ public abstract class PlayerEntityMixin extends LivingEntityMixin {
         if (!player.level.isClientSide && !player.isCreative() && !player.isSpectator()) {
             // check if the player is shape
             if (shape != null) {
-                EntityType<?> type = shape.getType();
-
                 // check if the player's current shape burns in sunlight
                 if (SkillRegistry.has(shape, BurnInDaylightSkill.ID)) {
                     boolean bl = this.walkers$isInDaylight();
@@ -319,6 +256,7 @@ public abstract class PlayerEntityMixin extends LivingEntityMixin {
         }
     }
 
+    @SuppressWarnings("deprecation")
     @Unique
     private boolean walkers$isInDaylight() {
         if (level.isDay() && !level.isClientSide) {
@@ -423,11 +361,16 @@ public abstract class PlayerEntityMixin extends LivingEntityMixin {
         Player player = (Player) (Object) this;
         LivingEntity shape = PlayerShape.getCurrentShape(player);
         if (source.getEntity() instanceof LivingEntity livingAttacker && shape != null) {
-            for (ShapeSkill<LivingEntity> reinforcementSkill : SkillRegistry.get(shape, ReinforcementsSkill.ID)) {
-                double d = ((ReinforcementsSkill<LivingEntity>) reinforcementSkill).range;
-                List<EntityType<?>> reinforcements = ((ReinforcementsSkill<LivingEntity>) reinforcementSkill).reinforcements;
+            for (ReinforcementsSkill<LivingEntity> reinforcementSkill : SkillRegistry.get(shape, ReinforcementsSkill.ID).stream().map(skill -> (ReinforcementsSkill<LivingEntity>) skill).toList()) {
+                double d = reinforcementSkill.getRange();
                 AABB aABB = AABB.unitCubeFromLowerCorner(this.position()).inflate(d, 10.0, d);
-                Iterator<? extends LivingEntity> var5 = this.level.getEntitiesOfClass(Mob.class, aABB, EntitySelector.NO_SPECTATORS.and(entity -> reinforcements.contains(entity.getType()) || (reinforcements.isEmpty() && shape.getClass().isInstance(entity)))).iterator();
+                Iterator<? extends LivingEntity> var5 = this.level.getEntitiesOfClass(Mob.class, aABB, EntitySelector.NO_SPECTATORS.and(entity -> {
+                    if (reinforcementSkill.hasReinforcements()) {
+                        return reinforcementSkill.isReinforcement(entity);
+                    } else {
+                        return shape.getClass().isInstance(entity);
+                    }
+                })).iterator();
 
                 while (true) {
                     Mob mob;
@@ -457,9 +400,9 @@ public abstract class PlayerEntityMixin extends LivingEntityMixin {
     private void instantDieOnDamageTypeSkill(DamageSource source, float amount, CallbackInfoReturnable<Boolean> cir) {
         LivingEntity shape = PlayerShape.getCurrentShape((Player) (Object) this);
         if (shape != null) {
-            for (ShapeSkill<LivingEntity> instantDieOnDamageTypeSkill : SkillRegistry.get(shape, InstantDieOnDamageTypeSkill.ID)) {
-                if (source.type() == level.registryAccess().registryOrThrow(Registries.DAMAGE_TYPE).get(((InstantDieOnDamageTypeSkill<LivingEntity>) instantDieOnDamageTypeSkill).damageType)) {
-                    this.die(source);
+            for (ShapeSkill<LivingEntity> instantDieOnDamageTypeSkill : SkillRegistry.get(shape, InstantDieOnDamageMsgSkill.ID)) {
+                if (source.getMsgId().equals(((InstantDieOnDamageMsgSkill<LivingEntity>) instantDieOnDamageTypeSkill).msgId)) {
+                    this.kill();
                 }
             }
         }

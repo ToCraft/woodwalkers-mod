@@ -1,14 +1,5 @@
-plugins {
-    id "com.github.johnrengelman.shadow" version "8.1.1"
-}
-
 loom {
-    accessWidenerPath = project(":common").loom.accessWidenerPath
-
     forge {
-        convertAccessWideners = true
-        extraAccessWideners.add loom.accessWidenerPath.get().asFile.name
-
         mixinConfigs = ["walkers-forge.mixins.json", "walkers.mixins.json"]
     }
 }

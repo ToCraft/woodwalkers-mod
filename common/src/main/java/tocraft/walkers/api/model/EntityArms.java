@@ -9,6 +9,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import org.jetbrains.annotations.Nullable;
 import tocraft.craftedcore.math.math;
+import tocraft.walkers.api.model.impl.GenericEntityArm;
 import tocraft.walkers.mixin.client.accessor.*;
 
 import java.util.LinkedHashMap;
@@ -40,7 +41,7 @@ public class EntityArms {
     /**
      * Specific, but for easy use
      */
-    public static <T> void register(Class<T> modelClass, ClassArmProvider<T> provider) {
+    public static <T extends EntityModel<?>> void register(Class<T> modelClass, ClassArmProvider<T> provider) {
         register(modelClass, provider, (stack, model) -> {
         });
     }
@@ -48,8 +49,8 @@ public class EntityArms {
     /**
      * Specific with optional manipulator
      */
-    public static <T> void register(Class<T> modelClass, ClassArmProvider<T> provider,
-                                    ArmRenderingManipulator<T> manipulator) {
+    public static <T extends EntityModel<?>> void register(Class<T> modelClass, ClassArmProvider<T> provider,
+                                                           ArmRenderingManipulator<T> manipulator) {
         CLASS_PROVIDERS.put(modelClass, new Tuple<>(provider, manipulator));
     }
 
@@ -102,9 +103,9 @@ public class EntityArms {
     public static void init() {
         // specific
         register(LlamaModel.class, (llama, model) -> ((LlamaEntityModelAccessor) model).getRightFrontLeg());
-        register(PandaModel.class, (llama, model) -> ((QuadrupedEntityModelAccessor) model).getRightFrontLeg(),
+        register(PandaModel.class, (panda, model) -> ((QuadrupedEntityModelAccessor) model).getRightFrontLeg(),
                 (stack, model) -> stack.translate(0, -0.5, 0));
-        register(BlazeModel.class, (llama, model) -> ((BlazeEntityModelAccessor) model).getUpperBodyParts()[10],
+        register(BlazeModel.class, (blaze, model) -> ((BlazeEntityModelAccessor) model).getUpperBodyParts()[10],
                 (stack, model) -> {
                     stack.mulPose(math.getDegreesQuaternion(math.POSITIVE_Z(), 45));
                     stack.mulPose(math.getDegreesQuaternion(math.POSITIVE_Y(), -15));
@@ -131,6 +132,39 @@ public class EntityArms {
                 (bear, model) -> ((RavagerEntityModelAccessor) model).getRightFrontLeg());
         register(SquidModel.class,
                 (squid, model) -> ((SquidEntityModelAccessor) model).getTentacles()[0]);
+
+        // something between specific & generic
+        register(HorseModel.class, new GenericEntityArm<>(),
+                (stack, model) -> {
+                    stack.mulPose(math.getDegreesQuaternion(math.POSITIVE_Y(), -15));
+                    stack.translate(0, -.25, .25);
+                });
+        register(CamelModel.class, new GenericEntityArm<>(),
+                (stack, model) -> stack.translate(0, -.25, 0));
+        register(FoxModel.class, new GenericEntityArm<>(),
+                (stack, model) -> stack.translate(0, -0.1, 0));
+        register(WolfModel.class, new GenericEntityArm<>(),
+                (stack, model) -> stack.translate(0, -0.1, 0));
+        register(StriderModel.class, new GenericEntityArm<>("right_leg"));
+        register(WardenModel.class, new GenericEntityArm<>("bone", "body", "right_arm"),
+                ((stack, model) -> {
+                    stack.scale(.5f, .5f, .5f);
+                    stack.translate(0, .75, -1);
+                }));
+        register(AllayModel.class, new GenericEntityArm<>("root", "body", "right_arm"),
+                (stack, model) -> {
+                    stack.scale(5, 5, 5);
+                    stack.translate(.2, .5, -.35);
+                });
+        register(VexModel.class, new GenericEntityArm<>("root", "body", "right_arm"),
+                (stack, model) -> {
+                    stack.scale(5, 5, 5);
+                    stack.translate(.2, .5, -.35);
+                });
+        register(CreeperModel.class, new GenericEntityArm<>(),
+                (stack, model) -> stack.translate(0, -.5, 0));
+        register(HoglinModel.class, new GenericEntityArm<>(),
+                (stack, model) -> stack.scale(.75f, .75f, .75f));
 
         // generic
         register(QuadrupedModel.class,

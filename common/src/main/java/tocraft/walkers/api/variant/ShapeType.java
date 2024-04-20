@@ -35,8 +35,7 @@ public class ShapeType<T extends LivingEntity> {
     }
 
     public ShapeType(EntityType<T> type) {
-        this.type = type;
-        variantData = getDefaultVariantData(type);
+        this(type, getDefaultVariantData(type));
     }
 
     public ShapeType(EntityType<T> type, int variantData) {
@@ -67,13 +66,7 @@ public class ShapeType<T extends LivingEntity> {
             return null;
         }
 
-        EntityType<Z> type = (EntityType<Z>) entity.getType();
-        TypeProvider<Z> typeProvider = TypeProviderRegistry.getProvider(type);
-        if (typeProvider != null) {
-            return typeProvider.create(entity);
-        }
-
-        return ShapeType.from(type);
+        return new ShapeType<>(entity);
     }
 
     @Nullable

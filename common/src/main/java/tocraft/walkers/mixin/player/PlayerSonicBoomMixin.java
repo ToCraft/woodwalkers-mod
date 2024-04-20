@@ -1,4 +1,4 @@
-package tocraft.walkers.mixin;
+package tocraft.walkers.mixin.player;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;

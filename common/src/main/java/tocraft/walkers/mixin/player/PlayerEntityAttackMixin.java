@@ -1,4 +1,4 @@
-package tocraft.walkers.mixin;
+package tocraft.walkers.mixin.player;
 
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;

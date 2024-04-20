@@ -1,9 +1,11 @@
 package tocraft.walkers.skills;
 
 import com.mojang.serialization.Codec;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.EntityTypeTags;
 import net.minecraft.tags.FluidTags;
-import net.minecraft.world.damagesource.DamageTypes;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.*;
@@ -16,6 +18,7 @@ import net.minecraft.world.entity.boss.wither.WitherBoss;
 import net.minecraft.world.entity.monster.*;
 import net.minecraft.world.level.block.Blocks;
 import org.jetbrains.annotations.Nullable;
+import tocraft.walkers.Walkers;
 import tocraft.walkers.ability.ShapeAbility;
 import tocraft.walkers.skills.impl.*;
 
@@ -26,7 +29,10 @@ import java.util.Map;
 import java.util.function.Predicate;
 
 public class SkillRegistry {
-    private static final Map<Predicate<LivingEntity>, ShapeSkill<?>> skills = new HashMap<>();
+    private static final Map<Predicate<LivingEntity>, List<ShapeSkill<?>>> skillsByPredicates = new HashMap<>();
+    private static final Map<EntityType<? extends LivingEntity>, List<ShapeSkill<?>>> skillsByEntityTypes = new HashMap<>();
+    private static final Map<TagKey<EntityType<?>>, List<ShapeSkill<?>>> skillsByEntityTags = new HashMap<>();
+    private static final Map<Class<? extends LivingEntity>, List<ShapeSkill<?>>> skillsByEntityClasses = new HashMap<>();
     private static final Map<ResourceLocation, Codec<? extends ShapeSkill<?>>> skillCodecs = new HashMap<>();
 
 
@@ -47,7 +53,7 @@ public class SkillRegistry {
         registerCodec(FearedSkill.ID, FearedSkill.CODEC);
         registerCodec(ClimbBlocksSkill.ID, ClimbBlocksSkill.CODEC);
         registerCodec(ReinforcementsSkill.ID, ReinforcementsSkill.CODEC);
-        registerCodec(InstantDieOnDamageTypeSkill.ID, InstantDieOnDamageTypeSkill.CODEC);
+        registerCodec(InstantDieOnDamageMsgSkill.ID, InstantDieOnDamageMsgSkill.CODEC);
         registerCodec(AquaticSkill.ID, AquaticSkill.CODEC);
         registerCodec(WalkOnPowderSnow.ID, WalkOnPowderSnow.CODEC);
         registerCodec(HumanoidSkill.ID, HumanoidSkill.CODEC);
@@ -111,8 +117,9 @@ public class SkillRegistry {
         // reinforcements
         registerByClass(Wolf.class, new ReinforcementsSkill<>());
         registerByClass(Bee.class, new ReinforcementsSkill<>());
+        registerByTag(EntityTypeTags.RAIDERS, new ReinforcementsSkill<>(32, new ArrayList<>(), List.of(EntityTypeTags.RAIDERS)));
         // instant die on lightning
-        registerByClass(Turtle.class, new InstantDieOnDamageTypeSkill<>(DamageTypes.LIGHTNING_BOLT));
+        registerByClass(Turtle.class, new InstantDieOnDamageMsgSkill<>("lightningBolt"));
         // cats hunt rabbits
         registerByClass(Rabbit.class, new PreySkill<>(List.of(entity -> entity instanceof Cat cat && !cat.isTame())));
         // aquatic
@@ -122,6 +129,20 @@ public class SkillRegistry {
         registerByClass(Dolphin.class, new BurnInDaylightSkill<>());
         // walk on powder snow
         registerByClass(Rabbit.class, new WalkOnPowderSnow<>());
+        // slow falling
+        registerByClass(Chicken.class, new SlowFallingSkill<>());
+        // support deprecated entity tags
+        registerByTag(TagKey.create(Registries.ENTITY_TYPE, Walkers.id("burns_in_daylight")), new BurnInDaylightSkill<>());
+        registerByTag(TagKey.create(Registries.ENTITY_TYPE, Walkers.id("flying")), new FlyingSkill<>(false));
+        registerByTag(TagKey.create(Registries.ENTITY_TYPE, Walkers.id("slow_falling")), new SlowFallingSkill<>());
+        registerByTag(TagKey.create(Registries.ENTITY_TYPE, Walkers.id("wolf_prey")), PreySkill.ofHunterClass(Wolf.class));
+        registerByTag(TagKey.create(Registries.ENTITY_TYPE, Walkers.id("fox_prey")), PreySkill.ofHunterClass(Fox.class));
+        registerByTag(TagKey.create(Registries.ENTITY_TYPE, Walkers.id("hurt_by_high_temperature")), new TemperatureSkill<>());
+        registerByTag(TagKey.create(Registries.ENTITY_TYPE, Walkers.id("ravager_riding")), RiderSkill.ofRideableClass(Ravager.class));
+        registerByTag(TagKey.create(Registries.ENTITY_TYPE, Walkers.id("lava_walking")), new StandOnFluidSkill<>(FluidTags.LAVA));
+        registerByTag(TagKey.create(Registries.ENTITY_TYPE, Walkers.id("fall_through_blocks")), new NoPhysicsSkill<>());
+        registerByTag(TagKey.create(Registries.ENTITY_TYPE, Walkers.id("cant_swim")), new CantSwimSkill<>());
+        registerByTag(TagKey.create(Registries.ENTITY_TYPE, Walkers.id("undrownable")), new UndrownableSkill<>());
     }
 
     /**
@@ -129,37 +150,53 @@ public class SkillRegistry {
      */
     @SuppressWarnings("unchecked")
     public static <L extends LivingEntity> List<ShapeSkill<L>> getAll(L shape) {
-        List<ShapeSkill<L>> skillList = new ArrayList<>();
+        List<ShapeSkill<L>> skills = new ArrayList<>();
         if (shape != null) {
-            skillList.addAll(skills.entrySet().stream().filter(entry -> entry.getKey().test(shape)).map(entry -> (ShapeSkill<L>) entry.getValue()).toList());
+            if (skillsByEntityTypes.containsKey(shape.getType())) {
+                skills.addAll(skillsByEntityTypes.get(shape.getType()).stream().map(skill -> (ShapeSkill<L>) skill).toList());
+            }
+            for (Class<? extends LivingEntity> aClass : skillsByEntityClasses.keySet()) {
+                if (aClass.isInstance(shape))
+                    skills.addAll(skillsByEntityClasses.get(shape.getClass()).stream().map(skill -> (ShapeSkill<L>) skill).toList());
+            }
+            for (TagKey<EntityType<?>> entityTypeTagKey : skillsByEntityTags.keySet()) {
+                if (shape.getType().is(entityTypeTagKey)) {
+                    skills.addAll(skillsByEntityTags.get(entityTypeTagKey).stream().map(skill -> (ShapeSkill<L>) skill).toList());
+                }
+            }
+            for (Predicate<LivingEntity> predicate : skillsByPredicates.keySet()) {
+                if (predicate.test(shape)) {
+                    skills.addAll(skillsByPredicates.get(predicate).stream().map(skill -> (ShapeSkill<L>) skill).toList());
+                }
+            }
         }
-        return skillList;
+        return skills;
     }
 
     /**
      * @return a list of every available skill for the specified entity
      */
-    @SuppressWarnings("unchecked")
     public static <L extends LivingEntity> List<ShapeSkill<L>> get(L shape, ResourceLocation skillId) {
-        List<ShapeSkill<L>> skillList = new ArrayList<>();
-        if (shape != null) {
-            for (Map.Entry<Predicate<LivingEntity>, ShapeSkill<?>> skillEntry : skills.entrySet()) {
-                ShapeSkill<?> skill = skillEntry.getValue();
-                if (skill.getId() == skillId && skillEntry.getKey().test(shape)) {
-                    skillList.add((ShapeSkill<L>) skill);
-                }
-            }
-        }
-        return skillList;
+        List<ShapeSkill<L>> skills = getAll(shape);
+        return skills.stream().filter(skill -> skill.getId() == skillId).toList();
     }
 
-
     public static <A extends LivingEntity> void registerByType(EntityType<A> type, ShapeSkill<A> skill) {
-        registerByPredicate(livingEntity -> type.equals(livingEntity.getType()), skill);
+        List<ShapeSkill<?>> skills = skillsByEntityTypes.containsKey(type) ? skillsByEntityTypes.get(type) : new ArrayList<>();
+        skills.add(skill);
+        skillsByEntityTypes.put(type, skills);
+    }
+
+    public static <A extends LivingEntity> void registerByTag(TagKey<EntityType<?>> tag, ShapeSkill<A> skill) {
+        List<ShapeSkill<?>> skills = skillsByEntityTags.containsKey(tag) ? skillsByEntityTags.get(tag) : new ArrayList<>();
+        skills.add(skill);
+        skillsByEntityTags.put(tag, skills);
     }
 
     public static <A extends LivingEntity> void registerByClass(Class<A> entityClass, ShapeSkill<A> skill) {
-        registerByPredicate(entityClass::isInstance, skill);
+        List<ShapeSkill<?>> skills = skillsByEntityClasses.containsKey(entityClass) ? skillsByEntityClasses.get(entityClass) : new ArrayList<>();
+        skills.add(skill);
+        skillsByEntityClasses.put(entityClass, skills);
     }
 
     /**
@@ -169,7 +206,9 @@ public class SkillRegistry {
      * @param skill           your {@link ShapeAbility}
      */
     public static void registerByPredicate(Predicate<LivingEntity> entityPredicate, ShapeSkill<?> skill) {
-        skills.put(entityPredicate, skill);
+        List<ShapeSkill<?>> skills = skillsByPredicates.containsKey(entityPredicate) ? skillsByPredicates.get(entityPredicate) : new ArrayList<>();
+        skills.add(skill);
+        skillsByPredicates.put(entityPredicate, skills);
     }
 
     public static void registerCodec(ResourceLocation skillId, Codec<? extends ShapeSkill<?>> skillCodec) {
@@ -193,8 +232,21 @@ public class SkillRegistry {
 
     public static <L extends LivingEntity> boolean has(L shape, ResourceLocation skillId) {
         if (shape != null) {
-            for (Map.Entry<Predicate<LivingEntity>, ShapeSkill<?>> skillEntry : skills.entrySet()) {
-                if (skillEntry.getValue().getId() == skillId && skillEntry.getKey().test(shape)) {
+            if (skillsByEntityTypes.containsKey(shape.getType()) && skillsByEntityTypes.get(shape.getType()).stream().anyMatch(skill -> skill.getId() == skillId)) {
+                return true;
+            }
+            for (Class<? extends LivingEntity> aClass : skillsByEntityClasses.keySet()) {
+                if (aClass.isInstance(shape) && skillsByEntityClasses.get(shape.getClass()).stream().anyMatch(skill -> skill.getId() == skillId)) {
+                    return true;
+                }
+            }
+            for (TagKey<EntityType<?>> entityTypeTagKey : skillsByEntityTags.keySet()) {
+                if (shape.getType().is(entityTypeTagKey) && skillsByEntityTags.get(entityTypeTagKey).stream().anyMatch(skill -> skill.getId() == skillId)) {
+                    return true;
+                }
+            }
+            for (Predicate<LivingEntity> predicate : skillsByPredicates.keySet()) {
+                if (predicate.test(shape) && skillsByPredicates.get(predicate).stream().anyMatch(skill -> skill.getId() == skillId)) {
                     return true;
                 }
             }
