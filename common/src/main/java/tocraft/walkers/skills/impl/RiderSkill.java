@@ -64,7 +64,9 @@ public class RiderSkill<E extends LivingEntity> extends ShapeSkill<E> {
 
     public boolean isRideable(LivingEntity entity) {
         if (rideableTypes.contains(entity.getType())) return true;
-        if (rideableClasses.contains(entity.getClass())) return true;
+        for (Class<? extends LivingEntity> rideableClass : rideableClasses) {
+            if (rideableClass.isInstance(entity)) return true;
+        }
         for (TagKey<EntityType<?>> rideableTag : rideableTags) {
             if (entity.getType().is(rideableTag)) return true;
         }

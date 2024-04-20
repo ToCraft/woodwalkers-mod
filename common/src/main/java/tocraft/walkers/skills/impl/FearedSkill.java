@@ -68,7 +68,9 @@ public class FearedSkill<E extends LivingEntity> extends ShapeSkill<E> {
 
     public boolean isFeared(LivingEntity entity) {
         if (fearfulTypes.contains(entity.getType())) return true;
-        if (fearfulClasses.contains(entity.getClass())) return true;
+        for (Class<? extends LivingEntity> fearfulClass : fearfulClasses) {
+            if (fearfulClass.isInstance(entity)) return true;
+        }
         for (TagKey<EntityType<?>> fearfulTag : fearfulTags) {
             if (entity.getType().is(fearfulTag)) return true;
         }

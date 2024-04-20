@@ -70,7 +70,9 @@ public class PreySkill<E extends LivingEntity> extends ShapeSkill<E> {
 
     public boolean isHunter(LivingEntity entity) {
         if (hunterTypes.contains(entity.getType())) return true;
-        if (hunterClasses.contains(entity.getClass())) return true;
+        for (Class<? extends LivingEntity> hunterClass : hunterClasses) {
+            if (hunterClass.isInstance(entity)) return true;
+        }
         for (TagKey<EntityType<?>> hunterTag : hunterTags) {
             if (entity.getType().is(hunterTag)) return true;
         }

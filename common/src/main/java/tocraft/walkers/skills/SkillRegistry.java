@@ -155,8 +155,9 @@ public class SkillRegistry {
             if (skillsByEntityTypes.containsKey(shape.getType())) {
                 skills.addAll(skillsByEntityTypes.get(shape.getType()).stream().map(skill -> (ShapeSkill<L>) skill).toList());
             }
-            if (skillsByEntityClasses.containsKey(shape.getClass())) {
-                skills.addAll(skillsByEntityClasses.get(shape.getClass()).stream().map(skill -> (ShapeSkill<L>) skill).toList());
+            for (Class<? extends LivingEntity> aClass : skillsByEntityClasses.keySet()) {
+                if (aClass.isInstance(shape))
+                    skills.addAll(skillsByEntityClasses.get(shape.getClass()).stream().map(skill -> (ShapeSkill<L>) skill).toList());
             }
             for (TagKey<EntityType<?>> entityTypeTagKey : skillsByEntityTags.keySet()) {
                 if (shape.getType().is(entityTypeTagKey)) {
@@ -234,8 +235,10 @@ public class SkillRegistry {
             if (skillsByEntityTypes.containsKey(shape.getType()) && skillsByEntityTypes.get(shape.getType()).stream().anyMatch(skill -> skill.getId() == skillId)) {
                 return true;
             }
-            if (skillsByEntityClasses.containsKey(shape.getClass()) && skillsByEntityClasses.get(shape.getClass()).stream().anyMatch(skill -> skill.getId() == skillId)) {
-                return true;
+            for (Class<? extends LivingEntity> aClass : skillsByEntityClasses.keySet()) {
+                if (aClass.isInstance(shape) && skillsByEntityClasses.get(shape.getClass()).stream().anyMatch(skill -> skill.getId() == skillId)) {
+                    return true;
+                }
             }
             for (TagKey<EntityType<?>> entityTypeTagKey : skillsByEntityTags.keySet()) {
                 if (shape.getType().is(entityTypeTagKey) && skillsByEntityTags.get(entityTypeTagKey).stream().anyMatch(skill -> skill.getId() == skillId)) {
