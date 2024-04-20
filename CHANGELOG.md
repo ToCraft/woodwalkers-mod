@@ -7,6 +7,13 @@ walkers 4.2
 - **add variants menu!** (a menu, where you can switch between variants in your in-game HUD)
 - add entity arm for horse, donkey, mule, zombie horse, skeleton horse, fox, wolf, strider, warden, allay, vex, creeper,
   zoglin & hoglin
+- fix broken breathing underwater sometimes ignoring limits
+- fix FearedSkill not always working
+- merge special shape to special variant
+- background improvements
+- fix MobEffectSkill not working when registered via datapack on 1.20.1
+- rework InstantDieOnDamageType
+- register SlowFallingSkill for chicken
 
 walkers 4.1
 ================
