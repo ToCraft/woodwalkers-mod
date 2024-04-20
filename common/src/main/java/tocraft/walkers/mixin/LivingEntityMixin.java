@@ -52,6 +52,9 @@ public abstract class LivingEntityMixin extends Entity implements NearbySongAcce
     @Shadow
     public abstract boolean hurt(DamageSource source, float amount);
 
+    @Shadow
+    protected abstract int decreaseAirSupply(int currentAir);
+
     protected LivingEntityMixin(EntityType<?> type, Level world) {
         super(type, world);
     }
@@ -137,7 +140,7 @@ public abstract class LivingEntityMixin extends Entity implements NearbySongAcce
     private void returnHasNightVision(MobEffect effect, CallbackInfoReturnable<Boolean> cir) {
         if ((Object) this instanceof Player player) {
             LivingEntity shape = PlayerShape.getCurrentShape(player);
-            if (shape != null && SkillRegistry.has(shape, MobEffectSkill.ID)) {
+            if (SkillRegistry.has(shape, MobEffectSkill.ID)) {
                 List<MobEffectSkill<LivingEntity>> skillList = SkillRegistry.get(shape, MobEffectSkill.ID).stream().map(skill -> (MobEffectSkill<LivingEntity>) skill).toList();
                 for (MobEffectSkill<LivingEntity> mobEffectSkill : skillList) {
                     if (!mobEffectSkill.showInInventory && mobEffectSkill.applyToSelf && effect.equals(mobEffectSkill.mobEffectInstance.getEffect())) {
@@ -153,7 +156,7 @@ public abstract class LivingEntityMixin extends Entity implements NearbySongAcce
     private void returnNightVisionInstance(MobEffect effect, CallbackInfoReturnable<MobEffectInstance> cir) {
         if ((Object) this instanceof Player player) {
             LivingEntity shape = PlayerShape.getCurrentShape(player);
-            if (shape != null && SkillRegistry.has(shape, MobEffectSkill.ID)) {
+            if (SkillRegistry.has(shape, MobEffectSkill.ID)) {
                 List<MobEffectSkill<LivingEntity>> skillList = SkillRegistry.get(shape, MobEffectSkill.ID).stream().map(skill -> (MobEffectSkill<LivingEntity>) skill).toList();
                 for (MobEffectSkill<LivingEntity> mobEffectSkill : skillList) {
                     if (!mobEffectSkill.showInInventory && mobEffectSkill.applyToSelf) {

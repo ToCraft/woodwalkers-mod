@@ -8,6 +8,7 @@ import net.minecraft.world.entity.monster.Shulker;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.Level;
 import tocraft.walkers.api.variant.TypeProvider;
+import tocraft.walkers.mixin.accessor.ShulkerAccessor;
 
 public class ShulkerTypeProvider extends TypeProvider<Shulker> {
 
@@ -20,7 +21,7 @@ public class ShulkerTypeProvider extends TypeProvider<Shulker> {
     @Override
     public Shulker create(EntityType<Shulker> type, Level world, int data) {
         Shulker shulker = new Shulker(type, world);
-        if (data < 16) shulker.setColor(DyeColor.byId(data));
+        if (data < 16) ((ShulkerAccessor) shulker).callSetColor(DyeColor.byId(data));
         return shulker;
     }
 

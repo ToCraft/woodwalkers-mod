@@ -12,9 +12,9 @@ public class ShulkerEntityUpdater implements EntityUpdater<Shulker> {
     @Override
     public void update(Player player, Shulker shulker) {
         if (((ShulkerAccessor) shulker).callGetRawPeekAmount() <= 0 && shulker.getClientPeekAmount(0) <= 0 && shulker.getRandom().nextInt(50) == 1) {
-            shulker.setRawPeekAmount(30);
+            ((ShulkerAccessor) shulker).callSetRawPeekAmount(30);
         } else if (shulker.getClientPeekAmount(0) >= 1) {
-            shulker.setRawPeekAmount(0);
+            ((ShulkerAccessor) shulker).callSetRawPeekAmount(0);
         }
 
         if (((ShulkerAccessor) shulker).callUpdatePeekAmount()) ((ShulkerAccessor) shulker).callOnPeekAmountChange();

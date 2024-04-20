@@ -22,9 +22,9 @@ public abstract class WolfEntityMixin extends TamableAnimal {
         super(entityType, world);
     }
 
+    @SuppressWarnings("all")
     @Unique
-    private static final EntityDataAccessor<Boolean> walkers$isSpecial = SynchedEntityData.defineId(Wolf.class,
-            EntityDataSerializers.BOOLEAN);
+    private static final EntityDataAccessor<Boolean> walkers$isSpecial = SynchedEntityData.defineId(Wolf.class, EntityDataSerializers.BOOLEAN);
 
     @SuppressWarnings("ConstantConditions")
     @Inject(method = "tick", at = @At("HEAD"))

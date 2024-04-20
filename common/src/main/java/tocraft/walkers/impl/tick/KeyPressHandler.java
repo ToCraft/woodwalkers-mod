@@ -17,8 +17,8 @@ import tocraft.walkers.api.blacklist.EntityBlacklist;
 import tocraft.walkers.api.variant.ShapeType;
 import tocraft.walkers.impl.PlayerDataProvider;
 import tocraft.walkers.network.ClientNetworking;
-import tocraft.walkers.network.impl.SpecialSwapPackets;
 import tocraft.walkers.network.impl.SwapPackets;
+import tocraft.walkers.network.impl.SwapVariantPackets;
 import tocraft.walkers.network.impl.UnlockPackets;
 
 public class KeyPressHandler implements ClientTickEvent.Client {
@@ -26,22 +26,34 @@ public class KeyPressHandler implements ClientTickEvent.Client {
 
     @Override
     public void tick(Minecraft client) {
-        assert client.player != null;
+        if (client.player != null) {
+            if (WalkersClient.ABILITY_KEY.consumeClick()) handleAbilityKey(client);
 
-        if (WalkersClient.ABILITY_KEY.consumeClick()) handleAbilityKey(client);
+            if (WalkersClient.TRANSFORM_KEY.consumeClick()) {
+                SwapPackets.sendSwapRequest();
+            }
 
-        if (WalkersClient.TRANSFORM_KEY.consumeClick()) {
-            SwapPackets.sendSwapRequest();
+            if (WalkersClient.VARIANTS_MENU_KEY.consumeClick() && Walkers.CONFIG.unlockEveryVariant) {
+                LivingEntity shape = PlayerShape.getCurrentShape(client.player);
+                if (shape != null) {
+                    ShapeType<?> shapeType = ShapeType.from(shape);
+                    if (WalkersClient.isRenderingVariantsMenu) {
+                        SwapVariantPackets.sendSwapRequest(shapeType.getVariantData() + WalkersClient.variantOffset);
+                    }
+                    WalkersClient.variantOffset = 0;
+                    WalkersClient.isRenderingVariantsMenu = !WalkersClient.isRenderingVariantsMenu;
+                }
+            }
+
+            // disable variants menu when in other menu
+            if (WalkersClient.isRenderingVariantsMenu && (client.options.hideGui || !Walkers.CONFIG.unlockEveryVariant || client.screen != null || PlayerShape.getCurrentShape(client.player) == null))
+                WalkersClient.isRenderingVariantsMenu = false;
+
+            if (WalkersClient.UNLOCK_KEY.isDown())
+                handleUnlockKey(client);
+
+            else if (currentTimer != Walkers.CONFIG.unlockTimer) currentTimer = Walkers.CONFIG.unlockTimer;
         }
-
-        if (WalkersClient.SPECIAL_TRANSFORM_KEY.consumeClick()) {
-            if (Walkers.hasSpecialShape(client.player.getUUID())) SpecialSwapPackets.sendSpecialSwapRequest();
-            else client.player.displayClientMessage(new TranslatableComponent("walkers.not_special"), true);
-        }
-
-        if (WalkersClient.UNLOCK_KEY.isDown()) handleUnlockKey(client);
-
-        else if (currentTimer != Walkers.CONFIG.unlockTimer) currentTimer = Walkers.CONFIG.unlockTimer;
     }
 
     private void handleAbilityKey(Minecraft client) {

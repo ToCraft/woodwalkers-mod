@@ -48,7 +48,7 @@ import tocraft.walkers.mixin.client.accessor.LivingEntityRendererAccessor;
 import java.util.Optional;
 import java.util.UUID;
 
-@SuppressWarnings("ALL")
+@SuppressWarnings({"ALL", "unchecked"})
 @Environment(EnvType.CLIENT)
 @Mixin(PlayerRenderer.class)
 public abstract class PlayerEntityRendererMixin extends LivingEntityRenderer<AbstractClientPlayer, PlayerModel<AbstractClientPlayer>> {

@@ -30,7 +30,6 @@ public class WalkersConfig implements Config {
     public int endermanAbilityTeleportDistance = 32;
     @Synchronize
     public boolean showPlayerNametag = false;
-    public boolean logCommands = true;
     public float flySpeed = 0.05f;
     public boolean wardenIsBlinded = true;
     public boolean wardenBlindsNearby = true;
@@ -38,7 +37,8 @@ public class WalkersConfig implements Config {
     public boolean unlockOverridesCurrentShape = false;
     @Synchronize
     public float unlockTimer = 60f;
-    public boolean specialShapeIsThirdShape = false;
+    @Synchronize
+    public boolean unlockEveryVariant = true;
 
     public Map<String, Integer> abilityCooldownMap = new HashMap<>() {
         {

@@ -1,5 +1,23 @@
+walkers 4.2
+================
+
+- fix skeleton not "humanoid"
+- entity tags can now be used for skills & blacklist
+- small performance patch for the skill system
+- **add variants menu!** (a menu, where you can switch between variants in your in-game HUD)
+- add entity arm for horse, donkey, mule, zombie horse, skeleton horse, fox, wolf, strider, warden, allay, vex, creeper,
+  zoglin & hoglin
+- fix broken breathing underwater sometimes ignoring limits
+- fix FearedSkill not always working
+- merge special shape to special variant
+- background improvements
+- fix MobEffectSkill not working when registered via datapack on 1.20.1
+- rework InstantDieOnDamageType
+- register SlowFallingSkill for chicken
+
 walkers 4.1
 ================
+
 - improve rendering mechanic for better mod compatibility
 - add more skill icons
 - fix mobs not fighting back

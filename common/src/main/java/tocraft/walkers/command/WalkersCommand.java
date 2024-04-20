@@ -19,7 +19,6 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import org.jetbrains.annotations.Nullable;
-import tocraft.walkers.Walkers;
 import tocraft.walkers.api.PlayerShape;
 import tocraft.walkers.api.PlayerShapeChanger;
 import tocraft.walkers.api.variant.ShapeType;
@@ -109,14 +108,12 @@ public class WalkersCommand {
     private static int show2ndShape(CommandSourceStack source, ServerPlayer player) {
 
         if (((PlayerDataProvider) player).walkers$get2ndShape() != null) {
-            if (Walkers.CONFIG.logCommands) {
-                ShapeType<?> type = ((PlayerDataProvider) player).walkers$get2ndShape();
-                source.sendSuccess(new TranslatableComponent("walkers.show2ndShapeNot_positive",
-                        player.getDisplayName(), ShapeType.createTooltipText(type.create(player.level, player))), true);
-            }
+            ShapeType<?> type = ((PlayerDataProvider) player).walkers$get2ndShape();
+            source.sendSuccess(new TranslatableComponent("walkers.show2ndShapeNot_positive",
+                    player.getDisplayName(), ShapeType.createTooltipText(type.create(player.level, player))), true);
 
             return 1;
-        } else if (Walkers.CONFIG.logCommands) {
+        } else {
             source.sendSuccess(new TranslatableComponent("walkers.show2ndShapeNot_failed", player.getDisplayName()), true);
         }
 
@@ -127,7 +124,7 @@ public class WalkersCommand {
 
         boolean result = PlayerShapeChanger.change2ndShape(player, null);
 
-        if (result && Walkers.CONFIG.logCommands) {
+        if (result) {
             player.displayClientMessage(new TranslatableComponent("walkers.remove_entity"), true);
             source.sendSuccess(new TranslatableComponent("walkers.deletion_success", player.getDisplayName()), true);
         }
@@ -148,27 +145,24 @@ public class WalkersCommand {
             Entity loaded = EntityType.loadEntityRecursive(copy, serverWorld, it -> it);
             if (loaded instanceof LivingEntity living) {
                 type = ShapeType.from(living);
-                name = type != null ? ShapeType.createTooltipText(living) : Component.nullToEmpty("");
+                name = ShapeType.createTooltipText(living);
             }
         }
 
         if (((PlayerDataProvider) player).walkers$get2ndShape() != type) {
             boolean result = PlayerShapeChanger.change2ndShape(player, type);
 
-            if (result && Walkers.CONFIG.logCommands) {
+            if (result) {
                 player.displayClientMessage(new TranslatableComponent("walkers.unlock_entity", name), false);
                 source.sendSuccess(
                         new TranslatableComponent("walkers.grant_success", name, player.getDisplayName()), true);
             }
         } else {
-            if (Walkers.CONFIG.logCommands) {
-                source.sendSuccess(new TranslatableComponent("walkers.already_has", player.getDisplayName(), name), true);
-            }
+            source.sendSuccess(new TranslatableComponent("walkers.already_has", player.getDisplayName(), name), true);
         }
     }
 
-    private static void switchShape(CommandSourceStack source, ServerPlayer player, ResourceLocation shape,
-                                    @Nullable CompoundTag nbt) {
+    private static void switchShape(CommandSourceStack source, ServerPlayer player, ResourceLocation shape, @Nullable CompoundTag nbt) {
         Entity created;
 
         if (nbt != null) {
@@ -181,16 +175,11 @@ public class WalkersCommand {
             created = entity.create(player.level);
         }
 
-        if (created instanceof LivingEntity living) {
-            @Nullable
-            ShapeType<?> defaultType = ShapeType.from(living);
-
-            if (defaultType != null) {
-                boolean result = PlayerShape.updateShapes(player, (LivingEntity) created);
-                if (result && Walkers.CONFIG.logCommands) {
-                    source.sendSuccess(new TranslatableComponent("walkers.switchShape_success",
-                            player.getDisplayName(), new TranslatableComponent(created.getType().getDescriptionId())), true);
-                }
+        if (created instanceof LivingEntity) {
+            boolean result = PlayerShape.updateShapes(player, (LivingEntity) created);
+            if (result) {
+                source.sendSuccess(new TranslatableComponent("walkers.switchShape_success",
+                        player.getDisplayName(), new TranslatableComponent(created.getType().getDescriptionId())), true);
             }
         }
     }
@@ -198,7 +187,7 @@ public class WalkersCommand {
     private static void switchShapeToNormal(CommandSourceStack source, ServerPlayer player) {
         boolean result = PlayerShape.updateShapes(player, null);
 
-        if (result && Walkers.CONFIG.logCommands) {
+        if (result) {
             source.sendSuccess(
                     new TranslatableComponent("walkers.switchShape_human_success", player.getDisplayName()), true);
         }

@@ -21,8 +21,6 @@ import tocraft.walkers.skills.SkillRegistry;
 import tocraft.walkers.skills.impl.FearedSkill;
 import tocraft.walkers.skills.impl.PreySkill;
 
-import java.util.function.Predicate;
-
 @Mixin(Mob.class)
 public class MobHunterPreyMixin {
     @Shadow
@@ -56,9 +54,7 @@ public class MobHunterPreyMixin {
 
                             if (shape != null) {
                                 for (PreySkill<?> preySkill : SkillRegistry.get(shape, PreySkill.ID).stream().map(entry -> (PreySkill<?>) entry).toList()) {
-                                    for (Predicate<LivingEntity> hunterPredicate : preySkill.hunter) {
-                                        if (hunterPredicate.test((Mob) (Object) this)) return true;
-                                    }
+                                    if (preySkill.isHunter((Mob) (Object) this)) return true;
                                 }
                             }
 
@@ -77,8 +73,8 @@ public class MobHunterPreyMixin {
                         LivingEntity shape = PlayerShape.getCurrentShape((Player) player);
                         if (shape != null) {
                             for (FearedSkill<?> fearedSkill : SkillRegistry.get(shape, FearedSkill.ID).stream().map(entry -> (FearedSkill<?>) entry).toList()) {
-                                for (Predicate<LivingEntity> preyPredicate : fearedSkill.fearful) {
-                                    if (preyPredicate.test(mob)) return true;
+                                if (fearedSkill.isFeared(mob)) {
+                                    return true;
                                 }
                             }
                         }

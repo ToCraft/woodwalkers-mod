@@ -7,6 +7,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.animal.horse.Horse;
 import net.minecraft.world.level.Level;
 import tocraft.walkers.api.variant.TypeProvider;
+import tocraft.walkers.mixin.accessor.HorseAccessor;
 
 public class HorseTypeProvider extends TypeProvider<Horse> {
 
@@ -18,7 +19,7 @@ public class HorseTypeProvider extends TypeProvider<Horse> {
     @Override
     public Horse create(EntityType<Horse> type, Level world, int data) {
         Horse horse = new Horse(type, world);
-        horse.setTypeVariant(data);
+        ((HorseAccessor) horse).callSetTypeVariant(data);
         return horse;
     }
 
