@@ -14,43 +14,69 @@ import tocraft.walkers.skills.ShapeSkill;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Predicate;
-import java.util.stream.Stream;
 
+@SuppressWarnings("unused")
 public class PreySkill<E extends LivingEntity> extends ShapeSkill<E> {
     public static final ResourceLocation ID = Walkers.id("prey");
     public static final Codec<PreySkill<?>> CODEC = RecordCodecBuilder.create((instance) -> instance.group(
-            Codec.list(ResourceLocation.CODEC).fieldOf("hunter").forGetter(o -> new ArrayList<>())
-    ).apply(instance, instance.stable(hunterLocations -> {
-                List<Predicate<LivingEntity>> hunter = new ArrayList<>();
+            Codec.list(ResourceLocation.CODEC).optionalFieldOf("hunter", new ArrayList<>()).forGetter(o -> o.hunterTypes.stream().map(BuiltInRegistries.ENTITY_TYPE::getKey).toList()),
+            Codec.list(ResourceLocation.CODEC).optionalFieldOf("hunter_tags", new ArrayList<>()).forGetter(o -> o.hunterTags.stream().map(TagKey::location).toList())
+    ).apply(instance, instance.stable((hunterLocations, hunterTagLocations) -> {
+                List<EntityType<?>> hunterTypes = new ArrayList<>();
+                List<TagKey<EntityType<?>>> hunterTags = new ArrayList<>();
                 for (ResourceLocation resourceLocation : hunterLocations) {
                     if (BuiltInRegistries.ENTITY_TYPE.containsKey(resourceLocation)) {
-                        hunter.add(entity -> entity.getType().equals(BuiltInRegistries.ENTITY_TYPE.get(resourceLocation)));
-                    } else {
-                        hunter.add(entity -> entity.getType().is(TagKey.create(Registries.ENTITY_TYPE, resourceLocation)));
+                        hunterTypes.add(BuiltInRegistries.ENTITY_TYPE.get(resourceLocation));
                     }
                 }
-                return new PreySkill<>(hunter);
+                for (ResourceLocation hunterTagLocation : hunterTagLocations) {
+                    hunterTags.add(TagKey.create(Registries.ENTITY_TYPE, hunterTagLocation));
+                }
+                return new PreySkill<>(new ArrayList<>(), hunterTypes, new ArrayList<>(), hunterTags);
             }
     )));
 
-    public final List<Predicate<LivingEntity>> hunter;
+    private final List<Predicate<LivingEntity>> hunterPredicates;
+    private final List<EntityType<?>> hunterTypes;
+    private final List<Class<? extends LivingEntity>> hunterClasses;
+    private final List<TagKey<EntityType<?>>> hunterTags;
 
     public static PreySkill<?> ofHunterType(EntityType<?>... hunter) {
-        return new PreySkill<>(Stream.of(hunter).map(entry -> (Predicate<LivingEntity>) entity -> entity.getType().equals(entry)).toList());
+        return new PreySkill<>(new ArrayList<>(), List.of(hunter), new ArrayList<>(), new ArrayList<>());
     }
 
     @SafeVarargs
     public static PreySkill<?> ofHunterTag(TagKey<EntityType<?>>... hunter) {
-        return new PreySkill<>(Stream.of(hunter).map(entry -> (Predicate<LivingEntity>) entity -> entity.getType().is(entry)).toList());
+        return new PreySkill<>(new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), List.of(hunter));
     }
 
     @SafeVarargs
     public static PreySkill<?> ofHunterClass(Class<? extends LivingEntity>... hunter) {
-        return new PreySkill<>(Stream.of(hunter).map(entry -> (Predicate<LivingEntity>) entry::isInstance).toList());
+        return new PreySkill<>(new ArrayList<>(), new ArrayList<>(), List.of(hunter), new ArrayList<>());
     }
 
-    public PreySkill(List<Predicate<LivingEntity>> hunter) {
-        this.hunter = hunter;
+
+    public PreySkill(List<Predicate<LivingEntity>> hunterPredicates) {
+        this(hunterPredicates, new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
+    }
+
+    public PreySkill(List<Predicate<LivingEntity>> hunterPredicates, List<EntityType<?>> hunterTypes, List<Class<? extends LivingEntity>> hunterClasses, List<TagKey<EntityType<?>>> hunterTags) {
+        this.hunterPredicates = hunterPredicates;
+        this.hunterTypes = hunterTypes;
+        this.hunterClasses = hunterClasses;
+        this.hunterTags = hunterTags;
+    }
+
+    public boolean isHunter(LivingEntity entity) {
+        if (hunterTypes.contains(entity.getType())) return true;
+        if (hunterClasses.contains(entity.getClass())) return true;
+        for (TagKey<EntityType<?>> hunterTag : hunterTags) {
+            if (entity.getType().is(hunterTag)) return true;
+        }
+        for (Predicate<LivingEntity> hunterPredicate : hunterPredicates) {
+            if (hunterPredicate.test(entity)) return true;
+        }
+        return false;
     }
 
     @Override

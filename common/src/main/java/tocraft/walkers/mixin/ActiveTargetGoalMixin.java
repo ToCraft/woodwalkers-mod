@@ -24,8 +24,6 @@ import tocraft.walkers.integrations.Integrations;
 import tocraft.walkers.skills.SkillRegistry;
 import tocraft.walkers.skills.impl.FearedSkill;
 
-import java.util.function.Predicate;
-
 @Mixin(NearestAttackableTargetGoal.class)
 public abstract class ActiveTargetGoalMixin extends TrackTargetGoalMixin {
 
@@ -45,11 +43,9 @@ public abstract class ActiveTargetGoalMixin extends TrackTargetGoalMixin {
                 if (!hasHostility) {
                     // prey should ignore hunter
                     for (FearedSkill<?> fearedSkill : SkillRegistry.get(shape, FearedSkill.ID).stream().map(entry -> (FearedSkill<?>) entry).toList()) {
-                        for (Predicate<LivingEntity> fearPredicate : fearedSkill.fearful) {
-                            if (fearPredicate.test(mob)) {
-                                this.stop();
-                                ci.cancel();
-                            }
+                        if (fearedSkill.isFeared(mob)) {
+                            this.stop();
+                            ci.cancel();
                         }
                     }
 
@@ -100,11 +96,9 @@ public abstract class ActiveTargetGoalMixin extends TrackTargetGoalMixin {
                 if (!hasHostility) {
                     // prey should ignore hunter
                     for (FearedSkill<?> fearedSkill : SkillRegistry.get(shape, FearedSkill.ID).stream().map(entry -> (FearedSkill<?>) entry).toList()) {
-                        for (Predicate<LivingEntity> fearPredicate : fearedSkill.fearful) {
-                            if (fearPredicate.test(mob)) {
-                                cir.setReturnValue(false);
-                                return;
-                            }
+                        if (fearedSkill.isFeared(mob)) {
+                            cir.setReturnValue(false);
+                            return;
                         }
                     }
 

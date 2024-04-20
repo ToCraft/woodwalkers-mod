@@ -5,7 +5,6 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.network.protocol.game.ClientboundGameEventPacket;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
-import net.minecraft.tags.TagKey;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
@@ -49,7 +48,6 @@ import tocraft.walkers.skills.SkillRegistry;
 import tocraft.walkers.skills.impl.*;
 
 import java.util.Iterator;
-import java.util.List;
 
 @SuppressWarnings("ConstantConditions")
 @Mixin(Player.class)
@@ -364,18 +362,15 @@ public abstract class PlayerEntityMixin extends LivingEntityMixin {
         Player player = (Player) (Object) this;
         LivingEntity shape = PlayerShape.getCurrentShape(player);
         if (source.getEntity() instanceof LivingEntity livingAttacker && shape != null) {
-            for (ShapeSkill<LivingEntity> reinforcementSkill : SkillRegistry.get(shape, ReinforcementsSkill.ID)) {
-                double d = ((ReinforcementsSkill<LivingEntity>) reinforcementSkill).range;
-                List<EntityType<?>> reinforcements = ((ReinforcementsSkill<LivingEntity>) reinforcementSkill).reinforcements;
-                List<TagKey<EntityType<?>>> reinforcementTags = ((ReinforcementsSkill<LivingEntity>) reinforcementSkill).reinforcementTags;
+            for (ReinforcementsSkill<LivingEntity> reinforcementSkill : SkillRegistry.get(shape, ReinforcementsSkill.ID).stream().map(skill -> (ReinforcementsSkill<LivingEntity>) skill).toList()) {
+                double d = reinforcementSkill.getRange();
                 AABB aABB = AABB.unitCubeFromLowerCorner(this.position()).inflate(d, 10.0, d);
                 Iterator<? extends LivingEntity> var5 = this.level().getEntitiesOfClass(Mob.class, aABB, EntitySelector.NO_SPECTATORS.and(entity -> {
-                    boolean bool = false;
-                    for (TagKey<EntityType<?>> reinforcementTag : reinforcementTags) {
-                        if (entity.getType().is(reinforcementTag)) bool = true;
-                        break;
+                    if (reinforcementSkill.hasReinforcements()) {
+                        return reinforcementSkill.isReinforcement(entity);
+                    } else {
+                        return shape.getClass().isInstance(entity);
                     }
-                    return reinforcements.contains(entity.getType()) || ((reinforcements.isEmpty() && shape.getClass().isInstance(entity)) || bool);
                 })).iterator();
 
                 while (true) {

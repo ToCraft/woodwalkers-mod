@@ -11,6 +11,7 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.Items;
@@ -21,26 +22,29 @@ import tocraft.walkers.skills.ShapeSkill;
 import java.util.ArrayList;
 import java.util.List;
 
+@SuppressWarnings("unused")
 public class ReinforcementsSkill<E extends LivingEntity> extends ShapeSkill<E> {
     public static final ResourceLocation ID = Walkers.id("reinforcements");
     public static final Codec<ReinforcementsSkill<?>> CODEC = RecordCodecBuilder.create((instance) -> instance.group(
             Codec.INT.optionalFieldOf("range", 32).forGetter(o -> o.range),
-            Codec.list(ResourceLocation.CODEC).optionalFieldOf("reinforcements", new ArrayList<>()).forGetter(o -> o.reinforcements.stream().map(BuiltInRegistries.ENTITY_TYPE::getKey).toList())
-    ).apply(instance, instance.stable((range, reinforcementsLocation) -> {
+            Codec.list(ResourceLocation.CODEC).optionalFieldOf("reinforcements", new ArrayList<>()).forGetter(o -> o.reinforcementTypes.stream().map(BuiltInRegistries.ENTITY_TYPE::getKey).toList()),
+            Codec.list(ResourceLocation.CODEC).optionalFieldOf("reinforcement_tags", new ArrayList<>()).forGetter(o -> o.reinforcementTags.stream().map(TagKey::location).toList())
+    ).apply(instance, instance.stable((range, reinforcementsLocations, reinforcementTagsLocations) -> {
         List<EntityType<?>> reinforcements = new ArrayList<>();
         List<TagKey<EntityType<?>>> reinforcementTags = new ArrayList<>();
-        for (ResourceLocation resourceLocation : reinforcementsLocation) {
+        for (ResourceLocation resourceLocation : reinforcementsLocations) {
             if (BuiltInRegistries.ENTITY_TYPE.containsKey(resourceLocation)) {
                 reinforcements.add(BuiltInRegistries.ENTITY_TYPE.get(resourceLocation));
-            } else {
-                reinforcementTags.add(TagKey.create(Registries.ENTITY_TYPE, resourceLocation));
             }
+        }
+        for (ResourceLocation resourceLocation : reinforcementTagsLocations) {
+            reinforcementTags.add(TagKey.create(Registries.ENTITY_TYPE, resourceLocation));
         }
         return new ReinforcementsSkill<>(range, reinforcements, reinforcementTags);
     })));
-    public final int range;
-    public final List<EntityType<?>> reinforcements;
-    public final List<TagKey<EntityType<?>>> reinforcementTags;
+    private final int range;
+    private final List<EntityType<?>> reinforcementTypes;
+    private final List<TagKey<EntityType<?>>> reinforcementTags;
 
 
     public ReinforcementsSkill() {
@@ -51,18 +55,34 @@ public class ReinforcementsSkill<E extends LivingEntity> extends ShapeSkill<E> {
         this(range, new ArrayList<>());
     }
 
-    public ReinforcementsSkill(List<EntityType<?>> reinforcements) {
-        this(32, reinforcements);
+    public ReinforcementsSkill(List<EntityType<?>> reinforcementTypes) {
+        this(32, reinforcementTypes);
     }
 
-    public ReinforcementsSkill(int range, List<EntityType<?>> reinforcements) {
-        this(range, reinforcements, new ArrayList<>());
+    public ReinforcementsSkill(int range, List<EntityType<?>> reinforcementTypes) {
+        this(range, reinforcementTypes, new ArrayList<>());
     }
 
-    public ReinforcementsSkill(int range, List<EntityType<?>> reinforcements, List<TagKey<EntityType<?>>> reinforcementTags) {
+    public ReinforcementsSkill(int range, List<EntityType<?>> reinforcementTypes, List<TagKey<EntityType<?>>> reinforcementTags) {
         this.range = range;
-        this.reinforcements = reinforcements;
+        this.reinforcementTypes = reinforcementTypes;
         this.reinforcementTags = reinforcementTags;
+    }
+
+    public boolean hasReinforcements() {
+        return !reinforcementTypes.isEmpty() || !reinforcementTags.isEmpty();
+    }
+
+    public boolean isReinforcement(Entity entity) {
+        if (reinforcementTypes.contains(entity.getType())) return true;
+        for (TagKey<EntityType<?>> reinforcementTag : reinforcementTags) {
+            if (entity.getType().is(reinforcementTag)) return true;
+        }
+        return false;
+    }
+
+    public int getRange() {
+        return range;
     }
 
     @Override

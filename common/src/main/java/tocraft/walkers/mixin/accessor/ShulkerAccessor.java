@@ -15,6 +15,7 @@ public interface ShulkerAccessor {
 
     @Invoker
     int callGetRawPeekAmount();
+
     @Invoker
     void callSetRawPeekAmount(int peekAmount);
 }
