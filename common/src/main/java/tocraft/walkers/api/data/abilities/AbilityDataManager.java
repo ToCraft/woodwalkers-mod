@@ -12,7 +12,6 @@ import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.LivingEntity;
 import tocraft.walkers.Walkers;
 import tocraft.walkers.ability.AbilityRegistry;
 import tocraft.walkers.ability.ShapeAbility;
@@ -21,7 +20,6 @@ import tocraft.walkers.api.data.variants.TypeProviderDataManager;
 import java.lang.reflect.InvocationTargetException;
 import java.util.AbstractMap.SimpleEntry;
 import java.util.Map;
-import java.util.function.Predicate;
 
 public class AbilityDataManager extends SimpleJsonResourceReloadListener {
     private static final String DEFAULT_PACKAGE = "tocraft.walkers.ability.impl";
@@ -36,7 +34,7 @@ public class AbilityDataManager extends SimpleJsonResourceReloadListener {
         for (Map.Entry<ResourceLocation, JsonElement> mapEntry : map.entrySet()) {
             Map.Entry<EntityType<?>, ShapeAbility<?>> convertedEntry = abilityEntryFromJson(mapEntry.getValue().getAsJsonObject());
 
-            AbilityRegistry.registerByPredicate((Predicate<LivingEntity>) entity -> entity.getType().equals(convertedEntry.getKey()), convertedEntry.getValue());
+            AbilityRegistry.registerByPredicate(entity -> entity.getType().equals(convertedEntry.getKey()), convertedEntry.getValue());
 
             Walkers.LOGGER.info("{}: {} registered for {}", getClass().getSimpleName(), convertedEntry.getKey(), convertedEntry.getValue());
         }

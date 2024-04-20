@@ -3,6 +3,7 @@ package tocraft.walkers.skills;
 import com.mojang.serialization.Codec;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.EntityTypeTags;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.damagesource.DamageTypes;
@@ -117,7 +118,7 @@ public class SkillRegistry {
         // reinforcements
         registerByClass(Wolf.class, new ReinforcementsSkill<>());
         registerByClass(Bee.class, new ReinforcementsSkill<>());
-        //registerByTag(EntityTypeTags.RAIDERS, new ReinforcementsSkill<>(32, new ArrayList<>(), List.of(EntityTypeTags.RAIDERS)));
+        registerByTag(EntityTypeTags.RAIDERS, new ReinforcementsSkill<>(32, new ArrayList<>(), List.of(EntityTypeTags.RAIDERS)));
         // instant die on lightning
         registerByClass(Turtle.class, new InstantDieOnDamageTypeSkill<>(DamageTypes.LIGHTNING_BOLT));
         // cats hunt rabbits
@@ -129,6 +130,8 @@ public class SkillRegistry {
         registerByClass(Dolphin.class, new BurnInDaylightSkill<>());
         // walk on powder snow
         registerByClass(Rabbit.class, new WalkOnPowderSnow<>());
+        // slow falling
+        registerByClass(Chicken.class, new SlowFallingSkill<>());
         // support deprecated entity tags
         registerByTag(TagKey.create(Registries.ENTITY_TYPE, Walkers.id("burns_in_daylight")), new BurnInDaylightSkill<>());
         registerByTag(TagKey.create(Registries.ENTITY_TYPE, Walkers.id("flying")), new FlyingSkill<>(false));
