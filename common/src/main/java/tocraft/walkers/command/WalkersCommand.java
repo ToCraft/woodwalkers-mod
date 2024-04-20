@@ -19,7 +19,6 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import org.jetbrains.annotations.Nullable;
-import tocraft.walkers.Walkers;
 import tocraft.walkers.api.PlayerShape;
 import tocraft.walkers.api.PlayerShapeChanger;
 import tocraft.walkers.api.variant.ShapeType;
@@ -109,14 +108,12 @@ public class WalkersCommand {
     private static int show2ndShape(CommandSourceStack source, ServerPlayer player) {
 
         if (((PlayerDataProvider) player).walkers$get2ndShape() != null) {
-            if (Walkers.CONFIG.logCommands) {
-                ShapeType<?> type = ((PlayerDataProvider) player).walkers$get2ndShape();
-                source.sendSystemMessage(Component.translatable("walkers.show2ndShapeNot_positive",
-                        player.getDisplayName(), type.createTooltipText(type.create(player.level(), player))));
-            }
+            ShapeType<?> type = ((PlayerDataProvider) player).walkers$get2ndShape();
+            source.sendSystemMessage(Component.translatable("walkers.show2ndShapeNot_positive",
+                    player.getDisplayName(), ShapeType.createTooltipText(type.create(player.level(), player))));
 
             return 1;
-        } else if (Walkers.CONFIG.logCommands) {
+        } else {
             source.sendSystemMessage(Component.translatable("walkers.show2ndShapeNot_failed", player.getDisplayName()));
         }
 
@@ -127,7 +124,7 @@ public class WalkersCommand {
 
         boolean result = PlayerShapeChanger.change2ndShape(player, null);
 
-        if (result && Walkers.CONFIG.logCommands) {
+        if (result) {
             player.displayClientMessage(Component.translatable("walkers.remove_entity"), true);
             source.sendSystemMessage(Component.translatable("walkers.deletion_success", player.getDisplayName()));
         }
@@ -148,22 +145,20 @@ public class WalkersCommand {
             Entity loaded = EntityType.loadEntityRecursive(copy, serverWorld, it -> it);
             if (loaded instanceof LivingEntity living) {
                 type = ShapeType.from(living);
-                name = type != null ? type.createTooltipText(living) : Component.nullToEmpty("");
+                name = ShapeType.createTooltipText(living);
             }
         }
 
         if (((PlayerDataProvider) player).walkers$get2ndShape() != type) {
             boolean result = PlayerShapeChanger.change2ndShape(player, type);
 
-            if (result && Walkers.CONFIG.logCommands) {
+            if (result) {
                 player.sendSystemMessage(Component.translatable("walkers.unlock_entity", name));
                 source.sendSystemMessage(
                         Component.translatable("walkers.grant_success", name, player.getDisplayName()));
             }
         } else {
-            if (Walkers.CONFIG.logCommands) {
-                source.sendSystemMessage(Component.translatable("walkers.already_has", player.getDisplayName(), name));
-            }
+            source.sendSystemMessage(Component.translatable("walkers.already_has", player.getDisplayName(), name));
         }
     }
 
@@ -182,7 +177,7 @@ public class WalkersCommand {
 
         if (created instanceof LivingEntity) {
             boolean result = PlayerShape.updateShapes(player, (LivingEntity) created);
-            if (result && Walkers.CONFIG.logCommands) {
+            if (result) {
                 source.sendSystemMessage(Component.translatable("walkers.switchShape_success",
                         player.getDisplayName(), Component.translatable(created.getType().getDescriptionId())));
             }
@@ -192,7 +187,7 @@ public class WalkersCommand {
     private static void switchShapeToNormal(CommandSourceStack source, ServerPlayer player) {
         boolean result = PlayerShape.updateShapes(player, null);
 
-        if (result && Walkers.CONFIG.logCommands) {
+        if (result) {
             source.sendSystemMessage(
                     Component.translatable("walkers.switchShape_human_success", player.getDisplayName()));
         }

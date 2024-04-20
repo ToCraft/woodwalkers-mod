@@ -11,7 +11,7 @@
   "walkers.player_blacklisted": "Sorry, but you're blacklisted.",
   "walkers.remove_entity": "Your second shape was removed.",
   "walkers.show2ndShapeNot_failed": "%s doesn't have a second shape.",
-  "walkers.show2ndShapeNot_positive": "%s is disguised as a %s.",
+  "walkers.show2ndShapeNot_positive": "%s has %s unlocked as 2ndShape.",
   "walkers.switchShape_human_success": "%s is now using the first shape.",
   "walkers.switchShape_success": "Set the current shape of %s to %s.",
   "walkers.unlock_entity": "Unlocked %s as second shape.",

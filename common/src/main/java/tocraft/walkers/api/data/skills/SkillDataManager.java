@@ -46,7 +46,8 @@ public class SkillDataManager extends SimpleJsonResourceReloadListener {
                             SkillRegistry.registerByTag(TagKey.create(Registries.ENTITY_TYPE, entitySkills.getKey().getSecond()), (ShapeSkill<LivingEntity>) shapeSkill);
                         }
                     }
-                    Walkers.LOGGER.info("{}: {} registered for {}", getClass().getSimpleName(), entitySkills.getKey().toString().replaceAll("null", ""), entitySkills.getValue().stream().map(skill -> skill.getClass().getSimpleName()).toArray(String[]::new));
+                    String key = entitySkills.getKey().getFirst() != null ? entitySkills.getKey().getFirst().toString() : entitySkills.getKey().getSecond().toString();
+                    Walkers.LOGGER.info("{}: {} registered for {}", getClass().getSimpleName(), key, entitySkills.getValue().stream().map(skill -> skill.getClass().getSimpleName()).toArray(String[]::new));
                 }
             }
         }
