@@ -5,6 +5,8 @@ walkers 4.2
 - entity tags can now be used for skills & blacklist
 - small performance patch for the skill system
 - **add variants menu!** (a menu, where you can switch between variants in your in-game HUD)
+- add entity arm for horse, donkey, mule, zombie horse, skeleton horse, fox, wolf, strider, warden, allay, vex, creeper,
+  zoglin & hoglin
 
 walkers 4.1
 ================
