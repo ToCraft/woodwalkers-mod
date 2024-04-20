@@ -1,7 +1,6 @@
 package tocraft.walkers.mixin.player;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.network.protocol.game.ClientboundGameEventPacket;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
@@ -63,7 +62,7 @@ public abstract class PlayerEntityMixin extends LivingEntityMixin {
     public abstract boolean isSwimming();
 
     @Shadow
-    public abstract void die(DamageSource damageSource);
+    public abstract boolean hurt(DamageSource source, float amount);
 
     private PlayerEntityMixin(EntityType<? extends LivingEntity> type, Level world) {
         super(type, world);
@@ -401,9 +400,9 @@ public abstract class PlayerEntityMixin extends LivingEntityMixin {
     private void instantDieOnDamageTypeSkill(DamageSource source, float amount, CallbackInfoReturnable<Boolean> cir) {
         LivingEntity shape = PlayerShape.getCurrentShape((Player) (Object) this);
         if (shape != null) {
-            for (ShapeSkill<LivingEntity> instantDieOnDamageTypeSkill : SkillRegistry.get(shape, InstantDieOnDamageTypeSkill.ID)) {
-                if (source.type() == level().registryAccess().registryOrThrow(Registries.DAMAGE_TYPE).get(((InstantDieOnDamageTypeSkill<LivingEntity>) instantDieOnDamageTypeSkill).damageType)) {
-                    this.die(source);
+            for (ShapeSkill<LivingEntity> instantDieOnDamageTypeSkill : SkillRegistry.get(shape, InstantDieOnDamageMsgSkill.ID)) {
+                if (source.getMsgId().equals(((InstantDieOnDamageMsgSkill<LivingEntity>) instantDieOnDamageTypeSkill).msgId)) {
+                    this.kill();
                 }
             }
         }

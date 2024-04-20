@@ -6,7 +6,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.EntityTypeTags;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.tags.TagKey;
-import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.*;
@@ -54,7 +53,7 @@ public class SkillRegistry {
         registerCodec(FearedSkill.ID, FearedSkill.CODEC);
         registerCodec(ClimbBlocksSkill.ID, ClimbBlocksSkill.CODEC);
         registerCodec(ReinforcementsSkill.ID, ReinforcementsSkill.CODEC);
-        registerCodec(InstantDieOnDamageTypeSkill.ID, InstantDieOnDamageTypeSkill.CODEC);
+        registerCodec(InstantDieOnDamageMsgSkill.ID, InstantDieOnDamageMsgSkill.CODEC);
         registerCodec(AquaticSkill.ID, AquaticSkill.CODEC);
         registerCodec(WalkOnPowderSnow.ID, WalkOnPowderSnow.CODEC);
         registerCodec(HumanoidSkill.ID, HumanoidSkill.CODEC);
@@ -120,7 +119,7 @@ public class SkillRegistry {
         registerByClass(Bee.class, new ReinforcementsSkill<>());
         registerByTag(EntityTypeTags.RAIDERS, new ReinforcementsSkill<>(32, new ArrayList<>(), List.of(EntityTypeTags.RAIDERS)));
         // instant die on lightning
-        registerByClass(Turtle.class, new InstantDieOnDamageTypeSkill<>(DamageTypes.LIGHTNING_BOLT));
+        registerByClass(Turtle.class, new InstantDieOnDamageMsgSkill<>("lightningBolt"));
         // cats hunt rabbits
         registerByClass(Rabbit.class, new PreySkill<>(List.of(entity -> entity instanceof Cat cat && !cat.isTame())));
         // aquatic
