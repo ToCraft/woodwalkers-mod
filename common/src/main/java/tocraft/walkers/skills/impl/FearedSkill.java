@@ -8,6 +8,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import org.jetbrains.annotations.NotNull;
 import tocraft.walkers.Walkers;
 import tocraft.walkers.skills.ShapeSkill;
 
@@ -54,11 +55,11 @@ public class FearedSkill<E extends LivingEntity> extends ShapeSkill<E> {
         return new FearedSkill<>(new ArrayList<>(), new ArrayList<>(), List.of(fearful), new ArrayList<>());
     }
 
-    public FearedSkill(List<Predicate<LivingEntity>> fearfulPredicates) {
+    public FearedSkill(@NotNull List<Predicate<LivingEntity>> fearfulPredicates) {
         this(fearfulPredicates, new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
     }
 
-    public FearedSkill(List<Predicate<LivingEntity>> fearfulPredicates, List<EntityType<?>> fearfulTypes, List<Class<? extends LivingEntity>> fearfulClasses, List<TagKey<EntityType<?>>> fearfulTags) {
+    public FearedSkill(@NotNull List<Predicate<LivingEntity>> fearfulPredicates, @NotNull List<EntityType<?>> fearfulTypes, @NotNull List<Class<? extends LivingEntity>> fearfulClasses, @NotNull List<TagKey<EntityType<?>>> fearfulTags) {
         this.fearfulPredicates = fearfulPredicates;
         this.fearfulTypes = fearfulTypes;
         this.fearfulClasses = fearfulClasses;
@@ -68,11 +69,11 @@ public class FearedSkill<E extends LivingEntity> extends ShapeSkill<E> {
     public boolean isFeared(LivingEntity entity) {
         if (fearfulTypes.contains(entity.getType())) return true;
         if (fearfulClasses.contains(entity.getClass())) return true;
-        for (TagKey<EntityType<?>> hunterTag : fearfulTags) {
-            if (entity.getType().is(hunterTag)) return true;
+        for (TagKey<EntityType<?>> fearfulTag : fearfulTags) {
+            if (entity.getType().is(fearfulTag)) return true;
         }
-        for (Predicate<LivingEntity> hunterPredicate : fearfulPredicates) {
-            if (hunterPredicate.test(entity)) return true;
+        for (Predicate<LivingEntity> fearfulPredicate : fearfulPredicates) {
+            if (fearfulPredicate.test(entity)) return true;
         }
         return false;
     }

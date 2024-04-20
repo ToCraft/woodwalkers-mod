@@ -15,6 +15,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.Items;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import tocraft.walkers.Walkers;
 import tocraft.walkers.skills.ShapeSkill;
@@ -59,11 +60,11 @@ public class ReinforcementsSkill<E extends LivingEntity> extends ShapeSkill<E> {
         this(32, reinforcementTypes);
     }
 
-    public ReinforcementsSkill(int range, List<EntityType<?>> reinforcementTypes) {
+    public ReinforcementsSkill(int range, @NotNull List<EntityType<?>> reinforcementTypes) {
         this(range, reinforcementTypes, new ArrayList<>());
     }
 
-    public ReinforcementsSkill(int range, List<EntityType<?>> reinforcementTypes, List<TagKey<EntityType<?>>> reinforcementTags) {
+    public ReinforcementsSkill(int range, @NotNull List<EntityType<?>> reinforcementTypes, @NotNull List<TagKey<EntityType<?>>> reinforcementTags) {
         this.range = range;
         this.reinforcementTypes = reinforcementTypes;
         this.reinforcementTags = reinforcementTags;

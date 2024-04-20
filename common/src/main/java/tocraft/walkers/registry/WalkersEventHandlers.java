@@ -28,8 +28,6 @@ import tocraft.walkers.api.blacklist.EntityBlacklist;
 import tocraft.walkers.skills.SkillRegistry;
 import tocraft.walkers.skills.impl.*;
 
-import java.util.function.Predicate;
-
 public class WalkersEventHandlers {
 
     public static void initialize() {
@@ -115,11 +113,9 @@ public class WalkersEventHandlers {
             if (shape != null && entity instanceof LivingEntity livingEntity) {
                 // checks, if selected entity is rideable
                 for (RiderSkill<?> riderSkill : SkillRegistry.get(shape, RiderSkill.ID).stream().map(entry -> (RiderSkill<?>) entry).toList()) {
-                    for (Predicate<LivingEntity> rideable : riderSkill.rideable) {
-                        if (rideable.test(livingEntity) || (livingEntity instanceof Player rideablePlayer && rideable.test(PlayerShape.getCurrentShape(rideablePlayer)))) {
-                            player.startRiding(entity);
-                            return EventResult.pass();
-                        }
+                    if (riderSkill.isRideable(livingEntity) || (livingEntity instanceof Player rideablePlayer && riderSkill.isRideable(PlayerShape.getCurrentShape(rideablePlayer)))) {
+                        player.startRiding(entity);
+                        return EventResult.pass();
                     }
                 }
             }

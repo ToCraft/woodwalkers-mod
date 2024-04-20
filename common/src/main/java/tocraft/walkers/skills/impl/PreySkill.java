@@ -8,6 +8,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import org.jetbrains.annotations.NotNull;
 import tocraft.walkers.Walkers;
 import tocraft.walkers.skills.ShapeSkill;
 
@@ -56,11 +57,11 @@ public class PreySkill<E extends LivingEntity> extends ShapeSkill<E> {
     }
 
 
-    public PreySkill(List<Predicate<LivingEntity>> hunterPredicates) {
+    public PreySkill(@NotNull List<Predicate<LivingEntity>> hunterPredicates) {
         this(hunterPredicates, new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
     }
 
-    public PreySkill(List<Predicate<LivingEntity>> hunterPredicates, List<EntityType<?>> hunterTypes, List<Class<? extends LivingEntity>> hunterClasses, List<TagKey<EntityType<?>>> hunterTags) {
+    public PreySkill(@NotNull List<Predicate<LivingEntity>> hunterPredicates, @NotNull List<EntityType<?>> hunterTypes, @NotNull List<Class<? extends LivingEntity>> hunterClasses, @NotNull List<TagKey<EntityType<?>>> hunterTags) {
         this.hunterPredicates = hunterPredicates;
         this.hunterTypes = hunterTypes;
         this.hunterClasses = hunterClasses;
