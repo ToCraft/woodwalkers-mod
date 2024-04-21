@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-@SuppressWarnings("unchecked")
+@SuppressWarnings({"unchecked", "unused"})
 public class ShapeType<T extends LivingEntity> {
 
     private static final List<EntityType<? extends LivingEntity>> LIVING_TYPE_CASH = new ArrayList<>();
@@ -93,6 +93,23 @@ public class ShapeType<T extends LivingEntity> {
         return new ShapeType<>(entityType, variant);
     }
 
+    public static <T extends LivingEntity> List<ShapeType<T>> getAllTypes(EntityType<T> entityType) {
+        List<ShapeType<T>> types = new ArrayList<>();
+        // check blacklist
+        if (!EntityBlacklist.isBlacklisted(entityType)) {
+            // check variants
+            TypeProvider<?> variant = TypeProviderRegistry.getProvider(entityType);
+            if (variant != null) {
+                for (int i = 0; i <= variant.getRange(); i++) {
+                    types.add(new ShapeType<>(entityType, i));
+                }
+            } else {
+                types.add(ShapeType.from(entityType));
+            }
+        }
+        return types;
+    }
+
     public static List<ShapeType<?>> getAllTypes(Level world) {
         if (LIVING_TYPE_CASH.isEmpty()) {
             for (EntityType<?> type : Registry.ENTITY_TYPE) {
@@ -109,34 +126,10 @@ public class ShapeType<T extends LivingEntity> {
 
         List<ShapeType<? extends LivingEntity>> types = new ArrayList<>();
         for (EntityType<? extends LivingEntity> type : LIVING_TYPE_CASH) {
-            // check blacklist
-            if (!EntityBlacklist.isBlacklisted(type)) {
-                // check variants
-                TypeProvider<?> variant = TypeProviderRegistry.getProvider(type);
-                if (variant != null) {
-                    for (int i = 0; i <= variant.getRange(); i++) {
-                        types.add(new ShapeType<>(type, i));
-                    }
-                } else {
-                    types.add(ShapeType.from(type));
-                }
-            }
+            types.addAll(getAllTypes(type));
         }
 
         return types;
-    }
-
-    @Deprecated
-    public static List<ShapeType<?>> getAllTypes(Level world, boolean includeVariants) {
-        List<ShapeType<?>> types = getAllTypes(world);
-        List<ShapeType<?>> filteredTypes = new ArrayList<>();
-        if (!includeVariants) {
-            for (ShapeType<?> type : types) {
-                if (filteredTypes.stream().noneMatch(fType -> fType.getEntityType() == type.getEntityType()))
-                    filteredTypes.add(type);
-            }
-        }
-        return filteredTypes;
     }
 
     public CompoundTag writeCompound() {
