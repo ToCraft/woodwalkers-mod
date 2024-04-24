@@ -83,12 +83,13 @@ jobs:
 
       - name: Extract Changelog for GitHub
         run: ./gradlew extractNewestChangelog --no-daemon
-      - name: Create version name for GitHub
+      - name: Create version data
         run: |
           cat $GITHUB_WORKSPACE/gradle.properties | grep ^archives_base_name= >> $GITHUB_ENV
           cat $GITHUB_WORKSPACE/gradle.properties | grep ^minecraft_version= >> $GITHUB_ENV
           cat $GITHUB_WORKSPACE/gradle.properties | grep ^mod_version= >> $GITHUB_ENV
-          echo "version_name_git=$minecraft_version-$mod_version" >> $GITHUB_ENV
+      - name: Create version name
+        run: echo "version_name_git=$minecraft_version-$mod_version" >> $GITHUB_ENV
       - name: Create GitHub Tag
         uses: EndBug/latest-tag@latest
         with:
