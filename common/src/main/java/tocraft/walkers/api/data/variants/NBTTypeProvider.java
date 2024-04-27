@@ -13,13 +13,16 @@ import org.jetbrains.annotations.NotNull;
 import tocraft.walkers.Walkers;
 import tocraft.walkers.api.variant.TypeProvider;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 // this is amazing
 public class NBTTypeProvider<T extends LivingEntity> extends TypeProvider<T> {
     public static Codec<NBTTypeProvider<?>> CODEC = RecordCodecBuilder.create((instance) -> instance.group(
             Codec.INT.optionalFieldOf("fallback", 0).forGetter(NBTTypeProvider::getFallbackData),
-            Codec.INT.optionalFieldOf("range").forGetter(o -> Optional.of(o.getRange())),
+            Codec.INT.optionalFieldOf("range", -1).forGetter(NBTTypeProvider::getRange),
             Codec.list(NBTEntry.CODEC).fieldOf("nbt").forGetter(o -> o.nbtEntryList),
             Codec.unboundedMap(Codec.STRING, Codec.STRING).optionalFieldOf("names", new HashMap<>()).forGetter(o -> o.nameMap)
     ).apply(instance, instance.stable(NBTTypeProvider::new)));
@@ -29,24 +32,18 @@ public class NBTTypeProvider<T extends LivingEntity> extends TypeProvider<T> {
     private final List<NBTEntry<?>> nbtEntryList;
     private final Map<String, String> nameMap;
 
-    NBTTypeProvider(int fallback, Optional<Integer> range, List<NBTEntry<?>> nbtEntryList, Map<String, String> nameMap) {
-        this(fallback, range.orElseGet(() -> {
-            switch (nbtEntryList.get(0).nbtType.toUpperCase()) {
-                case "BOOL", "BOOLEAN" -> {
-                    return 1;
-                }
-                default -> {
-                    return fallback;
-                }
-            }
-        }), nbtEntryList, nameMap);
-    }
-
     NBTTypeProvider(int fallback, int range, List<NBTEntry<?>> nbtEntryList, Map<String, String> nameMap) {
         this.fallback = fallback;
-        this.range = range;
         this.nbtEntryList = nbtEntryList;
         this.nameMap = nameMap;
+        if (range >= 0 && fallback <= range) {
+            this.range = range;
+        } else {
+            switch (nbtEntryList.get(0).nbtType.toUpperCase()) {
+                case "BOOL", "BOOLEAN" -> this.range = 1;
+                default -> this.range = fallback;
+            }
+        }
     }
 
     @SuppressWarnings("unchecked")
@@ -72,11 +69,11 @@ public class NBTTypeProvider<T extends LivingEntity> extends TypeProvider<T> {
         List<Integer> validData = getValidDataValues(validValues);
         if (!validData.isEmpty()) {
             if (validData.size() > 1) {
-                Walkers.LOGGER.error("{}: found too much valid variant ids: {} for entity: {}", getClass().getSimpleName(), validData.size(), entity.getType().getDescriptionId());
+                Walkers.LOGGER.error("{}: found too much valid variant ids: {} for entity: {}", getClass().getSimpleName(), validData.toArray(Integer[]::new), entity.getType().getDescriptionId());
             }
             return validData.get(0);
         }
-        Walkers.LOGGER.error("{}: parameter for the Variant not found.", getClass().getSimpleName());
+        Walkers.LOGGER.error("{}: No Variant for entity type {} found.", getClass().getSimpleName(), entity.getType().getDescriptionId());
         return getFallbackData();
     }
 
@@ -93,7 +90,9 @@ public class NBTTypeProvider<T extends LivingEntity> extends TypeProvider<T> {
                     }
                 }
                 if (!invalid) {
-                    validData.add(i);
+                    if (!validData.contains(i)) {
+                        validData.add(i);
+                    }
                 }
             }
         }
@@ -113,6 +112,9 @@ public class NBTTypeProvider<T extends LivingEntity> extends TypeProvider<T> {
                 tag.putString(nbtEntry.nbtField(), stringValue);
             } else if (value instanceof Boolean booleanValue) {
                 tag.putBoolean(nbtEntry.nbtField(), booleanValue);
+            }
+            else if (value == null) {
+                Walkers.LOGGER.error("{}: variant parameter for {} not found.", getClass().getSimpleName(), type.getDescriptionId());
             }
         }
 
@@ -186,7 +188,6 @@ public class NBTTypeProvider<T extends LivingEntity> extends TypeProvider<T> {
                     else return (T) (Object) false;
                 }
             }
-            Walkers.LOGGER.error("{}: variant parameter not found.", getClass().getSimpleName());
             return null;
         }
 
