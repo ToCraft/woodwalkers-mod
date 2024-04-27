@@ -22,7 +22,6 @@ public class TypeProviderRegistry {
         register(EntityType.HORSE, new HorseTypeProvider());
         register(EntityType.LLAMA, new LlamaTypeProvider<>());
         register(EntityType.TRADER_LLAMA, new LlamaTypeProvider<>());
-        register(EntityType.GOAT, new GoatTypeProvider());
         register(EntityType.MAGMA_CUBE, new MagmaCubeTypeProvider());
         register(EntityType.MOOSHROOM, new MushroomCowTypeProvider());
         register(EntityType.PANDA, new PandaTypeProvider());

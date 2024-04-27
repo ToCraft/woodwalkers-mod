@@ -1,0 +1,14 @@
+{
+  "required_mod": "artifacts",
+  "entity_type": "artifacts:mimic",
+  "type_provider": {
+    "fallback": 1,
+    "range": 1,
+    "nbt": [
+      {
+        "nbt_type": "boolean",
+        "nbt_field": "isDormant"
+      }
+    ]
+  }
+}

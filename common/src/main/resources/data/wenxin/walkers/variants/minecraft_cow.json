@@ -1,0 +1,24 @@
+{
+  "required_mod": "moremobvariants",
+  "entity_type": "minecraft:cow",
+  "type_provider": {
+    "fallback": 0,
+    "range": 7,
+    "nbt": [
+      {
+        "nbt_type": "string",
+        "nbt_field": "VariantID",
+        "parameters": {
+          "0": "moremobvariants:default",
+          "1": "moremobvariants:ashen",
+          "2": "moremobvariants:cookie",
+          "3": "moremobvariants:dairy",
+          "4": "moremobvariants:pinto",
+          "5": "moremobvariants:sunset",
+          "6": "moremobvariants:umbra",
+          "7": "moremobvariants:wooly"
+        }
+      }
+    ]
+  }
+}

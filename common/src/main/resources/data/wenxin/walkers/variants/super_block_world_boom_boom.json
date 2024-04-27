@@ -1,0 +1,20 @@
+{
+  "required_mod": "super_block_world",
+  "entity_type": "super_block_world:boom_boom",
+  "type_provider": {
+    "fallback": 0,
+    "range": 3,
+    "nbt": [
+      {
+        "nbt_type": "string",
+        "nbt_field": "State",
+        "parameters": {
+          "0": "normal",
+          "1": "dizzy",
+          "2": "spinning",
+          "3": "flying"
+        }
+      }
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "skills": [
+    {
+      "type": "walkers:aquatic",
+      "is_aquatic": 1
+    }
+  ],
+  "entity_types": [
+	"alexsmobs:lobster"
+  ]
+}

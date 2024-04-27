@@ -1,0 +1,24 @@
+{
+  "required_mod": "moremobvariants",
+  "entity_type": "minecraft:zombie",
+  "type_provider": {
+    "fallback": 0,
+    "range": 7,
+    "nbt": [
+      {
+        "nbt_type": "string",
+        "nbt_field": "VariantID",
+        "parameters": {
+          "0": "moremobvariants:default",
+          "1": "moremobvariants:alex",
+          "2": "moremobvariants:efe",
+          "3": "moremobvariants:kai",
+          "4": "moremobvariants:makena",
+          "5": "moremobvariants:noor",
+          "6": "moremobvariants:sunny",
+          "7": "moremobvariants:zuri"
+        }
+      }
+    ]
+  }
+}

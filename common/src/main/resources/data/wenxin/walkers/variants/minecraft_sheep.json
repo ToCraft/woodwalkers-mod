@@ -1,0 +1,24 @@
+{
+  "entity_type": "minecraft:sheep",
+  "type_provider": {
+    "fallback": 0,
+    "range": 28,
+    "nbt": [
+      {
+        "nbt_type": "int",
+        "nbt_field": "Color"
+      },
+      {
+        "nbt_type": "string",
+        "nbt_field": "Variant",
+        "is_mutable": true,
+        "parameters": {
+          "0": "default",
+          "16": "fuzzy",
+          "17": "patched",
+          "18": "rocky"
+        }
+      }
+    ]
+  }
+}
