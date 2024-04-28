@@ -55,6 +55,9 @@ public abstract class LivingEntityMixin extends Entity implements NearbySongAcce
     @Shadow
     protected abstract int increaseAirSupply(int currentAir);
 
+    @Shadow
+    public abstract void heal(float healAmount);
+
     protected LivingEntityMixin(EntityType<?> type, Level world) {
         super(type, world);
     }
@@ -336,6 +339,19 @@ public abstract class LivingEntityMixin extends Entity implements NearbySongAcce
                 if (playerDamageSource != null) {
                     cir.setReturnValue(this.hurt(playerDamageSource, amount));
                 }
+            }
+        }
+    }
+
+
+    @Inject(method = "hurt", at = @At("RETURN"))
+    private void attackForHealthSkill(DamageSource source, float amount, CallbackInfoReturnable<Boolean> cir) {
+        if (source.getEntity() instanceof Player player) {
+            boolean didHurtTarget = cir.getReturnValue();
+
+            LivingEntity shape = PlayerShape.getCurrentShape(player);
+            if (didHurtTarget && SkillRegistry.has(shape, AttackForHealthSkill.ID)) {
+                player.heal(Math.max(1, amount / 2));
             }
         }
     }

@@ -58,6 +58,7 @@ public class SkillRegistry {
         registerCodec(AquaticSkill.ID, AquaticSkill.CODEC);
         registerCodec(WalkOnPowderSnow.ID, WalkOnPowderSnow.CODEC);
         registerCodec(HumanoidSkill.ID, HumanoidSkill.CODEC);
+        registerCodec(AttackForHealthSkill.ID, AttackForHealthSkill.CODEC);
         // register skills
         // mob effects
         registerByClass(Bat.class, new MobEffectSkill<>(new MobEffectInstance(MobEffects.NIGHT_VISION, 100000, 0, false, false)));
@@ -142,6 +143,8 @@ public class SkillRegistry {
         registerByTag(TagKey.create(Registries.ENTITY_TYPE, Walkers.id("fall_through_blocks")), new NoPhysicsSkill<>());
         registerByTag(TagKey.create(Registries.ENTITY_TYPE, Walkers.id("cant_swim")), new CantSwimSkill<>());
         registerByTag(TagKey.create(Registries.ENTITY_TYPE, Walkers.id("undrownable")), new UndrownableSkill<>());
+        // Attack for Health
+        registerByPredicate(entity -> entity.getMobType() == MobType.UNDEAD, new AttackForHealthSkill<>());
 
         // handle Integrations
         Integrations.registerSkills();

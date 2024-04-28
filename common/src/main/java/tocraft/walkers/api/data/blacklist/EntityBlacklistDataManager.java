@@ -14,7 +14,6 @@ import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.profiling.ProfilerFiller;
 import tocraft.walkers.Walkers;
-import tocraft.walkers.ability.AbilityRegistry;
 import tocraft.walkers.api.blacklist.EntityBlacklist;
 
 import java.util.ArrayList;

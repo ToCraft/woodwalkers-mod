@@ -2,7 +2,9 @@ package tocraft.walkers.integrations;
 
 import dev.architectury.platform.Platform;
 import net.minecraft.world.entity.Entity;
-import tocraft.walkers.integrations.impl.*;
+import tocraft.walkers.integrations.impl.GuardVillagersIntegration;
+import tocraft.walkers.integrations.impl.MobBattleModIntegration;
+import tocraft.walkers.integrations.impl.MoreMobVariantsIntegration;
 
 import java.util.HashMap;
 import java.util.Map;

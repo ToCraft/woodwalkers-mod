@@ -112,8 +112,7 @@ public class NBTTypeProvider<T extends LivingEntity> extends TypeProvider<T> {
                 tag.putString(nbtEntry.nbtField(), stringValue);
             } else if (value instanceof Boolean booleanValue) {
                 tag.putBoolean(nbtEntry.nbtField(), booleanValue);
-            }
-            else if (value == null) {
+            } else if (value == null) {
                 Walkers.LOGGER.error("{}: variant parameter for {} not found.", getClass().getSimpleName(), type.getDescriptionId());
             }
         }

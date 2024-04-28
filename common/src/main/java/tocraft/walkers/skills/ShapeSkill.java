@@ -17,7 +17,7 @@ public abstract class ShapeSkill<E extends LivingEntity> {
     @Environment(EnvType.CLIENT)
     public boolean iconMightDiffer() {
         return false;
-    };
+    }
 
     @Environment(EnvType.CLIENT)
     public @Nullable TextureAtlasSprite getIcon() {

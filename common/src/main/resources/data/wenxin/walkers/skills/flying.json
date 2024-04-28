@@ -5,7 +5,7 @@
     }
   ],
   "entity_types": [
-	"blue_skies:frost_spirit",
+    "blue_skies:frost_spirit",
     "habitat:passerine"
   ]
 }
