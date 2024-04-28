@@ -16,6 +16,30 @@ public class Integrations {
         register(MoreMobVariantsIntegration.MODID, new MoreMobVariantsIntegration());
     }
 
+    public static void registerAbilities() {
+        for (AbstractIntegration loadedIntegration : INTEGRATIONS.values()) {
+            loadedIntegration.registerAbilities();
+        }
+    }
+
+    public static void registerSkills() {
+        for (AbstractIntegration loadedIntegration : INTEGRATIONS.values()) {
+            loadedIntegration.registerSkills();
+        }
+    }
+
+    public static void registerTypeProvider() {
+        for (AbstractIntegration loadedIntegration : INTEGRATIONS.values()) {
+            loadedIntegration.registerTypeProvider();
+        }
+    }
+
+    public static void registerEntityBlacklist() {
+        for (AbstractIntegration loadedIntegration : INTEGRATIONS.values()) {
+            loadedIntegration.registerEntityBlacklist();
+        }
+    }
+
     public static void initialize() {
         for (AbstractIntegration loadedIntegration : INTEGRATIONS.values()) {
             loadedIntegration.initialize();

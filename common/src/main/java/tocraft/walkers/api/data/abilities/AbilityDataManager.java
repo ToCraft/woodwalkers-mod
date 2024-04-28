@@ -31,6 +31,10 @@ public class AbilityDataManager extends SimpleJsonResourceReloadListener {
 
     @Override
     protected void apply(Map<ResourceLocation, JsonElement> map, ResourceManager resourceManager, ProfilerFiller profiler) {
+        // prevent duplicates and the registration of removed entries
+        AbilityRegistry.clearAll();
+        AbilityRegistry.registerDefault();
+
         for (Map.Entry<ResourceLocation, JsonElement> mapEntry : map.entrySet()) {
             Map.Entry<EntityType<?>, ShapeAbility<?>> convertedEntry = abilityEntryFromJson(mapEntry.getValue().getAsJsonObject());
 

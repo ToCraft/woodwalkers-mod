@@ -14,6 +14,7 @@ import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.profiling.ProfilerFiller;
 import tocraft.walkers.Walkers;
+import tocraft.walkers.ability.AbilityRegistry;
 import tocraft.walkers.api.blacklist.EntityBlacklist;
 
 import java.util.ArrayList;
@@ -29,6 +30,10 @@ public class EntityBlacklistDataManager extends SimpleJsonResourceReloadListener
 
     @Override
     protected void apply(Map<ResourceLocation, JsonElement> map, ResourceManager resourceManager, ProfilerFiller profiler) {
+        // prevent duplicates and the registration of removed entries
+        EntityBlacklist.clearAll();
+        EntityBlacklist.registerDefault();
+
         for (Map.Entry<ResourceLocation, JsonElement> mapEntry : map.entrySet()) {
             if (mapEntry.getKey().getPath().equals("blacklist")) {
                 Pair<List<ResourceLocation>, List<ResourceLocation>> someBlacklist = blacklistFromJson(mapEntry.getValue().getAsJsonObject());

@@ -32,6 +32,10 @@ public class TypeProviderDataManager extends SimpleJsonResourceReloadListener {
     @SuppressWarnings("unchecked")
     @Override
     protected void apply(Map<ResourceLocation, JsonElement> map, ResourceManager resourceManager, ProfilerFiller profiler) {
+        // prevent duplicates and the registration of removed entries
+        TypeProviderRegistry.clearAll();
+        TypeProviderRegistry.registerDefault();
+
         for (Map.Entry<ResourceLocation, JsonElement> mapEntry : map.entrySet()) {
             Map.Entry<EntityType<?>, TypeProvider<?>> convertedEntry = typeProviderFromJson(mapEntry.getKey(), mapEntry.getValue().getAsJsonObject());
 

@@ -1,4 +1,5 @@
 {
+  "required_mod": "moremobvariants",
   "entity_type": "minecraft:sheep",
   "type_provider": {
     "fallback": 0,
@@ -11,12 +12,11 @@
       {
         "nbt_type": "string",
         "nbt_field": "VariantID",
-        "is_mutable": true,
         "parameters": {
-          "0": "default",
-          "16": "fuzzy",
-          "17": "patched",
-          "18": "rocky"
+          "0": "moremobvariants:default",
+          "16": "moremobvariants:fuzzy",
+          "17": "moremobvariants:patched",
+          "18": "moremobvariants:rocky"
         }
       }
     ]

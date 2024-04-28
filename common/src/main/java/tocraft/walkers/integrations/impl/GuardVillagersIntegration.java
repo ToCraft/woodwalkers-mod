@@ -16,7 +16,7 @@ public class GuardVillagersIntegration extends AbstractIntegration {
     public static final ResourceLocation GUARD_VILLAGER_TYPE = new ResourceLocation(MODID, "guard");
 
     @Override
-    public void initialize() {
+    public void registerSkills() {
         SkillRegistry.registerByPredicate(entity -> entity instanceof Enemy && !getMobBlackList().contains(entity.getEncodeId()), new PreySkill<>(List.of(hunter -> EntityType.getKey(hunter.getType()).equals(GUARD_VILLAGER_TYPE))));
     }
 

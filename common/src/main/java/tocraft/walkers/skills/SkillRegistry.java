@@ -20,6 +20,7 @@ import net.minecraft.world.level.block.Blocks;
 import org.jetbrains.annotations.Nullable;
 import tocraft.walkers.Walkers;
 import tocraft.walkers.ability.ShapeAbility;
+import tocraft.walkers.integrations.Integrations;
 import tocraft.walkers.skills.impl.*;
 
 import java.util.ArrayList;
@@ -37,7 +38,7 @@ public class SkillRegistry {
 
 
     @SuppressWarnings("unchecked")
-    public static void init() {
+    public static void registerDefault() {
         // register skill codecs
         registerCodec(MobEffectSkill.ID, MobEffectSkill.CODEC);
         registerCodec(BurnInDaylightSkill.ID, BurnInDaylightSkill.CODEC);
@@ -141,6 +142,9 @@ public class SkillRegistry {
         registerByTag(TagKey.create(Registries.ENTITY_TYPE, Walkers.id("fall_through_blocks")), new NoPhysicsSkill<>());
         registerByTag(TagKey.create(Registries.ENTITY_TYPE, Walkers.id("cant_swim")), new CantSwimSkill<>());
         registerByTag(TagKey.create(Registries.ENTITY_TYPE, Walkers.id("undrownable")), new UndrownableSkill<>());
+
+        // handle Integrations
+        Integrations.registerSkills();
     }
 
     /**
@@ -250,5 +254,12 @@ public class SkillRegistry {
             }
         }
         return false;
+    }
+
+    public static void clearAll() {
+        skillsByEntityTypes.clear();
+        skillsByEntityClasses.clear();
+        skillsByEntityTags.clear();
+        skillsByPredicates.clear();
     }
 }

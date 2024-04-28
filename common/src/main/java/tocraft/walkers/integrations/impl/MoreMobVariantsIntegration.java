@@ -22,7 +22,7 @@ public class MoreMobVariantsIntegration extends AbstractIntegration {
     public static final String MODID = "moremobvariants";
 
     @Override
-    public void initialize() {
+    public void registerTypeProvider() {
         registerMMVTypeProvider(EntityType.CAT);
         registerMMVTypeProvider(EntityType.CHICKEN);
         registerMMVTypeProvider(EntityType.COW);
