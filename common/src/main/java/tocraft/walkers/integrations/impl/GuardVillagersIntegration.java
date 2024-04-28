@@ -8,7 +8,6 @@ import tocraft.walkers.integrations.AbstractIntegration;
 import tocraft.walkers.skills.SkillRegistry;
 import tocraft.walkers.skills.impl.PreySkill;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,14 +26,10 @@ public class GuardVillagersIntegration extends AbstractIntegration {
     private static List<String> getMobBlackList() {
         try {
             Class<?> configClass = Class.forName("tallestegg.guardvillagers.configuration.GuardConfig");
-            Object mobBlackListObject = configClass.getField("MobBlackList").get(configClass.getDeclaredConstructor().newInstance());
-            if (mobBlackListObject instanceof List) {
-                CACHED_MOB_BLACKLIST = (List<String>) mobBlackListObject;
-                return CACHED_MOB_BLACKLIST;
-            }
-        } catch (ClassNotFoundException | NoSuchMethodException | IllegalAccessException |
-                 InvocationTargetException |
-                 NoSuchFieldException | InstantiationException e) {
+            CACHED_MOB_BLACKLIST = (List<String>) configClass.getDeclaredField("MobBlackList").get(null);
+            return CACHED_MOB_BLACKLIST;
+        } catch (ClassNotFoundException | IllegalAccessException |
+                 NoSuchFieldException e) {
             Walkers.LOGGER.error("{}: failed to get the mob blacklist for {}: {}", GuardVillagersIntegration.class.getSimpleName(), MODID, e);
         }
 

@@ -2,7 +2,7 @@
   "entity_type": "minecraft:sheep",
   "type_provider": {
     "fallback": 0,
-    "range": 28,
+    "range": 18,
     "nbt": [
       {
         "nbt_type": "int",
@@ -10,7 +10,7 @@
       },
       {
         "nbt_type": "string",
-        "nbt_field": "Variant",
+        "nbt_field": "VariantID",
         "is_mutable": true,
         "parameters": {
           "0": "default",

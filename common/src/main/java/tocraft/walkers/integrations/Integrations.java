@@ -2,8 +2,7 @@ package tocraft.walkers.integrations;
 
 import dev.architectury.platform.Platform;
 import net.minecraft.world.entity.Entity;
-import tocraft.walkers.integrations.impl.GuardVillagersIntegration;
-import tocraft.walkers.integrations.impl.MobBattleModIntegration;
+import tocraft.walkers.integrations.impl.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -14,6 +13,7 @@ public class Integrations {
     static {
         register(MobBattleModIntegration.MODID, new MobBattleModIntegration());
         register(GuardVillagersIntegration.MODID, new GuardVillagersIntegration());
+        register(MoreMobVariantsIntegration.MODID, new MoreMobVariantsIntegration());
     }
 
     public static void initialize() {
