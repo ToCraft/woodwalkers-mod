@@ -20,7 +20,7 @@ permissions:
 
 jobs:
   build:
-    name: "Build and Release"
+    name: "Build"
     runs-on: ubuntu-latest
     if: |
       !contains(github.event.head_commit.message, '[ci skip]')
@@ -32,60 +32,70 @@ jobs:
         with:
           java-version: 17
           distribution: 'temurin'
-
       - name: Validate Gradle Wrapper
-        uses: gradle/wrapper-validation-action@v2
+        uses: gradle/actions/wrapper-validation@v3
 
-      - name: Setup and Build with Gradle
-        uses: gradle/gradle-build-action@v3
-        with:
-          arguments: check build --no-daemon
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v3
+      - name: Build files
+        run: ./gradlew check build --no-daemon
 
       - name: Setting mod version
         run: |
           cat $GITHUB_WORKSPACE/gradle.properties | grep ^archives_base_name= >> $GITHUB_ENV
           cat $GITHUB_WORKSPACE/gradle.properties | grep ^minecraft_version= >> $GITHUB_ENV
           cat $GITHUB_WORKSPACE/gradle.properties | grep ^mod_version= >> $GITHUB_ENV
-      - name: Create package name
-        run: echo "package_name=[$minecraft_version] $archives_base_name-$mod_version" >> $GITHUB_ENV
       - uses: actions/upload-artifact@v4
         with:
-          name: ${{ env.package_name }}
+          name: "[${{ env.minecraft_version }}] ${{ env.archives_base_name }}-${{ env.mod_version }}"
           path: |
             **/build/libs/
             !build/libs/
             !**/*-dev.jar
             !**/*-shadow.jar
             !**/*-transformProduction*.jar
+  release:
+    name: "Release"
+    needs: build
+    runs-on: ubuntu-latest
+    if: |
+      !contains(github.event.head_commit.message, '[ci skip]') && !contains(github.event.head_commit.message, '[release]') && github.event.inputs.release == 'true'
+    steps:
+      - uses: actions/checkout@v4
 
-      - name: Release to Maven, CurseForge & Modrinth
-        uses: gradle/gradle-build-action@v3
-        if: |
-          !contains(github.event.head_commit.message, '[release]') && github.event.inputs.release == 'true'
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: 17
+          distribution: 'temurin'
+      - name: Validate Gradle Wrapper
+        uses: gradle/actions/wrapper-validation@v3
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v3
+
+      - name: Publish to Maven, CurseForge & Modrinth
+        run: ./gradlew publish modrinth curseforge --no-daemon
         env:
           MAVEN_PASS: ${{ secrets.MAVEN_PASS }}
           CURSEFORGE_TOKEN: ${{ secrets.CURSEFORGE_TOKEN }}
           MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
-        with:
-          arguments: publish curseforge modrinth --no-daemon
+
       - name: Extract Changelog for GitHub
-        uses: gradle/gradle-build-action@v3
-        if: |
-          !contains(github.event.head_commit.message, '[release]') && github.event.inputs.release == 'true'
-        with:
-          arguments: extractNewestChangelog --no-daemon
-      - name: Create version name for GitHub
+        run: ./gradlew extractNewestChangelog --no-daemon
+      - name: Create version data
+        run: |
+          cat $GITHUB_WORKSPACE/gradle.properties | grep ^archives_base_name= >> $GITHUB_ENV
+          cat $GITHUB_WORKSPACE/gradle.properties | grep ^minecraft_version= >> $GITHUB_ENV
+          cat $GITHUB_WORKSPACE/gradle.properties | grep ^mod_version= >> $GITHUB_ENV
+      - name: Create version name
         run: echo "version_name_git=$minecraft_version-$mod_version" >> $GITHUB_ENV
       - name: Create GitHub Tag
         uses: EndBug/latest-tag@latest
-        if: |
-          !contains(github.event.head_commit.message, '[release]') && github.event.inputs.release == 'true'
         with:
           ref: "${{ env.version_name_git }}"
       - name: Create GitHub Release
-        uses: softprops/action-gh-release@v1
-        if: |
-          !contains(github.event.head_commit.message, '[release]') && github.event.inputs.release == 'true'
+        uses: softprops/action-gh-release@v2
         with:
           tag_name: "${{ env.version_name_git }}"
           files: |

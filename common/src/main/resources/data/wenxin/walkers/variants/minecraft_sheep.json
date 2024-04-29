@@ -1,0 +1,24 @@
+{
+  "required_mod": "moremobvariants",
+  "entity_type": "minecraft:sheep",
+  "type_provider": {
+    "fallback": 0,
+    "range": 18,
+    "nbt": [
+      {
+        "nbt_type": "int",
+        "nbt_field": "Color"
+      },
+      {
+        "nbt_type": "string",
+        "nbt_field": "VariantID",
+        "parameters": {
+          "0": "moremobvariants:default",
+          "16": "moremobvariants:fuzzy",
+          "17": "moremobvariants:patched",
+          "18": "moremobvariants:rocky"
+        }
+      }
+    ]
+  }
+}

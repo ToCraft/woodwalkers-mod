@@ -1,5 +1,6 @@
 package tocraft.walkers.mixin.player;
 
+import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.protocol.game.ClientboundGameEventPacket;
 import net.minecraft.server.level.ServerPlayer;
@@ -20,6 +21,7 @@ import net.minecraft.world.entity.monster.WitherSkeleton;
 import net.minecraft.world.entity.monster.warden.Warden;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.vehicle.Boat;
+import net.minecraft.world.food.FoodData;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
@@ -406,5 +408,11 @@ public abstract class PlayerEntityMixin extends LivingEntityMixin {
                 }
             }
         }
+    }
+
+    @WrapWithCondition(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/food/FoodData;tick(Lnet/minecraft/world/entity/player/Player;)V"))
+    private boolean preventFoodDataTick(FoodData instance, Player player) {
+        LivingEntity shape = PlayerShape.getCurrentShape(player);
+        return player.hasEffect(MobEffects.SATURATION) || !SkillRegistry.has(shape, AttackForHealthSkill.ID);
     }
 }

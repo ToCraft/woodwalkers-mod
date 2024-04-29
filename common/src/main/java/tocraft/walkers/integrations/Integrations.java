@@ -4,6 +4,7 @@ import dev.architectury.platform.Platform;
 import net.minecraft.world.entity.Entity;
 import tocraft.walkers.integrations.impl.GuardVillagersIntegration;
 import tocraft.walkers.integrations.impl.MobBattleModIntegration;
+import tocraft.walkers.integrations.impl.MoreMobVariantsIntegration;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -14,6 +15,31 @@ public class Integrations {
     static {
         register(MobBattleModIntegration.MODID, new MobBattleModIntegration());
         register(GuardVillagersIntegration.MODID, new GuardVillagersIntegration());
+        register(MoreMobVariantsIntegration.MODID, new MoreMobVariantsIntegration());
+    }
+
+    public static void registerAbilities() {
+        for (AbstractIntegration loadedIntegration : INTEGRATIONS.values()) {
+            loadedIntegration.registerAbilities();
+        }
+    }
+
+    public static void registerSkills() {
+        for (AbstractIntegration loadedIntegration : INTEGRATIONS.values()) {
+            loadedIntegration.registerSkills();
+        }
+    }
+
+    public static void registerTypeProvider() {
+        for (AbstractIntegration loadedIntegration : INTEGRATIONS.values()) {
+            loadedIntegration.registerTypeProvider();
+        }
+    }
+
+    public static void registerEntityBlacklist() {
+        for (AbstractIntegration loadedIntegration : INTEGRATIONS.values()) {
+            loadedIntegration.registerEntityBlacklist();
+        }
     }
 
     public static void initialize() {

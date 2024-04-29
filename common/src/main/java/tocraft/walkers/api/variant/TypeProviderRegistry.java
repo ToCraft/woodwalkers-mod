@@ -4,6 +4,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import org.jetbrains.annotations.Nullable;
 import tocraft.walkers.impl.variant.*;
+import tocraft.walkers.integrations.Integrations;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -11,7 +12,7 @@ import java.util.Map;
 public class TypeProviderRegistry {
     public static final Map<EntityType<? extends LivingEntity>, TypeProvider<? extends LivingEntity>> VARIANT_BY_TYPE = new LinkedHashMap<>();
 
-    static {
+    public static void registerDefault() {
         register(EntityType.SHEEP, new SheepTypeProvider());
         register(EntityType.AXOLOTL, new AxolotlTypeProvider());
         register(EntityType.PARROT, new ParrotTypeProvider());
@@ -22,7 +23,6 @@ public class TypeProviderRegistry {
         register(EntityType.HORSE, new HorseTypeProvider());
         register(EntityType.LLAMA, new LlamaTypeProvider<>());
         register(EntityType.TRADER_LLAMA, new LlamaTypeProvider<>());
-        register(EntityType.GOAT, new GoatTypeProvider());
         register(EntityType.MAGMA_CUBE, new MagmaCubeTypeProvider());
         register(EntityType.MOOSHROOM, new MushroomCowTypeProvider());
         register(EntityType.PANDA, new PandaTypeProvider());
@@ -31,6 +31,9 @@ public class TypeProviderRegistry {
         register(EntityType.ZOMBIE_VILLAGER, new ZombieVillagerTypeProvider());
         register(EntityType.TROPICAL_FISH, new TropicalFishTypeProvider());
         register(EntityType.SHULKER, new ShulkerTypeProvider());
+
+        // handle Integrations
+        Integrations.registerTypeProvider();
     }
 
     public static <T extends LivingEntity> void register(EntityType<T> type, TypeProvider<T> provider) {
@@ -45,5 +48,9 @@ public class TypeProviderRegistry {
     @Nullable
     public static <T extends LivingEntity> TypeProvider<T> getProvider(EntityType<T> type) {
         return (TypeProvider<T>) VARIANT_BY_TYPE.get(type);
+    }
+
+    public static void clearAll() {
+        VARIANT_BY_TYPE.clear();
     }
 }

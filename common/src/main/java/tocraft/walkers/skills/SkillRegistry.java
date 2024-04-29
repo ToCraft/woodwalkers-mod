@@ -20,6 +20,7 @@ import net.minecraft.world.level.block.Blocks;
 import org.jetbrains.annotations.Nullable;
 import tocraft.walkers.Walkers;
 import tocraft.walkers.ability.ShapeAbility;
+import tocraft.walkers.integrations.Integrations;
 import tocraft.walkers.skills.impl.*;
 
 import java.util.ArrayList;
@@ -37,7 +38,7 @@ public class SkillRegistry {
 
 
     @SuppressWarnings("unchecked")
-    public static void init() {
+    public static void registerDefault() {
         // register skill codecs
         registerCodec(MobEffectSkill.ID, MobEffectSkill.CODEC);
         registerCodec(BurnInDaylightSkill.ID, BurnInDaylightSkill.CODEC);
@@ -57,6 +58,8 @@ public class SkillRegistry {
         registerCodec(AquaticSkill.ID, AquaticSkill.CODEC);
         registerCodec(WalkOnPowderSnow.ID, WalkOnPowderSnow.CODEC);
         registerCodec(HumanoidSkill.ID, HumanoidSkill.CODEC);
+        registerCodec(AttackForHealthSkill.ID, AttackForHealthSkill.CODEC);
+        registerCodec(NocturnalSkill.ID, NocturnalSkill.CODEC);
         // register skills
         // mob effects
         registerByClass(Bat.class, new MobEffectSkill<>(new MobEffectInstance(MobEffects.NIGHT_VISION, 100000, 0, false, false)));
@@ -93,9 +96,7 @@ public class SkillRegistry {
         // hurt by high temperature
         registerByClass(SnowGolem.class, new TemperatureSkill<>());
         // ravager riding
-        registerByClass(Evoker.class, (RiderSkill<Evoker>) RiderSkill.ofRideableClass(Ravager.class));
-        registerByClass(Pillager.class, (RiderSkill<Pillager>) RiderSkill.ofRideableClass(Ravager.class));
-        registerByClass(Vindicator.class, (RiderSkill<Vindicator>) RiderSkill.ofRideableClass(Ravager.class));
+        registerByTag(EntityTypeTags.RAIDERS, (RiderSkill<Evoker>) RiderSkill.ofRideableClass(Ravager.class));
         registerByClass(Skeleton.class, (RiderSkill<Skeleton>) RiderSkill.ofRideableClass(Spider.class));
         // Zombie Horse and Skeleton Horse riding
         registerByPredicate(entity -> entity instanceof Enemy, new RiderSkill<>(List.of(rideable -> rideable instanceof AbstractHorse && rideable instanceof Enemy)));
@@ -143,6 +144,13 @@ public class SkillRegistry {
         registerByTag(TagKey.create(Registries.ENTITY_TYPE, Walkers.id("fall_through_blocks")), new NoPhysicsSkill<>());
         registerByTag(TagKey.create(Registries.ENTITY_TYPE, Walkers.id("cant_swim")), new CantSwimSkill<>());
         registerByTag(TagKey.create(Registries.ENTITY_TYPE, Walkers.id("undrownable")), new UndrownableSkill<>());
+        // Attack for Health
+        registerByPredicate(entity -> entity.getMobType() == MobType.UNDEAD, new AttackForHealthSkill<>());
+        // nocturnal
+        registerByPredicate(entity -> entity.getMobType() == MobType.UNDEAD, new NocturnalSkill<>());
+
+        // handle Integrations
+        Integrations.registerSkills();
     }
 
     /**
@@ -183,19 +191,25 @@ public class SkillRegistry {
 
     public static <A extends LivingEntity> void registerByType(EntityType<A> type, ShapeSkill<A> skill) {
         List<ShapeSkill<?>> skills = skillsByEntityTypes.containsKey(type) ? skillsByEntityTypes.get(type) : new ArrayList<>();
-        skills.add(skill);
+        if (skill.canBeRegisteredMultipleTimes() || skills.stream().noneMatch(entry -> entry.getId().equals(skill.getId()))) {
+            skills.add(skill);
+        }
         skillsByEntityTypes.put(type, skills);
     }
 
     public static <A extends LivingEntity> void registerByTag(TagKey<EntityType<?>> tag, ShapeSkill<A> skill) {
         List<ShapeSkill<?>> skills = skillsByEntityTags.containsKey(tag) ? skillsByEntityTags.get(tag) : new ArrayList<>();
-        skills.add(skill);
+        if (skill.canBeRegisteredMultipleTimes() || skills.stream().noneMatch(entry -> entry.getId().equals(skill.getId()))) {
+            skills.add(skill);
+        }
         skillsByEntityTags.put(tag, skills);
     }
 
     public static <A extends LivingEntity> void registerByClass(Class<A> entityClass, ShapeSkill<A> skill) {
         List<ShapeSkill<?>> skills = skillsByEntityClasses.containsKey(entityClass) ? skillsByEntityClasses.get(entityClass) : new ArrayList<>();
-        skills.add(skill);
+        if (skill.canBeRegisteredMultipleTimes() || skills.stream().noneMatch(entry -> entry.getId().equals(skill.getId()))) {
+            skills.add(skill);
+        }
         skillsByEntityClasses.put(entityClass, skills);
     }
 
@@ -207,7 +221,9 @@ public class SkillRegistry {
      */
     public static void registerByPredicate(Predicate<LivingEntity> entityPredicate, ShapeSkill<?> skill) {
         List<ShapeSkill<?>> skills = skillsByPredicates.containsKey(entityPredicate) ? skillsByPredicates.get(entityPredicate) : new ArrayList<>();
-        skills.add(skill);
+        if (skill.canBeRegisteredMultipleTimes() || skills.stream().noneMatch(entry -> entry.getId().equals(skill.getId()))) {
+            skills.add(skill);
+        }
         skillsByPredicates.put(entityPredicate, skills);
     }
 
@@ -252,5 +268,12 @@ public class SkillRegistry {
             }
         }
         return false;
+    }
+
+    public static void clearAll() {
+        skillsByEntityTypes.clear();
+        skillsByEntityClasses.clear();
+        skillsByEntityTags.clear();
+        skillsByPredicates.clear();
     }
 }
