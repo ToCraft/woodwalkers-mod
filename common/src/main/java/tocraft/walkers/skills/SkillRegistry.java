@@ -59,6 +59,7 @@ public class SkillRegistry {
         registerCodec(WalkOnPowderSnow.ID, WalkOnPowderSnow.CODEC);
         registerCodec(HumanoidSkill.ID, HumanoidSkill.CODEC);
         registerCodec(AttackForHealthSkill.ID, AttackForHealthSkill.CODEC);
+        registerCodec(NocturnalSkill.ID, NocturnalSkill.CODEC);
         // register skills
         // mob effects
         registerByClass(Bat.class, new MobEffectSkill<>(new MobEffectInstance(MobEffects.NIGHT_VISION, 100000, 0, false, false)));
@@ -145,6 +146,8 @@ public class SkillRegistry {
         registerByTag(TagKey.create(Registries.ENTITY_TYPE, Walkers.id("undrownable")), new UndrownableSkill<>());
         // Attack for Health
         registerByPredicate(entity -> entity.getMobType() == MobType.UNDEAD, new AttackForHealthSkill<>());
+        // nocturnal
+        registerByPredicate(entity -> entity.getMobType() == MobType.UNDEAD, new NocturnalSkill<>());
 
         // handle Integrations
         Integrations.registerSkills();

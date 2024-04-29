@@ -6,7 +6,6 @@ import tocraft.walkers.Walkers;
 
 import java.util.*;
 
-@SuppressWarnings("ConstantConditions")
 public class WalkersConfig implements Config {
 
     public boolean revoke2ndShapeOnDeath = false;

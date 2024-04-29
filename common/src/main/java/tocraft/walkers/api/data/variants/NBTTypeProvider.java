@@ -20,7 +20,7 @@ import java.util.Map;
 
 // this is amazing
 public class NBTTypeProvider<T extends LivingEntity> extends TypeProvider<T> {
-    public static Codec<NBTTypeProvider<?>> CODEC = RecordCodecBuilder.create((instance) -> instance.group(
+    public static final Codec<NBTTypeProvider<?>> CODEC = RecordCodecBuilder.create((instance) -> instance.group(
             Codec.INT.optionalFieldOf("fallback", 0).forGetter(NBTTypeProvider::getFallbackData),
             Codec.INT.optionalFieldOf("range", -1).forGetter(NBTTypeProvider::getRange),
             Codec.list(NBTEntry.CODEC).fieldOf("nbt").forGetter(o -> o.nbtEntryList),
@@ -142,7 +142,7 @@ public class NBTTypeProvider<T extends LivingEntity> extends TypeProvider<T> {
 
     @SuppressWarnings("unchecked")
     public record NBTEntry<T>(String nbtType, String nbtField, Map<Integer, T> parameterList, boolean isMutable) {
-        public static Codec<NBTEntry<?>> CODEC = RecordCodecBuilder.create((instance) -> instance.group(
+        public static final Codec<NBTEntry<?>> CODEC = RecordCodecBuilder.create((instance) -> instance.group(
                 Codec.STRING.fieldOf("nbt_type").forGetter(NBTEntry::nbtType),
                 Codec.STRING.fieldOf("nbt_field").forGetter(NBTEntry::nbtField),
                 Codec.unboundedMap(Codec.STRING, Codec.STRING).optionalFieldOf("parameters", new HashMap<>()).forGetter(o -> new HashMap<>()),
