@@ -32,6 +32,10 @@ public class SkillDataManager extends SimpleJsonResourceReloadListener {
     @SuppressWarnings("unchecked")
     @Override
     protected void apply(Map<ResourceLocation, JsonElement> map, ResourceManager resourceManager, ProfilerFiller profiler) {
+        // prevent duplicates and the registration of removed entries
+        SkillRegistry.clearAll();
+        SkillRegistry.registerDefault();
+
         for (Map.Entry<ResourceLocation, JsonElement> mapEntry : map.entrySet()) {
             Map<Pair<ResourceLocation, ResourceLocation>, List<? extends ShapeSkill<?>>> skillMap = skillEntryFromJson(mapEntry.getValue().getAsJsonObject());
 

@@ -1,0 +1,14 @@
+{
+  "skills": [
+    {
+      "type": "walkers:reinforcements",
+      "range": 32,
+      "reinforcements": [
+        "minecraft:drowned"
+      ]
+    }
+  ],
+  "entity_types": [
+    "minecraft:drowned"
+  ]
+}

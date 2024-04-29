@@ -1,0 +1,14 @@
+{
+  "required_mod": "twilightforest",
+  "entity_type": "twilightforest:bighorn_sheep",
+  "type_provider": {
+    "fallback": 0,
+    "range": 15,
+    "nbt": [
+      {
+        "nbt_type": "int",
+        "nbt_field": "Color"
+      }
+    ]
+  }
+}

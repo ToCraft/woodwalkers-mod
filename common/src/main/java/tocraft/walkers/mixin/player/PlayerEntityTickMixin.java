@@ -144,7 +144,7 @@ public abstract class PlayerEntityTickMixin extends LivingEntity {
         if (!level.isClientSide && this.isAlive()) {
             Player player = (Player) (Object) this;
             LivingEntity shape = PlayerShape.getCurrentShape(player);
-            if (shape != null && SkillRegistry.has(shape, MobEffectSkill.ID)) {
+            if (SkillRegistry.has(shape, MobEffectSkill.ID)) {
                 List<MobEffectSkill<LivingEntity>> skillList = SkillRegistry.get(shape, MobEffectSkill.ID).stream().map(skill -> (MobEffectSkill<LivingEntity>) skill).toList();
                 for (MobEffectSkill<LivingEntity> mobEffectSkill : skillList) {
                     MobEffectInstance mobEffectInstance = mobEffectSkill.mobEffectInstance;

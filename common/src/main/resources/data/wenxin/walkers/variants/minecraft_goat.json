@@ -1,0 +1,51 @@
+{
+  "entity_type": "minecraft:goat",
+  "type_provider": {
+    "fallback": 0,
+    "range": 7,
+    "nbt": [
+      {
+        "nbt_type": "boolean",
+        "nbt_field": "HasLeftHorn",
+        "parameters": {
+          "0": "true",
+          "1": "true",
+          "2": "true",
+          "3": "true",
+          "4": "false",
+          "5": "false",
+          "6": "false",
+          "7": "false"
+        }
+      },
+      {
+        "nbt_type": "boolean",
+        "nbt_field": "HasRightHorn",
+        "parameters": {
+          "0": "true",
+          "1": "true",
+          "2": "false",
+          "3": "false",
+          "4": "true",
+          "5": "true",
+          "6": "false",
+          "7": "false"
+        }
+      },
+      {
+        "nbt_type": "boolean",
+        "nbt_field": "IsScreamingGoat",
+        "parameters": {
+          "0": "true",
+          "1": "false",
+          "2": "true",
+          "3": "false",
+          "4": "true",
+          "5": "false",
+          "6": "true",
+          "7": "false"
+        }
+      }
+    ]
+  }
+}

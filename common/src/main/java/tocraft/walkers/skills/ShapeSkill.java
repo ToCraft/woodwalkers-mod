@@ -14,12 +14,14 @@ public abstract class ShapeSkill<E extends LivingEntity> {
 
     public abstract Codec<? extends ShapeSkill<?>> codec();
 
+    public boolean canBeRegisteredMultipleTimes() {
+        return true;
+    }
+
     @Environment(EnvType.CLIENT)
     public boolean iconMightDiffer() {
         return false;
     }
-
-    ;
 
     @Environment(EnvType.CLIENT)
     public @Nullable TextureAtlasSprite getIcon() {

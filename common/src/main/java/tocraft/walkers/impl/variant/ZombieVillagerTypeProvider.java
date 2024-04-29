@@ -58,6 +58,6 @@ public class ZombieVillagerTypeProvider extends TypeProvider<ZombieVillager> {
 
     @Override
     public Component modifyText(ZombieVillager entity, MutableComponent text) {
-        return new TextComponent(formatTypePrefix(entity.getVillagerData().getType().toString()) + " ").append(text);
+        return new TextComponent(formatTypePrefix(entity.getVillagerData().getProfession().toString()) + " ").append(text);
     }
 }

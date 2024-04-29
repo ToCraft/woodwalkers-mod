@@ -1,0 +1,16 @@
+{
+  "skills": [
+    {
+      "type": "walkers:reinforcements",
+      "range": 32,
+      "reinforcements": [
+        "minecraft:zombie",
+        "minecraft:zombie_villager"
+      ]
+    }
+  ],
+  "entity_types": [
+    "minecraft:zombie",
+    "minecraft:zombie_villager"
+  ]
+}

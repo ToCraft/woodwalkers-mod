@@ -1,0 +1,14 @@
+{
+  "required_mod": "unusualfishmod",
+  "entity_type": "unusualfishmod:rhinotetra",
+  "type_provider": {
+    "fallback": 0,
+    "range": 9,
+    "nbt": [
+      {
+        "nbt_type": "integer",
+        "nbt_field": "Variant"
+      }
+    ]
+  }
+}

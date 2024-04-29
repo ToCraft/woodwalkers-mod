@@ -27,6 +27,10 @@ public class EntityBlacklistDataManager extends SimpleJsonResourceReloadListener
 
     @Override
     protected void apply(Map<ResourceLocation, JsonElement> map, ResourceManager resourceManager, ProfilerFiller profiler) {
+        // prevent duplicates and the registration of removed entries
+        EntityBlacklist.clearAll();
+        EntityBlacklist.registerDefault();
+
         for (Map.Entry<ResourceLocation, JsonElement> mapEntry : map.entrySet()) {
             if (mapEntry.getKey().getPath().equals("blacklist")) {
                 Pair<List<ResourceLocation>, List<ResourceLocation>> someBlacklist = blacklistFromJson(mapEntry.getValue().getAsJsonObject());

@@ -1,0 +1,29 @@
+{
+  "entity_type": "minecraft:bee",
+  "type_provider": {
+    "fallback": 0,
+    "range": 3,
+    "nbt": [
+      {
+        "nbt_type": "boolean",
+        "nbt_field": "HasNectar",
+        "parameters": {
+          "0": "true",
+          "1": "true",
+          "2": "false",
+          "3": "false"
+        }
+      },
+      {
+        "nbt_type": "boolean",
+        "nbt_field": "HasStung",
+        "parameters": {
+          "0": "true",
+          "1": "false",
+          "2": "true",
+          "3": "false"
+        }
+      }
+    ]
+  }
+}

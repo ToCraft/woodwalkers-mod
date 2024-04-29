@@ -1,0 +1,15 @@
+{
+  "skills": [
+    {
+      "type": "walkers:rider",
+      "rideable": [
+        "minecraft:cave_spider",
+        "minecraft:spider"
+      ]
+    }
+  ],
+  "entity_types": [
+    "minecraft:stray",
+    "minecraft:the_bogged"
+  ]
+}

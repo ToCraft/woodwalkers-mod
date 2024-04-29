@@ -2,6 +2,7 @@ package tocraft.walkers.ability;
 
 import net.minecraft.core.Registry;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.tags.EntityTypeTags;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.NeutralMob;
@@ -14,6 +15,7 @@ import net.minecraft.world.entity.boss.wither.WitherBoss;
 import net.minecraft.world.entity.monster.*;
 import tocraft.walkers.Walkers;
 import tocraft.walkers.ability.impl.*;
+import tocraft.walkers.integrations.Integrations;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -25,13 +27,10 @@ public class AbilityRegistry {
 
     private static final Map<Predicate<LivingEntity>, ShapeAbility<?>> abilities = new LinkedHashMap<>();
 
-    private AbilityRegistry() {
-
-    }
-
-    public static void init() {
+    public static void registerDefault() {
         // Register generic Abilities first (since the last registered ability will be the used one
         registerByPredicate(livingEntity -> livingEntity instanceof NeutralMob, new AngerAbility<>());
+        registerByPredicate(entity -> entity.getType().is(EntityTypeTags.RAIDERS), new RaidAbility<>());
 
         // Register 'normal' Abilities
         registerByClass(AbstractHorse.class, new HorseAbility<>());
@@ -57,6 +56,9 @@ public class AbilityRegistry {
         registerByClass(Pufferfish.class, new PufferfishAbility<>());
         registerByClass(Turtle.class, new TurtleAbility<>());
         registerByClass(Rabbit.class, new RabbitAbility<>());
+
+        // handle Integrations
+        Integrations.registerAbilities();
     }
 
     /**
@@ -96,5 +98,9 @@ public class AbilityRegistry {
         if (Walkers.CONFIG.abilityBlacklist.contains(Registry.ENTITY_TYPE.getKey(shape.getType()).toString()))
             return false;
         return abilities.keySet().stream().anyMatch(predicate -> predicate.test(shape));
+    }
+
+    public static void clearAll() {
+        abilities.clear();
     }
 }

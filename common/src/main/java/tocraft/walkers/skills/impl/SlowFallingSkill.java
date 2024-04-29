@@ -28,6 +28,11 @@ public class SlowFallingSkill<E extends LivingEntity> extends ShapeSkill<E> {
     }
 
     @Override
+    public boolean canBeRegisteredMultipleTimes() {
+        return false;
+    }
+
+    @Override
     @Environment(EnvType.CLIENT)
     public @Nullable TextureAtlasSprite getIcon() {
         return Minecraft.getInstance().getMobEffectTextures().get(MobEffects.SLOW_FALLING);
