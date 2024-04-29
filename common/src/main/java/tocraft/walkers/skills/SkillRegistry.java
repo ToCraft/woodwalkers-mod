@@ -188,19 +188,25 @@ public class SkillRegistry {
 
     public static <A extends LivingEntity> void registerByType(EntityType<A> type, ShapeSkill<A> skill) {
         List<ShapeSkill<?>> skills = skillsByEntityTypes.containsKey(type) ? skillsByEntityTypes.get(type) : new ArrayList<>();
-        skills.add(skill);
+        if (skill.canBeRegisteredMultipleTimes() || skills.stream().noneMatch(entry -> entry.getId().equals(skill.getId()))) {
+            skills.add(skill);
+        }
         skillsByEntityTypes.put(type, skills);
     }
 
     public static <A extends LivingEntity> void registerByTag(TagKey<EntityType<?>> tag, ShapeSkill<A> skill) {
         List<ShapeSkill<?>> skills = skillsByEntityTags.containsKey(tag) ? skillsByEntityTags.get(tag) : new ArrayList<>();
-        skills.add(skill);
+        if (skill.canBeRegisteredMultipleTimes() || skills.stream().noneMatch(entry -> entry.getId().equals(skill.getId()))) {
+            skills.add(skill);
+        }
         skillsByEntityTags.put(tag, skills);
     }
 
     public static <A extends LivingEntity> void registerByClass(Class<A> entityClass, ShapeSkill<A> skill) {
         List<ShapeSkill<?>> skills = skillsByEntityClasses.containsKey(entityClass) ? skillsByEntityClasses.get(entityClass) : new ArrayList<>();
-        skills.add(skill);
+        if (skill.canBeRegisteredMultipleTimes() || skills.stream().noneMatch(entry -> entry.getId().equals(skill.getId()))) {
+            skills.add(skill);
+        }
         skillsByEntityClasses.put(entityClass, skills);
     }
 
@@ -212,7 +218,9 @@ public class SkillRegistry {
      */
     public static void registerByPredicate(Predicate<LivingEntity> entityPredicate, ShapeSkill<?> skill) {
         List<ShapeSkill<?>> skills = skillsByPredicates.containsKey(entityPredicate) ? skillsByPredicates.get(entityPredicate) : new ArrayList<>();
-        skills.add(skill);
+        if (skill.canBeRegisteredMultipleTimes() || skills.stream().noneMatch(entry -> entry.getId().equals(skill.getId()))) {
+            skills.add(skill);
+        }
         skillsByPredicates.put(entityPredicate, skills);
     }
 

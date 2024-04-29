@@ -2,8 +2,13 @@ package tocraft.walkers.skills.impl;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
+import org.jetbrains.annotations.Nullable;
 import tocraft.walkers.Walkers;
 import tocraft.walkers.skills.ShapeSkill;
 
@@ -19,5 +24,16 @@ public class AttackForHealthSkill<E extends LivingEntity> extends ShapeSkill<E> 
     @Override
     public Codec<? extends ShapeSkill<?>> codec() {
         return CODEC;
+    }
+
+    @Override
+    public boolean canBeRegisteredMultipleTimes() {
+        return false;
+    }
+
+    @Override
+    @Environment(EnvType.CLIENT)
+    public @Nullable TextureAtlasSprite getIcon() {
+        return Minecraft.getInstance().getGuiSprites().getSprite(new ResourceLocation("hud/food_half"));
     }
 }

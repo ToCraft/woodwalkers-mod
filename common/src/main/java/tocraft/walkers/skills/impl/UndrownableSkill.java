@@ -20,4 +20,9 @@ public class UndrownableSkill<E extends LivingEntity> extends ShapeSkill<E> {
     public Codec<? extends ShapeSkill<?>> codec() {
         return CODEC;
     }
+
+    @Override
+    public boolean canBeRegisteredMultipleTimes() {
+        return false;
+    }
 }

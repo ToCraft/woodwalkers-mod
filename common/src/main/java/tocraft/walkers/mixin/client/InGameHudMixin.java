@@ -16,6 +16,7 @@ import tocraft.walkers.skills.SkillRegistry;
 import tocraft.walkers.skills.impl.AttackForHealthSkill;
 import tocraft.walkers.skills.impl.UndrownableSkill;
 
+// FIXME: doesn't work on Forge/NeoForge
 @Environment(EnvType.CLIENT)
 @Mixin(Gui.class)
 public abstract class InGameHudMixin {
