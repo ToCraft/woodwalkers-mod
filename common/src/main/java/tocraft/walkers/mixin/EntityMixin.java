@@ -55,7 +55,8 @@ public abstract class EntityMixin implements DimensionsRefresher {
     @Shadow
     public abstract boolean isCrouching();
 
-    @Shadow public abstract InteractionResult interact(Player player, InteractionHand hand);
+    @Shadow
+    public abstract InteractionResult interact(Player player, InteractionHand hand);
 
     @Inject(method = "getBbWidth", at = @At("HEAD"), cancellable = true)
     private void getBbWidth(CallbackInfoReturnable<Float> cir) {

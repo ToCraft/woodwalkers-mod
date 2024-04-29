@@ -7,6 +7,22 @@ public abstract class AbstractIntegration {
 
     }
 
+    public void registerAbilities() {
+
+    }
+
+    public void registerSkills() {
+
+    }
+
+    public void registerTypeProvider() {
+
+    }
+
+    public void registerEntityBlacklist() {
+
+    }
+
     public boolean mightAttackInnocent(Entity entity1, Entity entity2) {
         return true;
     }

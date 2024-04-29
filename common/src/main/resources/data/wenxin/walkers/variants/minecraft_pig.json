@@ -1,0 +1,64 @@
+{
+  "required_mod": "moremobvariants",
+  "entity_type": "minecraft:pig",
+  "type_provider": {
+    "fallback": 0,
+    "range": 11,
+    "nbt": [
+      {
+        "nbt_type": "string",
+        "nbt_field": "VariantID",
+        "parameters": {
+          "0": "moremobvariants:default",
+          "1": "moremobvariants:mottled",
+          "2": "moremobvariants:piebald",
+          "3": "moremobvariants:pink_footed",
+          "4": "moremobvariants:sooty",
+          "5": "moremobvariants:spotted",
+          "6": "moremobvariants:default",
+          "7": "moremobvariants:mottled",
+          "8": "moremobvariants:piebald",
+          "9": "moremobvariants:pink_footed",
+          "10": "moremobvariants:sooty",
+          "11": "moremobvariants:spotted"
+        }
+      },
+      {
+        "nbt_type": "boolean",
+        "nbt_field": "IsMuddy",
+        "parameters": {
+          "0": "true",
+          "1": "true",
+          "2": "true",
+          "3": "true",
+          "4": "true",
+          "5": "true",
+          "6": "false",
+          "7": "false",
+          "8": "false",
+          "9": "false",
+          "10": "false",
+          "11": "false"
+        }
+      },
+      {
+        "nbt_type": "integer",
+        "nbt_field": "MuddyTimeLeft",
+        "parameters": {
+          "0": "-1",
+          "1": "-1",
+          "2": "-1",
+          "3": "-1",
+          "4": "-1",
+          "5": "-1",
+          "6": "-1",
+          "7": "-1",
+          "8": "-1",
+          "9": "-1",
+          "10": "-1",
+          "11": "-1"
+        }
+      }
+    ]
+  }
+}

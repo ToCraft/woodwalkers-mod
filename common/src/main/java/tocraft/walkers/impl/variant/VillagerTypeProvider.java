@@ -57,6 +57,6 @@ public class VillagerTypeProvider extends TypeProvider<Villager> {
 
     @Override
     public Component modifyText(Villager entity, MutableComponent text) {
-        return Component.literal(formatTypePrefix(entity.getVariant().toString()) + " ").append(text);
+        return Component.literal(formatTypePrefix(entity.getVillagerData().getProfession().toString()) + " ").append(text);
     }
 }

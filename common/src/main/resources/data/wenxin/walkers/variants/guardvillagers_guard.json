@@ -1,0 +1,13 @@
+{
+  "required_mod": "guardvillagers",
+  "entity_type": "guardvillagers:guard",
+  "type_provider": {
+    "range": 1,
+    "nbt": [
+      {
+        "nbt_type": "boolean",
+        "nbt_field": "SpawnWithArmor"
+      }
+    ]
+  }
+}

@@ -29,6 +29,11 @@ public class NoPhysicsSkill<E extends LivingEntity> extends ShapeSkill<E> {
     }
 
     @Override
+    public boolean canBeRegisteredMultipleTimes() {
+        return false;
+    }
+
+    @Override
     @Environment(EnvType.CLIENT)
     public @Nullable TextureAtlasSprite getIcon() {
         BakedModel itemModel = Minecraft.getInstance().getItemRenderer().getItemModelShaper().getItemModel(Items.ENDER_EYE);

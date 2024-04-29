@@ -17,10 +17,8 @@ import org.slf4j.LoggerFactory;
 import tocraft.craftedcore.VIPs;
 import tocraft.craftedcore.config.ConfigLoader;
 import tocraft.craftedcore.platform.VersionChecker;
-import tocraft.walkers.ability.AbilityRegistry;
 import tocraft.walkers.api.PlayerShape;
 import tocraft.walkers.api.WalkersTickHandlers;
-import tocraft.walkers.api.blacklist.EntityBlacklist;
 import tocraft.walkers.api.data.DataManager;
 import tocraft.walkers.api.platform.WalkersConfig;
 import tocraft.walkers.command.WalkersCommand;
@@ -47,14 +45,12 @@ public class Walkers {
     static {
         devs.add(UUID.fromString("1f63e38e-4059-4a4f-b7c4-0fac4a48e744"));
         devs.add(UUID.fromString("494e1c8a-f733-43ed-8c1b-a2943fdc05f3"));
+        devs.add(UUID.fromString("eb83f5a3-397a-4e14-80bc-914ff91890f0"));
     }
 
     public void initialize() {
         MixinExtrasBootstrap.init();
 
-        EntityBlacklist.init();
-        AbilityRegistry.init();
-        SkillRegistry.init();
         WalkersEventHandlers.initialize();
         WalkersCommand.register();
         ServerNetworking.initialize();

@@ -1,0 +1,13 @@
+{
+  "skills": [
+    {
+      "type": "walkers:rider",
+      "rideable": [
+        "minecraft:strider"
+      ]
+    }
+  ],
+  "entity_types": [
+    "minecraft:strider"
+  ]
+}

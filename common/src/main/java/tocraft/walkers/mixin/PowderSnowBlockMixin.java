@@ -18,7 +18,7 @@ public class PowderSnowBlockMixin {
     private static void handleWalkOnPowderSnowSkill(Entity entity, CallbackInfoReturnable<Boolean> cir) {
         if (!cir.getReturnValue() && entity instanceof Player player) {
             LivingEntity shape = PlayerShape.getCurrentShape(player);
-            if (shape != null && SkillRegistry.has(shape, WalkOnPowderSnow.ID)) {
+            if (SkillRegistry.has(shape, WalkOnPowderSnow.ID)) {
                 cir.setReturnValue(true);
             }
         }

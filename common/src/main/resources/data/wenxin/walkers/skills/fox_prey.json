@@ -1,0 +1,13 @@
+{
+  "skills": [
+    {
+      "type": "walkers:prey",
+      "hunter": [
+        "minecraft:fox"
+      ]
+    }
+  ],
+  "entity_types": [
+    "habitat:passerine"
+  ]
+}
