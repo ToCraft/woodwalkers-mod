@@ -2,6 +2,7 @@ package tocraft.walkers.ability;
 
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.tags.EntityTypeTags;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.NeutralMob;
@@ -31,6 +32,7 @@ public class AbilityRegistry {
     public static void registerDefault() {
         // Register generic Abilities first (since the last registered ability will be the used one
         registerByPredicate(livingEntity -> livingEntity instanceof NeutralMob, new AngerAbility<>());
+        registerByPredicate(entity -> entity.getType().is(EntityTypeTags.RAIDERS), new RaidAbility<>());
 
         // Register 'normal' Abilities
         registerByClass(AbstractHorse.class, new HorseAbility<>());
