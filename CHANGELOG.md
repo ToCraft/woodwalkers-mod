@@ -1,3 +1,16 @@
+walkers 4.3
+================
+
+- improve logging to help datapack creators
+- implement datapack by WenXin2
+- fix villager variant names
+- overhaul tropical fish variants
+- auto-detect MoreMobVariants
+- small performance patch for the skill engine
+- add AttackForHealthSkill
+- add NocturnalSkill
+- add RaidAbility
+
 walkers 4.2
 ================
 
