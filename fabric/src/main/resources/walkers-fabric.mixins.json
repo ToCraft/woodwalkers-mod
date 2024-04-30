@@ -5,9 +5,7 @@
   "compatibilityLevel": "JAVA_17",
   "mixins": [
     "LivingEntityMixin",
-    "NocturnalPlayerMixin",
     "NocturnalServerLevelMixin",
-    "NocturnalServerPlayerMixin",
     "WitherEntityMixin"
   ],
   "client": [

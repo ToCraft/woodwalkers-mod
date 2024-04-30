@@ -1,3 +1,8 @@
+walkers 4.4
+================
+
+- improve logic for NocturnalSkill on Fabric
+
 walkers 4.3
 ================
 
