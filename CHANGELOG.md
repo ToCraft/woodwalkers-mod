@@ -1,6 +1,7 @@
 walkers 4.4
 ================
 
+- fix render status bar issues on Forge/NeoForge
 - improve logic for NocturnalSkill on Fabric
 
 walkers 4.3
