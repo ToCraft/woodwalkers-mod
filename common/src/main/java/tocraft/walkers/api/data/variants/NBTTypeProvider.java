@@ -32,7 +32,7 @@ public class NBTTypeProvider<T extends LivingEntity> extends TypeProvider<T> {
     private final List<NBTEntry<?>> nbtEntryList;
     private final Map<String, String> nameMap;
 
-    NBTTypeProvider(int fallback, int range, List<NBTEntry<?>> nbtEntryList, Map<String, String> nameMap) {
+    public NBTTypeProvider(int fallback, int range, List<NBTEntry<?>> nbtEntryList, Map<String, String> nameMap) {
         this.fallback = fallback;
         this.nbtEntryList = nbtEntryList;
         this.nameMap = nameMap;
@@ -145,7 +145,11 @@ public class NBTTypeProvider<T extends LivingEntity> extends TypeProvider<T> {
         public static final Codec<NBTEntry<?>> CODEC = RecordCodecBuilder.create((instance) -> instance.group(
                 Codec.STRING.fieldOf("nbt_type").forGetter(NBTEntry::nbtType),
                 Codec.STRING.fieldOf("nbt_field").forGetter(NBTEntry::nbtField),
-                Codec.unboundedMap(Codec.STRING, Codec.STRING).optionalFieldOf("parameters", new HashMap<>()).forGetter(o -> new HashMap<>()),
+                Codec.unboundedMap(Codec.STRING, Codec.STRING).optionalFieldOf("parameters", new HashMap<>()).forGetter(o -> {
+                    Map<String, String> parameters = new HashMap<>();
+                    o.parameterList().forEach((key, value) -> parameters.put(String.valueOf(key), String.valueOf(value)));
+                    return parameters;
+                }),
                 Codec.BOOL.optionalFieldOf("is_mutable", false).forGetter(NBTEntry::isMutable)
         ).apply(instance, instance.stable((nbtType, nbtField, parameters, isMutable) -> {
             switch (nbtType.toUpperCase()) {

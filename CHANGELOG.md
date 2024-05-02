@@ -4,6 +4,7 @@ walkers 4.4
 - fix render status bar issues on Forge/NeoForge
 - improve logic for NocturnalSkill on Fabric
 - prevent eating with AttackForHealthSkill
+- rework Codecs for Datapacks
 
 walkers 4.3
 ================

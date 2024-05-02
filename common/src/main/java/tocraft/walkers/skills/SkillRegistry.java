@@ -1,6 +1,7 @@
 package tocraft.walkers.skills;
 
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.DataResult;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.EntityTypeTags;
@@ -23,13 +24,21 @@ import tocraft.walkers.ability.ShapeAbility;
 import tocraft.walkers.integrations.Integrations;
 import tocraft.walkers.skills.impl.*;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.function.Function;
 import java.util.function.Predicate;
 
 public class SkillRegistry {
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    public static final Codec<ShapeSkill<?>> SKILL_CODEC = ResourceLocation.CODEC.flatXmap(
+            resourceLocation -> (DataResult) Optional.ofNullable(SkillRegistry.getSkillCodec(resourceLocation))
+                    .map(DataResult::success)
+                    .orElseGet(() -> DataResult.error(() -> "Unknown shape skill: " + resourceLocation)),
+            object -> Optional.ofNullable(SkillRegistry.getSkillId((ShapeSkill<?>) object))
+                    .map(DataResult::success)
+                    .orElseGet(() -> DataResult.error(() -> "Unknown shape skill:" + object))
+    ).dispatchStable(object -> ((ShapeSkill<?>) object).codec(), Function.identity());
+
     private static final Map<Predicate<LivingEntity>, List<ShapeSkill<?>>> skillsByPredicates = new HashMap<>();
     private static final Map<EntityType<? extends LivingEntity>, List<ShapeSkill<?>>> skillsByEntityTypes = new HashMap<>();
     private static final Map<TagKey<EntityType<?>>, List<ShapeSkill<?>>> skillsByEntityTags = new HashMap<>();
@@ -190,25 +199,43 @@ public class SkillRegistry {
     }
 
     public static <A extends LivingEntity> void registerByType(EntityType<A> type, ShapeSkill<A> skill) {
+        registerByType(type, List.of(skill));
+    }
+
+    public static <A extends LivingEntity> void registerByType(EntityType<A> type, List<ShapeSkill<A>> newSkills) {
         List<ShapeSkill<?>> skills = skillsByEntityTypes.containsKey(type) ? skillsByEntityTypes.get(type) : new ArrayList<>();
-        if (skill.canBeRegisteredMultipleTimes() || skills.stream().noneMatch(entry -> entry.getId().equals(skill.getId()))) {
-            skills.add(skill);
+        for (ShapeSkill<A> skill : newSkills) {
+            if (skill.canBeRegisteredMultipleTimes() || skills.stream().noneMatch(entry -> entry.getId().equals(skill.getId()))) {
+                skills.add(skill);
+            }
         }
         skillsByEntityTypes.put(type, skills);
     }
 
     public static <A extends LivingEntity> void registerByTag(TagKey<EntityType<?>> tag, ShapeSkill<A> skill) {
+        registerByTag(tag, List.of(skill));
+    }
+
+    public static <A extends LivingEntity> void registerByTag(TagKey<EntityType<?>> tag, List<ShapeSkill<A>> newSkills) {
         List<ShapeSkill<?>> skills = skillsByEntityTags.containsKey(tag) ? skillsByEntityTags.get(tag) : new ArrayList<>();
-        if (skill.canBeRegisteredMultipleTimes() || skills.stream().noneMatch(entry -> entry.getId().equals(skill.getId()))) {
-            skills.add(skill);
+        for (ShapeSkill<A> skill : newSkills) {
+            if (skill.canBeRegisteredMultipleTimes() || skills.stream().noneMatch(entry -> entry.getId().equals(skill.getId()))) {
+                skills.add(skill);
+            }
         }
         skillsByEntityTags.put(tag, skills);
     }
 
     public static <A extends LivingEntity> void registerByClass(Class<A> entityClass, ShapeSkill<A> skill) {
+        registerByClass(entityClass, List.of(skill));
+    }
+
+    public static <A extends LivingEntity> void registerByClass(Class<A> entityClass, List<ShapeSkill<A>> newSkills) {
         List<ShapeSkill<?>> skills = skillsByEntityClasses.containsKey(entityClass) ? skillsByEntityClasses.get(entityClass) : new ArrayList<>();
-        if (skill.canBeRegisteredMultipleTimes() || skills.stream().noneMatch(entry -> entry.getId().equals(skill.getId()))) {
-            skills.add(skill);
+        for (ShapeSkill<A> skill : newSkills) {
+            if (skill.canBeRegisteredMultipleTimes() || skills.stream().noneMatch(entry -> entry.getId().equals(skill.getId()))) {
+                skills.add(skill);
+            }
         }
         skillsByEntityClasses.put(entityClass, skills);
     }
@@ -220,9 +247,15 @@ public class SkillRegistry {
      * @param skill           your {@link ShapeAbility}
      */
     public static void registerByPredicate(Predicate<LivingEntity> entityPredicate, ShapeSkill<?> skill) {
+        registerByPredicate(entityPredicate, List.of(skill));
+    }
+
+    public static void registerByPredicate(Predicate<LivingEntity> entityPredicate, List<ShapeSkill<?>> newSkills) {
         List<ShapeSkill<?>> skills = skillsByPredicates.containsKey(entityPredicate) ? skillsByPredicates.get(entityPredicate) : new ArrayList<>();
-        if (skill.canBeRegisteredMultipleTimes() || skills.stream().noneMatch(entry -> entry.getId().equals(skill.getId()))) {
-            skills.add(skill);
+        for (ShapeSkill<?> skill : newSkills) {
+            if (skill.canBeRegisteredMultipleTimes() || skills.stream().noneMatch(entry -> entry.getId().equals(skill.getId()))) {
+                skills.add(skill);
+            }
         }
         skillsByPredicates.put(entityPredicate, skills);
     }
