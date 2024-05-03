@@ -415,4 +415,13 @@ public abstract class PlayerEntityMixin extends LivingEntityMixin {
         LivingEntity shape = PlayerShape.getCurrentShape(player);
         return player.hasEffect(MobEffects.SATURATION) || !SkillRegistry.has(shape, AttackForHealthSkill.ID);
     }
+
+    @Inject(method = "canEat", at = @At("RETURN"), cancellable = true)
+    private void onCanEat(boolean canAlwaysEat, CallbackInfoReturnable<Boolean> cir) {
+        if (cir.getReturnValue()) {
+            if (SkillRegistry.has(PlayerShape.getCurrentShape((Player) (Object) this), AttackForHealthSkill.ID)) {
+                cir.setReturnValue(false);
+            }
+        }
+    }
 }
