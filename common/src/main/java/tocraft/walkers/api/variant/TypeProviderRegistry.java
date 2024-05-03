@@ -1,16 +1,20 @@
 package tocraft.walkers.api.variant;
 
+import com.mojang.datafixers.util.Pair;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import org.jetbrains.annotations.Nullable;
 import tocraft.walkers.impl.variant.*;
 import tocraft.walkers.integrations.Integrations;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
+@SuppressWarnings("unused")
 public class TypeProviderRegistry {
-    public static final Map<EntityType<? extends LivingEntity>, TypeProvider<? extends LivingEntity>> VARIANT_BY_TYPE = new LinkedHashMap<>();
+    private static final Map<EntityType<? extends LivingEntity>, TypeProvider<? extends LivingEntity>> VARIANT_BY_TYPE = new LinkedHashMap<>();
 
     public static void registerDefault() {
         register(EntityType.SHEEP, new SheepTypeProvider());
@@ -48,6 +52,15 @@ public class TypeProviderRegistry {
     @Nullable
     public static <T extends LivingEntity> TypeProvider<T> getProvider(EntityType<T> type) {
         return (TypeProvider<T>) VARIANT_BY_TYPE.get(type);
+    }
+
+    /**
+     * @return a list of every entity type with their registered type provider
+     */
+    public static List<Pair<EntityType<? extends LivingEntity>, TypeProvider<?>>> getAll() {
+        List<Pair<EntityType<? extends LivingEntity>, TypeProvider<?>>> typeList = new ArrayList<>();
+        VARIANT_BY_TYPE.forEach((entityType, typeProvider) -> typeList.add(new Pair<>(entityType, typeProvider)));
+        return typeList;
     }
 
     public static void clearAll() {

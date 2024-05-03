@@ -1,3 +1,11 @@
+walkers 4.4
+================
+
+- fix render status bar issues on Forge/NeoForge
+- improve logic for NocturnalSkill on Fabric
+- prevent eating with AttackForHealthSkill
+- rework Codecs for Datapacks
+
 walkers 4.3
 ================
 
@@ -34,6 +42,8 @@ walkers 4.1
 - improve rendering mechanic for better mod compatibility
 - add more skill icons
 - fix mobs not fighting back
+- rework Codecs for encoding
+- add AdvancedNBTEntries for TypeProvider (take a look at the wiki for details)
 
 walkers 4.0
 ================
