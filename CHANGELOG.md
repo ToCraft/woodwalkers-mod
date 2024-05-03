@@ -42,6 +42,8 @@ walkers 4.1
 - improve rendering mechanic for better mod compatibility
 - add more skill icons
 - fix mobs not fighting back
+- rework Codecs for encoding
+- add AdvancedNBTEntries for TypeProvider (take a look at the wiki for details)
 
 walkers 4.0
 ================

@@ -2,6 +2,7 @@ package tocraft.walkers.api.data.variants;
 
 import com.google.gson.*;
 import com.mojang.datafixers.util.Either;
+import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.JsonOps;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -68,9 +69,17 @@ public class TypeProviderDataManager extends SimpleJsonResourceReloadListener {
                 if (requiredMod == null) return "";
                 else return requiredMod;
             }),
-            ResourceLocation.CODEC.optionalFieldOf("parent").forGetter(o -> Optional.empty()),
+            ResourceLocation.CODEC.optionalFieldOf("parent").forGetter(o -> {
+                for (Pair<EntityType<? extends LivingEntity>, TypeProvider<?>> pair : TypeProviderRegistry.getAll()) {
+                    if (pair.getSecond() == o.left().orElseThrow().typeProvider()) {
+                        return Optional.of(EntityType.getKey(pair.getFirst()));
+                    }
+                }
+                return Optional.empty();
+            }),
             Codec.STRING.optionalFieldOf("type_provider_class").forGetter(o -> {
-                if (o.left().orElseThrow().typeProvider() instanceof NBTTypeProvider<?>) return Optional.empty();
+                if (o.left().orElseThrow().typeProvider() instanceof NBTTypeProvider<?>)
+                    return Optional.empty();
                 else return Optional.of(o.left().orElseThrow().typeProvider().getClass().getName());
             }),
             NBTTypeProvider.CODEC.optionalFieldOf("type_provider").forGetter(o -> {
@@ -105,9 +114,15 @@ public class TypeProviderDataManager extends SimpleJsonResourceReloadListener {
         return Util.getOrThrow(TYPE_PROVIDER_LIST_CODEC.parse(JsonOps.INSTANCE, json), JsonParseException::new);
     }
 
+   @SuppressWarnings("unused")
     public record TypeProviderEntry<L extends LivingEntity>(ResourceLocation entityTypeKey,
                                                             @Nullable String requiredMod,
                                                             TypeProvider<L> typeProvider) {
+
+        public TypeProviderEntry(EntityType<L> entityType, String requiredMod, TypeProvider<L> typeProvider) {
+            this(EntityType.getKey(entityType), requiredMod, typeProvider);
+        }
+
         @SuppressWarnings("unchecked")
         @Nullable
         public EntityType<L> entityType() {
