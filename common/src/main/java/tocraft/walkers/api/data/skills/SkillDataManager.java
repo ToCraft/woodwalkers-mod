@@ -1,9 +1,7 @@
 package tocraft.walkers.api.data.skills;
 
 import com.google.gson.*;
-import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.Codec;
-import com.mojang.serialization.DataResult;
 import com.mojang.serialization.JsonOps;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.architectury.platform.Platform;
@@ -19,8 +17,9 @@ import tocraft.walkers.Walkers;
 import tocraft.walkers.skills.ShapeSkill;
 import tocraft.walkers.skills.SkillRegistry;
 
-import java.util.*;
-import java.util.function.Function;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 public class SkillDataManager extends SimpleJsonResourceReloadListener {
     public static final Gson GSON = new GsonBuilder().registerTypeAdapter(ResourceLocation.class, new ResourceLocation.Serializer()).create();
@@ -37,54 +36,60 @@ public class SkillDataManager extends SimpleJsonResourceReloadListener {
         SkillRegistry.registerDefault();
 
         for (Map.Entry<ResourceLocation, JsonElement> mapEntry : map.entrySet()) {
-            Map<Pair<ResourceLocation, ResourceLocation>, List<? extends ShapeSkill<?>>> skillMap = skillEntryFromJson(mapEntry.getValue().getAsJsonObject());
+            SkillList skillList = skillListFromJson(mapEntry.getValue().getAsJsonObject());
 
-            if (!skillMap.isEmpty()) {
-                for (Map.Entry<Pair<ResourceLocation, ResourceLocation>, List<? extends ShapeSkill<?>>> entitySkills : skillMap.entrySet()) {
-                    for (ShapeSkill<?> shapeSkill : entitySkills.getValue()) {
-                        if (Registry.ENTITY_TYPE.containsKey(entitySkills.getKey().getFirst())) {
-                            SkillRegistry.registerByType((EntityType<LivingEntity>) Registry.ENTITY_TYPE.get(entitySkills.getKey().getFirst()), (ShapeSkill<LivingEntity>) shapeSkill);
-                        } else if (entitySkills.getKey().getSecond() != null) {
-                            SkillRegistry.registerByTag(TagKey.create(Registry.ENTITY_TYPE_REGISTRY, entitySkills.getKey().getSecond()), (ShapeSkill<LivingEntity>) shapeSkill);
-                        }
+            if (!skillList.isEmpty()) {
+                if (skillList.requiredMod() == null || Platform.isModLoaded(skillList.requiredMod())) {
+                    // entity types
+                    for (EntityType<LivingEntity> entityType : skillList.entityTypes()) {
+                        SkillRegistry.registerByType(entityType, skillList.skillList().stream().map(skill -> (ShapeSkill<LivingEntity>) skill).toList());
                     }
-                    String key = entitySkills.getKey().getFirst() != null ? entitySkills.getKey().getFirst().toString() : entitySkills.getKey().getSecond().toString();
-                    Walkers.LOGGER.info("{}: {} registered for {}", getClass().getSimpleName(), key, entitySkills.getValue().stream().map(skill -> skill.getClass().getSimpleName()).toArray(String[]::new));
+
+                    if (!skillList.entityTypes().isEmpty())
+                        Walkers.LOGGER.info("{}: {} registered for {}", getClass().getSimpleName(), skillList.entityTypes(), skillList.skillList().stream().map(skill -> skill.getClass().getSimpleName()).toArray(String[]::new));
+
+                    // entity tags
+                    for (TagKey<EntityType<?>> entityTag : skillList.entityTags()) {
+                        SkillRegistry.registerByTag(entityTag, skillList.skillList().stream().map(skill -> (ShapeSkill<LivingEntity>) skill).toList());
+                    }
+
+                    if (!skillList.entityTags().isEmpty())
+                        Walkers.LOGGER.info("{}: {} registered for {}", getClass().getSimpleName(), skillList.entityTags(), skillList.skillList().stream().map(skill -> skill.getClass().getSimpleName()).toArray(String[]::new));
                 }
             }
         }
     }
 
-    protected static Map<Pair<ResourceLocation, ResourceLocation>, List<? extends ShapeSkill<?>>> skillEntryFromJson(JsonObject json) {
-        Codec<Map<Pair<ResourceLocation, ResourceLocation>, List<? extends ShapeSkill<?>>>> codec = RecordCodecBuilder.create((instance) -> instance.group(
-                Codec.list(ResourceLocation.CODEC).optionalFieldOf("entity_types", new ArrayList<>()).forGetter(o -> o.keySet().stream().map(Pair::getFirst).toList()),
-                Codec.list(ResourceLocation.CODEC).optionalFieldOf("entity_tags", new ArrayList<>()).forGetter(o -> o.keySet().stream().map(Pair::getSecond).toList()),
-                Codec.STRING.optionalFieldOf("required_mod", "").forGetter(o -> ""),
-                Codec.list(byNameCodec()).fieldOf("skills").forGetter(o -> new ArrayList<>())
-        ).apply(instance, instance.stable((entityTypes, entityTags, requiredMod, shapeSkills) -> {
-            Map<Pair<ResourceLocation, ResourceLocation>, List<? extends ShapeSkill<?>>> skillMap = new HashMap<>();
-            if (requiredMod.isBlank() || Platform.isModLoaded(requiredMod)) {
-                for (ResourceLocation entityType : entityTypes) {
-                    skillMap.put(new Pair<>(entityType, null), shapeSkills);
-                }
-                for (ResourceLocation entityTag : entityTags) {
-                    skillMap.put(new Pair<>(null, entityTag), shapeSkills);
-                }
-            }
-            return skillMap;
-        })));
-        return codec.parse(JsonOps.INSTANCE, json).getOrThrow(false, JsonParseException::new);
+    public static Codec<SkillList> SKILL_LIST_CODEC = RecordCodecBuilder.create((instance) -> instance.group(
+            Codec.STRING.optionalFieldOf("required_mod", "").forGetter(SkillList::requiredMod),
+            Codec.list(ResourceLocation.CODEC).optionalFieldOf("entity_types", new ArrayList<>()).forGetter(SkillList::entityTypeKeys),
+            Codec.list(ResourceLocation.CODEC).optionalFieldOf("entity_tags", new ArrayList<>()).forGetter(SkillList::entityTagKeys),
+            Codec.list(SkillRegistry.SKILL_CODEC).fieldOf("skills").forGetter(SkillList::skillList)
+    ).apply(instance, instance.stable(SkillList::new)));
+
+    protected static SkillList skillListFromJson(JsonObject json) {
+        return SKILL_LIST_CODEC.parse(JsonOps.INSTANCE, json).getOrThrow(false, JsonParseException::new);
     }
 
-    @SuppressWarnings({"unchecked", "rawtypes"})
-    private static Codec<? extends ShapeSkill<?>> byNameCodec() {
-        return ResourceLocation.CODEC.flatXmap(
-                resourceLocation -> (DataResult) Optional.ofNullable(SkillRegistry.getSkillCodec(resourceLocation))
-                        .map(DataResult::success)
-                        .orElseGet(() -> DataResult.error("Unknown shape skill: " + resourceLocation)),
-                object -> Optional.ofNullable(SkillRegistry.getSkillId((ShapeSkill<?>) object))
-                        .map(DataResult::success)
-                        .orElseGet(() -> DataResult.error("Unknown shape skill:" + object))
-        ).dispatchStable(object -> ((ShapeSkill<?>) object).codec(), Function.identity());
+    public record SkillList(String requiredMod, List<ResourceLocation> entityTypeKeys,
+                            List<ResourceLocation> entityTagKeys,
+                            List<ShapeSkill<?>> skillList) {
+
+        public SkillList(List<EntityType<?>> entityTypeKeys, List<TagKey<EntityType<?>>> entityTagKeys, List<ShapeSkill<?>> skillList, String requiredMod) {
+            this(requiredMod, entityTypeKeys.stream().map(EntityType::getKey).toList(), entityTagKeys.stream().map(TagKey::location).toList(), skillList);
+        }
+
+        @SuppressWarnings("unchecked")
+        public List<EntityType<LivingEntity>> entityTypes() {
+            return entityTypeKeys.stream().filter(Registry.ENTITY_TYPE::containsKey).map(type -> (EntityType<LivingEntity>) Registry.ENTITY_TYPE.get(type)).toList();
+        }
+
+        public List<TagKey<EntityType<?>>> entityTags() {
+            return entityTagKeys().stream().map(tag -> TagKey.create(Registry.ENTITY_TYPE_REGISTRY, tag)).toList();
+        }
+
+        public boolean isEmpty() {
+            return (entityTypeKeys().isEmpty() && entityTagKeys().isEmpty()) || skillList().isEmpty();
+        }
     }
 }

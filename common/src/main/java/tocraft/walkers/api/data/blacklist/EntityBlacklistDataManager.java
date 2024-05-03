@@ -46,11 +46,12 @@ public class EntityBlacklistDataManager extends SimpleJsonResourceReloadListener
         }
     }
 
+    public static Codec<Pair<List<ResourceLocation>, List<ResourceLocation>>> BLACKLIST_CODEC = RecordCodecBuilder.create((instance) -> instance.group(
+            Codec.list(ResourceLocation.CODEC).optionalFieldOf("entity_types", new ArrayList<>()).forGetter(Pair::getFirst),
+            Codec.list(ResourceLocation.CODEC).optionalFieldOf("entity_tags", new ArrayList<>()).forGetter(Pair::getSecond)
+    ).apply(instance, instance.stable(Pair::new)));
+
     protected static Pair<List<ResourceLocation>, List<ResourceLocation>> blacklistFromJson(JsonObject json) {
-        Codec<Pair<List<ResourceLocation>, List<ResourceLocation>>> codec = RecordCodecBuilder.create((instance) -> instance.group(
-                Codec.list(ResourceLocation.CODEC).optionalFieldOf("entity_types", new ArrayList<>()).forGetter(Pair::getFirst),
-                Codec.list(ResourceLocation.CODEC).optionalFieldOf("entity_tags", new ArrayList<>()).forGetter(Pair::getSecond)
-        ).apply(instance, instance.stable(Pair::new)));
-        return codec.parse(JsonOps.INSTANCE, json).getOrThrow(false, JsonParseException::new);
+        return BLACKLIST_CODEC.parse(JsonOps.INSTANCE, json).getOrThrow(false, JsonParseException::new);
     }
 }
