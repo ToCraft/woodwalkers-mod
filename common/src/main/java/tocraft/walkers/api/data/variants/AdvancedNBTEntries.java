@@ -24,7 +24,6 @@ public record AdvancedNBTEntries(List<CompoundTag> variantDataList) {
     }))));
 
     public int getData(CompoundTag tag) {
-        Walkers.LOGGER.warn(Arrays.toString(variantDataList().toArray(CompoundTag[]::new)));
         for (CompoundTag compoundTag : variantDataList()) {
             boolean bool = true;
             for (String key : compoundTag.getAllKeys()) {
