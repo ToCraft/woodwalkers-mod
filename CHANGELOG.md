@@ -1,3 +1,8 @@
+walkers 4.4.1
+================
+
+- fix data pack data not synchronized to client
+
 walkers 4.4
 ================
 

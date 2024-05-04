@@ -9,13 +9,11 @@ import net.minecraft.Util;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.packs.resources.ResourceManager;
-import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener;
 import net.minecraft.tags.TagKey;
-import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import tocraft.walkers.Walkers;
+import tocraft.walkers.api.data.util.SynchronizedJsonReloadListener;
 import tocraft.walkers.skills.ShapeSkill;
 import tocraft.walkers.skills.SkillRegistry;
 
@@ -23,7 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class SkillDataManager extends SimpleJsonResourceReloadListener {
+public class SkillDataManager extends SynchronizedJsonReloadListener {
     public static final Gson GSON = new GsonBuilder().registerTypeAdapter(ResourceLocation.class, new ResourceLocation.Serializer()).create();
 
     public SkillDataManager() {
@@ -32,7 +30,7 @@ public class SkillDataManager extends SimpleJsonResourceReloadListener {
 
     @SuppressWarnings("unchecked")
     @Override
-    protected void apply(Map<ResourceLocation, JsonElement> map, ResourceManager resourceManager, ProfilerFiller profiler) {
+    protected void onApply(Map<ResourceLocation, JsonElement> map) {
         // prevent duplicates and the registration of removed entries
         SkillRegistry.clearAll();
         SkillRegistry.registerDefault();
