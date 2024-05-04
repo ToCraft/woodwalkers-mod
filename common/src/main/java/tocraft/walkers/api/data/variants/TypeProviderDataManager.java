@@ -9,13 +9,11 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.architectury.platform.Platform;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.packs.resources.ResourceManager;
-import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener;
-import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import org.jetbrains.annotations.Nullable;
 import tocraft.walkers.Walkers;
+import tocraft.walkers.api.data.util.SynchronizedJsonReloadListener;
 import tocraft.walkers.api.variant.TypeProvider;
 import tocraft.walkers.api.variant.TypeProviderRegistry;
 
@@ -23,7 +21,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
 import java.util.Optional;
 
-public class TypeProviderDataManager extends SimpleJsonResourceReloadListener {
+public class TypeProviderDataManager extends SynchronizedJsonReloadListener {
     public static final Gson GSON = new GsonBuilder().registerTypeAdapter(ResourceLocation.class, new ResourceLocation.Serializer()).create();
 
     public TypeProviderDataManager() {
@@ -32,13 +30,12 @@ public class TypeProviderDataManager extends SimpleJsonResourceReloadListener {
 
     @SuppressWarnings("unchecked")
     @Override
-    protected void apply(Map<ResourceLocation, JsonElement> map, ResourceManager resourceManager, ProfilerFiller profiler) {
+    protected void onApply(Map<ResourceLocation, JsonElement> map) {
         // prevent duplicates and the registration of removed entries
         TypeProviderRegistry.clearAll();
         TypeProviderRegistry.registerDefault();
 
         for (Map.Entry<ResourceLocation, JsonElement> mapEntry : map.entrySet()) {
-
             Either<TypeProviderEntry<?>, String> typeProviderEntryStringEither = typeProviderFromJson(mapEntry.getValue().getAsJsonObject());
 
             // print error

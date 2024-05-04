@@ -51,6 +51,8 @@ public class Walkers {
     public void initialize() {
         MixinExtrasBootstrap.init();
 
+        SkillRegistry.initialize();
+
         WalkersEventHandlers.initialize();
         WalkersCommand.register();
         ServerNetworking.initialize();

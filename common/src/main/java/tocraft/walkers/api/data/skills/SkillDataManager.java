@@ -7,13 +7,11 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.architectury.platform.Platform;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.packs.resources.ResourceManager;
-import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener;
 import net.minecraft.tags.TagKey;
-import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import tocraft.walkers.Walkers;
+import tocraft.walkers.api.data.util.SynchronizedJsonReloadListener;
 import tocraft.walkers.skills.ShapeSkill;
 import tocraft.walkers.skills.SkillRegistry;
 
@@ -21,16 +19,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class SkillDataManager extends SimpleJsonResourceReloadListener {
+public class SkillDataManager extends SynchronizedJsonReloadListener {
     public static final Gson GSON = new GsonBuilder().registerTypeAdapter(ResourceLocation.class, new ResourceLocation.Serializer()).create();
 
     public SkillDataManager() {
         super(GSON, Walkers.MODID + "/skills");
     }
 
-    @SuppressWarnings("unchecked")
     @Override
-    protected void apply(Map<ResourceLocation, JsonElement> map, ResourceManager resourceManager, ProfilerFiller profiler) {
+    protected void onApply(Map<ResourceLocation, JsonElement> map) {
         // prevent duplicates and the registration of removed entries
         SkillRegistry.clearAll();
         SkillRegistry.registerDefault();
@@ -64,13 +61,14 @@ public class SkillDataManager extends SimpleJsonResourceReloadListener {
             Codec.STRING.optionalFieldOf("required_mod", "").forGetter(SkillList::requiredMod),
             Codec.list(ResourceLocation.CODEC).optionalFieldOf("entity_types", new ArrayList<>()).forGetter(SkillList::entityTypeKeys),
             Codec.list(ResourceLocation.CODEC).optionalFieldOf("entity_tags", new ArrayList<>()).forGetter(SkillList::entityTagKeys),
-            Codec.list(SkillRegistry.SKILL_CODEC).fieldOf("skills").forGetter(SkillList::skillList)
+            Codec.list(SkillRegistry.getSkillCodec()).fieldOf("skills").forGetter(SkillList::skillList)
     ).apply(instance, instance.stable(SkillList::new)));
 
     protected static SkillList skillListFromJson(JsonObject json) {
         return SKILL_LIST_CODEC.parse(JsonOps.INSTANCE, json).getOrThrow(false, JsonParseException::new);
     }
 
+    @SuppressWarnings("unused")
     public record SkillList(String requiredMod, List<ResourceLocation> entityTypeKeys,
                             List<ResourceLocation> entityTagKeys,
                             List<ShapeSkill<?>> skillList) {
