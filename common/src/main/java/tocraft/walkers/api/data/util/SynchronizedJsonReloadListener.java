@@ -7,6 +7,7 @@ import dev.architectury.networking.NetworkManager;
 import dev.architectury.platform.Platform;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
@@ -47,13 +48,14 @@ public abstract class SynchronizedJsonReloadListener extends SimpleJsonResourceR
 
         // Serialize unlocked to tag
         CompoundTag compound = new CompoundTag();
-        this.map.forEach((key, json) -> compound.putString(key.toString(), gson.toJson(json)));
+        this.map.forEach((key, json) -> compound.putString(key.toString(), json.toString()));
         packet.writeNbt(compound);
 
         // Send to client
         NetworkManager.sendToPlayer(player, RELOAD_SYNC, packet);
     }
 
+    @Environment(EnvType.CLIENT)
     private void onPacketReceive(FriendlyByteBuf packet, NetworkManager.PacketContext context) {
         this.map.clear();
         CompoundTag compound = packet.readNbt();
@@ -67,6 +69,7 @@ public abstract class SynchronizedJsonReloadListener extends SimpleJsonResourceR
         }
     }
 
+    @Environment(EnvType.CLIENT)
     public void registerPacketReceiver() {
         NetworkManager.registerReceiver(NetworkManager.Side.S2C, RELOAD_SYNC, this::onPacketReceive);
     }

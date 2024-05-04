@@ -1,8 +1,9 @@
 package tocraft.walkers.api.data;
 
-import dev.architectury.event.events.common.LifecycleEvent;
 import dev.architectury.event.events.common.PlayerEvent;
 import dev.architectury.registry.ReloadListenerRegistry;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.packs.PackType;
 import tocraft.walkers.Walkers;
@@ -23,23 +24,18 @@ public class DataManager {
         ReloadListenerRegistry.register(PackType.SERVER_DATA, SKILL_DATA_MANAGER, Walkers.id("skill_data_manager"));
         ReloadListenerRegistry.register(PackType.SERVER_DATA, ENTITY_BLACKLIST_DATA_MANAGER, Walkers.id("entity_blacklist_data_manager"));
 
-        // sync packets on player join or level load
-        PlayerEvent.PLAYER_JOIN.register(player -> {
-            ABILITY_DATA_MANAGER.sendSyncPacket(player);
-            TYPE_PROVIDER_DATA_MANAGER.sendSyncPacket(player);
-            SKILL_DATA_MANAGER.sendSyncPacket(player);
-            ENTITY_BLACKLIST_DATA_MANAGER.sendSyncPacket(player);
-        });
-        LifecycleEvent.SERVER_LEVEL_LOAD.register(world -> {
-            for (ServerPlayer player : world.players()) {
-                ABILITY_DATA_MANAGER.sendSyncPacket(player);
-                TYPE_PROVIDER_DATA_MANAGER.sendSyncPacket(player);
-                SKILL_DATA_MANAGER.sendSyncPacket(player);
-                ENTITY_BLACKLIST_DATA_MANAGER.sendSyncPacket(player);
-            }
-        });
+        // sync packets on player join
+        PlayerEvent.PLAYER_JOIN.register(DataManager::sendAllToPlayer);
     }
 
+    public static void sendAllToPlayer(ServerPlayer player) {
+        ABILITY_DATA_MANAGER.sendSyncPacket(player);
+        TYPE_PROVIDER_DATA_MANAGER.sendSyncPacket(player);
+        SKILL_DATA_MANAGER.sendSyncPacket(player);
+        ENTITY_BLACKLIST_DATA_MANAGER.sendSyncPacket(player);
+    }
+
+    @Environment(EnvType.CLIENT)
     public static void registerReceiver() {
         ABILITY_DATA_MANAGER.registerPacketReceiver();
         TYPE_PROVIDER_DATA_MANAGER.registerPacketReceiver();

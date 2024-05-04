@@ -9,7 +9,10 @@ import net.minecraft.Util;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.packs.resources.ResourceManager;
+import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener;
 import net.minecraft.tags.TagKey;
+import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import tocraft.walkers.Walkers;
@@ -28,6 +31,7 @@ public class SkillDataManager extends SynchronizedJsonReloadListener {
         super(GSON, Walkers.MODID + "/skills");
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     protected void onApply(Map<ResourceLocation, JsonElement> map) {
         // prevent duplicates and the registration of removed entries
