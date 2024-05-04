@@ -7,6 +7,7 @@ import dev.architectury.registry.client.keymappings.KeyMappingRegistry;
 import net.minecraft.client.KeyMapping;
 import org.lwjgl.glfw.GLFW;
 import tocraft.walkers.ability.AbilityOverlayRenderer;
+import tocraft.walkers.api.data.DataManager;
 import tocraft.walkers.api.model.EntityArms;
 import tocraft.walkers.api.model.EntityUpdaters;
 import tocraft.walkers.impl.tick.KeyPressHandler;
@@ -38,5 +39,8 @@ public class WalkersClient {
         ClientTickEvent.CLIENT_PRE.register(new KeyPressHandler());
         ClientGuiEvent.RENDER_HUD.register((guiGraphics, tickDelta) -> new VariantMenu().render(guiGraphics));
         ClientNetworking.registerPacketHandlers();
+
+        // Register Data Packet receiver
+        DataManager.registerReceiver();
     }
 }

@@ -9,18 +9,16 @@ import net.minecraft.Util;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.packs.resources.ResourceManager;
-import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener;
 import net.minecraft.tags.TagKey;
-import net.minecraft.util.profiling.ProfilerFiller;
 import tocraft.walkers.Walkers;
 import tocraft.walkers.api.blacklist.EntityBlacklist;
+import tocraft.walkers.api.data.util.SynchronizedJsonReloadListener;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class EntityBlacklistDataManager extends SimpleJsonResourceReloadListener {
+public class EntityBlacklistDataManager extends SynchronizedJsonReloadListener {
     public static final Gson GSON = new GsonBuilder().registerTypeAdapter(ResourceLocation.class, new ResourceLocation.Serializer()).create();
 
     public EntityBlacklistDataManager() {
@@ -28,7 +26,7 @@ public class EntityBlacklistDataManager extends SimpleJsonResourceReloadListener
     }
 
     @Override
-    protected void apply(Map<ResourceLocation, JsonElement> map, ResourceManager resourceManager, ProfilerFiller profiler) {
+    protected void onApply(Map<ResourceLocation, JsonElement> map) {
         // prevent duplicates and the registration of removed entries
         EntityBlacklist.clearAll();
         EntityBlacklist.registerDefault();
