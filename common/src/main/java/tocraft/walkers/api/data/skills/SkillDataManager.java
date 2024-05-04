@@ -28,7 +28,6 @@ public class SkillDataManager extends SynchronizedJsonReloadListener {
         super(GSON, Walkers.MODID + "/skills");
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     protected void onApply(Map<ResourceLocation, JsonElement> map) {
         // prevent duplicates and the registration of removed entries
@@ -64,13 +63,14 @@ public class SkillDataManager extends SynchronizedJsonReloadListener {
             Codec.STRING.optionalFieldOf("required_mod", "").forGetter(SkillList::requiredMod),
             Codec.list(ResourceLocation.CODEC).optionalFieldOf("entity_types", new ArrayList<>()).forGetter(SkillList::entityTypeKeys),
             Codec.list(ResourceLocation.CODEC).optionalFieldOf("entity_tags", new ArrayList<>()).forGetter(SkillList::entityTagKeys),
-            Codec.list(SkillRegistry.SKILL_CODEC).fieldOf("skills").forGetter(SkillList::skillList)
+            Codec.list(SkillRegistry.getSkillCodec()).fieldOf("skills").forGetter(SkillList::skillList)
     ).apply(instance, instance.stable(SkillList::new)));
 
     protected static SkillList skillListFromJson(JsonObject json) {
         return Util.getOrThrow(SKILL_LIST_CODEC.parse(JsonOps.INSTANCE, json), JsonParseException::new);
     }
 
+    @SuppressWarnings("unused")
     public record SkillList(String requiredMod, List<ResourceLocation> entityTypeKeys,
                             List<ResourceLocation> entityTagKeys,
                             List<ShapeSkill<?>> skillList) {

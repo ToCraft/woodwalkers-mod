@@ -28,26 +28,16 @@ import java.util.*;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
+@SuppressWarnings("unused")
 public class SkillRegistry {
-    @SuppressWarnings({"unchecked", "rawtypes"})
-    public static final Codec<ShapeSkill<?>> SKILL_CODEC = ResourceLocation.CODEC.flatXmap(
-            resourceLocation -> (DataResult) Optional.ofNullable(SkillRegistry.getSkillCodec(resourceLocation))
-                    .map(DataResult::success)
-                    .orElseGet(() -> DataResult.error(() -> "Unknown shape skill: " + resourceLocation)),
-            object -> Optional.ofNullable(SkillRegistry.getSkillId((ShapeSkill<?>) object))
-                    .map(DataResult::success)
-                    .orElseGet(() -> DataResult.error(() -> "Unknown shape skill:" + object))
-    ).dispatchStable(object -> ((ShapeSkill<?>) object).codec(), Function.identity());
-
     private static final Map<Predicate<LivingEntity>, List<ShapeSkill<?>>> skillsByPredicates = new HashMap<>();
     private static final Map<EntityType<? extends LivingEntity>, List<ShapeSkill<?>>> skillsByEntityTypes = new HashMap<>();
     private static final Map<TagKey<EntityType<?>>, List<ShapeSkill<?>>> skillsByEntityTags = new HashMap<>();
     private static final Map<Class<? extends LivingEntity>, List<ShapeSkill<?>>> skillsByEntityClasses = new HashMap<>();
-    private static final Map<ResourceLocation, Codec<? extends ShapeSkill<?>>> skillCodecs = new HashMap<>();
+    private static final Map<ResourceLocation, Codec<? extends ShapeSkill<?>>> skillCodecById = new HashMap<>();
+    private static final Map<Codec<? extends ShapeSkill<?>>, ResourceLocation> skillIdByCodec = new IdentityHashMap<>();
 
-
-    @SuppressWarnings("unchecked")
-    public static void registerDefault() {
+    public static void initialize() {
         // register skill codecs
         registerCodec(MobEffectSkill.ID, MobEffectSkill.CODEC);
         registerCodec(BurnInDaylightSkill.ID, BurnInDaylightSkill.CODEC);
@@ -69,6 +59,10 @@ public class SkillRegistry {
         registerCodec(HumanoidSkill.ID, HumanoidSkill.CODEC);
         registerCodec(AttackForHealthSkill.ID, AttackForHealthSkill.CODEC);
         registerCodec(NocturnalSkill.ID, NocturnalSkill.CODEC);
+    }
+
+    @SuppressWarnings("unchecked")
+    public static void registerDefault() {
         // register skills
         // mob effects
         registerByClass(Bat.class, new MobEffectSkill<>(new MobEffectInstance(MobEffects.NIGHT_VISION, 100000, 0, false, false)));
@@ -261,22 +255,18 @@ public class SkillRegistry {
     }
 
     public static void registerCodec(ResourceLocation skillId, Codec<? extends ShapeSkill<?>> skillCodec) {
-        skillCodecs.put(skillId, skillCodec);
+        skillCodecById.put(skillId, skillCodec);
+        skillIdByCodec.put(skillCodec, skillId);
     }
 
     @Nullable
     public static Codec<? extends ShapeSkill<?>> getSkillCodec(ResourceLocation skillId) {
-        return skillCodecs.get(skillId);
+        return skillCodecById.get(skillId);
     }
 
     @Nullable
-    public static ResourceLocation getSkillId(ShapeSkill<?> skill) {
-        for (Map.Entry<ResourceLocation, Codec<? extends ShapeSkill<?>>> resourceLocationCodecEntry : skillCodecs.entrySet()) {
-            if (resourceLocationCodecEntry.getValue() == skill.codec()) {
-                return resourceLocationCodecEntry.getKey();
-            }
-        }
-        return null;
+    public static ResourceLocation getSkillId(Codec<? extends ShapeSkill<?>> skillCodec) {
+        return skillIdByCodec.get(skillCodec);
     }
 
     public static <L extends LivingEntity> boolean has(L shape, ResourceLocation skillId) {
@@ -308,5 +298,17 @@ public class SkillRegistry {
         skillsByEntityClasses.clear();
         skillsByEntityTags.clear();
         skillsByPredicates.clear();
+    }
+
+    public static Codec<ShapeSkill<?>> getSkillCodec() {
+        Codec<Codec<? extends ShapeSkill<?>>> codec = ResourceLocation.CODEC.flatXmap(
+                resourceLocation -> Optional.ofNullable(SkillRegistry.getSkillCodec(resourceLocation))
+                        .map(DataResult::success)
+                        .orElseGet(() -> DataResult.error(() -> "Unknown shape skill: " + resourceLocation)),
+                skillCodec -> Optional.ofNullable(getSkillId(skillCodec))
+                        .map(DataResult::success)
+                        .orElseGet(() -> DataResult.error(() -> "Unknown shape skill codec: " + skillCodec))
+        );
+        return codec.dispatchStable(ShapeSkill::codec, Function.identity());
     }
 }

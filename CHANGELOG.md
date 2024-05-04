@@ -2,6 +2,7 @@ walkers 4.4.1
 ================
 
 - fix data pack data not synchronized to client
+- fix skill codec encoding
 
 walkers 4.4
 ================
