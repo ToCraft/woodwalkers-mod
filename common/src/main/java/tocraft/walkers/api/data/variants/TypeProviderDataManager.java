@@ -37,7 +37,6 @@ public class TypeProviderDataManager extends SynchronizedJsonReloadListener {
         TypeProviderRegistry.registerDefault();
 
         for (Map.Entry<ResourceLocation, JsonElement> mapEntry : map.entrySet()) {
-
             Either<TypeProviderEntry<?>, String> typeProviderEntryStringEither = typeProviderFromJson(mapEntry.getValue().getAsJsonObject());
 
             // print error

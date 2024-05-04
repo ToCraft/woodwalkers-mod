@@ -3,6 +3,7 @@ walkers 4.4.1
 
 - fix data pack data not synchronized to client
 - fix skill codec encoding
+- add support for CompoundTags for advanced type provider
 
 walkers 4.4
 ================

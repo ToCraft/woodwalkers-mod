@@ -24,7 +24,7 @@ public abstract class SynchronizedJsonReloadListener extends SimpleJsonResourceR
 
     protected final String directory;
     protected final Gson gson;
-    protected final Map<ResourceLocation, JsonElement> map = new HashMap<>();
+    private final Map<ResourceLocation, JsonElement> map = new HashMap<>();
 
     public SynchronizedJsonReloadListener(Gson gson, String directory) {
         super(gson, directory);
@@ -35,11 +35,9 @@ public abstract class SynchronizedJsonReloadListener extends SimpleJsonResourceR
 
     @Override
     protected void apply(Map<ResourceLocation, JsonElement> map, ResourceManager resourceManager, ProfilerFiller profiler) {
-        if (Platform.getEnv() == EnvType.SERVER) {
-            this.map.clear();
-            this.map.putAll(map);
-            this.onApply(map);
-        }
+        this.map.clear();
+        this.map.putAll(map);
+        this.onApply(map);
     }
 
     protected abstract void onApply(Map<ResourceLocation, JsonElement> map);
