@@ -8,20 +8,18 @@ import dev.architectury.platform.Platform;
 import net.minecraft.Util;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.packs.resources.ResourceManager;
-import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener;
-import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.entity.EntityType;
 import tocraft.walkers.Walkers;
 import tocraft.walkers.ability.AbilityRegistry;
 import tocraft.walkers.ability.ShapeAbility;
+import tocraft.walkers.api.data.util.SynchronizedJsonReloadListener;
 import tocraft.walkers.api.data.variants.TypeProviderDataManager;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.AbstractMap.SimpleEntry;
 import java.util.Map;
 
-public class AbilityDataManager extends SimpleJsonResourceReloadListener {
+public class AbilityDataManager extends SynchronizedJsonReloadListener {
     private static final String DEFAULT_PACKAGE = "tocraft.walkers.ability.impl";
     public static final Gson GSON = new GsonBuilder().registerTypeAdapter(ResourceLocation.class, new ResourceLocation.Serializer()).create();
 
@@ -30,7 +28,7 @@ public class AbilityDataManager extends SimpleJsonResourceReloadListener {
     }
 
     @Override
-    protected void apply(Map<ResourceLocation, JsonElement> map, ResourceManager resourceManager, ProfilerFiller profiler) {
+    protected void onApply(Map<ResourceLocation, JsonElement> map) {
         // prevent duplicates and the registration of removed entries
         AbilityRegistry.clearAll();
         AbilityRegistry.registerDefault();
