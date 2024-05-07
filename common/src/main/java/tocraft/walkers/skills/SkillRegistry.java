@@ -2,6 +2,7 @@ package tocraft.walkers.skills;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
+import com.mojang.serialization.MapCodec;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.EntityTypeTags;
@@ -34,8 +35,8 @@ public class SkillRegistry {
     private static final Map<EntityType<? extends LivingEntity>, List<ShapeSkill<?>>> skillsByEntityTypes = new HashMap<>();
     private static final Map<TagKey<EntityType<?>>, List<ShapeSkill<?>>> skillsByEntityTags = new HashMap<>();
     private static final Map<Class<? extends LivingEntity>, List<ShapeSkill<?>>> skillsByEntityClasses = new HashMap<>();
-    private static final Map<ResourceLocation, Codec<? extends ShapeSkill<?>>> skillCodecById = new HashMap<>();
-    private static final Map<Codec<? extends ShapeSkill<?>>, ResourceLocation> skillIdByCodec = new IdentityHashMap<>();
+    private static final Map<ResourceLocation, MapCodec<? extends ShapeSkill<?>>> skillCodecById = new HashMap<>();
+    private static final Map<MapCodec<? extends ShapeSkill<?>>, ResourceLocation> skillIdByCodec = new IdentityHashMap<>();
 
     public static void initialize() {
         // register skill codecs
@@ -127,8 +128,8 @@ public class SkillRegistry {
         // cats hunt rabbits
         registerByClass(Rabbit.class, new PreySkill<>(List.of(entity -> entity instanceof Cat cat && !cat.isTame())));
         // aquatic
-        registerByPredicate(entity -> entity instanceof Mob mob && mob.getMobType().equals(MobType.WATER) && mob instanceof WaterAnimal, new AquaticSkill<>(0));
-        registerByPredicate(entity -> entity instanceof Mob mob && mob.getMobType().equals(MobType.WATER) && !(mob instanceof WaterAnimal), new AquaticSkill<>(1));
+        registerByPredicate(entity -> entity instanceof Mob mob && mob.getType().getCategory().getName().contains("water") && mob instanceof WaterAnimal, new AquaticSkill<>(0));
+        registerByPredicate(entity -> entity instanceof Mob mob && mob.getType().getCategory().getName().contains("water") && !(mob instanceof WaterAnimal), new AquaticSkill<>(1));
         // dolphin don't like sun
         registerByClass(Dolphin.class, new BurnInDaylightSkill<>());
         // walk on powder snow
@@ -148,9 +149,9 @@ public class SkillRegistry {
         registerByTag(TagKey.create(Registries.ENTITY_TYPE, Walkers.id("cant_swim")), new CantSwimSkill<>());
         registerByTag(TagKey.create(Registries.ENTITY_TYPE, Walkers.id("undrownable")), new UndrownableSkill<>());
         // Attack for Health
-        registerByPredicate(entity -> entity.getMobType() == MobType.UNDEAD, new AttackForHealthSkill<>());
+        registerByPredicate(entity -> entity.getType().getCategory().equals(MobCategory.MONSTER), new AttackForHealthSkill<>());
         // nocturnal
-        registerByPredicate(entity -> entity.getMobType() == MobType.UNDEAD, new NocturnalSkill<>());
+        registerByPredicate(entity -> entity.getType().getCategory().equals(MobCategory.MONSTER), new NocturnalSkill<>());
 
         // handle Integrations
         Integrations.registerSkills();
@@ -160,7 +161,7 @@ public class SkillRegistry {
      * @return a list of every available skill for the specified entity
      */
     @SuppressWarnings("unchecked")
-    public static <L extends LivingEntity> List<ShapeSkill<L>> getAll(L shape) {
+    public static synchronized <L extends LivingEntity> List<ShapeSkill<L>> getAll(L shape) {
         List<ShapeSkill<L>> skills = new ArrayList<>();
         if (shape != null) {
             if (skillsByEntityTypes.containsKey(shape.getType())) {
@@ -187,9 +188,15 @@ public class SkillRegistry {
     /**
      * @return a list of every available skill for the specified entity
      */
-    public static <L extends LivingEntity> List<ShapeSkill<L>> get(L shape, ResourceLocation skillId) {
+    public static synchronized <L extends LivingEntity> List<ShapeSkill<L>> get(L shape, ResourceLocation skillId) {
         List<ShapeSkill<L>> skills = getAll(shape);
-        return skills.stream().filter(skill -> skill.getId() == skillId).toList();
+        List<ShapeSkill<L>> filteredSkills = new ArrayList<>();
+        for (ShapeSkill<L> skill : skills) {
+            if (skill.getId() == skillId) {
+                filteredSkills.add(skill);
+            }
+        }
+        return filteredSkills;
     }
 
     public static <A extends LivingEntity> void registerByType(EntityType<A> type, ShapeSkill<A> skill) {
@@ -254,18 +261,18 @@ public class SkillRegistry {
         skillsByPredicates.put(entityPredicate, skills);
     }
 
-    public static void registerCodec(ResourceLocation skillId, Codec<? extends ShapeSkill<?>> skillCodec) {
+    public static void registerCodec(ResourceLocation skillId, MapCodec<? extends ShapeSkill<?>> skillCodec) {
         skillCodecById.put(skillId, skillCodec);
         skillIdByCodec.put(skillCodec, skillId);
     }
 
     @Nullable
-    public static Codec<? extends ShapeSkill<?>> getSkillCodec(ResourceLocation skillId) {
+    public static MapCodec<? extends ShapeSkill<?>> getSkillCodec(ResourceLocation skillId) {
         return skillCodecById.get(skillId);
     }
 
     @Nullable
-    public static ResourceLocation getSkillId(Codec<? extends ShapeSkill<?>> skillCodec) {
+    public static ResourceLocation getSkillId(MapCodec<? extends ShapeSkill<?>> skillCodec) {
         return skillIdByCodec.get(skillCodec);
     }
 
@@ -301,7 +308,7 @@ public class SkillRegistry {
     }
 
     public static Codec<ShapeSkill<?>> getSkillCodec() {
-        Codec<Codec<? extends ShapeSkill<?>>> codec = ResourceLocation.CODEC.flatXmap(
+        Codec<MapCodec<? extends ShapeSkill<?>>> codec = ResourceLocation.CODEC.flatXmap(
                 resourceLocation -> Optional.ofNullable(SkillRegistry.getSkillCodec(resourceLocation))
                         .map(DataResult::success)
                         .orElseGet(() -> DataResult.error(() -> "Unknown shape skill: " + resourceLocation)),

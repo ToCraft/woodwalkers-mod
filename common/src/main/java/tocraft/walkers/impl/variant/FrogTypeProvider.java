@@ -22,13 +22,13 @@ public class FrogTypeProvider extends TypeProvider<Frog> {
 
     @Override
     public int getVariantData(Frog entity) {
-        return BuiltInRegistries.FROG_VARIANT.getId(entity.getVariant());
+        return BuiltInRegistries.FROG_VARIANT.getId(entity.getVariant().value());
     }
 
     @Override
     public Frog create(EntityType<Frog> type, Level world, int data) {
         Frog frog = new Frog(type, world);
-        frog.setVariant(BuiltInRegistries.FROG_VARIANT.byId(data));
+        frog.setVariant(BuiltInRegistries.FROG_VARIANT.getHolder(data).orElseThrow());
         return frog;
     }
 

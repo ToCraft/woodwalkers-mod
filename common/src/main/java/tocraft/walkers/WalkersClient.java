@@ -1,17 +1,19 @@
 package tocraft.walkers;
 
 import com.mojang.blaze3d.platform.InputConstants;
-import dev.architectury.event.events.client.ClientGuiEvent;
-import dev.architectury.event.events.client.ClientTickEvent;
-import dev.architectury.registry.client.keymappings.KeyMappingRegistry;
 import net.minecraft.client.KeyMapping;
 import org.lwjgl.glfw.GLFW;
+import tocraft.craftedcore.event.client.ClientPlayerEvents;
+import tocraft.craftedcore.event.client.ClientTickEvents;
+import tocraft.craftedcore.event.client.RenderEvents;
+import tocraft.craftedcore.registration.KeyBindingRegistry;
 import tocraft.walkers.ability.AbilityOverlayRenderer;
-import tocraft.walkers.api.data.DataManager;
 import tocraft.walkers.api.model.EntityArms;
 import tocraft.walkers.api.model.EntityUpdaters;
+import tocraft.walkers.eventhandler.ClientRespawnHandler;
 import tocraft.walkers.impl.tick.KeyPressHandler;
 import tocraft.walkers.network.ClientNetworking;
+import tocraft.walkers.screen.hud.OverlayEventHandler;
 import tocraft.walkers.screen.hud.VariantMenu;
 
 public class WalkersClient {
@@ -25,10 +27,10 @@ public class WalkersClient {
 
 
     public void initialize() {
-        KeyMappingRegistry.register(ABILITY_KEY);
-        KeyMappingRegistry.register(TRANSFORM_KEY);
-        KeyMappingRegistry.register(UNLOCK_KEY);
-        KeyMappingRegistry.register(VARIANTS_MENU_KEY);
+        KeyBindingRegistry.register(ABILITY_KEY);
+        KeyBindingRegistry.register(TRANSFORM_KEY);
+        KeyBindingRegistry.register(UNLOCK_KEY);
+        KeyBindingRegistry.register(VARIANTS_MENU_KEY);
 
         // Register client-side event handlers
         EntityUpdaters.init();
@@ -36,11 +38,12 @@ public class WalkersClient {
         EntityArms.init();
 
         // Register event handlers
-        ClientTickEvent.CLIENT_PRE.register(new KeyPressHandler());
-        ClientGuiEvent.RENDER_HUD.register((guiGraphics, tickDelta) -> new VariantMenu().render(guiGraphics));
+        ClientTickEvents.CLIENT_PRE.register(new KeyPressHandler());
+        RenderEvents.HUD_RENDERING.register((guiGraphics, tickDelta) -> new VariantMenu().render(guiGraphics));
         ClientNetworking.registerPacketHandlers();
 
-        // Register Data Packet receiver
-        DataManager.registerReceiver();
+        OverlayEventHandler.initialize();
+
+        ClientPlayerEvents.CLIENT_PLAYER_RESPAWN.register(new ClientRespawnHandler());
     }
 }

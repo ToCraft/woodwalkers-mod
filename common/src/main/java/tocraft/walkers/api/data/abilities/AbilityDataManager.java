@@ -4,15 +4,14 @@ import com.google.gson.*;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.JsonOps;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import dev.architectury.platform.Platform;
-import net.minecraft.Util;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
+import tocraft.craftedcore.data.SynchronizedJsonReloadListener;
+import tocraft.craftedcore.platform.PlatformData;
 import tocraft.walkers.Walkers;
 import tocraft.walkers.ability.AbilityRegistry;
 import tocraft.walkers.ability.ShapeAbility;
-import tocraft.walkers.api.data.util.SynchronizedJsonReloadListener;
 import tocraft.walkers.api.data.variants.TypeProviderDataManager;
 
 import java.lang.reflect.InvocationTargetException;
@@ -48,7 +47,7 @@ public class AbilityDataManager extends SynchronizedJsonReloadListener {
             Codec.STRING.optionalFieldOf("required_mod", "").forGetter(o -> ""),
             Codec.STRING.fieldOf("ability_class").forGetter(o -> o.getValue().getClass().getName())
     ).apply(instance, instance.stable((entityType, requiredMod, shapeAbility) -> {
-        if ((requiredMod.isBlank() || Platform.isModLoaded(requiredMod)) && BuiltInRegistries.ENTITY_TYPE.containsKey(entityType)) {
+        if ((requiredMod.isBlank() || PlatformData.isModLoaded(requiredMod)) && BuiltInRegistries.ENTITY_TYPE.containsKey(entityType)) {
             try {
                 String abilityClassName = shapeAbility.contains(".") ? shapeAbility : DEFAULT_PACKAGE + "." + shapeAbility;
                 return new SimpleEntry<EntityType<?>, ShapeAbility<?>>(BuiltInRegistries.ENTITY_TYPE.get(entityType), Class.forName(abilityClassName).asSubclass(ShapeAbility.class).getDeclaredConstructor().newInstance());
@@ -56,13 +55,13 @@ public class AbilityDataManager extends SynchronizedJsonReloadListener {
                      IllegalAccessException | NoSuchMethodException e) {
                 throw new RuntimeException(e);
             }
-        } else if (requiredMod.isBlank() || Platform.isModLoaded(requiredMod)) {
+        } else if (requiredMod.isBlank() || PlatformData.isModLoaded(requiredMod)) {
             Walkers.LOGGER.info("{}: EntityType not found for {}", TypeProviderDataManager.class.getSimpleName(), entityType);
         }
         return new SimpleEntry<>(null, null);
     })));
 
     protected static Map.Entry<EntityType<?>, ShapeAbility<?>> abilityEntryFromJson(JsonObject json) {
-        return Util.getOrThrow(ABILITY_CODEC.parse(JsonOps.INSTANCE, json), JsonParseException::new);
+        return ABILITY_CODEC.parse(JsonOps.INSTANCE, json).getOrThrow(JsonParseException::new);
     }
 }

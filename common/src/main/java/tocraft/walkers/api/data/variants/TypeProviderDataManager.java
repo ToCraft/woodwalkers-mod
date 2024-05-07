@@ -6,15 +6,14 @@ import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.JsonOps;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import dev.architectury.platform.Platform;
-import net.minecraft.Util;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import org.jetbrains.annotations.Nullable;
+import tocraft.craftedcore.data.SynchronizedJsonReloadListener;
+import tocraft.craftedcore.platform.PlatformData;
 import tocraft.walkers.Walkers;
-import tocraft.walkers.api.data.util.SynchronizedJsonReloadListener;
 import tocraft.walkers.api.variant.TypeProvider;
 import tocraft.walkers.api.variant.TypeProviderRegistry;
 
@@ -108,7 +107,7 @@ public class TypeProviderDataManager extends SynchronizedJsonReloadListener {
     })));
 
     private static Either<TypeProviderEntry<?>, String> typeProviderFromJson(JsonObject json) {
-        return Util.getOrThrow(TYPE_PROVIDER_LIST_CODEC.parse(JsonOps.INSTANCE, json), JsonParseException::new);
+        return TYPE_PROVIDER_LIST_CODEC.parse(JsonOps.INSTANCE, json).getOrThrow(JsonParseException::new);
     }
 
     @SuppressWarnings("unused")
@@ -123,7 +122,7 @@ public class TypeProviderDataManager extends SynchronizedJsonReloadListener {
         @SuppressWarnings("unchecked")
         @Nullable
         public EntityType<L> entityType() {
-            if ((requiredMod() == null || requiredMod().isBlank() || Platform.isModLoaded(requiredMod())) && BuiltInRegistries.ENTITY_TYPE.containsKey(entityTypeKey()))
+            if ((requiredMod() == null || requiredMod().isBlank() || PlatformData.isModLoaded(requiredMod())) && BuiltInRegistries.ENTITY_TYPE.containsKey(entityTypeKey()))
                 return (EntityType<L>) BuiltInRegistries.ENTITY_TYPE.get(entityTypeKey());
             else
                 return null;

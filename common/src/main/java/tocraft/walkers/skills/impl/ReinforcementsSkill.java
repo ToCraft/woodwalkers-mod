@@ -1,6 +1,7 @@
 package tocraft.walkers.skills.impl;
 
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -26,7 +27,7 @@ import java.util.List;
 @SuppressWarnings("unused")
 public class ReinforcementsSkill<E extends LivingEntity> extends ShapeSkill<E> {
     public static final ResourceLocation ID = Walkers.id("reinforcements");
-    public static final Codec<ReinforcementsSkill<?>> CODEC = RecordCodecBuilder.create((instance) -> instance.group(
+    public static final MapCodec<ReinforcementsSkill<?>> CODEC = RecordCodecBuilder.mapCodec((instance) -> instance.group(
             Codec.INT.optionalFieldOf("range", 32).forGetter(o -> o.range),
             Codec.list(ResourceLocation.CODEC).optionalFieldOf("reinforcements", new ArrayList<>()).forGetter(o -> o.reinforcementTypes.stream().map(BuiltInRegistries.ENTITY_TYPE::getKey).toList()),
             Codec.list(ResourceLocation.CODEC).optionalFieldOf("reinforcement_tags", new ArrayList<>()).forGetter(o -> o.reinforcementTags.stream().map(TagKey::location).toList())
@@ -92,7 +93,7 @@ public class ReinforcementsSkill<E extends LivingEntity> extends ShapeSkill<E> {
     }
 
     @Override
-    public Codec<? extends ShapeSkill<?>> codec() {
+    public MapCodec<? extends ShapeSkill<?>> codec() {
         return CODEC;
     }
 

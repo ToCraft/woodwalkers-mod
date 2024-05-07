@@ -1,6 +1,7 @@
 package tocraft.walkers.skills.impl;
 
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
@@ -19,7 +20,7 @@ import java.util.function.Predicate;
 @SuppressWarnings("unused")
 public class PreySkill<E extends LivingEntity> extends ShapeSkill<E> {
     public static final ResourceLocation ID = Walkers.id("prey");
-    public static final Codec<PreySkill<?>> CODEC = RecordCodecBuilder.create((instance) -> instance.group(
+    public static final MapCodec<PreySkill<?>> CODEC = RecordCodecBuilder.mapCodec((instance) -> instance.group(
             Codec.list(ResourceLocation.CODEC).optionalFieldOf("hunter", new ArrayList<>()).forGetter(o -> o.hunterTypes.stream().map(BuiltInRegistries.ENTITY_TYPE::getKey).toList()),
             Codec.list(ResourceLocation.CODEC).optionalFieldOf("hunter_tags", new ArrayList<>()).forGetter(o -> o.hunterTags.stream().map(TagKey::location).toList())
     ).apply(instance, instance.stable((hunterLocations, hunterTagLocations) -> {
@@ -88,7 +89,7 @@ public class PreySkill<E extends LivingEntity> extends ShapeSkill<E> {
     }
 
     @Override
-    public Codec<? extends ShapeSkill<?>> codec() {
+    public MapCodec<? extends ShapeSkill<?>> codec() {
         return CODEC;
     }
 }

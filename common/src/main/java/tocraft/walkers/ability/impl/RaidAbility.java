@@ -15,7 +15,7 @@ public class RaidAbility<T extends Mob> extends ShapeAbility<T> {
     @Override
     public void onUse(Player player, Mob shape, Level world) {
         if (world instanceof ServerLevel serverLevel) {
-            serverLevel.getRaids().createOrExtendRaid((ServerPlayer) player);
+            serverLevel.getRaids().createOrExtendRaid((ServerPlayer) player, player.getOnPos());
             player.playSound(SoundEvents.RAID_HORN.value());
         }
     }

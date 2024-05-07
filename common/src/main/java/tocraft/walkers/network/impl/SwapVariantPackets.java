@@ -1,15 +1,13 @@
 package tocraft.walkers.network.impl;
 
-import dev.architectury.networking.NetworkManager;
-import io.netty.buffer.Unpooled;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import tocraft.craftedcore.network.ModernNetworking;
 import tocraft.walkers.Walkers;
 import tocraft.walkers.api.PlayerShape;
 import tocraft.walkers.api.PlayerShapeChanger;
@@ -23,9 +21,9 @@ public class SwapVariantPackets {
 
     @SuppressWarnings("ConstantConditions")
     public static void registerSwapVariantPacketHandler() {
-        NetworkManager.registerReceiver(NetworkManager.Side.C2S, NetworkHandler.VARIANT_REQUEST,
-                (buf, context) -> {
-                    int variantID = buf.readInt();
+        ModernNetworking.registerReceiver(ModernNetworking.Side.C2S, NetworkHandler.VARIANT_REQUEST,
+                (context, packet) -> {
+                    int variantID = packet.getInt("variant_id");
                     context.getPlayer().getServer().execute(() -> {
                         if (Walkers.CONFIG.unlockEveryVariant) {
                             ShapeType<?> currentShapeType = ShapeType.from(PlayerShape.getCurrentShape(context.getPlayer()));
@@ -64,9 +62,9 @@ public class SwapVariantPackets {
 
     public static void sendSwapRequest(int variantID) {
         if (Walkers.CONFIG.unlockEveryVariant) {
-            FriendlyByteBuf packet = new FriendlyByteBuf(Unpooled.buffer());
-            packet.writeInt(variantID);
-            NetworkManager.sendToServer(ClientNetworking.VARIANT_REQUEST, packet);
+            CompoundTag packet = new CompoundTag();
+            packet.putInt("variant_id", variantID);
+            ModernNetworking.sendToServer(ClientNetworking.VARIANT_REQUEST, packet);
         }
     }
 }

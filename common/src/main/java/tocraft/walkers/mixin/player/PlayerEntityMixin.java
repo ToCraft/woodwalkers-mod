@@ -29,7 +29,6 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -58,9 +57,6 @@ public abstract class PlayerEntityMixin extends LivingEntityMixin {
     public abstract boolean isSpectator();
 
     @Shadow
-    public abstract @NotNull EntityDimensions getDimensions(Pose pose);
-
-    @Shadow
     public abstract boolean isSwimming();
 
     @Shadow
@@ -70,14 +66,14 @@ public abstract class PlayerEntityMixin extends LivingEntityMixin {
         super(type, world);
     }
 
-    @Inject(method = "getDimensions", at = @At("HEAD"), cancellable = true)
+    @Inject(method = "getDefaultDimensions", at = @At("HEAD"), cancellable = true)
     private void getDimensions(Pose pose, CallbackInfoReturnable<EntityDimensions> cir) {
         LivingEntity entity = PlayerShape.getCurrentShape((Player) (Object) this);
 
         if (entity != null) {
             EntityDimensions shapeDimensions = entity.getDimensions(pose);
             if (pose == Pose.CROUCHING && SkillRegistry.has(entity, HumanoidSkill.ID)) {
-                cir.setReturnValue(EntityDimensions.scalable(shapeDimensions.width, shapeDimensions.height * 1.5F / 1.8F));
+                cir.setReturnValue(EntityDimensions.scalable(shapeDimensions.width(), shapeDimensions.height() * 1.5F / 1.8F));
             } else {
                 cir.setReturnValue(shapeDimensions);
             }
@@ -124,20 +120,6 @@ public abstract class PlayerEntityMixin extends LivingEntityMixin {
                     this.setAirSupply(this.increaseAirSupply(air));
                 }
             }
-        }
-    }
-
-    @Inject(method = "getStandingEyeHeight", at = @At("HEAD"), cancellable = true)
-    private void shape_getStandingEyeHeight(Pose pose, EntityDimensions dimensions, CallbackInfoReturnable<Float> cir) {
-        // cursed
-        try {
-            LivingEntity shape = PlayerShape.getCurrentShape((Player) (Object) this);
-
-            if (shape != null) {
-                cir.setReturnValue(((LivingEntityAccessor) shape).callGetEyeHeight(getPose(), getDimensions(getPose())));
-            }
-        } catch (Exception ignored) {
-
         }
     }
 
@@ -250,7 +232,7 @@ public abstract class PlayerEntityMixin extends LivingEntityMixin {
 
                         // set player on fire
                         if (bl) {
-                            player.setSecondsOnFire(8);
+                            player.igniteForSeconds(8);
                         }
                     }
                 }

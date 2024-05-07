@@ -15,8 +15,10 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.ModifyArgs;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.invoke.arg.Args;
 import tocraft.walkers.api.PlayerShape;
 import tocraft.walkers.mixin.client.accessor.EntityShadowAccessor;
 
@@ -36,7 +38,7 @@ public abstract class ShadowMixin {
 
     @ModifyVariable(
             method = "renderShadow",
-            at = @At(value = "INVOKE", target = "Lnet/minecraft/util/Mth;lerp(DDD)D", ordinal = 0), index = 7)
+            at = @At(value = "INVOKE", target = "Lnet/minecraft/util/Mth;lerp(DDD)D", ordinal = 0), index = 6, argsOnly = true)
     private static float adjustShadowSize(float originalSize) {
         if (shape_shadowEntity instanceof Player player) {
             LivingEntity shape = PlayerShape.getCurrentShape(player);

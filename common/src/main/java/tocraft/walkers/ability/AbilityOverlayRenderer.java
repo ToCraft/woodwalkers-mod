@@ -1,9 +1,9 @@
 package tocraft.walkers.ability;
 
-import dev.architectury.event.events.client.ClientGuiEvent;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.world.entity.LivingEntity;
+import tocraft.craftedcore.event.client.RenderEvents;
 import tocraft.craftedcore.gui.TimerOverlayRenderer;
 import tocraft.walkers.api.PlayerAbilities;
 import tocraft.walkers.api.PlayerShape;
@@ -11,7 +11,7 @@ import tocraft.walkers.api.PlayerShape;
 public class AbilityOverlayRenderer {
 
     public static void register() {
-        ClientGuiEvent.RENDER_HUD.register((matrices, delta) -> {
+        RenderEvents.HUD_RENDERING.register((matrices, delta) -> {
             Minecraft client = Minecraft.getInstance();
             LocalPlayer player = client.player;
             LivingEntity shape = PlayerShape.getCurrentShape(player);

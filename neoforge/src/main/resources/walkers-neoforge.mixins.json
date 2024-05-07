@@ -7,7 +7,6 @@
     "WitherEntityMixin"
   ],
   "client": [
-    "ExtendedGuiMixin"
   ],
   "injectors": {
     "defaultRequire": 1

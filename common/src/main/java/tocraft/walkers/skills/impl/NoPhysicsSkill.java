@@ -1,6 +1,6 @@
 package tocraft.walkers.skills.impl;
 
-import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -16,7 +16,7 @@ import tocraft.walkers.skills.ShapeSkill;
 
 public class NoPhysicsSkill<E extends LivingEntity> extends ShapeSkill<E> {
     public static final ResourceLocation ID = Walkers.id("no_physics");
-    public static final Codec<NoPhysicsSkill<?>> CODEC = RecordCodecBuilder.create((instance) -> instance.stable(new NoPhysicsSkill<>()));
+    public static final MapCodec<NoPhysicsSkill<?>> CODEC = RecordCodecBuilder.mapCodec((instance) -> instance.stable(new NoPhysicsSkill<>()));
 
     @Override
     public ResourceLocation getId() {
@@ -24,7 +24,7 @@ public class NoPhysicsSkill<E extends LivingEntity> extends ShapeSkill<E> {
     }
 
     @Override
-    public Codec<? extends ShapeSkill<?>> codec() {
+    public MapCodec<? extends ShapeSkill<?>> codec() {
         return CODEC;
     }
 

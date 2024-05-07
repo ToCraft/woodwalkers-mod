@@ -1,13 +1,19 @@
 package tocraft.walkers.mixin;
 
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
-import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.animal.Dolphin;
 import net.minecraft.world.entity.animal.Parrot;
 import net.minecraft.world.entity.animal.Sheep;
@@ -23,7 +29,6 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
-import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import tocraft.walkers.Walkers;
@@ -39,10 +44,6 @@ import java.util.List;
 
 @Mixin(LivingEntity.class)
 public abstract class LivingEntityMixin extends Entity implements NearbySongAccessor {
-
-    @Shadow
-    public abstract boolean hasEffect(MobEffect effect);
-
     @Shadow
     public abstract void kill();
 
@@ -55,15 +56,12 @@ public abstract class LivingEntityMixin extends Entity implements NearbySongAcce
     @Shadow
     protected abstract int increaseAirSupply(int currentAir);
 
-    @Shadow
-    public abstract void heal(float healAmount);
-
     protected LivingEntityMixin(EntityType<?> type, Level world) {
         super(type, world);
     }
 
-    @Redirect(method = "travel", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;hasEffect(Lnet/minecraft/world/effect/MobEffect;)Z", ordinal = 0))
-    private boolean slowFall(LivingEntity livingEntity, MobEffect effect) {
+    @WrapOperation(method = "travel", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;hasEffect(Lnet/minecraft/core/Holder;)Z", ordinal = 0))
+    private boolean slowFall(LivingEntity instance, Holder<MobEffect> effect, Operation<Boolean> original) {
         if ((Object) this instanceof Player player) {
             LivingEntity shape = PlayerShape.getCurrentShape(player);
 
@@ -81,10 +79,10 @@ public abstract class LivingEntityMixin extends Entity implements NearbySongAcce
             }
         }
 
-        return this.hasEffect(MobEffects.SLOW_FALLING);
+        return original.call(instance, effect);
     }
 
-    @ModifyVariable(method = "travel", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;hasEffect(Lnet/minecraft/world/effect/MobEffect;)Z", ordinal = 1), ordinal = 0)
+    @ModifyVariable(method = "travel", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;hasEffect(Lnet/minecraft/core/Holder;)Z", ordinal = 1), ordinal = 0)
     public float applyWaterCreatureSwimSpeedBoost(float j) {
         if ((Object) this instanceof Player player) {
             LivingEntity shape = PlayerShape.getCurrentShape(player);
@@ -124,7 +122,7 @@ public abstract class LivingEntityMixin extends Entity implements NearbySongAcce
     }
 
     @Inject(method = "hasEffect", at = @At("HEAD"), cancellable = true)
-    private void returnHasNightVision(MobEffect effect, CallbackInfoReturnable<Boolean> cir) {
+    private void returnHasNightVision(Holder<MobEffect> effect, CallbackInfoReturnable<Boolean> cir) {
         if ((Object) this instanceof Player player) {
             LivingEntity shape = PlayerShape.getCurrentShape(player);
             if (SkillRegistry.has(shape, MobEffectSkill.ID)) {
@@ -140,7 +138,7 @@ public abstract class LivingEntityMixin extends Entity implements NearbySongAcce
     }
 
     @Inject(method = "getEffect", at = @At("HEAD"), cancellable = true)
-    private void returnNightVisionInstance(MobEffect effect, CallbackInfoReturnable<MobEffectInstance> cir) {
+    private void returnNightVisionInstance(Holder<MobEffect> effect, CallbackInfoReturnable<MobEffectInstance> cir) {
         if ((Object) this instanceof Player player) {
             LivingEntity shape = PlayerShape.getCurrentShape(player);
             if (SkillRegistry.has(shape, MobEffectSkill.ID)) {
@@ -154,28 +152,6 @@ public abstract class LivingEntityMixin extends Entity implements NearbySongAcce
                         }
                     }
                 }
-            }
-        }
-    }
-
-    @Inject(at = @At("HEAD"), method = "getEyeHeight", cancellable = true)
-    public void getEyeHeight(Pose pose, EntityDimensions dimensions, CallbackInfoReturnable<Float> cir) {
-        if ((LivingEntity) (Object) this instanceof Player player) {
-
-            // this is cursed
-            try {
-                LivingEntity shape = PlayerShape.getCurrentShape(player);
-
-                if (shape != null) {
-                    float shapeEyeHeight = shape.getEyeHeight(pose);
-                    if (pose == Pose.CROUCHING && SkillRegistry.has(shape, HumanoidSkill.ID)) {
-                        cir.setReturnValue(shapeEyeHeight * 1.27F / 1.62F);
-                        return;
-                    }
-
-                    cir.setReturnValue(shapeEyeHeight);
-                }
-            } catch (Exception ignored) {
             }
         }
     }
@@ -280,7 +256,7 @@ public abstract class LivingEntityMixin extends Entity implements NearbySongAcce
     }
 
 
-    @Inject(method = "eat", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;addEatEffect(Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/level/Level;Lnet/minecraft/world/entity/LivingEntity;)V"))
+    @Inject(method = "eat", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;addEatEffect(Lnet/minecraft/world/food/FoodProperties;)V"))
     private void regenerateWoolFromFood(Level level, ItemStack food, CallbackInfoReturnable<ItemStack> cir) {
         if ((Object) this instanceof Player player) {
             LivingEntity shape = PlayerShape.getCurrentShape(player);

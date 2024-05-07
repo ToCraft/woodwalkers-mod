@@ -8,12 +8,10 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import tocraft.walkers.Walkers;
 import tocraft.walkers.api.PlayerShape;
 import tocraft.walkers.api.PlayerShapeChanger;
-import tocraft.walkers.api.data.DataManager;
 import tocraft.walkers.impl.DimensionsRefresher;
 
 @Mixin(PlayerList.class)
@@ -44,13 +42,5 @@ public class PlayerManagerMixin {
         // send sync packets
         PlayerShapeChanger.sync(player);
         PlayerShape.sync(player);
-    }
-
-    // send reloaded packets to player when reloading packets
-    @ModifyArg(method = "reloadResources", at = @At(value = "INVOKE", target = "Lnet/minecraft/stats/ServerRecipeBook;sendInitialRecipeBook(Lnet/minecraft/server/level/ServerPlayer;)V"))
-    private ServerPlayer endResourceReload(ServerPlayer player) {
-        Walkers.LOGGER.warn("got here :D");
-        DataManager.sendAllToPlayer(player);
-        return player;
     }
 }

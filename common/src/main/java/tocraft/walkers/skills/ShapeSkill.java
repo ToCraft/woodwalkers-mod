@@ -1,6 +1,6 @@
 package tocraft.walkers.skills;
 
-import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -12,7 +12,7 @@ import org.jetbrains.annotations.Nullable;
 public abstract class ShapeSkill<E extends LivingEntity> {
     public abstract ResourceLocation getId();
 
-    public abstract Codec<? extends ShapeSkill<?>> codec();
+    public abstract MapCodec<? extends ShapeSkill<?>> codec();
 
     public boolean canBeRegisteredMultipleTimes() {
         return true;

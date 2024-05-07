@@ -30,13 +30,13 @@ public class CatTypeProvider extends TypeProvider<Cat> {
 
     @Override
     public int getVariantData(Cat entity) {
-        return BuiltInRegistries.CAT_VARIANT.getId(entity.getVariant());
+        return BuiltInRegistries.CAT_VARIANT.getId(entity.getVariant().value());
     }
 
     @Override
     public Cat create(EntityType<Cat> type, Level world, int data) {
         Cat cat = new Cat(type, world);
-        cat.setVariant(BuiltInRegistries.CAT_VARIANT.byId(data));
+        cat.setVariant(BuiltInRegistries.CAT_VARIANT.getHolder(data).orElseThrow());
         return cat;
     }
 

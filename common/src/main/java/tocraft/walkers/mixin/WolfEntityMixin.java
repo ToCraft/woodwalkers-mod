@@ -36,8 +36,8 @@ public abstract class WolfEntityMixin extends TamableAnimal {
     }
 
     @Inject(method = "defineSynchedData", at = @At("RETURN"))
-    protected void onInitDataTracker(CallbackInfo ci) {
-        ((Wolf) (Object) this).getEntityData().define(walkers$isSpecial, false);
+    protected void onInitDataTracker(SynchedEntityData.Builder builder, CallbackInfo ci) {
+        builder.define(walkers$isSpecial, false);
     }
 
     @Inject(method = "addAdditionalSaveData", at = @At("RETURN"))

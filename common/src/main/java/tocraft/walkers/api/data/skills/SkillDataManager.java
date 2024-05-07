@@ -4,19 +4,15 @@ import com.google.gson.*;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.JsonOps;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import dev.architectury.platform.Platform;
-import net.minecraft.Util;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.packs.resources.ResourceManager;
-import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener;
 import net.minecraft.tags.TagKey;
-import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import tocraft.craftedcore.data.SynchronizedJsonReloadListener;
+import tocraft.craftedcore.platform.PlatformData;
 import tocraft.walkers.Walkers;
-import tocraft.walkers.api.data.util.SynchronizedJsonReloadListener;
 import tocraft.walkers.skills.ShapeSkill;
 import tocraft.walkers.skills.SkillRegistry;
 
@@ -42,7 +38,7 @@ public class SkillDataManager extends SynchronizedJsonReloadListener {
             SkillList skillList = skillListFromJson(mapEntry.getValue().getAsJsonObject());
 
             if (!skillList.isEmpty()) {
-                if (skillList.requiredMod() == null || Platform.isModLoaded(skillList.requiredMod())) {
+                if (skillList.requiredMod() == null || PlatformData.isModLoaded(skillList.requiredMod())) {
                     // entity types
                     for (EntityType<LivingEntity> entityType : skillList.entityTypes()) {
                         SkillRegistry.registerByType(entityType, skillList.skillList().stream().map(skill -> (ShapeSkill<LivingEntity>) skill).toList());
@@ -71,7 +67,7 @@ public class SkillDataManager extends SynchronizedJsonReloadListener {
     ).apply(instance, instance.stable(SkillList::new)));
 
     protected static SkillList skillListFromJson(JsonObject json) {
-        return Util.getOrThrow(SKILL_LIST_CODEC.parse(JsonOps.INSTANCE, json), JsonParseException::new);
+        return SKILL_LIST_CODEC.parse(JsonOps.INSTANCE, json).getOrThrow(JsonParseException::new);
     }
 
     @SuppressWarnings("unused")
