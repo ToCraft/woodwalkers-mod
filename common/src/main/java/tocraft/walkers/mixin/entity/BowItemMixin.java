@@ -19,13 +19,11 @@ import tocraft.walkers.api.PlayerShape;
 public class BowItemMixin {
 
     @Inject(method = "releaseUsing", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/Level;addFreshEntity(Lnet/minecraft/world/entity/Entity;)Z"), locals = LocalCapture.CAPTURE_FAILHARD)
-    private void flameArrows(ItemStack stack, Level level, LivingEntity user, int remainingUseTicks, CallbackInfo ci,
-                             Player playerEntity, boolean bl, ItemStack itemStack, int i, float f, boolean bl2, ArrowItem arrowItem,
-                             AbstractArrow arrow) {
-        if (user instanceof Player player) {
+    private void flameArrows(ItemStack stack, Level level, LivingEntity shooter, int timeCharged, CallbackInfo ci, Player playerEntity, boolean bl, ItemStack itemStack, int i, float f, boolean bl2, ArrowItem arrowItem, AbstractArrow projectile) {
+        if (shooter instanceof Player player) {
             LivingEntity shape = PlayerShape.getCurrentShape(player);
             if (shape instanceof WitherSkeleton) {
-                arrow.setSecondsOnFire(100);
+                projectile.setSecondsOnFire(100);
             }
         }
     }

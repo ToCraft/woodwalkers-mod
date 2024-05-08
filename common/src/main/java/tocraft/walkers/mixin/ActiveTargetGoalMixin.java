@@ -2,7 +2,7 @@ package tocraft.walkers.mixin;
 
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.MobType;
+import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.animal.PolarBear;
 import net.minecraft.world.entity.boss.wither.WitherBoss;
@@ -56,7 +56,7 @@ public abstract class ActiveTargetGoalMixin extends TrackTargetGoalMixin {
                     }
 
                     // withers should ignore undead
-                    else if (this.mob instanceof WitherBoss && shape.getMobType().equals(MobType.UNDEAD)) {
+                    else if (this.mob instanceof WitherBoss && shape.getType().getCategory().equals(MobCategory.MONSTER)) {
                         this.stop();
                         ci.cancel();
                     }
@@ -103,7 +103,7 @@ public abstract class ActiveTargetGoalMixin extends TrackTargetGoalMixin {
                     }
 
                     // withers should ignore undead
-                    if (this.mob instanceof WitherBoss && shape.getMobType().equals(MobType.UNDEAD)) {
+                    if (this.mob instanceof WitherBoss && shape.getType().getCategory().equals(MobCategory.MONSTER)) {
                         cir.setReturnValue(false);
                     }
 

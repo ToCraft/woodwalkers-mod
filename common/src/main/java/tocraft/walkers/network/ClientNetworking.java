@@ -1,14 +1,12 @@
 package tocraft.walkers.network;
 
-import dev.architectury.networking.NetworkManager;
-import io.netty.buffer.Unpooled;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.Nullable;
 import tocraft.craftedcore.client.CraftedCoreClient;
+import tocraft.craftedcore.network.ModernNetworking;
 import tocraft.craftedcore.network.client.ClientNetworking.ApplicablePacket;
 import tocraft.walkers.impl.DimensionsRefresher;
 import tocraft.walkers.impl.PlayerDataProvider;
@@ -21,17 +19,17 @@ import java.util.UUID;
 public class ClientNetworking implements NetworkHandler {
 
     public static void registerPacketHandlers() {
-        NetworkManager.registerReceiver(NetworkManager.Side.S2C, NetworkHandler.SHAPE_SYNC,
+        ModernNetworking.registerReceiver(ModernNetworking.Side.S2C, NetworkHandler.SHAPE_SYNC,
                 ClientNetworking::handleWalkersSyncPacket);
-        NetworkManager.registerReceiver(NetworkManager.Side.S2C, NetworkHandler.ABILITY_SYNC,
+        ModernNetworking.registerReceiver(ModernNetworking.Side.S2C, NetworkHandler.ABILITY_SYNC,
                 ClientNetworking::handleAbilitySyncPacket);
-        NetworkManager.registerReceiver(NetworkManager.Side.S2C, NetworkHandler.UNLOCK_SYNC,
+        ModernNetworking.registerReceiver(ModernNetworking.Side.S2C, NetworkHandler.UNLOCK_SYNC,
                 UnlockPackets::handleUnlockSyncPacket);
-        NetworkManager.registerReceiver(NetworkManager.Side.S2C, NetworkHandler.CHANGE_VEHICLE_STATE,
+        ModernNetworking.registerReceiver(ModernNetworking.Side.S2C, NetworkHandler.CHANGE_VEHICLE_STATE,
                 VehiclePackets::handleSyncPacket);
     }
 
-    public static void runOrQueue(NetworkManager.PacketContext context, ApplicablePacket packet) {
+    public static void runOrQueue(ModernNetworking.Context context, ApplicablePacket packet) {
         if (context.getPlayer() == null) {
             CraftedCoreClient.getSyncPacketQueue().add(packet);
         } else {
@@ -40,13 +38,13 @@ public class ClientNetworking implements NetworkHandler {
     }
 
     public static void sendAbilityRequest() {
-        NetworkManager.sendToServer(USE_ABILITY, new FriendlyByteBuf(Unpooled.buffer()));
+        ModernNetworking.sendToServer(USE_ABILITY, new CompoundTag());
     }
 
-    public static void handleWalkersSyncPacket(FriendlyByteBuf packet, NetworkManager.PacketContext context) {
-        final UUID uuid = packet.readUUID();
-        final String id = packet.readUtf();
-        final CompoundTag entityNbt = packet.readNbt();
+    public static void handleWalkersSyncPacket(ModernNetworking.Context context, CompoundTag packetData) {
+        final UUID uuid = packetData.getUUID("uuid");
+        final String id = packetData.getString("type");
+        final CompoundTag entityNbt = packetData.getCompound("entity_tag");
 
         runOrQueue(context, player -> {
             @Nullable
@@ -63,32 +61,30 @@ public class ClientNetworking implements NetworkHandler {
                 }
 
                 // If entity type was valid, deserialize entity data from tag/
-                if (entityNbt != null) {
-                    entityNbt.putString("id", id);
-                    Optional<EntityType<?>> type = EntityType.by(entityNbt);
-                    if (type.isPresent()) {
-                        LivingEntity shape = data.walkers$getCurrentShape();
+                entityNbt.putString("id", id);
+                Optional<EntityType<?>> type = EntityType.by(entityNbt);
+                if (type.isPresent()) {
+                    LivingEntity shape = data.walkers$getCurrentShape();
 
-                        // ensure entity data exists
-                        if (shape == null || !type.get().equals(shape.getType())) {
-                            shape = (LivingEntity) type.get().create(syncTarget.level());
-                            data.walkers$setCurrentShape(shape);
+                    // ensure entity data exists
+                    if (shape == null || !type.get().equals(shape.getType())) {
+                        shape = (LivingEntity) type.get().create(syncTarget.level());
+                        data.walkers$setCurrentShape(shape);
 
-                            // refresh player dimensions/hitbox on client
-                            ((DimensionsRefresher) syncTarget).shape_refreshDimensions();
-                        }
+                        // refresh player dimensions/hitbox on client
+                        ((DimensionsRefresher) syncTarget).shape_refreshDimensions();
+                    }
 
-                        if (shape != null) {
-                            shape.load(entityNbt);
-                        }
+                    if (shape != null) {
+                        shape.load(entityNbt);
                     }
                 }
             }
         });
     }
 
-    public static void handleAbilitySyncPacket(FriendlyByteBuf packet, NetworkManager.PacketContext context) {
-        int cooldown = packet.readInt();
+    public static void handleAbilitySyncPacket(ModernNetworking.Context context, CompoundTag packet) {
+        int cooldown = packet.getInt("cooldown");
         runOrQueue(context, player -> ((PlayerDataProvider) player).walkers$setAbilityCooldown(cooldown));
     }
 }

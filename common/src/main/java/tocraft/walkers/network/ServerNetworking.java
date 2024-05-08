@@ -1,9 +1,9 @@
 package tocraft.walkers.network;
 
-import dev.architectury.networking.NetworkManager;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import tocraft.craftedcore.network.ModernNetworking;
 import tocraft.walkers.ability.AbilityRegistry;
 import tocraft.walkers.api.PlayerAbilities;
 import tocraft.walkers.api.PlayerShape;
@@ -22,7 +22,7 @@ public class ServerNetworking implements NetworkHandler {
 
     @SuppressWarnings("ConstantConditions")
     private static void registerUseAbilityPacketHandler() {
-        NetworkManager.registerReceiver(NetworkManager.Side.C2S, USE_ABILITY, (buf, context) -> {
+        ModernNetworking.registerReceiver(ModernNetworking.Side.C2S, USE_ABILITY, (context, packet) -> {
             Player player = context.getPlayer();
 
             context.getPlayer().getServer().execute(() -> {

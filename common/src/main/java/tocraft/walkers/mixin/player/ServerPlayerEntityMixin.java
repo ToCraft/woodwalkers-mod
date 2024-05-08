@@ -1,4 +1,4 @@
-package tocraft.walkers.mixin;
+package tocraft.walkers.mixin.player;
 
 import com.mojang.authlib.GameProfile;
 import net.minecraft.core.BlockPos;
