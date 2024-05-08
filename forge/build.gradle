@@ -4,7 +4,7 @@ loom {
     }
 }
 
-apply from: "https://raw.githubusercontent.com/ToCraft/GradleMaster/Java21/forge.gradle"
+apply from: "https://raw.githubusercontent.com/ToCraft/GradleMaster/main/forge.gradle"
 
 dependencies {
     modApi "dev.tocraft:craftedcore-forge:${rootProject.minecraft_version}-${rootProject.craftedcore_version}"
