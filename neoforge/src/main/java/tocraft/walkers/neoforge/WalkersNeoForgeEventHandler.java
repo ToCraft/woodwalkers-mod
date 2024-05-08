@@ -2,11 +2,8 @@ package tocraft.walkers.neoforge;
 
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.bus.api.Event;
 import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.neoforge.client.event.RenderGuiOverlayEvent;
 import net.neoforged.neoforge.event.entity.player.SleepingTimeCheckEvent;
 import net.neoforged.neoforge.event.level.SleepFinishedTimeEvent;
 import tocraft.walkers.api.PlayerShape;
@@ -29,11 +26,5 @@ public class WalkersNeoForgeEventHandler {
         if (SkillRegistry.has(PlayerShape.getCurrentShape(event.getEntity()), NocturnalSkill.ID)) {
             event.setResult(event.getEntity().level().isDay() ? Event.Result.ALLOW : Event.Result.DENY);
         }
-    }
-
-    @OnlyIn(Dist.CLIENT)
-    @SubscribeEvent
-    public void event(RenderGuiOverlayEvent.Pre event) {
-        event.getOverlay().id();
     }
 }

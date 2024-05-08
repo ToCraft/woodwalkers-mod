@@ -54,7 +54,6 @@ public class Walkers {
         SkillRegistry.initialize();
 
         WalkersEventHandlers.initialize();
-        WalkersCommand.register();
         ServerNetworking.initialize();
         registerJoinSyncPacket();
         WalkersTickHandlers.initialize();
