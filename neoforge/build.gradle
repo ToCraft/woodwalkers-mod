@@ -1,4 +1,4 @@
-apply from: "https://raw.githubusercontent.com/ToCraft/GradleMaster/Java21/neoforge.gradle"
+apply from: "https://raw.githubusercontent.com/ToCraft/GradleMaster/main/neoforge.gradle"
 
 dependencies {
     modApi "dev.tocraft:craftedcore-neoforge:${rootProject.minecraft_version}-${rootProject.craftedcore_version}"

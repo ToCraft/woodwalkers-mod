@@ -1,4 +1,4 @@
-apply from: "https://raw.githubusercontent.com/ToCraft/GradleMaster/Java21/common.gradle"
+apply from: "https://raw.githubusercontent.com/ToCraft/GradleMaster/main/common.gradle"
 
 dependencies {
     modApi "dev.tocraft:craftedcore:${rootProject.minecraft_version}-${rootProject.craftedcore_version}"
