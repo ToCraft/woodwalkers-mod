@@ -1,15 +1,13 @@
 package tocraft.walkers.network.impl;
 
-import dev.architectury.networking.NetworkManager;
-import io.netty.buffer.Unpooled;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import org.jetbrains.annotations.Nullable;
+import tocraft.craftedcore.network.ModernNetworking;
 import tocraft.walkers.Walkers;
 import tocraft.walkers.api.PlayerShape;
 import tocraft.walkers.api.PlayerShapeChanger;
@@ -23,8 +21,7 @@ public class UnlockPackets {
 
     private static final String UNLOCK_KEY = "UnlockedShape";
 
-    public static void handleUnlockSyncPacket(FriendlyByteBuf packet, NetworkManager.PacketContext context) {
-        CompoundTag nbt = packet.readNbt();
+    public static void handleUnlockSyncPacket(ModernNetworking.Context context, CompoundTag nbt) {
         if (nbt != null) {
             CompoundTag idTag = nbt.getCompound(UNLOCK_KEY);
 
@@ -40,17 +37,17 @@ public class UnlockPackets {
      */
     @SuppressWarnings({"unchecked", "ConstantConditions"})
     public static void registerShapeUnlockRequestPacketHandler() {
-        NetworkManager.registerReceiver(NetworkManager.Side.C2S, NetworkHandler.UNLOCK_REQUEST, (buf, context) -> {
+        ModernNetworking.registerReceiver(ModernNetworking.Side.C2S, NetworkHandler.UNLOCK_REQUEST, (context, nbt) -> {
             // check if player is blacklisted
             if (Walkers.isPlayerBlacklisted(context.getPlayer().getUUID()))
                 return;
 
-            boolean validType = buf.readBoolean();
+            boolean validType = nbt.getBoolean("valid_type");
             if (validType) {
-                ResourceLocation typeId = buf.readResourceLocation();
+                ResourceLocation typeId = new ResourceLocation(nbt.getString("type_id"));
                 EntityType<? extends LivingEntity> entityType = (EntityType<? extends LivingEntity>) BuiltInRegistries.ENTITY_TYPE.get(typeId);
 
-                int variant = buf.readInt();
+                int variant = nbt.getInt("variant");
 
                 context.getPlayer().getServer().execute(() -> {
                     @Nullable
@@ -78,32 +75,29 @@ public class UnlockPackets {
      * Server synchronizes unlocked shape with the client
      */
     public static void sendSyncPacket(ServerPlayer player) {
-        FriendlyByteBuf packet = new FriendlyByteBuf(Unpooled.buffer());
-
         // Serialize unlocked to tag
         CompoundTag compound = new CompoundTag();
         CompoundTag id = new CompoundTag();
         if (((PlayerDataProvider) player).walkers$get2ndShape() != null)
             id = ((PlayerDataProvider) player).walkers$get2ndShape().writeCompound();
         compound.put(UNLOCK_KEY, id);
-        packet.writeNbt(compound);
 
         // Send to client
-        NetworkManager.sendToPlayer(player, NetworkHandler.UNLOCK_SYNC, packet);
+        ModernNetworking.sendToPlayer(player, NetworkHandler.UNLOCK_SYNC, compound);
     }
 
     /**
      * Client requests, that server may unlock a shape
      */
     public static void sendUnlockRequest(@Nullable ShapeType<? extends LivingEntity> type) {
-        FriendlyByteBuf packet = new FriendlyByteBuf(Unpooled.buffer());
+        CompoundTag packet = new CompoundTag();
 
-        packet.writeBoolean(type != null);
+        packet.putBoolean("valid_type", type != null);
         if (type != null) {
-            packet.writeResourceLocation(BuiltInRegistries.ENTITY_TYPE.getKey(type.getEntityType()));
-            packet.writeInt(type.getVariantData());
+            packet.putString("type_id", EntityType.getKey(type.getEntityType()).toString());
+            packet.putInt("variant", type.getVariantData());
         }
 
-        NetworkManager.sendToServer(ClientNetworking.UNLOCK_REQUEST, packet);
+        ModernNetworking.sendToServer(ClientNetworking.UNLOCK_REQUEST, packet);
     }
 }

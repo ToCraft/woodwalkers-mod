@@ -1,12 +1,11 @@
 package tocraft.walkers.network.impl;
 
-import dev.architectury.networking.NetworkManager;
-import io.netty.buffer.Unpooled;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.LivingEntity;
 import org.jetbrains.annotations.Nullable;
+import tocraft.craftedcore.network.ModernNetworking;
 import tocraft.walkers.Walkers;
 import tocraft.walkers.api.PlayerShape;
 import tocraft.walkers.api.variant.ShapeType;
@@ -18,8 +17,8 @@ public class SwapPackets {
 
     @SuppressWarnings({"unchecked", "ConstantConditions"})
     public static void registerWalkersRequestPacketHandler() {
-        NetworkManager.registerReceiver(NetworkManager.Side.C2S, NetworkHandler.SHAPE_REQUEST,
-                (buf, context) -> context.getPlayer().getServer().execute(() -> {
+        ModernNetworking.registerReceiver(ModernNetworking.Side.C2S, NetworkHandler.SHAPE_REQUEST,
+                (context, packet) -> context.getPlayer().getServer().execute(() -> {
                     // check if player is blacklisted
                     if (Walkers.isPlayerBlacklisted(context.getPlayer().getUUID())) {
                         context.getPlayer().displayClientMessage(Component.translatable("walkers.player_blacklisted"), true);
@@ -50,6 +49,6 @@ public class SwapPackets {
     }
 
     public static void sendSwapRequest() {
-        NetworkManager.sendToServer(ClientNetworking.SHAPE_REQUEST, new FriendlyByteBuf(Unpooled.buffer()));
+        ModernNetworking.sendToServer(ClientNetworking.SHAPE_REQUEST, new CompoundTag());
     }
 }

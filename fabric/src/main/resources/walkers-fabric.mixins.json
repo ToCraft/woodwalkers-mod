@@ -8,7 +8,6 @@
     "WitherEntityMixin"
   ],
   "client": [
-    "InGameHudMixin"
   ],
   "injectors": {
     "defaultRequire": 1

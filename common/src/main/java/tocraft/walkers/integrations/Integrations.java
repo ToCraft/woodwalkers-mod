@@ -1,7 +1,7 @@
 package tocraft.walkers.integrations;
 
-import dev.architectury.platform.Platform;
 import net.minecraft.world.entity.Entity;
+import tocraft.craftedcore.platform.PlatformData;
 import tocraft.walkers.integrations.impl.GuardVillagersIntegration;
 import tocraft.walkers.integrations.impl.MobBattleModIntegration;
 import tocraft.walkers.integrations.impl.MoreMobVariantsIntegration;
@@ -58,7 +58,7 @@ public class Integrations {
     }
 
     public static void register(String modid, AbstractIntegration integration) {
-        if (Platform.isModLoaded(modid))
+        if (PlatformData.isModLoaded(modid))
             INTEGRATIONS.put(modid, integration);
     }
 }

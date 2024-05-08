@@ -8,6 +8,11 @@ import net.minecraft.world.entity.LivingEntity;
 import org.jetbrains.annotations.Nullable;
 import tocraft.walkers.api.variant.ShapeType;
 
+/**
+ * @see tocraft.walkers.api.events.ShapeEvents
+ */
+@SuppressWarnings("unused")
+@Deprecated
 public interface ShapeEvents {
     Event<UnlockShapeCallback> UNLOCK_SHAPE = EventFactory.createEventResult(UnlockShapeCallback.class);
 

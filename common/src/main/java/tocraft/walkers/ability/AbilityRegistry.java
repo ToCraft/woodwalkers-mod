@@ -18,12 +18,11 @@ import tocraft.walkers.Walkers;
 import tocraft.walkers.ability.impl.*;
 import tocraft.walkers.integrations.Integrations;
 
-import java.util.ArrayList;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.function.Predicate;
 
+@SuppressWarnings("unused")
 public class AbilityRegistry {
 
     private static final Map<Predicate<LivingEntity>, ShapeAbility<?>> abilities = new LinkedHashMap<>();
@@ -72,8 +71,13 @@ public class AbilityRegistry {
         if (Walkers.CONFIG.abilityBlacklist.contains(BuiltInRegistries.ENTITY_TYPE.getKey(shape.getType()).toString()))
             return null;
 
-        List<ShapeAbility<?>> shapeAbilities = new ArrayList<>(abilities.entrySet().stream().filter(entry -> entry.getKey().test(shape)).map(Map.Entry::getValue).toList());
-        return !shapeAbilities.isEmpty() ? (ShapeAbility<L>) shapeAbilities.get(shapeAbilities.size() - 1) : null;
+        for (Map.Entry<Predicate<LivingEntity>, ShapeAbility<?>> entry : abilities.entrySet()) {
+            if (entry.getKey().test(shape)) {
+                return (ShapeAbility<L>) entry.getValue();
+            }
+        }
+
+        return null;
     }
 
     public static <A extends LivingEntity> void registerByType(EntityType<A> type, ShapeAbility<A> ability) {

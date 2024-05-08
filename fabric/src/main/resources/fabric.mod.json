@@ -30,7 +30,6 @@
     "fabricloader": ">=0.8.7+build.201",
     "fabric": "*",
     "fabric-api": "*",
-    "craftedcore": ">=${craftedcore_version}",
-    "architectury": ">=${architectury_version}"
+    "craftedcore": ">=${craftedcore_version}"
   }
 }

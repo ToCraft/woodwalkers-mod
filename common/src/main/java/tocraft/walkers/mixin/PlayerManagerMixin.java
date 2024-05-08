@@ -11,6 +11,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import tocraft.walkers.Walkers;
 import tocraft.walkers.api.PlayerShape;
+import tocraft.walkers.api.PlayerShapeChanger;
 import tocraft.walkers.impl.DimensionsRefresher;
 
 @Mixin(PlayerList.class)
@@ -37,5 +38,9 @@ public class PlayerManagerMixin {
                         player.getAttributes().getSyncableAttributes()));
             }
         }
+
+        // send sync packets
+        PlayerShapeChanger.sync(player);
+        PlayerShape.sync(player);
     }
 }
