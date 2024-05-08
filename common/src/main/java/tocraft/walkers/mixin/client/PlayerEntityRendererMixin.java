@@ -155,7 +155,7 @@ public abstract class PlayerEntityRendererMixin extends LivingEntityRenderer<Abs
                 // Only render nametags if the server option is true and the entity being
                 // rendered is NOT this player/client
                 if (Walkers.CONFIG.showPlayerNametag && player != Minecraft.getInstance().player) {
-                    renderNameTag((AbstractClientPlayer) player, player.getDisplayName(), matrixStack, buffer, packedLight, 0);
+                    renderNameTag((AbstractClientPlayer) player, player.getDisplayName(), matrixStack, buffer, packedLight);
                 }
             }
 

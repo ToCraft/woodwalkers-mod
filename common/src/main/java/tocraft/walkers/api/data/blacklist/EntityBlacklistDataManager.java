@@ -51,6 +51,8 @@ public class EntityBlacklistDataManager extends SynchronizedJsonReloadListener {
     ).apply(instance, instance.stable(Pair::new)));
 
     protected static Pair<List<ResourceLocation>, List<ResourceLocation>> blacklistFromJson(JsonObject json) {
-        return BLACKLIST_CODEC.parse(JsonOps.INSTANCE, json).getOrThrow(JsonParseException::new);
+        return BLACKLIST_CODEC.parse(JsonOps.INSTANCE, json).getOrThrow(false, (s) -> {
+            throw new JsonParseException(s);
+        });
     }
 }

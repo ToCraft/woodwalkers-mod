@@ -14,7 +14,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@SuppressWarnings({})
+@SuppressWarnings("ALL")
 @Mixin(Wolf.class)
 public abstract class WolfEntityMixin extends TamableAnimal {
 
@@ -22,11 +22,9 @@ public abstract class WolfEntityMixin extends TamableAnimal {
         super(entityType, world);
     }
 
-    @SuppressWarnings("all")
     @Unique
     private static final EntityDataAccessor<Boolean> walkers$isSpecial = SynchedEntityData.defineId(Wolf.class, EntityDataSerializers.BOOLEAN);
 
-    @SuppressWarnings("ConstantConditions")
     @Inject(method = "tick", at = @At("HEAD"))
     public void onTick(CallbackInfo ci) {
         if (this.hasCustomName() && this.getCustomName().getString().equalsIgnoreCase("Patreon"))
@@ -36,8 +34,8 @@ public abstract class WolfEntityMixin extends TamableAnimal {
     }
 
     @Inject(method = "defineSynchedData", at = @At("RETURN"))
-    protected void onInitDataTracker(SynchedEntityData.Builder builder, CallbackInfo ci) {
-        builder.define(walkers$isSpecial, false);
+    protected void onInitDataTracker(CallbackInfo ci) {
+        this.getEntityData().define(walkers$isSpecial, false);
     }
 
     @Inject(method = "addAdditionalSaveData", at = @At("RETURN"))

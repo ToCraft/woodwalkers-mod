@@ -2,7 +2,6 @@ package tocraft.walkers.skills;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
-import com.mojang.serialization.MapCodec;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.EntityTypeTags;
@@ -35,8 +34,8 @@ public class SkillRegistry {
     private static final Map<EntityType<? extends LivingEntity>, List<ShapeSkill<?>>> skillsByEntityTypes = new HashMap<>();
     private static final Map<TagKey<EntityType<?>>, List<ShapeSkill<?>>> skillsByEntityTags = new HashMap<>();
     private static final Map<Class<? extends LivingEntity>, List<ShapeSkill<?>>> skillsByEntityClasses = new HashMap<>();
-    private static final Map<ResourceLocation, MapCodec<? extends ShapeSkill<?>>> skillCodecById = new HashMap<>();
-    private static final Map<MapCodec<? extends ShapeSkill<?>>, ResourceLocation> skillIdByCodec = new IdentityHashMap<>();
+    private static final Map<ResourceLocation, Codec<? extends ShapeSkill<?>>> skillCodecById = new HashMap<>();
+    private static final Map<Codec<? extends ShapeSkill<?>>, ResourceLocation> skillIdByCodec = new IdentityHashMap<>();
 
     public static void initialize() {
         // register skill codecs
@@ -261,18 +260,18 @@ public class SkillRegistry {
         skillsByPredicates.put(entityPredicate, skills);
     }
 
-    public static void registerCodec(ResourceLocation skillId, MapCodec<? extends ShapeSkill<?>> skillCodec) {
+    public static void registerCodec(ResourceLocation skillId, Codec<? extends ShapeSkill<?>> skillCodec) {
         skillCodecById.put(skillId, skillCodec);
         skillIdByCodec.put(skillCodec, skillId);
     }
 
     @Nullable
-    public static MapCodec<? extends ShapeSkill<?>> getSkillCodec(ResourceLocation skillId) {
+    public static Codec<? extends ShapeSkill<?>> getSkillCodec(ResourceLocation skillId) {
         return skillCodecById.get(skillId);
     }
 
     @Nullable
-    public static ResourceLocation getSkillId(MapCodec<? extends ShapeSkill<?>> skillCodec) {
+    public static ResourceLocation getSkillId(Codec<? extends ShapeSkill<?>> skillCodec) {
         return skillIdByCodec.get(skillCodec);
     }
 
@@ -308,7 +307,7 @@ public class SkillRegistry {
     }
 
     public static Codec<ShapeSkill<?>> getSkillCodec() {
-        Codec<MapCodec<? extends ShapeSkill<?>>> codec = ResourceLocation.CODEC.flatXmap(
+        Codec<Codec<? extends ShapeSkill<?>>> codec = ResourceLocation.CODEC.flatXmap(
                 resourceLocation -> Optional.ofNullable(SkillRegistry.getSkillCodec(resourceLocation))
                         .map(DataResult::success)
                         .orElseGet(() -> DataResult.error(() -> "Unknown shape skill: " + resourceLocation)),

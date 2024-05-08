@@ -1,7 +1,6 @@
 package tocraft.walkers.skills.impl;
 
 import com.mojang.serialization.Codec;
-import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -18,7 +17,7 @@ import tocraft.walkers.skills.ShapeSkill;
 
 public class AquaticSkill<E extends LivingEntity> extends ShapeSkill<E> {
     public static final ResourceLocation ID = Walkers.id("aquatic");
-    public static final MapCodec<AquaticSkill<?>> CODEC = RecordCodecBuilder.mapCodec((instance) -> instance.group(
+    public static final Codec<AquaticSkill<?>> CODEC = RecordCodecBuilder.create((instance) -> instance.group(
             Codec.INT.optionalFieldOf("is_aquatic", 0).forGetter(o -> o.isAquatic)
     ).apply(instance, instance.stable(AquaticSkill::new)));
 
@@ -37,7 +36,7 @@ public class AquaticSkill<E extends LivingEntity> extends ShapeSkill<E> {
     }
 
     @Override
-    public MapCodec<? extends ShapeSkill<?>> codec() {
+    public Codec<? extends ShapeSkill<?>> codec() {
         return CODEC;
     }
 

@@ -49,7 +49,7 @@ import tocraft.walkers.skills.impl.*;
 
 import java.util.Iterator;
 
-@SuppressWarnings("ConstantConditions")
+@SuppressWarnings("ALL")
 @Mixin(Player.class)
 public abstract class PlayerEntityMixin extends LivingEntityMixin {
 
@@ -66,14 +66,14 @@ public abstract class PlayerEntityMixin extends LivingEntityMixin {
         super(type, world);
     }
 
-    @Inject(method = "getDefaultDimensions", at = @At("HEAD"), cancellable = true)
+    @Inject(method = "getDimensions", at = @At("HEAD"), cancellable = true)
     private void getDimensions(Pose pose, CallbackInfoReturnable<EntityDimensions> cir) {
         LivingEntity entity = PlayerShape.getCurrentShape((Player) (Object) this);
 
         if (entity != null) {
             EntityDimensions shapeDimensions = entity.getDimensions(pose);
             if (pose == Pose.CROUCHING && SkillRegistry.has(entity, HumanoidSkill.ID)) {
-                cir.setReturnValue(EntityDimensions.scalable(shapeDimensions.width(), shapeDimensions.height() * 1.5F / 1.8F));
+                cir.setReturnValue(EntityDimensions.scalable(shapeDimensions.width, shapeDimensions.height * 1.5F / 1.8F));
             } else {
                 cir.setReturnValue(shapeDimensions);
             }
@@ -232,7 +232,7 @@ public abstract class PlayerEntityMixin extends LivingEntityMixin {
 
                         // set player on fire
                         if (bl) {
-                            player.igniteForSeconds(8);
+                            player.setSecondsOnFire(8);
                         }
                     }
                 }

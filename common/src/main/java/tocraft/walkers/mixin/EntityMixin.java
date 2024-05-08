@@ -82,10 +82,10 @@ public abstract class EntityMixin implements DimensionsRefresher {
         this.eyeHeight = this.getEyeHeight(entityPose);
 
         AABB box = this.getBoundingBox();
-        this.setBoundingBox(new AABB(box.minX, box.minY, box.minZ, box.minX + newDimensions.width(), box.minY + newDimensions.height(), box.minZ + newDimensions.width()));
+        this.setBoundingBox(new AABB(box.minX, box.minY, box.minZ, box.minX + newDimensions.width, box.minY + newDimensions.height, box.minZ + newDimensions.width));
 
         if (!this.firstTick) {
-            float f = currentDimensions.width() - newDimensions.width();
+            float f = currentDimensions.width - newDimensions.width;
             this.move(MoverType.SELF, new Vec3(f, 0.0D, f));
         }
     }

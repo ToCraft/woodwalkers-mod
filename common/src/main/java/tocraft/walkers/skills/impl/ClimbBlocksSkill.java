@@ -1,7 +1,6 @@
 package tocraft.walkers.skills.impl;
 
 import com.mojang.serialization.Codec;
-import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -21,7 +20,7 @@ import java.util.List;
 
 public class ClimbBlocksSkill<E extends LivingEntity> extends ShapeSkill<E> {
     public static final ResourceLocation ID = Walkers.id("climb_blocks");
-    public static final MapCodec<ClimbBlocksSkill<?>> CODEC = RecordCodecBuilder.mapCodec((instance) -> instance.group(
+    public static final Codec<ClimbBlocksSkill<?>> CODEC = RecordCodecBuilder.create((instance) -> instance.group(
             Codec.BOOL.optionalFieldOf("horizontal_collision", true).forGetter(o -> o.horizontalCollision),
             Codec.list(ResourceLocation.CODEC).optionalFieldOf("valid_blocks", new ArrayList<>()).forGetter(o -> o.validBlocks.stream().map(BuiltInRegistries.BLOCK::getKey).toList()),
             Codec.list(ResourceLocation.CODEC).optionalFieldOf("invalid_blocks", new ArrayList<>()).forGetter(o -> o.invalidBlocks.stream().map(BuiltInRegistries.BLOCK::getKey).toList())
@@ -70,7 +69,7 @@ public class ClimbBlocksSkill<E extends LivingEntity> extends ShapeSkill<E> {
     }
 
     @Override
-    public MapCodec<? extends ShapeSkill<?>> codec() {
+    public Codec<? extends ShapeSkill<?>> codec() {
         return CODEC;
     }
 

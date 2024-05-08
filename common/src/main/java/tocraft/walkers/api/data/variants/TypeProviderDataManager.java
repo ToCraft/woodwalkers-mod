@@ -107,7 +107,9 @@ public class TypeProviderDataManager extends SynchronizedJsonReloadListener {
     })));
 
     private static Either<TypeProviderEntry<?>, String> typeProviderFromJson(JsonObject json) {
-        return TYPE_PROVIDER_LIST_CODEC.parse(JsonOps.INSTANCE, json).getOrThrow(JsonParseException::new);
+        return TYPE_PROVIDER_LIST_CODEC.parse(JsonOps.INSTANCE, json).getOrThrow(false, s -> {
+            throw new JsonParseException(s);
+        });
     }
 
     @SuppressWarnings("unused")

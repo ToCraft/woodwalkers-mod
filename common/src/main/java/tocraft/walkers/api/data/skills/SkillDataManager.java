@@ -67,7 +67,9 @@ public class SkillDataManager extends SynchronizedJsonReloadListener {
     ).apply(instance, instance.stable(SkillList::new)));
 
     protected static SkillList skillListFromJson(JsonObject json) {
-        return SKILL_LIST_CODEC.parse(JsonOps.INSTANCE, json).getOrThrow(JsonParseException::new);
+        return SKILL_LIST_CODEC.parse(JsonOps.INSTANCE, json).getOrThrow(false, s -> {
+            throw new JsonParseException(s);
+        });
     }
 
     @SuppressWarnings("unused")

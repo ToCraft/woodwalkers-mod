@@ -1,7 +1,6 @@
 package tocraft.walkers.skills.impl;
 
 import com.mojang.serialization.Codec;
-import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
@@ -10,7 +9,7 @@ import tocraft.walkers.skills.ShapeSkill;
 
 public class TemperatureSkill<E extends LivingEntity> extends ShapeSkill<E> {
     public static final ResourceLocation ID = Walkers.id("temperature");
-    public static final MapCodec<TemperatureSkill<?>> CODEC = RecordCodecBuilder.mapCodec((instance) -> instance.group(
+    public static final Codec<TemperatureSkill<?>> CODEC = RecordCodecBuilder.create((instance) -> instance.group(
             Codec.BOOL.optionalFieldOf("cold_enough_to_snow", true).forGetter(o -> o.coldEnoughToSnow)
     ).apply(instance, instance.stable(TemperatureSkill::new)));
 
@@ -34,7 +33,7 @@ public class TemperatureSkill<E extends LivingEntity> extends ShapeSkill<E> {
     }
 
     @Override
-    public MapCodec<? extends ShapeSkill<?>> codec() {
+    public Codec<? extends ShapeSkill<?>> codec() {
         return CODEC;
     }
 }

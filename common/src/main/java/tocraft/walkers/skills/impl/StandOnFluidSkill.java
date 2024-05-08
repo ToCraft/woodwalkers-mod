@@ -1,6 +1,6 @@
 package tocraft.walkers.skills.impl;
 
-import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -19,7 +19,7 @@ import tocraft.walkers.skills.ShapeSkill;
 
 public class StandOnFluidSkill<E extends LivingEntity> extends ShapeSkill<E> {
     public static final ResourceLocation ID = Walkers.id("stand_on_fluid");
-    public static final MapCodec<StandOnFluidSkill<?>> CODEC = RecordCodecBuilder.mapCodec((instance) -> instance.group(
+    public static final Codec<StandOnFluidSkill<?>> CODEC = RecordCodecBuilder.create((instance) -> instance.group(
             ResourceLocation.CODEC.fieldOf("fluid").forGetter(o -> o.fluidTagKey.location())
     ).apply(instance, instance.stable(fluid -> new StandOnFluidSkill<>(TagKey.create(Registries.FLUID, fluid)))));
 
@@ -36,7 +36,7 @@ public class StandOnFluidSkill<E extends LivingEntity> extends ShapeSkill<E> {
     }
 
     @Override
-    public MapCodec<? extends ShapeSkill<?>> codec() {
+    public Codec<? extends ShapeSkill<?>> codec() {
         return CODEC;
     }
 

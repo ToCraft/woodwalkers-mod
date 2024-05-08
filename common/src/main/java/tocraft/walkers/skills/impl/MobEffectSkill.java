@@ -1,7 +1,6 @@
 package tocraft.walkers.skills.impl;
 
 import com.mojang.serialization.Codec;
-import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -19,15 +18,16 @@ import java.util.Optional;
 
 public class MobEffectSkill<E extends LivingEntity> extends ShapeSkill<E> {
     public static final ResourceLocation ID = Walkers.id("mob_effect");
-    public static final MapCodec<MobEffectInstance> MOB_EFFECT_INSTANCE_CODEC = RecordCodecBuilder.mapCodec((instance) -> instance.group(
-            ResourceLocation.CODEC.fieldOf("id").forGetter(o -> BuiltInRegistries.MOB_EFFECT.getKey(o.getEffect().value())),
+    @SuppressWarnings("DataFlowIssue")
+    public static final Codec<MobEffectInstance> MOB_EFFECT_INSTANCE_CODEC = RecordCodecBuilder.create((instance) -> instance.group(
+            ResourceLocation.CODEC.fieldOf("id").forGetter(o -> BuiltInRegistries.MOB_EFFECT.getKey(o.getEffect())),
             Codec.INT.fieldOf("duration").forGetter(MobEffectInstance::getDuration),
             Codec.INT.fieldOf("amplifier").forGetter(MobEffectInstance::getAmplifier),
             Codec.BOOL.optionalFieldOf("ambient", false).forGetter(MobEffectInstance::isAmbient),
             Codec.BOOL.optionalFieldOf("show_particles", true).forGetter(MobEffectInstance::isVisible),
             Codec.BOOL.optionalFieldOf("show_icon").forGetter(o -> Optional.of(o.showIcon()))
-    ).apply(instance, instance.stable((id, duration, amplifier, ambient, show_particles, show_icon) -> new MobEffectInstance(BuiltInRegistries.MOB_EFFECT.getHolder(id).orElseThrow(), duration, amplifier, ambient, show_particles, show_icon.orElse(show_particles)))));
-    public static final MapCodec<MobEffectSkill<?>> CODEC = RecordCodecBuilder.mapCodec((instance) -> instance.group(
+    ).apply(instance, instance.stable((id, duration, amplifier, ambient, show_particles, show_icon) -> new MobEffectInstance(BuiltInRegistries.MOB_EFFECT.get(id), duration, amplifier, ambient, show_particles, show_icon.orElse(show_particles)))));
+    public static final Codec<MobEffectSkill<?>> CODEC = RecordCodecBuilder.create((instance) -> instance.group(
             MOB_EFFECT_INSTANCE_CODEC.fieldOf("mob_effect").forGetter(o -> o.mobEffectInstance),
             Codec.BOOL.optionalFieldOf("show_in_inventory", true).forGetter(o -> o.showInInventory),
             Codec.BOOL.optionalFieldOf("apply_to_self", true).forGetter(o -> o.applyToSelf),
@@ -74,7 +74,7 @@ public class MobEffectSkill<E extends LivingEntity> extends ShapeSkill<E> {
     }
 
     @Override
-    public MapCodec<? extends ShapeSkill<?>> codec() {
+    public Codec<? extends ShapeSkill<?>> codec() {
         return CODEC;
     }
 

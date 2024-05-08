@@ -125,10 +125,10 @@ public class WalkersEventHandlers {
                     if (!(player.level().getDifficulty() != Difficulty.HARD && player.getRandom().nextBoolean())) {
                         ZombieVillager zombievillager = villager.convertTo(EntityType.ZOMBIE_VILLAGER, false);
                         if (zombievillager != null) {
-                            zombievillager.finalizeSpawn((ServerLevelAccessor) player.level(), player.level().getCurrentDifficultyAt(zombievillager.blockPosition()), MobSpawnType.CONVERSION, new Zombie.ZombieGroupData(false, true));
+                            zombievillager.finalizeSpawn((ServerLevelAccessor) player.level(), player.level().getCurrentDifficultyAt(zombievillager.blockPosition()), MobSpawnType.CONVERSION, new Zombie.ZombieGroupData(false, true), null);
                             zombievillager.setVillagerData(villager.getVillagerData());
                             zombievillager.setGossips(villager.getGossips().store(NbtOps.INSTANCE));
-                            zombievillager.setTradeOffers(villager.getOffers());
+                            zombievillager.setTradeOffers(villager.getOffers().createTag());
                             zombievillager.setVillagerXp(villager.getVillagerXp());
                         }
                     }

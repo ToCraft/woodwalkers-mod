@@ -62,6 +62,8 @@ public class AbilityDataManager extends SynchronizedJsonReloadListener {
     })));
 
     protected static Map.Entry<EntityType<?>, ShapeAbility<?>> abilityEntryFromJson(JsonObject json) {
-        return ABILITY_CODEC.parse(JsonOps.INSTANCE, json).getOrThrow(JsonParseException::new);
+        return ABILITY_CODEC.parse(JsonOps.INSTANCE, json).getOrThrow(false, s -> {
+            throw new JsonParseException(s);
+        });
     }
 }

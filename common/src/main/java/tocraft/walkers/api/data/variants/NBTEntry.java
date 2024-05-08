@@ -2,7 +2,6 @@ package tocraft.walkers.api.data.variants;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 
@@ -64,7 +63,7 @@ public record NBTEntry<T>(String nbtType, String nbtField, Map<Integer, T> param
         List<Integer> index = new ArrayList<>();
         if (!parameterList.isEmpty()) {
             if (isMutable && value instanceof String) {
-                MutableComponent tagDataMutable = Component.Serializer.fromJsonLenient((String) value, RegistryAccess.EMPTY);
+                MutableComponent tagDataMutable = Component.Serializer.fromJsonLenient((String) value);
                 if (tagDataMutable != null) {
                     value = (T) tagDataMutable.getString();
                 }
@@ -72,7 +71,7 @@ public record NBTEntry<T>(String nbtType, String nbtField, Map<Integer, T> param
             for (int i : parameterList.keySet()) {
                 T parameterT = parameterList.get(i);
                 if (isMutable && parameterT instanceof String) {
-                    MutableComponent parameterMutable = Component.Serializer.fromJsonLenient((String) parameterT, RegistryAccess.EMPTY);
+                    MutableComponent parameterMutable = Component.Serializer.fromJsonLenient((String) parameterT);
                     if (parameterMutable != null) {
                         parameterT = (T) parameterMutable.getString();
                     }
