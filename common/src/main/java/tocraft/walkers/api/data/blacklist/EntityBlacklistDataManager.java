@@ -8,9 +8,9 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
+import tocraft.craftedcore.data.SynchronizedJsonReloadListener;
 import tocraft.walkers.Walkers;
 import tocraft.walkers.api.blacklist.EntityBlacklist;
-import tocraft.walkers.api.data.util.SynchronizedJsonReloadListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,6 +50,8 @@ public class EntityBlacklistDataManager extends SynchronizedJsonReloadListener {
     ).apply(instance, instance.stable(Pair::new)));
 
     protected static Pair<List<ResourceLocation>, List<ResourceLocation>> blacklistFromJson(JsonObject json) {
-        return BLACKLIST_CODEC.parse(JsonOps.INSTANCE, json).getOrThrow(false, JsonParseException::new);
+        return BLACKLIST_CODEC.parse(JsonOps.INSTANCE, json).getOrThrow(false, (s) -> {
+            throw new JsonParseException(s);
+        });
     }
 }

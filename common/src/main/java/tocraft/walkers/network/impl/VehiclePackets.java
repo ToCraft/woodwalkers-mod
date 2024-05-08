@@ -1,12 +1,10 @@
 package tocraft.walkers.network.impl;
 
-import dev.architectury.networking.NetworkManager;
-import io.netty.buffer.Unpooled;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
+import tocraft.craftedcore.network.ModernNetworking;
 import tocraft.walkers.impl.PlayerDataProvider;
 import tocraft.walkers.mixin.EntityTrackerAccessor;
 import tocraft.walkers.mixin.ThreadedAnvilChunkStorageAccessor;
@@ -15,9 +13,7 @@ import tocraft.walkers.network.NetworkHandler;
 import java.util.UUID;
 
 public class VehiclePackets {
-    public static void handleSyncPacket(FriendlyByteBuf packet, NetworkManager.PacketContext context) {
-        CompoundTag tag = packet.readNbt();
-
+    public static void handleSyncPacket(ModernNetworking.Context context, CompoundTag tag) {
         if (context.getPlayer() != null && tag != null) {
             UUID sender = tag.getUUID("senderID");
             Player commandSender = context.getPlayer().getCommandSenderWorld().getPlayerByUUID(sender);
@@ -42,9 +38,7 @@ public class VehiclePackets {
         // Send to all clients
         if (tracking != null)
             ((EntityTrackerAccessor) tracking).getSeenBy().forEach(listener -> {
-                FriendlyByteBuf packet = new FriendlyByteBuf(Unpooled.buffer());
-                packet.writeNbt(tag);
-                NetworkManager.sendToPlayer(listener.getPlayer(), NetworkHandler.CHANGE_VEHICLE_STATE, packet);
+                ModernNetworking.sendToPlayer(listener.getPlayer(), NetworkHandler.CHANGE_VEHICLE_STATE, tag.copy());
             });
     }
 }

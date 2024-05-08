@@ -3,12 +3,11 @@ plugins {
     id "dev.architectury.loom" version "1.6-SNAPSHOT" apply false
 }
 
-apply from: "https://raw.githubusercontent.com/ToCraft/GradleMaster/main/main.gradle"
+apply from: "https://raw.githubusercontent.com/ToCraft/GradleMaster/Java21/main.gradle"
 
 ext {
     mod_meta = [
-            minecraft_version   : minecraft_version, version: version,
-            architectury_version: architectury_version,
-            craftedcore_version : craftedcore_version,
+            minecraft_version  : minecraft_version, version: version,
+            craftedcore_version: craftedcore_version
     ]
 }

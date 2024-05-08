@@ -7,7 +7,6 @@
     "WitherEntityMixin"
   ],
   "client": [
-    "ForgeGuiMixin"
   ],
   "injectors": {
     "defaultRequire": 1

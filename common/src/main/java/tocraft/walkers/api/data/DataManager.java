@@ -1,10 +1,6 @@
 package tocraft.walkers.api.data;
 
-import dev.architectury.event.events.common.LifecycleEvent;
-import dev.architectury.event.events.common.PlayerEvent;
-import dev.architectury.registry.ReloadListenerRegistry;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.server.packs.PackType;
+import tocraft.craftedcore.registration.SynchronizedReloadListenerRegistry;
 import tocraft.walkers.Walkers;
 import tocraft.walkers.api.data.abilities.AbilityDataManager;
 import tocraft.walkers.api.data.blacklist.EntityBlacklistDataManager;
@@ -18,32 +14,9 @@ public class DataManager {
     private static final EntityBlacklistDataManager ENTITY_BLACKLIST_DATA_MANAGER = new EntityBlacklistDataManager();
 
     public static void initialize() {
-        ReloadListenerRegistry.register(PackType.SERVER_DATA, ABILITY_DATA_MANAGER, Walkers.id("ability_data_manager"));
-        ReloadListenerRegistry.register(PackType.SERVER_DATA, TYPE_PROVIDER_DATA_MANAGER, Walkers.id("variants_data_manager"));
-        ReloadListenerRegistry.register(PackType.SERVER_DATA, SKILL_DATA_MANAGER, Walkers.id("skill_data_manager"));
-        ReloadListenerRegistry.register(PackType.SERVER_DATA, ENTITY_BLACKLIST_DATA_MANAGER, Walkers.id("entity_blacklist_data_manager"));
-
-        // sync packets on player join or level load
-        PlayerEvent.PLAYER_JOIN.register(player -> {
-            ABILITY_DATA_MANAGER.sendSyncPacket(player);
-            TYPE_PROVIDER_DATA_MANAGER.sendSyncPacket(player);
-            SKILL_DATA_MANAGER.sendSyncPacket(player);
-            ENTITY_BLACKLIST_DATA_MANAGER.sendSyncPacket(player);
-        });
-        LifecycleEvent.SERVER_LEVEL_LOAD.register(world -> {
-            for (ServerPlayer player : world.players()) {
-                ABILITY_DATA_MANAGER.sendSyncPacket(player);
-                TYPE_PROVIDER_DATA_MANAGER.sendSyncPacket(player);
-                SKILL_DATA_MANAGER.sendSyncPacket(player);
-                ENTITY_BLACKLIST_DATA_MANAGER.sendSyncPacket(player);
-            }
-        });
-    }
-
-    public static void registerReceiver() {
-        ABILITY_DATA_MANAGER.registerPacketReceiver();
-        TYPE_PROVIDER_DATA_MANAGER.registerPacketReceiver();
-        SKILL_DATA_MANAGER.registerPacketReceiver();
-        ENTITY_BLACKLIST_DATA_MANAGER.registerPacketReceiver();
+        SynchronizedReloadListenerRegistry.register(ABILITY_DATA_MANAGER, Walkers.id("ability_data_manager"));
+        SynchronizedReloadListenerRegistry.register(TYPE_PROVIDER_DATA_MANAGER, Walkers.id("variants_data_manager"));
+        SynchronizedReloadListenerRegistry.register(SKILL_DATA_MANAGER, Walkers.id("skill_data_manager"));
+        SynchronizedReloadListenerRegistry.register(ENTITY_BLACKLIST_DATA_MANAGER, Walkers.id("entity_blacklist_data_manager"));
     }
 }

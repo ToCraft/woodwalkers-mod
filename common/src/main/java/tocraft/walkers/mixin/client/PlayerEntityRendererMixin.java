@@ -64,7 +64,7 @@ public abstract class PlayerEntityRendererMixin extends LivingEntityRenderer<Abs
     }
 
     @WrapWithCondition(method = "render(Lnet/minecraft/client/player/AbstractClientPlayer;FFLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/entity/LivingEntityRenderer;render(Lnet/minecraft/world/entity/LivingEntity;FFLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V"))
-    private boolean redirectRender(LivingEntityRenderer<AbstractClientPlayer, EntityModel<AbstractClientPlayer>> renderer, LivingEntity player, float f, float g, PoseStack matrixStack, MultiBufferSource buffer, int i) {
+    private boolean redirectRender(LivingEntityRenderer<AbstractClientPlayer, EntityModel<AbstractClientPlayer>> renderer, LivingEntity player, float f, float g, PoseStack matrixStack, MultiBufferSource buffer, int packedLight) {
         LivingEntity shape = PlayerShape.getCurrentShape((Player) player);
 
         Optional<UUID> vehiclePlayerId = ((PlayerDataProvider) player).walkers$getVehiclePlayerUUID();
@@ -149,12 +149,12 @@ public abstract class PlayerEntityRendererMixin extends LivingEntityRenderer<Abs
                     shape_setBipedShapeModelPose((AbstractClientPlayer) player, shape, (HumanoidMobRenderer<?, ?>) shapeRenderer);
                 }
 
-                shapeRenderer.render(shape, f, g, matrixStack, buffer, i);
+                shapeRenderer.render(shape, f, g, matrixStack, buffer, packedLight);
 
                 // Only render nametags if the server option is true and the entity being
                 // rendered is NOT this player/client
                 if (Walkers.CONFIG.showPlayerNametag && player != Minecraft.getInstance().player) {
-                    renderNameTag((AbstractClientPlayer) player, player.getDisplayName(), matrixStack, buffer, i);
+                    renderNameTag((AbstractClientPlayer) player, player.getDisplayName(), matrixStack, buffer, packedLight);
                 }
             }
 

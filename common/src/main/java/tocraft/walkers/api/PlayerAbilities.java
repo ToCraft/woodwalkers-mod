@@ -1,10 +1,9 @@
 package tocraft.walkers.api;
 
-import dev.architectury.networking.NetworkManager;
-import io.netty.buffer.Unpooled;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
+import tocraft.craftedcore.network.ModernNetworking;
 import tocraft.walkers.impl.PlayerDataProvider;
 import tocraft.walkers.network.NetworkHandler;
 
@@ -32,8 +31,8 @@ public class PlayerAbilities {
     }
 
     public static void sync(ServerPlayer player) {
-        FriendlyByteBuf packet = new FriendlyByteBuf(Unpooled.buffer());
-        packet.writeInt(((PlayerDataProvider) player).walkers$getAbilityCooldown());
-        NetworkManager.sendToPlayer(player, NetworkHandler.ABILITY_SYNC, packet);
+        CompoundTag packet = new CompoundTag();
+        packet.putInt("cooldown", ((PlayerDataProvider) player).walkers$getAbilityCooldown());
+        ModernNetworking.sendToPlayer(player, NetworkHandler.ABILITY_SYNC, packet);
     }
 }

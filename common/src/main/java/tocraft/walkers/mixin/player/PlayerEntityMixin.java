@@ -28,7 +28,6 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -49,15 +48,12 @@ import tocraft.walkers.skills.impl.*;
 
 import java.util.Iterator;
 
-@SuppressWarnings("ConstantConditions")
+@SuppressWarnings("ALL")
 @Mixin(Player.class)
 public abstract class PlayerEntityMixin extends LivingEntityMixin {
 
     @Shadow
     public abstract boolean isSpectator();
-
-    @Shadow
-    public abstract @NotNull EntityDimensions getDimensions(Pose pose);
 
     @Shadow
     public abstract boolean isSwimming();
@@ -123,20 +119,6 @@ public abstract class PlayerEntityMixin extends LivingEntityMixin {
                     this.setAirSupply(this.increaseAirSupply(air));
                 }
             }
-        }
-    }
-
-    @Inject(method = "getStandingEyeHeight", at = @At("HEAD"), cancellable = true)
-    private void shape_getStandingEyeHeight(Pose pose, EntityDimensions dimensions, CallbackInfoReturnable<Float> cir) {
-        // cursed
-        try {
-            LivingEntity shape = PlayerShape.getCurrentShape((Player) (Object) this);
-
-            if (shape != null) {
-                cir.setReturnValue(((LivingEntityAccessor) shape).callGetEyeHeight(getPose(), getDimensions(getPose())));
-            }
-        } catch (Exception ignored) {
-
         }
     }
 

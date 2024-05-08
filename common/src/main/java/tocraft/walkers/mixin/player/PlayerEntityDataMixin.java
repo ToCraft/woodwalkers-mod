@@ -1,12 +1,12 @@
 package tocraft.walkers.mixin.player;
 
-import dev.architectury.event.EventResult;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -25,7 +25,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import tocraft.walkers.Walkers;
 import tocraft.walkers.api.FlightHelper;
 import tocraft.walkers.api.PlayerShape;
-import tocraft.walkers.api.event.ShapeEvents;
+import tocraft.walkers.api.events.ShapeEvents;
 import tocraft.walkers.api.variant.ShapeType;
 import tocraft.walkers.impl.DimensionsRefresher;
 import tocraft.walkers.impl.PlayerDataProvider;
@@ -54,7 +54,8 @@ public abstract class PlayerEntityDataMixin extends LivingEntity implements Play
     @Unique
     private LivingEntity walkers$shape = null;
     @Unique
-    private Optional<UUID> walkers$vehiclePlayerUUID = Optional.empty();
+    @Nullable
+    private UUID walkers$vehiclePlayerUUID = null;
 
     private PlayerEntityDataMixin(EntityType<? extends LivingEntity> type, Level world) {
         super(type, world);
@@ -193,8 +194,8 @@ public abstract class PlayerEntityDataMixin extends LivingEntity implements Play
     public boolean walkers$updateShapes(@Nullable LivingEntity shape) {
         Player player = (Player) (Object) this;
         AttributeInstance healthAttribute = player.getAttribute(Attributes.MAX_HEALTH);
-        EventResult result = ShapeEvents.SWAP_SHAPE.invoker().swap((ServerPlayer) player, shape);
-        if (result.isFalse()) {
+        InteractionResult result = ShapeEvents.SWAP_SHAPE.invoke().swap((ServerPlayer) player, shape);
+        if (result == InteractionResult.FAIL) {
             return false;
         }
 
@@ -292,12 +293,12 @@ public abstract class PlayerEntityDataMixin extends LivingEntity implements Play
     @Unique
     @Override
     public Optional<UUID> walkers$getVehiclePlayerUUID() {
-        return walkers$vehiclePlayerUUID;
+        return Optional.ofNullable(walkers$vehiclePlayerUUID);
     }
 
     @Unique
     @Override
     public void walkers$setVehiclePlayerUUID(UUID riddenPlayerUUID) {
-        walkers$vehiclePlayerUUID = Optional.ofNullable(riddenPlayerUUID);
+        walkers$vehiclePlayerUUID = riddenPlayerUUID;
     }
 }

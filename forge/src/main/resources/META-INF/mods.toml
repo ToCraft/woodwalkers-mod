@@ -33,10 +33,3 @@ mandatory = true
 versionRange = "[${craftedcore_version},)"
 ordering = "AFTER"
 side = "BOTH"
-
-[[dependencies.walkers]]
-modId = "architectury"
-mandatory = true
-versionRange = "[${architectury_version},)"
-ordering = "AFTER"
-side = "BOTH"

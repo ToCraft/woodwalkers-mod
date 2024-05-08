@@ -1,7 +1,6 @@
 package tocraft.walkers;
 
 import com.llamalad7.mixinextras.MixinExtrasBootstrap;
-import dev.architectury.event.events.common.PlayerEvent;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.AdvancementProgress;
@@ -11,17 +10,17 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.FlyingMob;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.MobType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import tocraft.craftedcore.VIPs;
 import tocraft.craftedcore.config.ConfigLoader;
+import tocraft.craftedcore.event.common.PlayerEvents;
 import tocraft.craftedcore.platform.VersionChecker;
 import tocraft.walkers.api.PlayerShape;
 import tocraft.walkers.api.WalkersTickHandlers;
 import tocraft.walkers.api.data.DataManager;
 import tocraft.walkers.api.platform.WalkersConfig;
-import tocraft.walkers.command.WalkersCommand;
+import tocraft.walkers.eventhandler.RespawnHandler;
 import tocraft.walkers.integrations.Integrations;
 import tocraft.walkers.mixin.ThreadedAnvilChunkStorageAccessor;
 import tocraft.walkers.network.ServerNetworking;
@@ -54,18 +53,19 @@ public class Walkers {
         SkillRegistry.initialize();
 
         WalkersEventHandlers.initialize();
-        WalkersCommand.register();
         ServerNetworking.initialize();
         registerJoinSyncPacket();
         WalkersTickHandlers.initialize();
         DataManager.initialize();
         Integrations.initialize();
+
+        PlayerEvents.PLAYER_RESPAWN.register(new RespawnHandler());
     }
 
     public static void registerJoinSyncPacket() {
         VersionChecker.registerDefaultGitHubChecker(MODID, "ToCraft", "woodwalkers-mod", new TextComponent("Woodwalkers"));
 
-        PlayerEvent.PLAYER_JOIN.register(player -> {
+        PlayerEvents.PLAYER_JOIN.register(player -> {
             Int2ObjectMap<Object> trackers = ((ThreadedAnvilChunkStorageAccessor) ((ServerLevel) player.level)
                     .getChunkSource().chunkMap).getEntityMap();
             trackers.forEach((entityid, tracking) -> {
@@ -123,7 +123,7 @@ public class Walkers {
             for (ShapeSkill<LivingEntity> aquaticSkill : SkillRegistry.get(entity, AquaticSkill.ID)) {
                 return ((AquaticSkill<LivingEntity>) aquaticSkill).isAquatic;
             }
-            return entity.getMobType().equals(MobType.WATER) ? 0 : 2;
+            return entity.getType().getCategory().getName().contains("water") ? 0 : 2;
         } else {
             return 2;
         }

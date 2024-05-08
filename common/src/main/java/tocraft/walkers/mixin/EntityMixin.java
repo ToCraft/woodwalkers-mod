@@ -50,10 +50,10 @@ public abstract class EntityMixin implements DimensionsRefresher {
     private float eyeHeight;
 
     @Shadow
-    protected abstract float getEyeHeight(Pose pose, EntityDimensions dimensions);
+    public abstract boolean isCrouching();
 
     @Shadow
-    public abstract boolean isCrouching();
+    public abstract float getEyeHeight(Pose pose);
 
     @Shadow
     public abstract InteractionResult interact(Player player, InteractionHand hand);
@@ -87,7 +87,7 @@ public abstract class EntityMixin implements DimensionsRefresher {
         EntityDimensions newDimensions = this.getDimensions(entityPose);
 
         this.dimensions = newDimensions;
-        this.eyeHeight = this.getEyeHeight(entityPose, newDimensions);
+        this.eyeHeight = this.getEyeHeight(entityPose);
 
         AABB box = this.getBoundingBox();
         this.setBoundingBox(new AABB(box.minX, box.minY, box.minZ, box.minX + newDimensions.width, box.minY + newDimensions.height, box.minZ + newDimensions.width));
