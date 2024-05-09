@@ -8,6 +8,5 @@ public class WalkersFabric implements ModInitializer {
     @Override
     public void onInitialize() {
         new Walkers().initialize();
-        new WalkersFabricEventHandler().initialize();
     }
 }

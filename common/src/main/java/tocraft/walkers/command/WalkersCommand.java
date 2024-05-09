@@ -19,13 +19,18 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import org.jetbrains.annotations.Nullable;
+import tocraft.craftedcore.event.common.CommandEvents;
 import tocraft.walkers.api.PlayerShape;
 import tocraft.walkers.api.PlayerShapeChanger;
 import tocraft.walkers.api.variant.ShapeType;
 import tocraft.walkers.impl.PlayerDataProvider;
 
 public class WalkersCommand {
-    public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
+    public static void initialize() {
+        CommandEvents.REGISTRATION.register((dispatcher, ctx) -> register(dispatcher));
+    }
+
+    private static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
         LiteralCommandNode<CommandSourceStack> rootNode = Commands.literal("walkers")
                 .requires(source -> source.hasPermission(2)).build();
 
