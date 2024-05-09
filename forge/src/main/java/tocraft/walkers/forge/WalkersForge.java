@@ -12,8 +12,6 @@ public class WalkersForge {
     public WalkersForge() {
         new Walkers().initialize();
 
-        MinecraftForge.EVENT_BUS.register(new WalkersForgeEventHandler());
-
         if (FMLEnvironment.dist.isClient())
             new WalkersForgeClient();
     }

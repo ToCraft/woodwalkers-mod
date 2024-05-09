@@ -3,7 +3,7 @@ plugins {
     id "dev.architectury.loom" version "1.6-SNAPSHOT" apply false
 }
 
-apply from: "https://raw.githubusercontent.com/ToCraft/GradleMaster/Java21/main.gradle"
+apply from: "https://raw.githubusercontent.com/ToCraft/GradleMaster/main/main.gradle"
 
 ext {
     mod_meta = [

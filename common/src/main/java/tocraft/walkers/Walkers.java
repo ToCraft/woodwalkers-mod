@@ -53,6 +53,7 @@ public class Walkers {
 
         SkillRegistry.initialize();
 
+        WalkersCommand.initialize();
         WalkersEventHandlers.initialize();
         ServerNetworking.initialize();
         registerJoinSyncPacket();

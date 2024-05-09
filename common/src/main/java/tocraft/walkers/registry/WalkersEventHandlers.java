@@ -15,11 +15,13 @@ import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.ServerLevelAccessor;
 import tocraft.craftedcore.event.common.EntityEvents;
+import tocraft.craftedcore.event.common.PlayerEvents;
 import tocraft.craftedcore.event.common.ServerLevelEvents;
 import tocraft.walkers.Walkers;
 import tocraft.walkers.api.PlayerHostility;
 import tocraft.walkers.api.PlayerShape;
 import tocraft.walkers.skills.SkillRegistry;
+import tocraft.walkers.skills.impl.NocturnalSkill;
 import tocraft.walkers.skills.impl.RiderSkill;
 
 public class WalkersEventHandlers {
@@ -30,6 +32,21 @@ public class WalkersEventHandlers {
         registerPlayerRidingHandler();
         registerLivingDeathHandler();
         registerHandlerForDeprecatedEntityTags();
+
+        PlayerEvents.ALLOW_SLEEP_TIME.register((player, sleepingPos, vanillaResult) -> {
+            if (SkillRegistry.has(PlayerShape.getCurrentShape(player), NocturnalSkill.ID)) {
+                return player.level().isDay() ? InteractionResult.SUCCESS : InteractionResult.FAIL;
+            }
+            return InteractionResult.PASS;
+        });
+
+        PlayerEvents.SLEEP_FINISHED_TIME.register((level, newTime) -> {
+            if (level.isDay() && !level.getPlayers(player -> player.isSleeping() && SkillRegistry.has(PlayerShape.getCurrentShape(player), NocturnalSkill.ID)).isEmpty()) {
+                return newTime + level.getDayTime() % 24000L > 12000L ? 13000 : -11000;
+            } else {
+                return newTime;
+            }
+        });
     }
 
     @SuppressWarnings({"deprecation"})
@@ -88,8 +105,8 @@ public class WalkersEventHandlers {
     }
 
     // Players with an equipped Walkers inside the `ravager_riding` entity tag
-    // should
-    // be able to ride Ravagers.
+// should
+// be able to ride Ravagers.
     public static void registerEntityRidingHandler() {
         EntityEvents.INTERACT_WITH_PLAYER.register((player, entity, hand) -> {
             LivingEntity shape = PlayerShape.getCurrentShape(player);

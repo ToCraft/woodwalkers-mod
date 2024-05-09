@@ -12,8 +12,6 @@ public class WalkersNeoForge {
     public WalkersNeoForge() {
         new Walkers().initialize();
 
-        NeoForge.EVENT_BUS.register(new WalkersNeoForgeEventHandler());
-
         if (FMLEnvironment.dist.isClient())
             new WalkersClient().initialize();
     }

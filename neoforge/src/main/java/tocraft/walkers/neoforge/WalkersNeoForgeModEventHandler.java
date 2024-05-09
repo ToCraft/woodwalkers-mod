@@ -4,11 +4,9 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.neoforge.event.RegisterCommandsEvent;
 import net.neoforged.neoforge.event.entity.living.LivingBreatheEvent;
 import tocraft.walkers.Walkers;
 import tocraft.walkers.api.PlayerShape;
-import tocraft.walkers.command.WalkersCommand;
 
 @SuppressWarnings("unused")
 @EventBusSubscriber(modid = Walkers.MODID)
@@ -25,10 +23,5 @@ public class WalkersNeoForgeModEventHandler {
                 }
             }
         }
-    }
-
-    @SubscribeEvent
-    public static void event(RegisterCommandsEvent event) {
-        WalkersCommand.register(event.getDispatcher(), event.getBuildContext());
     }
 }

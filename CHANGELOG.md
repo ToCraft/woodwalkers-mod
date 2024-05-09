@@ -1,3 +1,8 @@
+walkers 4.4.2
+================
+
+- update to CraftedCore 4.1 to fix several crashes
+
 walkers 4.4.1
 ================
 
