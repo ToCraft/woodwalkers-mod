@@ -1,6 +1,5 @@
 package tocraft.walkers.api.data;
 
-import tocraft.craftedcore.network.ModernNetworking;
 import tocraft.craftedcore.registration.SynchronizedReloadListenerRegistry;
 import tocraft.walkers.Walkers;
 import tocraft.walkers.api.data.abilities.AbilityDataManager;
@@ -19,10 +18,5 @@ public class DataManager {
         SynchronizedReloadListenerRegistry.register(TYPE_PROVIDER_DATA_MANAGER, Walkers.id("variants_data_manager"));
         SynchronizedReloadListenerRegistry.register(SKILL_DATA_MANAGER, Walkers.id("skill_data_manager"));
         SynchronizedReloadListenerRegistry.register(ENTITY_BLACKLIST_DATA_MANAGER, Walkers.id("entity_blacklist_data_manager"));
-
-        ModernNetworking.registerType(ABILITY_DATA_MANAGER.RELOAD_SYNC);
-        ModernNetworking.registerType(TYPE_PROVIDER_DATA_MANAGER.RELOAD_SYNC);
-        ModernNetworking.registerType(SKILL_DATA_MANAGER.RELOAD_SYNC);
-        ModernNetworking.registerType(ENTITY_BLACKLIST_DATA_MANAGER.RELOAD_SYNC);
     }
 }

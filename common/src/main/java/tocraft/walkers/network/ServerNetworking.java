@@ -19,14 +19,10 @@ public class ServerNetworking implements NetworkHandler {
         SwapVariantPackets.registerSwapVariantPacketHandler();
         registerUseAbilityPacketHandler();
 
-        ModernNetworking.registerType(SHAPE_REQUEST);
-        ModernNetworking.registerType(UNLOCK_REQUEST);
-        ModernNetworking.registerType(USE_ABILITY);
         ModernNetworking.registerType(SHAPE_SYNC);
         ModernNetworking.registerType(ABILITY_SYNC);
         ModernNetworking.registerType(UNLOCK_SYNC);
         ModernNetworking.registerType(CHANGE_VEHICLE_STATE);
-        ModernNetworking.registerType(VARIANT_REQUEST);
     }
 
     @SuppressWarnings("ConstantConditions")
