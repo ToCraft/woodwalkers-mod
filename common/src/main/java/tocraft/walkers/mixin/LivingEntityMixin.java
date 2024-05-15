@@ -34,9 +34,9 @@ import tocraft.walkers.api.PlayerShape;
 import tocraft.walkers.impl.NearbySongAccessor;
 import tocraft.walkers.impl.ShapeDataProvider;
 import tocraft.walkers.mixin.accessor.LivingEntityAccessor;
-import tocraft.walkers.skills.ShapeSkill;
-import tocraft.walkers.skills.SkillRegistry;
-import tocraft.walkers.skills.impl.*;
+import tocraft.walkers.traits.ShapeTrait;
+import tocraft.walkers.traits.TraitRegistry;
+import tocraft.walkers.traits.impl.*;
 
 import java.util.List;
 
@@ -59,13 +59,13 @@ public abstract class LivingEntityMixin extends Entity implements NearbySongAcce
 
             if (shape != null) {
                 boolean bool = false;
-                for (FlyingSkill<?> flyingSkill : SkillRegistry.get(shape, FlyingSkill.ID).stream().map(skill -> (FlyingSkill<?>) skill).toList()) {
-                    if (flyingSkill.slowFalling) {
+                for (FlyingTrait<?> flyingTrait : TraitRegistry.get(shape, FlyingTrait.ID).stream().map(trait -> (FlyingTrait<?>) trait).toList()) {
+                    if (flyingTrait.slowFalling) {
                         bool = true;
                         break;
                     }
                 }
-                if (!this.isShiftKeyDown() && (bool || SkillRegistry.has(shape, SlowFallingSkill.ID))) {
+                if (!this.isShiftKeyDown() && (bool || TraitRegistry.has(shape, SlowFallingTrait.ID))) {
                     return true;
                 }
             }
@@ -81,8 +81,8 @@ public abstract class LivingEntityMixin extends Entity implements NearbySongAcce
 
             // Apply 'Dolphin's Grace' status effect benefits if the player's shape is a
             // water creature
-            for (ShapeSkill<LivingEntity> skill : SkillRegistry.get(shape, AquaticSkill.ID)) {
-                if (((AquaticSkill<LivingEntity>) skill).isAquatic) {
+            for (ShapeTrait<LivingEntity> trait : TraitRegistry.get(shape, AquaticTrait.ID)) {
+                if (((AquaticTrait<LivingEntity>) trait).isAquatic) {
                     return .96f;
                 }
             }
@@ -119,10 +119,10 @@ public abstract class LivingEntityMixin extends Entity implements NearbySongAcce
     private void returnHasNightVision(Holder<MobEffect> effect, CallbackInfoReturnable<Boolean> cir) {
         if ((Object) this instanceof Player player) {
             LivingEntity shape = PlayerShape.getCurrentShape(player);
-            if (SkillRegistry.has(shape, MobEffectSkill.ID)) {
-                List<MobEffectSkill<LivingEntity>> skillList = SkillRegistry.get(shape, MobEffectSkill.ID).stream().map(skill -> (MobEffectSkill<LivingEntity>) skill).toList();
-                for (MobEffectSkill<LivingEntity> mobEffectSkill : skillList) {
-                    if (!mobEffectSkill.showInInventory && mobEffectSkill.applyToSelf && effect.equals(mobEffectSkill.mobEffectInstance.getEffect())) {
+            if (TraitRegistry.has(shape, MobEffectTrait.ID)) {
+                List<MobEffectTrait<LivingEntity>> traitList = TraitRegistry.get(shape, MobEffectTrait.ID).stream().map(trait -> (MobEffectTrait<LivingEntity>) trait).toList();
+                for (MobEffectTrait<LivingEntity> mobEffectTrait : traitList) {
+                    if (!mobEffectTrait.showInInventory && mobEffectTrait.applyToSelf && effect.equals(mobEffectTrait.mobEffectInstance.getEffect())) {
                         cir.setReturnValue(true);
                         return;
                     }
@@ -135,11 +135,11 @@ public abstract class LivingEntityMixin extends Entity implements NearbySongAcce
     private void returnNightVisionInstance(Holder<MobEffect> effect, CallbackInfoReturnable<MobEffectInstance> cir) {
         if ((Object) this instanceof Player player) {
             LivingEntity shape = PlayerShape.getCurrentShape(player);
-            if (SkillRegistry.has(shape, MobEffectSkill.ID)) {
-                List<MobEffectSkill<LivingEntity>> skillList = SkillRegistry.get(shape, MobEffectSkill.ID).stream().map(skill -> (MobEffectSkill<LivingEntity>) skill).toList();
-                for (MobEffectSkill<LivingEntity> mobEffectSkill : skillList) {
-                    if (!mobEffectSkill.showInInventory && mobEffectSkill.applyToSelf) {
-                        MobEffectInstance mobEffectInstance = mobEffectSkill.mobEffectInstance;
+            if (TraitRegistry.has(shape, MobEffectTrait.ID)) {
+                List<MobEffectTrait<LivingEntity>> traitList = TraitRegistry.get(shape, MobEffectTrait.ID).stream().map(trait -> (MobEffectTrait<LivingEntity>) trait).toList();
+                for (MobEffectTrait<LivingEntity> mobEffectTrait : traitList) {
+                    if (!mobEffectTrait.showInInventory && mobEffectTrait.applyToSelf) {
+                        MobEffectInstance mobEffectInstance = mobEffectTrait.mobEffectInstance;
                         if (effect.equals(mobEffectInstance.getEffect())) {
                             cir.setReturnValue(new MobEffectInstance(mobEffectInstance.getEffect(), mobEffectInstance.getDuration(), mobEffectInstance.getAmplifier(), mobEffectInstance.isAmbient(), mobEffectInstance.isVisible(), mobEffectInstance.showIcon()));
                             return;
@@ -197,8 +197,8 @@ public abstract class LivingEntityMixin extends Entity implements NearbySongAcce
                 if (shape.canStandOnFluid(state)) {
                     cir.setReturnValue(true);
                 } else {
-                    for (StandOnFluidSkill<?> standOnFluidSkill : SkillRegistry.get(shape, StandOnFluidSkill.ID).stream().map(entry -> (StandOnFluidSkill<?>) entry).toList()) {
-                        if (state.is(standOnFluidSkill.fluidTagKey)) {
+                    for (StandOnFluidTrait<?> standOnFluidTrait : TraitRegistry.get(shape, StandOnFluidTrait.ID).stream().map(entry -> (StandOnFluidTrait<?>) entry).toList()) {
+                        if (state.is(standOnFluidTrait.fluidTagKey)) {
                             cir.setReturnValue(true);
                             return;
                         }
@@ -215,19 +215,19 @@ public abstract class LivingEntityMixin extends Entity implements NearbySongAcce
 
             if (shape != null) {
                 BlockState blockState = this.level().getBlockState(this.blockPosition());
-                for (ClimbBlocksSkill<?> climbBlocksSkill : SkillRegistry.get(shape, ClimbBlocksSkill.ID).stream().map(entry -> (ClimbBlocksSkill<?>) entry).toList()) {
-                    for (Block invalidBlock : climbBlocksSkill.invalidBlocks) {
+                for (ClimbBlocksTrait<?> climbBlocksTrait : TraitRegistry.get(shape, ClimbBlocksTrait.ID).stream().map(entry -> (ClimbBlocksTrait<?>) entry).toList()) {
+                    for (Block invalidBlock : climbBlocksTrait.invalidBlocks) {
                         if (blockState.is(invalidBlock)) {
                             return;
                         }
                     }
 
-                    if (climbBlocksSkill.validBlocks.isEmpty()) {
+                    if (climbBlocksTrait.validBlocks.isEmpty()) {
                         cir.setReturnValue(this.horizontalCollision);
                     } else {
-                        for (Block validBlock : climbBlocksSkill.validBlocks) {
+                        for (Block validBlock : climbBlocksTrait.validBlocks) {
                             if (blockState.is(validBlock)) {
-                                cir.setReturnValue(!climbBlocksSkill.horizontalCollision || this.horizontalCollision);
+                                cir.setReturnValue(!climbBlocksTrait.horizontalCollision || this.horizontalCollision);
                                 return;
                             }
                         }
@@ -273,13 +273,13 @@ public abstract class LivingEntityMixin extends Entity implements NearbySongAcce
     }
 
     @Inject(method = "canFreeze", at = @At("RETURN"), cancellable = true)
-    private void temperatureSkillPreventFreeze(CallbackInfoReturnable<Boolean> cir) {
+    private void temperatureTraitPreventFreeze(CallbackInfoReturnable<Boolean> cir) {
         if (cir.getReturnValue()) {
             if ((Object) this instanceof Player) {
                 LivingEntity shape = PlayerShape.getCurrentShape((Player) (Object) this);
                 if (shape != null) {
-                    for (ShapeSkill<LivingEntity> temperatureSkill : SkillRegistry.get(shape, TemperatureSkill.ID)) {
-                        if (((TemperatureSkill<LivingEntity>) temperatureSkill).coldEnoughToSnow) {
+                    for (ShapeTrait<LivingEntity> temperatureTrait : TraitRegistry.get(shape, TemperatureTrait.ID)) {
+                        if (((TemperatureTrait<LivingEntity>) temperatureTrait).coldEnoughToSnow) {
                             cir.setReturnValue(false);
                         }
                     }
@@ -303,12 +303,12 @@ public abstract class LivingEntityMixin extends Entity implements NearbySongAcce
 
 
     @Inject(method = "hurt", at = @At("RETURN"))
-    private void attackForHealthSkill(DamageSource source, float amount, CallbackInfoReturnable<Boolean> cir) {
+    private void attackForHealthTrait(DamageSource source, float amount, CallbackInfoReturnable<Boolean> cir) {
         if (source.getEntity() instanceof Player player) {
             boolean didHurtTarget = cir.getReturnValue();
 
             LivingEntity shape = PlayerShape.getCurrentShape(player);
-            if (didHurtTarget && SkillRegistry.has(shape, AttackForHealthSkill.ID)) {
+            if (didHurtTarget && TraitRegistry.has(shape, AttackForHealthTrait.ID)) {
                 player.heal(Math.max(1, amount / 2));
             }
         }

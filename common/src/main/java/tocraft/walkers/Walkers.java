@@ -28,8 +28,8 @@ import tocraft.walkers.integrations.Integrations;
 import tocraft.walkers.mixin.ThreadedAnvilChunkStorageAccessor;
 import tocraft.walkers.network.ServerNetworking;
 import tocraft.walkers.registry.WalkersEventHandlers;
-import tocraft.walkers.skills.SkillRegistry;
-import tocraft.walkers.skills.impl.FlyingSkill;
+import tocraft.walkers.traits.TraitRegistry;
+import tocraft.walkers.traits.impl.FlyingTrait;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,7 +51,7 @@ public class Walkers {
     public void initialize() {
         MixinExtrasBootstrap.init();
 
-        SkillRegistry.initialize();
+        TraitRegistry.initialize();
 
         WalkersCommand.initialize();
         WalkersEventHandlers.initialize();
@@ -90,7 +90,7 @@ public class Walkers {
         LivingEntity shape = PlayerShape.getCurrentShape(player);
 
         if (shape != null && Walkers.CONFIG.enableFlight
-                && (SkillRegistry.has(shape, FlyingSkill.ID) || shape instanceof FlyingMob)) {
+                && (TraitRegistry.has(shape, FlyingTrait.ID) || shape instanceof FlyingMob)) {
             List<String> requiredAdvancements = Walkers.CONFIG.advancementsRequiredForFlight;
 
             // requires at least 1 advancement, check if player has them

@@ -1,0 +1,11 @@
+{
+  "entity_types": [
+    "friendsandfoes:copper_golem",
+    "friendsandfoes:tuff_golem"
+  ],
+  "traits": [
+    {
+      "type": "walkers:undrownable"
+    }
+  ]
+}

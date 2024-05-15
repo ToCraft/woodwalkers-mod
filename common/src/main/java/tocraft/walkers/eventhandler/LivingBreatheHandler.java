@@ -4,9 +4,9 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import tocraft.craftedcore.event.common.EntityEvents;
 import tocraft.walkers.api.PlayerShape;
-import tocraft.walkers.skills.SkillRegistry;
-import tocraft.walkers.skills.impl.AquaticSkill;
-import tocraft.walkers.skills.impl.UndrownableSkill;
+import tocraft.walkers.traits.TraitRegistry;
+import tocraft.walkers.traits.impl.AquaticTrait;
+import tocraft.walkers.traits.impl.UndrownableTrait;
 
 public final class LivingBreatheHandler implements EntityEvents.LivingBreathe {
     @Override
@@ -17,11 +17,11 @@ public final class LivingBreatheHandler implements EntityEvents.LivingBreathe {
             if (shape != null) {
                 boolean isInWater = entity.isInWaterOrBubble();
 
-                for (AquaticSkill<LivingEntity> skill : SkillRegistry.get(shape, AquaticSkill.ID).stream().map(skill -> (AquaticSkill<LivingEntity>) skill).toList()) {
-                    return isInWater ? skill.isAquatic : skill.isLand;
+                for (AquaticTrait<LivingEntity> trait : TraitRegistry.get(shape, AquaticTrait.ID).stream().map(trait -> (AquaticTrait<LivingEntity>) trait).toList()) {
+                    return isInWater ? trait.isAquatic : trait.isLand;
                 }
 
-                if (SkillRegistry.has(shape, UndrownableSkill.ID) || shape.canBreatheUnderwater() && isInWater) {
+                if (TraitRegistry.has(shape, UndrownableTrait.ID) || shape.canBreatheUnderwater() && isInWater) {
                     return true;
                 }
 

@@ -1,0 +1,11 @@
+{
+  "traits": [
+    {
+      "type": "walkers:flying"
+    }
+  ],
+  "entity_types": [
+    "blue_skies:frost_spirit",
+    "habitat:passerine"
+  ]
+}

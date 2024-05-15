@@ -2,6 +2,7 @@ walkers 4.4.3
 ================
 
 - update to CraftedCore 4.2 for better background performance
+- rename 'skills' to 'traits' (Datapacks still work)
 
 walkers 4.4.2
 ================

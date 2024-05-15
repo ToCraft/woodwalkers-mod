@@ -1,5 +1,11 @@
 apply from: "https://raw.githubusercontent.com/ToCraft/GradleMaster/main/common.gradle"
 
+loom {
+    mixin {
+        useLegacyMixinAp = false
+    }
+}
+
 dependencies {
     modApi "dev.tocraft:craftedcore:${rootProject.minecraft_version}-${rootProject.craftedcore_version}"
 }

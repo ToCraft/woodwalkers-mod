@@ -9,16 +9,16 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import tocraft.walkers.api.PlayerShape;
-import tocraft.walkers.skills.SkillRegistry;
-import tocraft.walkers.skills.impl.WalkOnPowderSnow;
+import tocraft.walkers.traits.TraitRegistry;
+import tocraft.walkers.traits.impl.WalkOnPowderSnow;
 
 @Mixin(PowderSnowBlock.class)
 public class PowderSnowBlockMixin {
     @Inject(method = "canEntityWalkOnPowderSnow", at = @At("RETURN"), cancellable = true)
-    private static void handleWalkOnPowderSnowSkill(Entity entity, CallbackInfoReturnable<Boolean> cir) {
+    private static void handleWalkOnPowderSnowTrait(Entity entity, CallbackInfoReturnable<Boolean> cir) {
         if (!cir.getReturnValue() && entity instanceof Player player) {
             LivingEntity shape = PlayerShape.getCurrentShape(player);
-            if (SkillRegistry.has(shape, WalkOnPowderSnow.ID)) {
+            if (TraitRegistry.has(shape, WalkOnPowderSnow.ID)) {
                 cir.setReturnValue(true);
             }
         }

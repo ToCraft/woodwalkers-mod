@@ -24,9 +24,9 @@ public class Integrations {
         }
     }
 
-    public static void registerSkills() {
+    public static void registerTraits() {
         for (AbstractIntegration loadedIntegration : INTEGRATIONS.values()) {
-            loadedIntegration.registerSkills();
+            loadedIntegration.registerTraits();
         }
     }
 

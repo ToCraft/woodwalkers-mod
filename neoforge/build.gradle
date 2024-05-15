@@ -1,5 +1,11 @@
 apply from: "https://raw.githubusercontent.com/ToCraft/GradleMaster/main/neoforge.gradle"
 
+loom {
+    mixin {
+        useLegacyMixinAp = false
+    }
+}
+
 dependencies {
     modApi "dev.tocraft:craftedcore-neoforge:${rootProject.minecraft_version}-${rootProject.craftedcore_version}"
 }

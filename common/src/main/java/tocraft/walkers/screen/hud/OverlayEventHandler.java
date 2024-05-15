@@ -8,8 +8,8 @@ import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.Nullable;
 import tocraft.craftedcore.event.client.RenderEvents;
 import tocraft.walkers.api.PlayerShape;
-import tocraft.walkers.skills.SkillRegistry;
-import tocraft.walkers.skills.impl.AttackForHealthSkill;
+import tocraft.walkers.traits.TraitRegistry;
+import tocraft.walkers.traits.impl.AttackForHealthTrait;
 
 public class OverlayEventHandler {
     public static void initialize() {
@@ -34,7 +34,7 @@ public class OverlayEventHandler {
                 LivingEntity shape = PlayerShape.getCurrentShape(player);
 
                 if (shape != null) {
-                    if (SkillRegistry.has(shape, AttackForHealthSkill.ID)) {
+                    if (TraitRegistry.has(shape, AttackForHealthTrait.ID)) {
                         return InteractionResult.FAIL;
                     }
                 }

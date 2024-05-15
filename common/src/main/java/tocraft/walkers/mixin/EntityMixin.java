@@ -12,9 +12,9 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import tocraft.walkers.api.PlayerShape;
 import tocraft.walkers.impl.DimensionsRefresher;
-import tocraft.walkers.skills.SkillRegistry;
-import tocraft.walkers.skills.impl.HumanoidSkill;
-import tocraft.walkers.skills.impl.NoPhysicsSkill;
+import tocraft.walkers.traits.TraitRegistry;
+import tocraft.walkers.traits.impl.HumanoidTrait;
+import tocraft.walkers.traits.impl.NoPhysicsTrait;
 
 @SuppressWarnings("ConstantConditions")
 @Mixin(Entity.class)
@@ -24,31 +24,11 @@ public abstract class EntityMixin implements DimensionsRefresher {
     private EntityDimensions dimensions;
 
     @Shadow
-    public abstract Pose getPose();
-
-    @Shadow
-    public abstract EntityDimensions getDimensions(Pose pose);
-
-    @Shadow
-    public abstract AABB getBoundingBox();
-
-    @Shadow
-    public abstract void setBoundingBox(AABB boundingBox);
-
-    @Shadow
     protected boolean firstTick;
-
-    @Shadow
-    public abstract void move(MoverType type, Vec3 movement);
 
     @Shadow
     private float eyeHeight;
 
-    @Shadow
-    public abstract boolean isCrouching();
-
-    @Shadow
-    public abstract float getEyeHeight(Pose pose);
 
     @Inject(method = "getBbWidth", at = @At("HEAD"), cancellable = true)
     private void getBbWidth(CallbackInfoReturnable<Float> cir) {
@@ -75,18 +55,18 @@ public abstract class EntityMixin implements DimensionsRefresher {
     @Override
     public void shape_refreshDimensions() {
         EntityDimensions currentDimensions = this.dimensions;
-        Pose entityPose = this.getPose();
-        EntityDimensions newDimensions = this.getDimensions(entityPose);
+        Pose entityPose = ((Entity) (Object) this).getPose();
+        EntityDimensions newDimensions = ((Entity) (Object) this).getDimensions(entityPose);
 
         this.dimensions = newDimensions;
-        this.eyeHeight = this.getEyeHeight(entityPose);
+        this.eyeHeight = ((Entity) (Object) this).getEyeHeight(entityPose);
 
-        AABB box = this.getBoundingBox();
-        this.setBoundingBox(new AABB(box.minX, box.minY, box.minZ, box.minX + newDimensions.width(), box.minY + newDimensions.height(), box.minZ + newDimensions.width()));
+        AABB box = ((Entity) (Object) this).getBoundingBox();
+        ((Entity) (Object) this).setBoundingBox(new AABB(box.minX, box.minY, box.minZ, box.minX + newDimensions.width(), box.minY + newDimensions.height(), box.minZ + newDimensions.width()));
 
         if (!this.firstTick) {
             float f = currentDimensions.width() - newDimensions.width();
-            this.move(MoverType.SELF, new Vec3(f, 0.0D, f));
+            ((Entity) (Object) this).move(MoverType.SELF, new Vec3(f, 0.0D, f));
         }
     }
 
@@ -96,7 +76,7 @@ public abstract class EntityMixin implements DimensionsRefresher {
             LivingEntity shape = PlayerShape.getCurrentShape(player);
 
             if (shape != null) {
-                if (this.isCrouching() && SkillRegistry.has(shape, HumanoidSkill.ID)) {
+                if (((Entity) (Object) this).isCrouching() && TraitRegistry.has(shape, HumanoidTrait.ID)) {
                     cir.setReturnValue(shape.getEyeHeight(Pose.CROUCHING) * 1.27F / 1.62F);
                     return;
                 }
@@ -121,7 +101,7 @@ public abstract class EntityMixin implements DimensionsRefresher {
         if ((Object) this instanceof Player player) {
             LivingEntity shape = PlayerShape.getCurrentShape(player);
             if (shape != null) {
-                if (SkillRegistry.has(shape, NoPhysicsSkill.ID)) {
+                if (TraitRegistry.has(shape, NoPhysicsTrait.ID)) {
                     player.noPhysics = true;
                 }
             }

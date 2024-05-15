@@ -29,7 +29,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -41,25 +40,15 @@ import tocraft.walkers.mixin.accessor.EntityAccessor;
 import tocraft.walkers.mixin.accessor.IronGolemEntityAccessor;
 import tocraft.walkers.mixin.accessor.LivingEntityAccessor;
 import tocraft.walkers.mixin.accessor.RavagerEntityAccessor;
-import tocraft.walkers.skills.ShapeSkill;
-import tocraft.walkers.skills.SkillRegistry;
-import tocraft.walkers.skills.impl.*;
+import tocraft.walkers.traits.ShapeTrait;
+import tocraft.walkers.traits.TraitRegistry;
+import tocraft.walkers.traits.impl.*;
 
 import java.util.Iterator;
 
-@SuppressWarnings("ConstantConditions")
+@SuppressWarnings({"ConstantConditions", "RedundantCast"})
 @Mixin(Player.class)
 public abstract class PlayerEntityMixin extends LivingEntityMixin {
-
-    @Shadow
-    public abstract boolean isSpectator();
-
-    @Shadow
-    public abstract boolean isSwimming();
-
-    @Shadow
-    public abstract boolean hurt(DamageSource source, float amount);
-
     private PlayerEntityMixin(EntityType<? extends LivingEntity> type, Level world) {
         super(type, world);
     }
@@ -70,7 +59,7 @@ public abstract class PlayerEntityMixin extends LivingEntityMixin {
 
         if (entity != null) {
             EntityDimensions shapeDimensions = entity.getDimensions(pose);
-            if (pose == Pose.CROUCHING && SkillRegistry.has(entity, HumanoidSkill.ID)) {
+            if (pose == Pose.CROUCHING && TraitRegistry.has(entity, HumanoidTrait.ID)) {
                 cir.setReturnValue(EntityDimensions.scalable(shapeDimensions.width(), shapeDimensions.height() * 1.5F / 1.8F));
             } else {
                 cir.setReturnValue(shapeDimensions);
@@ -156,11 +145,11 @@ public abstract class PlayerEntityMixin extends LivingEntityMixin {
             // check if the player is shape
             if (shape != null) {
                 // check if the player's current shape burns in sunlight
-                if (SkillRegistry.has(shape, BurnInDaylightSkill.ID)) {
+                if (TraitRegistry.has(shape, BurnInDaylightTrait.ID)) {
                     boolean bl = this.walkers$isInDaylight();
                     // handle night burning
-                    for (BurnInDaylightSkill<?> skill : SkillRegistry.get(shape, BurnInDaylightSkill.ID).stream().map(skill -> ((BurnInDaylightSkill<?>) skill)).toList()) {
-                        bl = (bl && !skill.burnInMoonlightInstead) || (!this.walkers$isInDaylight() && skill.burnInMoonlightInstead);
+                    for (BurnInDaylightTrait<?> trait : TraitRegistry.get(shape, BurnInDaylightTrait.ID).stream().map(trait -> ((BurnInDaylightTrait<?>) trait)).toList()) {
+                        bl = (bl && !trait.burnInMoonlightInstead) || (!this.walkers$isInDaylight() && trait.burnInMoonlightInstead);
                     }
                     if (bl) {
 
@@ -225,8 +214,8 @@ public abstract class PlayerEntityMixin extends LivingEntityMixin {
             if (shape != null) {
                 // damage player if they are a shape that gets hurt by low or high temperatures
                 final boolean couldEnoughToSnow = level().getBiome(blockPosition()).value().coldEnoughToSnow(blockPosition());
-                for (TemperatureSkill<?> temperatureSkill : SkillRegistry.get(shape, TemperatureSkill.ID).stream().map(entry -> (TemperatureSkill<?>) entry).toList()) {
-                    if (!temperatureSkill.coldEnoughToSnow == couldEnoughToSnow) {
+                for (TemperatureTrait<?> temperaturetrait : TraitRegistry.get(shape, TemperatureTrait.ID).stream().map(entry -> (TemperatureTrait<?>) entry).toList()) {
+                    if (!temperaturetrait.coldEnoughToSnow == couldEnoughToSnow) {
                         player.hurt(level().damageSources().onFire(), 1.0f);
                         break;
                     }
@@ -296,16 +285,16 @@ public abstract class PlayerEntityMixin extends LivingEntityMixin {
     }
 
     @Inject(method = "hurt", at = @At("HEAD"))
-    private void handeReinforcementsSkill(DamageSource source, float amount, CallbackInfoReturnable<Boolean> cir) {
+    private void handeReinforcementstrait(DamageSource source, float amount, CallbackInfoReturnable<Boolean> cir) {
         Player player = (Player) (Object) this;
         LivingEntity shape = PlayerShape.getCurrentShape(player);
         if (source.getEntity() instanceof LivingEntity livingAttacker && shape != null) {
-            for (ReinforcementsSkill<LivingEntity> reinforcementSkill : SkillRegistry.get(shape, ReinforcementsSkill.ID).stream().map(skill -> (ReinforcementsSkill<LivingEntity>) skill).toList()) {
-                double d = reinforcementSkill.getRange();
+            for (ReinforcementsTrait<LivingEntity> reinforcementTrait : TraitRegistry.get(shape, ReinforcementsTrait.ID).stream().map(trait -> (ReinforcementsTrait<LivingEntity>) trait).toList()) {
+                double d = reinforcementTrait.getRange();
                 AABB aABB = AABB.unitCubeFromLowerCorner(this.position()).inflate(d, 10.0, d);
                 Iterator<? extends LivingEntity> var5 = this.level().getEntitiesOfClass(Mob.class, aABB, EntitySelector.NO_SPECTATORS.and(entity -> {
-                    if (reinforcementSkill.hasReinforcements()) {
-                        return reinforcementSkill.isReinforcement(entity);
+                    if (reinforcementTrait.hasReinforcements()) {
+                        return reinforcementTrait.isReinforcement(entity);
                     } else {
                         return shape.getClass().isInstance(entity);
                     }
@@ -336,11 +325,11 @@ public abstract class PlayerEntityMixin extends LivingEntityMixin {
     }
 
     @Inject(method = "hurt", at = @At("HEAD"))
-    private void instantDieOnDamageTypeSkill(DamageSource source, float amount, CallbackInfoReturnable<Boolean> cir) {
+    private void instantDieOnDamageTypeTrait(DamageSource source, float amount, CallbackInfoReturnable<Boolean> cir) {
         LivingEntity shape = PlayerShape.getCurrentShape((Player) (Object) this);
         if (shape != null) {
-            for (ShapeSkill<LivingEntity> instantDieOnDamageTypeSkill : SkillRegistry.get(shape, InstantDieOnDamageMsgSkill.ID)) {
-                if (source.getMsgId().equals(((InstantDieOnDamageMsgSkill<LivingEntity>) instantDieOnDamageTypeSkill).msgId)) {
+            for (ShapeTrait<LivingEntity> instantDieOnDamageTypetrait : TraitRegistry.get(shape, InstantDieOnDamageMsgTrait.ID)) {
+                if (source.getMsgId().equals(((InstantDieOnDamageMsgTrait<LivingEntity>) instantDieOnDamageTypetrait).msgId)) {
                     this.kill();
                 }
             }
@@ -350,13 +339,13 @@ public abstract class PlayerEntityMixin extends LivingEntityMixin {
     @WrapWithCondition(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/food/FoodData;tick(Lnet/minecraft/world/entity/player/Player;)V"))
     private boolean preventFoodDataTick(FoodData instance, Player player) {
         LivingEntity shape = PlayerShape.getCurrentShape(player);
-        return player.hasEffect(MobEffects.SATURATION) || !SkillRegistry.has(shape, AttackForHealthSkill.ID);
+        return player.hasEffect(MobEffects.SATURATION) || !TraitRegistry.has(shape, AttackForHealthTrait.ID);
     }
 
     @Inject(method = "canEat", at = @At("RETURN"), cancellable = true)
     private void onCanEat(boolean canAlwaysEat, CallbackInfoReturnable<Boolean> cir) {
         if (cir.getReturnValue()) {
-            if (SkillRegistry.has(PlayerShape.getCurrentShape((Player) (Object) this), AttackForHealthSkill.ID)) {
+            if (TraitRegistry.has(PlayerShape.getCurrentShape((Player) (Object) this), AttackForHealthTrait.ID)) {
                 cir.setReturnValue(false);
             }
         }

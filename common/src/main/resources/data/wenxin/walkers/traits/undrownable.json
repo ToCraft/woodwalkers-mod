@@ -1,0 +1,11 @@
+{
+  "traits": [
+    {
+      "type": "walkers:undrownable"
+    }
+  ],
+  "entity_types": [
+    "minecraft:snow_golem",
+    "alexsmobs:lobster"
+  ]
+}
