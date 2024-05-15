@@ -13,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import tocraft.craftedcore.VIPs;
 import tocraft.craftedcore.config.ConfigLoader;
+import tocraft.craftedcore.event.common.EntityEvents;
 import tocraft.craftedcore.event.common.PlayerEvents;
 import tocraft.craftedcore.platform.VersionChecker;
 import tocraft.walkers.api.PlayerShape;
@@ -20,15 +21,14 @@ import tocraft.walkers.api.WalkersTickHandlers;
 import tocraft.walkers.api.data.DataManager;
 import tocraft.walkers.api.platform.WalkersConfig;
 import tocraft.walkers.command.WalkersCommand;
+import tocraft.walkers.eventhandler.LivingBreatheHandler;
 import tocraft.walkers.eventhandler.RespawnHandler;
 import tocraft.walkers.integrations.Integrations;
 import tocraft.walkers.mixin.ThreadedAnvilChunkStorageAccessor;
 import tocraft.walkers.network.ServerNetworking;
 import tocraft.walkers.registry.WalkersEventHandlers;
-import tocraft.walkers.skills.ShapeSkill;
-import tocraft.walkers.skills.SkillRegistry;
-import tocraft.walkers.skills.impl.AquaticSkill;
-import tocraft.walkers.skills.impl.FlyingSkill;
+import tocraft.walkers.traits.TraitRegistry;
+import tocraft.walkers.traits.impl.FlyingTrait;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,7 +48,7 @@ public class Walkers {
     }
 
     public void initialize() {
-        SkillRegistry.initialize();
+        TraitRegistry.initialize();
 
         WalkersCommand.initialize();
         WalkersEventHandlers.initialize();
@@ -59,6 +59,7 @@ public class Walkers {
         Integrations.initialize();
 
         PlayerEvents.PLAYER_RESPAWN.register(new RespawnHandler());
+        EntityEvents.LIVING_BREATHE.register(new LivingBreatheHandler());
     }
 
     public static void registerJoinSyncPacket() {
@@ -86,7 +87,7 @@ public class Walkers {
         LivingEntity shape = PlayerShape.getCurrentShape(player);
 
         if (shape != null && Walkers.CONFIG.enableFlight
-                && (SkillRegistry.has(shape, FlyingSkill.ID) || shape instanceof FlyingMob)) {
+                && (TraitRegistry.has(shape, FlyingTrait.ID) || shape instanceof FlyingMob)) {
             List<String> requiredAdvancements = Walkers.CONFIG.advancementsRequiredForFlight;
 
             // requires at least 1 advancement, check if player has them
@@ -112,21 +113,6 @@ public class Walkers {
         }
 
         return false;
-    }
-
-    /**
-     * @param entity the shape to be checked
-     * @return 0 - water mob, 1 - land and water mob, 2 - land mob
-     */
-    public static int isAquatic(LivingEntity entity) {
-        if (entity != null) {
-            for (ShapeSkill<LivingEntity> aquaticSkill : SkillRegistry.get(entity, AquaticSkill.ID)) {
-                return ((AquaticSkill<LivingEntity>) aquaticSkill).isAquatic;
-            }
-            return entity.getType().getCategory().getName().contains("water") ? 0 : 2;
-        } else {
-            return 2;
-        }
     }
 
     public static boolean isPlayerBlacklisted(UUID uuid) {

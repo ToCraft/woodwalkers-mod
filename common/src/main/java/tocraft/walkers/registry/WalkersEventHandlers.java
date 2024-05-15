@@ -1,6 +1,5 @@
 package tocraft.walkers.registry;
 
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.InteractionResult;
@@ -16,13 +15,12 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.ServerLevelAccessor;
 import tocraft.craftedcore.event.common.EntityEvents;
 import tocraft.craftedcore.event.common.PlayerEvents;
-import tocraft.craftedcore.event.common.ServerLevelEvents;
 import tocraft.walkers.Walkers;
 import tocraft.walkers.api.PlayerHostility;
 import tocraft.walkers.api.PlayerShape;
-import tocraft.walkers.skills.SkillRegistry;
-import tocraft.walkers.skills.impl.NocturnalSkill;
-import tocraft.walkers.skills.impl.RiderSkill;
+import tocraft.walkers.traits.TraitRegistry;
+import tocraft.walkers.traits.impl.NocturnalTrait;
+import tocraft.walkers.traits.impl.RiderTrait;
 
 public class WalkersEventHandlers {
 
@@ -31,65 +29,19 @@ public class WalkersEventHandlers {
         registerEntityRidingHandler();
         registerPlayerRidingHandler();
         registerLivingDeathHandler();
-        registerHandlerForDeprecatedEntityTags();
 
         PlayerEvents.ALLOW_SLEEP_TIME.register((player, sleepingPos, vanillaResult) -> {
-            if (SkillRegistry.has(PlayerShape.getCurrentShape(player), NocturnalSkill.ID)) {
+            if (TraitRegistry.has(PlayerShape.getCurrentShape(player), NocturnalTrait.ID)) {
                 return player.level().isDay() ? InteractionResult.SUCCESS : InteractionResult.FAIL;
             }
             return InteractionResult.PASS;
         });
 
         PlayerEvents.SLEEP_FINISHED_TIME.register((level, newTime) -> {
-            if (level.isDay() && !level.getPlayers(player -> player.isSleeping() && SkillRegistry.has(PlayerShape.getCurrentShape(player), NocturnalSkill.ID)).isEmpty()) {
+            if (level.isDay() && !level.getPlayers(player -> player.isSleeping() && TraitRegistry.has(PlayerShape.getCurrentShape(player), NocturnalTrait.ID)).isEmpty()) {
                 return newTime + level.getDayTime() % 24000L > 12000L ? 13000 : -11000;
             } else {
                 return newTime;
-            }
-        });
-    }
-
-    @SuppressWarnings({"deprecation"})
-    public static void registerHandlerForDeprecatedEntityTags() {
-        ServerLevelEvents.LEVEL_LOAD.register((serverLevel) -> {
-            for (EntityType<?> entityType : BuiltInRegistries.ENTITY_TYPE) {
-                // print warnings for deprecated entity tags
-                if (entityType.is(WalkersEntityTags.BURNS_IN_DAYLIGHT)) {
-                    Walkers.LOGGER.warn("Woodwalkers Warning: Please merge to the new skills system. Found " + WalkersEntityTags.BURNS_IN_DAYLIGHT + " for " + entityType);
-                }
-                if (entityType.is(WalkersEntityTags.FLYING)) {
-                    Walkers.LOGGER.warn("Woodwalkers Warning: Please merge to the new skills system. Found " + WalkersEntityTags.FLYING + " for " + entityType);
-                }
-                if (entityType.is(WalkersEntityTags.SLOW_FALLING)) {
-                    Walkers.LOGGER.warn("Woodwalkers Warning: Please merge to the new skills system. Found " + WalkersEntityTags.SLOW_FALLING + " for " + entityType);
-                }
-                if (entityType.is(WalkersEntityTags.WOLF_PREY)) {
-                    Walkers.LOGGER.warn("Woodwalkers Warning: Please merge to the new skills system. Found " + WalkersEntityTags.WOLF_PREY + " for " + entityType);
-                }
-                if (entityType.is(WalkersEntityTags.FOX_PREY)) {
-                    Walkers.LOGGER.warn("Woodwalkers Warning: Please merge to the new skills system. Found " + WalkersEntityTags.FOX_PREY + " for " + entityType);
-                }
-                if (entityType.is(WalkersEntityTags.HURT_BY_HIGH_TEMPERATURE)) {
-                    Walkers.LOGGER.warn("Woodwalkers Warning: Please merge to the new skills system. Found " + WalkersEntityTags.HURT_BY_HIGH_TEMPERATURE + " for " + entityType);
-                }
-                if (entityType.is(WalkersEntityTags.RAVAGER_RIDING)) {
-                    Walkers.LOGGER.warn("Woodwalkers Warning: Please merge to the new skills system. Found " + WalkersEntityTags.RAVAGER_RIDING + " for " + entityType);
-                }
-                if (entityType.is(WalkersEntityTags.LAVA_WALKING)) {
-                    Walkers.LOGGER.warn("Woodwalkers Warning: Please merge to the new skills system. Found " + WalkersEntityTags.LAVA_WALKING + " for " + entityType);
-                }
-                if (entityType.is(WalkersEntityTags.FALL_THROUGH_BLOCKS)) {
-                    Walkers.LOGGER.warn("Woodwalkers Warning: Please merge to the new skills system. Found " + WalkersEntityTags.FALL_THROUGH_BLOCKS + " for " + entityType);
-                }
-                if (entityType.is(WalkersEntityTags.CANT_SWIM)) {
-                    Walkers.LOGGER.warn("Woodwalkers Warning: Please merge to the new skills system. Found " + WalkersEntityTags.CANT_SWIM + " for " + entityType);
-                }
-                if (entityType.is(WalkersEntityTags.UNDROWNABLE)) {
-                    Walkers.LOGGER.warn("Woodwalkers Warning: Please merge to the new skills system. Found " + WalkersEntityTags.UNDROWNABLE + " for " + entityType);
-                }
-                if (entityType.is(WalkersEntityTags.BLACKLISTED)) {
-                    Walkers.LOGGER.warn("Woodwalkers Warning: Please merge to the new skills system. Found " + WalkersEntityTags.BLACKLISTED + " for " + entityType);
-                }
             }
         });
     }
@@ -112,8 +64,8 @@ public class WalkersEventHandlers {
             LivingEntity shape = PlayerShape.getCurrentShape(player);
             if (shape != null && entity instanceof LivingEntity livingEntity) {
                 // checks, if selected entity is rideable
-                for (RiderSkill<?> riderSkill : SkillRegistry.get(shape, RiderSkill.ID).stream().map(entry -> (RiderSkill<?>) entry).toList()) {
-                    if (riderSkill.isRideable(livingEntity) || (livingEntity instanceof Player rideablePlayer && riderSkill.isRideable(PlayerShape.getCurrentShape(rideablePlayer)))) {
+                for (RiderTrait<?> riderTrait : TraitRegistry.get(shape, RiderTrait.ID).stream().map(entry -> (RiderTrait<?>) entry).toList()) {
+                    if (riderTrait.isRideable(livingEntity) || (livingEntity instanceof Player rideablePlayer && riderTrait.isRideable(PlayerShape.getCurrentShape(rideablePlayer)))) {
                         player.startRiding(entity);
                         return InteractionResult.PASS;
                     }

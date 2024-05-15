@@ -2,6 +2,10 @@ loom {
     forge {
         mixinConfigs = ["walkers-forge.mixins.json", "walkers.mixins.json"]
     }
+
+    mixin {
+        useLegacyMixinAp = false
+    }
 }
 
 apply from: "https://raw.githubusercontent.com/ToCraft/GradleMaster/main/forge.gradle"
