@@ -18,7 +18,7 @@ credits = "Original mod by Draylar"
 description = '''
 Become a Woodwalker/animagus!
 '''
-logoFile = "assets/walkers/icon.png"
+logoFile = "icon.png"
 
 [[dependencies.walkers]]
 modId = "minecraft"
