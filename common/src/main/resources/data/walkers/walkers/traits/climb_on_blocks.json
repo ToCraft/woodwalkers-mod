@@ -1,0 +1,14 @@
+{
+  "entity_types": [
+    "alexsmobs:centipede"
+  ],
+  "traits": [
+    {
+      "type": "walkers:climb_blocks",
+      "horizontal_collision": true,
+      "invalid_blocks": [
+        "minecraft:bedrock"
+      ]
+    }
+  ]
+}
