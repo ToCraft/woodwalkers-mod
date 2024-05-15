@@ -11,7 +11,7 @@ public abstract class AbstractIntegration {
 
     }
 
-    public void registerSkills() {
+    public void registerTraits() {
 
     }
 

@@ -5,7 +5,6 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -17,7 +16,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -31,17 +29,14 @@ import tocraft.walkers.impl.DimensionsRefresher;
 import tocraft.walkers.impl.PlayerDataProvider;
 import tocraft.walkers.mixin.EntityTrackerAccessor;
 import tocraft.walkers.mixin.ThreadedAnvilChunkStorageAccessor;
-import tocraft.walkers.skills.SkillRegistry;
-import tocraft.walkers.skills.impl.RiderSkill;
+import tocraft.walkers.traits.TraitRegistry;
+import tocraft.walkers.traits.impl.RiderTrait;
 
 import java.util.Optional;
 import java.util.UUID;
 
 @Mixin(Player.class)
 public abstract class PlayerEntityDataMixin extends LivingEntity implements PlayerDataProvider {
-
-    @Shadow
-    public abstract void playSound(SoundEvent sound, float volume, float pitch);
 
     @Unique
     private static final String ABILITY_COOLDOWN_KEY = "AbilityCooldown";
@@ -255,8 +250,8 @@ public abstract class PlayerEntityDataMixin extends LivingEntity implements Play
             // checks, if the player can continue riding
             boolean b1 = false;
             boolean b2 = false;
-            for (RiderSkill<?> riderSkill : SkillRegistry.get(shape, RiderSkill.ID).stream().map(entry -> (RiderSkill<?>) entry).toList()) {
-                if (riderSkill.isRideable(livingVehicle) || (livingVehicle instanceof Player rideablePlayer && riderSkill.isRideable(PlayerShape.getCurrentShape(rideablePlayer)))) {
+            for (RiderTrait<?> riderTrait : TraitRegistry.get(shape, RiderTrait.ID).stream().map(entry -> (RiderTrait<?>) entry).toList()) {
+                if (riderTrait.isRideable(livingVehicle) || (livingVehicle instanceof Player rideablePlayer && riderTrait.isRideable(PlayerShape.getCurrentShape(rideablePlayer)))) {
                     b1 = true;
                     b2 = true;
                 }

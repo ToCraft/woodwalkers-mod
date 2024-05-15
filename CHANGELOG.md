@@ -1,3 +1,10 @@
+walkers 4.4.3
+================
+
+- update to CraftedCore 4.2 for better background performance
+- rename 'skills' to 'traits' (Datapacks still work)
+- add some traits for iceandfire mobs
+
 walkers 4.4.2
 ================
 

@@ -42,8 +42,8 @@ import tocraft.walkers.mixin.accessor.DolphinAccessor;
 import tocraft.walkers.mixin.accessor.PufferfishAccessor;
 import tocraft.walkers.mixin.accessor.SheepAccessor;
 import tocraft.walkers.network.impl.VehiclePackets;
-import tocraft.walkers.skills.SkillRegistry;
-import tocraft.walkers.skills.impl.MobEffectSkill;
+import tocraft.walkers.traits.TraitRegistry;
+import tocraft.walkers.traits.impl.MobEffectTrait;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -139,46 +139,46 @@ public abstract class PlayerEntityTickMixin extends LivingEntity {
     }
 
     @Inject(method = "tick", at = @At("HEAD"))
-    private void applyMobEffectSkill(CallbackInfo info) {
+    private void applyMobEffectTrait(CallbackInfo info) {
         if (!level().isClientSide && this.isAlive()) {
             Player player = (Player) (Object) this;
             LivingEntity shape = PlayerShape.getCurrentShape(player);
-            if (SkillRegistry.has(shape, MobEffectSkill.ID)) {
-                List<MobEffectSkill<LivingEntity>> skillList = SkillRegistry.get(shape, MobEffectSkill.ID).stream().map(skill -> (MobEffectSkill<LivingEntity>) skill).toList();
-                for (MobEffectSkill<LivingEntity> mobEffectSkill : skillList) {
-                    MobEffectInstance mobEffectInstance = mobEffectSkill.mobEffectInstance;
+            if (TraitRegistry.has(shape, MobEffectTrait.ID)) {
+                List<MobEffectTrait<LivingEntity>> traitList = TraitRegistry.get(shape, MobEffectTrait.ID).stream().map(trait -> (MobEffectTrait<LivingEntity>) trait).toList();
+                for (MobEffectTrait<LivingEntity> mobEffectTrait : traitList) {
+                    MobEffectInstance mobEffectInstance = mobEffectTrait.mobEffectInstance;
                     // apply to self
-                    if (mobEffectSkill.showInInventory && mobEffectSkill.applyToSelf) {
+                    if (mobEffectTrait.showInInventory && mobEffectTrait.applyToSelf) {
                         player.addEffect(new MobEffectInstance(mobEffectInstance.getEffect(), mobEffectInstance.getDuration(), mobEffectInstance.getAmplifier(), mobEffectInstance.isAmbient(), mobEffectInstance.isVisible(), mobEffectInstance.showIcon()), player);
                     }
                     // apply to nearby
-                    switch (mobEffectSkill.applyToNearby) {
+                    switch (mobEffectTrait.applyToNearby) {
                         case 0 -> {
-                            List<Player> nearbyPlayers = player.level().getNearbyPlayers(TargetingConditions.forNonCombat().range(mobEffectSkill.maxDistanceForEntities).ignoreLineOfSight(), player, player.getBoundingBox().inflate(mobEffectSkill.maxDistanceForEntities, mobEffectSkill.maxDistanceForEntities, mobEffectSkill.maxDistanceForEntities));
+                            List<Player> nearbyPlayers = player.level().getNearbyPlayers(TargetingConditions.forNonCombat().range(mobEffectTrait.maxDistanceForEntities).ignoreLineOfSight(), player, player.getBoundingBox().inflate(mobEffectTrait.maxDistanceForEntities, mobEffectTrait.maxDistanceForEntities, mobEffectTrait.maxDistanceForEntities));
                             if (!nearbyPlayers.isEmpty()) {
-                                for (int i = 0; i < nearbyPlayers.size() && (mobEffectSkill.amountOfEntitiesToApplyTo < 0 || i < mobEffectSkill.amountOfEntitiesToApplyTo); i++) {
+                                for (int i = 0; i < nearbyPlayers.size() && (mobEffectTrait.amountOfEntitiesToApplyTo < 0 || i < mobEffectTrait.amountOfEntitiesToApplyTo); i++) {
                                     nearbyPlayers.get(i).addEffect(new MobEffectInstance(mobEffectInstance.getEffect(), mobEffectInstance.getDuration(), mobEffectInstance.getAmplifier(), mobEffectInstance.isAmbient(), mobEffectInstance.isVisible(), mobEffectInstance.showIcon()), player);
                                 }
                             }
                         }
                         case 1 -> {
-                            List<Mob> nearbyMobs = player.level().getNearbyEntities(Mob.class, TargetingConditions.forNonCombat().range(mobEffectSkill.maxDistanceForEntities).ignoreLineOfSight(), player, player.getBoundingBox().inflate(mobEffectSkill.maxDistanceForEntities, mobEffectSkill.maxDistanceForEntities, mobEffectSkill.maxDistanceForEntities));
+                            List<Mob> nearbyMobs = player.level().getNearbyEntities(Mob.class, TargetingConditions.forNonCombat().range(mobEffectTrait.maxDistanceForEntities).ignoreLineOfSight(), player, player.getBoundingBox().inflate(mobEffectTrait.maxDistanceForEntities, mobEffectTrait.maxDistanceForEntities, mobEffectTrait.maxDistanceForEntities));
                             if (!nearbyMobs.isEmpty()) {
-                                for (int i = 0; i < nearbyMobs.size() && (mobEffectSkill.amountOfEntitiesToApplyTo < 0 || i < mobEffectSkill.amountOfEntitiesToApplyTo); i++) {
+                                for (int i = 0; i < nearbyMobs.size() && (mobEffectTrait.amountOfEntitiesToApplyTo < 0 || i < mobEffectTrait.amountOfEntitiesToApplyTo); i++) {
                                     nearbyMobs.get(i).addEffect(new MobEffectInstance(mobEffectInstance.getEffect(), mobEffectInstance.getDuration(), mobEffectInstance.getAmplifier(), mobEffectInstance.isAmbient(), mobEffectInstance.isVisible(), mobEffectInstance.showIcon()), player);
                                 }
                             }
                         }
                         case 2 -> {
-                            List<Mob> nearbyMobs = player.level().getNearbyEntities(Mob.class, TargetingConditions.forNonCombat().range(mobEffectSkill.maxDistanceForEntities).ignoreLineOfSight(), player, player.getBoundingBox().inflate(mobEffectSkill.maxDistanceForEntities, mobEffectSkill.maxDistanceForEntities, mobEffectSkill.maxDistanceForEntities));
-                            List<Player> nearbyPlayers = player.level().getNearbyPlayers(TargetingConditions.forNonCombat().range(mobEffectSkill.maxDistanceForEntities).ignoreLineOfSight(), player, player.getBoundingBox().inflate(mobEffectSkill.maxDistanceForEntities, mobEffectSkill.maxDistanceForEntities, mobEffectSkill.maxDistanceForEntities));
+                            List<Mob> nearbyMobs = player.level().getNearbyEntities(Mob.class, TargetingConditions.forNonCombat().range(mobEffectTrait.maxDistanceForEntities).ignoreLineOfSight(), player, player.getBoundingBox().inflate(mobEffectTrait.maxDistanceForEntities, mobEffectTrait.maxDistanceForEntities, mobEffectTrait.maxDistanceForEntities));
+                            List<Player> nearbyPlayers = player.level().getNearbyPlayers(TargetingConditions.forNonCombat().range(mobEffectTrait.maxDistanceForEntities).ignoreLineOfSight(), player, player.getBoundingBox().inflate(mobEffectTrait.maxDistanceForEntities, mobEffectTrait.maxDistanceForEntities, mobEffectTrait.maxDistanceForEntities));
                             List<LivingEntity> nearbyEntites = new ArrayList<>();
                             nearbyEntites.addAll(nearbyMobs);
                             nearbyEntites.addAll(nearbyPlayers);
                             // sort after distance
                             nearbyEntites.sort((first, second) -> Float.compare(player.distanceTo(first), player.distanceTo(second)));
                             if (!nearbyEntites.isEmpty()) {
-                                for (int i = 0; i < nearbyEntites.size() && (mobEffectSkill.amountOfEntitiesToApplyTo < 0 || i < mobEffectSkill.amountOfEntitiesToApplyTo); i++) {
+                                for (int i = 0; i < nearbyEntites.size() && (mobEffectTrait.amountOfEntitiesToApplyTo < 0 || i < mobEffectTrait.amountOfEntitiesToApplyTo); i++) {
                                     nearbyMobs.get(i).addEffect(new MobEffectInstance(mobEffectInstance.getEffect(), mobEffectInstance.getDuration(), mobEffectInstance.getAmplifier(), mobEffectInstance.isAmbient(), mobEffectInstance.isVisible(), mobEffectInstance.showIcon()), player);
                                 }
                             }
