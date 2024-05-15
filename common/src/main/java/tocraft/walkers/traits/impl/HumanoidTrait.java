@@ -1,6 +1,6 @@
 package tocraft.walkers.traits.impl;
 
-import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
@@ -9,7 +9,7 @@ import tocraft.walkers.traits.ShapeTrait;
 
 public class HumanoidTrait<E extends LivingEntity> extends ShapeTrait<E> {
     public static final ResourceLocation ID = Walkers.id("humanoid");
-    public static final MapCodec<HumanoidTrait<?>> CODEC = RecordCodecBuilder.mapCodec((instance) -> instance.stable(new HumanoidTrait<>()));
+    public static final Codec<HumanoidTrait<?>> CODEC = RecordCodecBuilder.create((instance) -> instance.stable(new HumanoidTrait<>()));
 
     @Override
     public ResourceLocation getId() {
@@ -17,7 +17,7 @@ public class HumanoidTrait<E extends LivingEntity> extends ShapeTrait<E> {
     }
 
     @Override
-    public MapCodec<? extends ShapeTrait<?>> codec() {
+    public Codec<? extends ShapeTrait<?>> codec() {
         return CODEC;
     }
 

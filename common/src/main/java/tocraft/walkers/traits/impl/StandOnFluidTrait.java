@@ -1,6 +1,6 @@
 package tocraft.walkers.traits.impl;
 
-import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -19,7 +19,7 @@ import tocraft.walkers.traits.ShapeTrait;
 
 public class StandOnFluidTrait<E extends LivingEntity> extends ShapeTrait<E> {
     public static final ResourceLocation ID = Walkers.id("stand_on_fluid");
-    public static final MapCodec<StandOnFluidTrait<?>> CODEC = RecordCodecBuilder.mapCodec((instance) -> instance.group(
+    public static final Codec<StandOnFluidTrait<?>> CODEC = RecordCodecBuilder.create((instance) -> instance.group(
             ResourceLocation.CODEC.fieldOf("fluid").forGetter(o -> o.fluidTagKey.location())
     ).apply(instance, instance.stable(fluid -> new StandOnFluidTrait<>(TagKey.create(Registries.FLUID, fluid)))));
 
@@ -36,7 +36,7 @@ public class StandOnFluidTrait<E extends LivingEntity> extends ShapeTrait<E> {
     }
 
     @Override
-    public MapCodec<? extends ShapeTrait<?>> codec() {
+    public Codec<? extends ShapeTrait<?>> codec() {
         return CODEC;
     }
 

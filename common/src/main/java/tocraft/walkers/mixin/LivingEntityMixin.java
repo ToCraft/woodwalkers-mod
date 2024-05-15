@@ -9,10 +9,7 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.animal.Parrot;
 import net.minecraft.world.entity.animal.Sheep;
 import net.minecraft.world.entity.player.Player;
@@ -146,6 +143,28 @@ public abstract class LivingEntityMixin extends Entity implements NearbySongAcce
                         }
                     }
                 }
+            }
+        }
+    }
+
+    @Inject(at = @At("HEAD"), method = "getEyeHeight", cancellable = true)
+    public void getEyeHeight(Pose pose, EntityDimensions dimensions, CallbackInfoReturnable<Float> cir) {
+        if ((LivingEntity) (Object) this instanceof Player player) {
+
+            // this is cursed
+            try {
+                LivingEntity shape = PlayerShape.getCurrentShape(player);
+
+                if (shape != null) {
+                    float shapeEyeHeight = shape.getEyeHeight(pose);
+                    if (pose == Pose.CROUCHING && TraitRegistry.has(shape, HumanoidTrait.ID)) {
+                        cir.setReturnValue(shapeEyeHeight * 1.27F / 1.62F);
+                        return;
+                    }
+
+                    cir.setReturnValue(shapeEyeHeight);
+                }
+            } catch (Exception ignored) {
             }
         }
     }

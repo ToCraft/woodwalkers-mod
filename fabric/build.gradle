@@ -1,11 +1,5 @@
 apply from: "https://raw.githubusercontent.com/ToCraft/GradleMaster/main/fabric.gradle"
 
-loom {
-    mixin {
-        useLegacyMixinAp = false
-    }
-}
-
 dependencies {
     modApi "dev.tocraft:craftedcore-fabric:${rootProject.minecraft_version}-${rootProject.craftedcore_version}"
 }

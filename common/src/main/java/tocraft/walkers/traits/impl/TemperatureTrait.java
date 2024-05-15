@@ -1,7 +1,7 @@
 package tocraft.walkers.traits.impl;
 
 import com.mojang.serialization.Codec;
-import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
@@ -10,7 +10,7 @@ import tocraft.walkers.traits.ShapeTrait;
 
 public class TemperatureTrait<E extends LivingEntity> extends ShapeTrait<E> {
     public static final ResourceLocation ID = Walkers.id("temperature");
-    public static final MapCodec<TemperatureTrait<?>> CODEC = RecordCodecBuilder.mapCodec((instance) -> instance.group(
+    public static final Codec<TemperatureTrait<?>> CODEC = RecordCodecBuilder.create((instance) -> instance.group(
             Codec.BOOL.optionalFieldOf("cold_enough_to_snow", true).forGetter(o -> o.coldEnoughToSnow)
     ).apply(instance, instance.stable(TemperatureTrait::new)));
 
@@ -34,7 +34,7 @@ public class TemperatureTrait<E extends LivingEntity> extends ShapeTrait<E> {
     }
 
     @Override
-    public MapCodec<? extends ShapeTrait<?>> codec() {
+    public Codec<? extends ShapeTrait<?>> codec() {
         return CODEC;
     }
 }

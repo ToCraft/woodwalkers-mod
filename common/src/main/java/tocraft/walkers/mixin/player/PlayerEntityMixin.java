@@ -46,7 +46,7 @@ import tocraft.walkers.traits.impl.*;
 
 import java.util.Iterator;
 
-@SuppressWarnings({"ALL", "RedundantCast"})
+@SuppressWarnings({"RedundantCast", "DataFlowIssue"})
 @Mixin(Player.class)
 public abstract class PlayerEntityMixin extends LivingEntityMixin {
     private PlayerEntityMixin(EntityType<? extends LivingEntity> type, Level world) {
@@ -64,6 +64,20 @@ public abstract class PlayerEntityMixin extends LivingEntityMixin {
             } else {
                 cir.setReturnValue(shapeDimensions);
             }
+        }
+    }
+
+    @Inject(method = "getStandingEyeHeight", at = @At("HEAD"), cancellable = true)
+    private void shape_getStandingEyeHeight(Pose pose, EntityDimensions dimensions, CallbackInfoReturnable<Float> cir) {
+        // cursed
+        try {
+            LivingEntity shape = PlayerShape.getCurrentShape((Player) (Object) this);
+
+            if (shape != null) {
+                cir.setReturnValue(((LivingEntityAccessor) shape).callGetEyeHeight(getPose(), getDimensions(getPose())));
+            }
+        } catch (Exception ignored) {
+
         }
     }
 

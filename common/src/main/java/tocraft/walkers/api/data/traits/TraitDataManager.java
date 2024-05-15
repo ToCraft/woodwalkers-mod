@@ -44,9 +44,11 @@ public class TraitDataManager extends SynchronizedJsonReloadListener {
             TraitList traitList = traitListFromJson(mapEntry.getValue().getAsJsonObject());
 
             if (!traitList.isEmpty()) {
-                Walkers.LOGGER.error("{}: Using the skills directory & key is deprecated. Please merge to 'trait's.", getClass().getSimpleName());
+                if (isDeprecatedSkills) {
+                    Walkers.LOGGER.error("{}: Using the skills directory & key is deprecated. Please merge to 'trait's.", getClass().getSimpleName());
+                }
 
-                if (traitList.requiredMod() == null || PlatformData.isModLoaded(traitList.requiredMod())) {
+                if (traitList.requiredMod() == null || traitList.requiredMod().isBlank() || PlatformData.isModLoaded(traitList.requiredMod())) {
                     // entity types
                     for (EntityType<LivingEntity> entityType : traitList.entityTypes()) {
                         TraitRegistry.registerByType(entityType, traitList.traitList().stream().map(trait -> (ShapeTrait<LivingEntity>) trait).toList());
@@ -82,7 +84,9 @@ public class TraitDataManager extends SynchronizedJsonReloadListener {
     ).apply(instance, instance.stable(TraitList::new)));
 
     protected TraitList traitListFromJson(JsonObject json) {
-        return (isDeprecatedSkills ?SKILL_LIST_CODEC : TRAIT_LIST_CODEC).parse(JsonOps.INSTANCE, json).getOrThrow(JsonParseException::new);
+        return (isDeprecatedSkills ? SKILL_LIST_CODEC : TRAIT_LIST_CODEC).parse(JsonOps.INSTANCE, json).getOrThrow(false, msg -> {
+            throw new JsonParseException(msg);
+        });
     }
 
     @SuppressWarnings("unused")
@@ -96,6 +100,7 @@ public class TraitDataManager extends SynchronizedJsonReloadListener {
 
         @SuppressWarnings("unchecked")
         public List<EntityType<LivingEntity>> entityTypes() {
+            if (entityTagKeys.contains(new ResourceLocation("alexsmobs:bald_eagle"))) Walkers.LOGGER.warn("got that far");
             return entityTypeKeys.stream().filter(BuiltInRegistries.ENTITY_TYPE::containsKey).map(type -> (EntityType<LivingEntity>) BuiltInRegistries.ENTITY_TYPE.get(type)).toList();
         }
 

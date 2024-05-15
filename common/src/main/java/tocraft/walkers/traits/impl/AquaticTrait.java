@@ -1,7 +1,7 @@
 package tocraft.walkers.traits.impl;
 
 import com.mojang.serialization.Codec;
-import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -20,7 +20,7 @@ import java.util.Optional;
 
 public class AquaticTrait<E extends LivingEntity> extends ShapeTrait<E> {
     public static final ResourceLocation ID = Walkers.id("aquatic");
-    public static final MapCodec<AquaticTrait<?>> CODEC = RecordCodecBuilder.mapCodec((instance) -> instance.group(
+    public static final Codec<AquaticTrait<?>> CODEC = RecordCodecBuilder.create((instance) -> instance.group(
             Codec.INT.optionalFieldOf("is_aquatic").forGetter(o -> Optional.empty()),
             Codec.BOOL.optionalFieldOf("isAquatic", true).forGetter(o -> o.isAquatic),
             Codec.BOOL.optionalFieldOf("isLand", false).forGetter(o -> o.isLand)
@@ -63,7 +63,7 @@ public class AquaticTrait<E extends LivingEntity> extends ShapeTrait<E> {
     }
 
     @Override
-    public MapCodec<? extends ShapeTrait<?>> codec() {
+    public Codec<? extends ShapeTrait<?>> codec() {
         return CODEC;
     }
 

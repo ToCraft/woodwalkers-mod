@@ -68,7 +68,12 @@
     "alexsmobs:blue_jay",
     "alexsmobs:farseer",
     "alexsmobs:void_worm",
-    "alexsmobs:tarantula_hawk"
+    "alexsmobs:tarantula_hawk",
+    "iceandfire:ghost",
+    "iceandfire:pixie",
+    "iceandfire:fire_dragon",
+    "iceandfire:ice_dragon",
+    "iceandfire:lightning_dragon"
   ],
   "traits": [
     {

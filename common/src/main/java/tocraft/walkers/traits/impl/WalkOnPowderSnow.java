@@ -1,6 +1,6 @@
 package tocraft.walkers.traits.impl;
 
-import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -16,7 +16,7 @@ import tocraft.walkers.traits.ShapeTrait;
 
 public class WalkOnPowderSnow<E extends LivingEntity> extends ShapeTrait<E> {
     public static final ResourceLocation ID = Walkers.id("walk_on_powder_snow");
-    public static final MapCodec<WalkOnPowderSnow<?>> CODEC = RecordCodecBuilder.mapCodec((instance) -> instance.stable(new WalkOnPowderSnow<>()));
+    public static final Codec<WalkOnPowderSnow<?>> CODEC = RecordCodecBuilder.create((instance) -> instance.stable(new WalkOnPowderSnow<>()));
 
     @Override
     public ResourceLocation getId() {
@@ -24,7 +24,7 @@ public class WalkOnPowderSnow<E extends LivingEntity> extends ShapeTrait<E> {
     }
 
     @Override
-    public MapCodec<? extends ShapeTrait<?>> codec() {
+    public Codec<? extends ShapeTrait<?>> codec() {
         return CODEC;
     }
 

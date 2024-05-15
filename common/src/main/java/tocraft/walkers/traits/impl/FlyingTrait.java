@@ -1,7 +1,7 @@
 package tocraft.walkers.traits.impl;
 
 import com.mojang.serialization.Codec;
-import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -17,7 +17,7 @@ import tocraft.walkers.traits.ShapeTrait;
 
 public class FlyingTrait<E extends LivingEntity> extends ShapeTrait<E> {
     public static final ResourceLocation ID = Walkers.id("flying");
-    public static final MapCodec<FlyingTrait<?>> CODEC = RecordCodecBuilder.mapCodec((instance) -> instance.group(
+    public static final Codec<FlyingTrait<?>> CODEC = RecordCodecBuilder.create((instance) -> instance.group(
             Codec.BOOL.optionalFieldOf("slow_falling", true).forGetter(o -> o.slowFalling)
     ).apply(instance, instance.stable(FlyingTrait::new)));
 
@@ -37,7 +37,7 @@ public class FlyingTrait<E extends LivingEntity> extends ShapeTrait<E> {
     }
 
     @Override
-    public MapCodec<? extends ShapeTrait<?>> codec() {
+    public Codec<? extends ShapeTrait<?>> codec() {
         return CODEC;
     }
 

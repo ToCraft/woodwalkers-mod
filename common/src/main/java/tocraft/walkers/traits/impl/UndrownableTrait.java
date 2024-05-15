@@ -1,6 +1,6 @@
 package tocraft.walkers.traits.impl;
 
-import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
@@ -9,7 +9,7 @@ import tocraft.walkers.traits.ShapeTrait;
 
 public class UndrownableTrait<E extends LivingEntity> extends ShapeTrait<E> {
     public static final ResourceLocation ID = Walkers.id("undrownable");
-    public static final MapCodec<UndrownableTrait<?>> CODEC = RecordCodecBuilder.mapCodec((instance) -> instance.stable(new UndrownableTrait<>()));
+    public static final Codec<UndrownableTrait<?>> CODEC = RecordCodecBuilder.create((instance) -> instance.stable(new UndrownableTrait<>()));
 
     @Override
     public ResourceLocation getId() {
@@ -17,7 +17,7 @@ public class UndrownableTrait<E extends LivingEntity> extends ShapeTrait<E> {
     }
 
     @Override
-    public MapCodec<? extends ShapeTrait<?>> codec() {
+    public Codec<? extends ShapeTrait<?>> codec() {
         return CODEC;
     }
 

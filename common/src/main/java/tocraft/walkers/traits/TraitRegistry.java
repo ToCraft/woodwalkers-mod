@@ -2,7 +2,7 @@ package tocraft.walkers.traits;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
-import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.Codec;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.EntityTypeTags;
@@ -38,8 +38,8 @@ public class TraitRegistry {
     private static final Map<EntityType<? extends LivingEntity>, List<ShapeTrait<?>>> traitsByEntityTypes = new HashMap<>();
     private static final Map<TagKey<EntityType<?>>, List<ShapeTrait<?>>> traitsByEntityTags = new HashMap<>();
     private static final Map<Class<? extends LivingEntity>, List<ShapeTrait<?>>> traitsByEntityClasses = new HashMap<>();
-    private static final Map<ResourceLocation, MapCodec<? extends ShapeTrait<?>>> traitCodecById = new HashMap<>();
-    private static final Map<MapCodec<? extends ShapeTrait<?>>, ResourceLocation> traitIdByCodec = new IdentityHashMap<>();
+    private static final Map<ResourceLocation, Codec<? extends ShapeTrait<?>>> traitCodecById = new HashMap<>();
+    private static final Map<Codec<? extends ShapeTrait<?>>, ResourceLocation> traitIdByCodec = new IdentityHashMap<>();
 
     public static void initialize() {
         // register trait codecs
@@ -264,18 +264,18 @@ public class TraitRegistry {
         traitsByPredicates.put(entityPredicate, traits);
     }
 
-    public static void registerCodec(ResourceLocation traitId, MapCodec<? extends ShapeTrait<?>> traitCodec) {
+    public static void registerCodec(ResourceLocation traitId, Codec<? extends ShapeTrait<?>> traitCodec) {
         traitCodecById.put(traitId, traitCodec);
         traitIdByCodec.put(traitCodec, traitId);
     }
 
     @Nullable
-    public static MapCodec<? extends ShapeTrait<?>> getTraitCodec(ResourceLocation traitId) {
+    public static Codec<? extends ShapeTrait<?>> getTraitCodec(ResourceLocation traitId) {
         return traitCodecById.get(traitId);
     }
 
     @Nullable
-    public static ResourceLocation gettraitId(MapCodec<? extends ShapeTrait<?>> traitCodec) {
+    public static ResourceLocation gettraitId(Codec<? extends ShapeTrait<?>> traitCodec) {
         return traitIdByCodec.get(traitCodec);
     }
 
@@ -311,7 +311,7 @@ public class TraitRegistry {
     }
 
     public static Codec<ShapeTrait<?>> getTraitCodec() {
-        Codec<MapCodec<? extends ShapeTrait<?>>> codec = ResourceLocation.CODEC.flatXmap(
+        Codec<Codec<? extends ShapeTrait<?>>> codec = ResourceLocation.CODEC.flatXmap(
                 resourceLocation -> Optional.ofNullable(TraitRegistry.getTraitCodec(resourceLocation))
                         .map(DataResult::success)
                         .orElseGet(() -> DataResult.error(() -> "Unknown shape trait: " + resourceLocation)),
