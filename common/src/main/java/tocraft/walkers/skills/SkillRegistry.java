@@ -10,7 +10,10 @@ import net.minecraft.tags.FluidTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
-import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.FlyingMob;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.entity.ambient.Bat;
 import net.minecraft.world.entity.animal.*;
 import net.minecraft.world.entity.animal.allay.Allay;
@@ -128,8 +131,8 @@ public class SkillRegistry {
         // cats hunt rabbits
         registerByClass(Rabbit.class, new PreySkill<>(List.of(entity -> entity instanceof Cat cat && !cat.isTame())));
         // aquatic
-        registerByPredicate(entity -> entity instanceof Mob mob && mob.getType().getCategory().getName().contains("water") && mob instanceof WaterAnimal, new AquaticSkill<>(0));
-        registerByPredicate(entity -> entity instanceof Mob mob && mob.getType().getCategory().getName().contains("water") && !(mob instanceof WaterAnimal), new AquaticSkill<>(1));
+        registerByPredicate(entity -> entity.getType().getCategory().getName().contains("water") && entity.canBreatheUnderwater(), new AquaticSkill<>());
+        registerByPredicate(entity -> entity.getType().getCategory().getName().contains("water") != entity.canBreatheUnderwater(), new AquaticSkill<>(true, true));
         // dolphin don't like sun
         registerByClass(Dolphin.class, new BurnInDaylightSkill<>());
         // walk on powder snow

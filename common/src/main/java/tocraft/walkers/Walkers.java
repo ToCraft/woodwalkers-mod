@@ -14,6 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import tocraft.craftedcore.VIPs;
 import tocraft.craftedcore.config.ConfigLoader;
+import tocraft.craftedcore.event.common.EntityEvents;
 import tocraft.craftedcore.event.common.PlayerEvents;
 import tocraft.craftedcore.platform.VersionChecker;
 import tocraft.walkers.api.PlayerShape;
@@ -21,14 +22,13 @@ import tocraft.walkers.api.WalkersTickHandlers;
 import tocraft.walkers.api.data.DataManager;
 import tocraft.walkers.api.platform.WalkersConfig;
 import tocraft.walkers.command.WalkersCommand;
+import tocraft.walkers.eventhandler.LivingBreatheHandler;
 import tocraft.walkers.eventhandler.RespawnHandler;
 import tocraft.walkers.integrations.Integrations;
 import tocraft.walkers.mixin.ThreadedAnvilChunkStorageAccessor;
 import tocraft.walkers.network.ServerNetworking;
 import tocraft.walkers.registry.WalkersEventHandlers;
-import tocraft.walkers.skills.ShapeSkill;
 import tocraft.walkers.skills.SkillRegistry;
-import tocraft.walkers.skills.impl.AquaticSkill;
 import tocraft.walkers.skills.impl.FlyingSkill;
 
 import java.util.ArrayList;
@@ -62,6 +62,7 @@ public class Walkers {
         Integrations.initialize();
 
         PlayerEvents.PLAYER_RESPAWN.register(new RespawnHandler());
+        EntityEvents.LIVING_BREATHE.register(new LivingBreatheHandler());
     }
 
     public static void registerJoinSyncPacket() {
@@ -114,21 +115,6 @@ public class Walkers {
         }
 
         return false;
-    }
-
-    /**
-     * @param entity the shape to be checked
-     * @return 0 - water mob, 1 - land and water mob, 2 - land mob
-     */
-    public static int isAquatic(LivingEntity entity) {
-        if (entity != null) {
-            for (ShapeSkill<LivingEntity> aquaticSkill : SkillRegistry.get(entity, AquaticSkill.ID)) {
-                return ((AquaticSkill<LivingEntity>) aquaticSkill).isAquatic;
-            }
-            return entity.getType().getCategory().getName().contains("water") ? 0 : 2;
-        } else {
-            return 2;
-        }
     }
 
     public static boolean isPlayerBlacklisted(UUID uuid) {

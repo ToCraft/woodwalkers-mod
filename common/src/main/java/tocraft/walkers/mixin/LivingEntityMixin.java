@@ -14,7 +14,6 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
-import net.minecraft.world.entity.animal.Dolphin;
 import net.minecraft.world.entity.animal.Parrot;
 import net.minecraft.world.entity.animal.Sheep;
 import net.minecraft.world.entity.player.Player;
@@ -31,7 +30,6 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import tocraft.walkers.Walkers;
 import tocraft.walkers.api.PlayerShape;
 import tocraft.walkers.impl.NearbySongAccessor;
 import tocraft.walkers.impl.ShapeDataProvider;
@@ -49,12 +47,6 @@ public abstract class LivingEntityMixin extends Entity implements NearbySongAcce
 
     @Shadow
     public abstract boolean hurt(DamageSource source, float amount);
-
-    @Shadow
-    protected abstract int decreaseAirSupply(int currentAir);
-
-    @Shadow
-    protected abstract int increaseAirSupply(int currentAir);
 
     protected LivingEntityMixin(EntityType<?> type, Level world) {
         super(type, world);
@@ -89,8 +81,10 @@ public abstract class LivingEntityMixin extends Entity implements NearbySongAcce
 
             // Apply 'Dolphin's Grace' status effect benefits if the player's shape is a
             // water creature
-            if (Walkers.isAquatic(shape) < 2) {
-                return .96f;
+            for (ShapeSkill<LivingEntity> skill : SkillRegistry.get(shape, AquaticSkill.ID)) {
+                if (((AquaticSkill<LivingEntity>) skill).isAquatic) {
+                    return .96f;
+                }
             }
         }
 
@@ -163,18 +157,6 @@ public abstract class LivingEntityMixin extends Entity implements NearbySongAcce
 
             if (entity != null) {
                 cir.setReturnValue(entity.isSensitiveToWater());
-            }
-        }
-    }
-
-    @Inject(method = "canBreatheUnderwater", at = @At("HEAD"), cancellable = true)
-    protected void shape_canBreatheUnderwater(CallbackInfoReturnable<Boolean> cir) {
-        if ((LivingEntity) (Object) this instanceof Player player) {
-            LivingEntity entity = PlayerShape.getCurrentShape(player);
-
-            if (entity != null) {
-                cir.setReturnValue(entity.canBreatheUnderwater() || entity instanceof Dolphin
-                        || SkillRegistry.has(entity, UndrownableSkill.ID));
             }
         }
     }

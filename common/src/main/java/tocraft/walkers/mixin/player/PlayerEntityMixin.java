@@ -23,7 +23,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.vehicle.Boat;
 import net.minecraft.world.food.FoodData;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
@@ -36,7 +35,6 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import tocraft.walkers.Walkers;
 import tocraft.walkers.api.PlayerShape;
 import tocraft.walkers.mixin.LivingEntityMixin;
 import tocraft.walkers.mixin.accessor.EntityAccessor;
@@ -76,49 +74,6 @@ public abstract class PlayerEntityMixin extends LivingEntityMixin {
                 cir.setReturnValue(EntityDimensions.scalable(shapeDimensions.width(), shapeDimensions.height() * 1.5F / 1.8F));
             } else {
                 cir.setReturnValue(shapeDimensions);
-            }
-        }
-    }
-
-    /**
-     * When a player turns into an Aquatic shape, they lose breath outside water.
-     *
-     * @param ci mixin callback info
-     */
-    @Inject(method = "tick", at = @At("HEAD"))
-    private void tickAquaticBreathingOutsideWater(CallbackInfo ci) {
-        LivingEntity shape = PlayerShape.getCurrentShape((Player) (Object) this);
-
-        if (shape != null) {
-            int isAquatic = Walkers.isAquatic(shape);
-            if (isAquatic < 2) {
-                int air = this.getAirSupply();
-                // copy of WaterCreatureEntity#tickWaterBreathingAir
-                if (this.isAlive() && !this.isInWaterOrBubble()) {
-                    if (isAquatic < 1) {
-                        int i = EnchantmentHelper.getRespiration((LivingEntity) (Object) this);
-
-                        // If the player has respiration, 50% chance to not consume air
-                        if (i > 0) {
-                            if (random.nextInt(i + 1) <= 0) {
-                                this.setAirSupply(this.decreaseAirSupply(air));
-                            }
-                        }
-
-                        // No respiration, decrease air as normal
-                        else {
-                            this.setAirSupply(this.decreaseAirSupply(air));
-                        }
-
-                        // Air has run out, start drowning
-                        if (this.getAirSupply() == -20) {
-                            this.setAirSupply(0);
-                            this.hurt(damageSources().dryOut(), 2.0F);
-                        }
-                    }
-                } else if (this.getAirSupply() < this.getMaxAirSupply()) {
-                    this.setAirSupply(this.increaseAirSupply(air));
-                }
             }
         }
     }

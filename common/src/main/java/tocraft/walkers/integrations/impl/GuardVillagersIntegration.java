@@ -5,6 +5,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.monster.Enemy;
 import tocraft.walkers.Walkers;
 import tocraft.walkers.integrations.AbstractIntegration;
+import tocraft.walkers.mixin.accessor.EntityAccessor;
 import tocraft.walkers.skills.SkillRegistry;
 import tocraft.walkers.skills.impl.PreySkill;
 
@@ -17,7 +18,7 @@ public class GuardVillagersIntegration extends AbstractIntegration {
 
     @Override
     public void registerSkills() {
-        SkillRegistry.registerByPredicate(entity -> entity instanceof Enemy && !getMobBlackList().contains(entity.getEncodeId()), new PreySkill<>(List.of(hunter -> EntityType.getKey(hunter.getType()).equals(GUARD_VILLAGER_TYPE))));
+        SkillRegistry.registerByPredicate(entity -> entity instanceof Enemy && !getMobBlackList().contains(((EntityAccessor) entity).callGetEncodeId()), new PreySkill<>(List.of(hunter -> EntityType.getKey(hunter.getType()).equals(GUARD_VILLAGER_TYPE))));
     }
 
     private static List<String> CACHED_MOB_BLACKLIST = new ArrayList<>();

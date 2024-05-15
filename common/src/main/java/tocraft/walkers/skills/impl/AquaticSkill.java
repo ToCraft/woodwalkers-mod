@@ -16,19 +16,45 @@ import org.jetbrains.annotations.Nullable;
 import tocraft.walkers.Walkers;
 import tocraft.walkers.skills.ShapeSkill;
 
+import java.util.Optional;
+
 public class AquaticSkill<E extends LivingEntity> extends ShapeSkill<E> {
     public static final ResourceLocation ID = Walkers.id("aquatic");
     public static final MapCodec<AquaticSkill<?>> CODEC = RecordCodecBuilder.mapCodec((instance) -> instance.group(
-            Codec.INT.optionalFieldOf("is_aquatic", 0).forGetter(o -> o.isAquatic)
-    ).apply(instance, instance.stable(AquaticSkill::new)));
+            Codec.INT.optionalFieldOf("is_aquatic").forGetter(o -> Optional.empty()),
+            Codec.BOOL.optionalFieldOf("isAquatic", true).forGetter(o -> o.isAquatic),
+            Codec.BOOL.optionalFieldOf("isLand", false).forGetter(o -> o.isLand)
+    ).apply(instance, instance.stable((i, isAquatic, isLand) -> {
+        if (i.isPresent()) {
+            switch (i.get()) {
+                case 0 -> {
+                    return new AquaticSkill<>(true, false);
+                }
+                case 1 -> {
+                    return new AquaticSkill<>(true, true);
+                }
+                case 2 -> {
+                    return new AquaticSkill<>(false, true);
+                }
+            }
+        }
+        return new AquaticSkill<>(isAquatic, isLand);
+    })));
 
-    public final int isAquatic;
+    public final boolean isAquatic;
+    public final boolean isLand;
 
-    /**
-     * @param isAquatic 0 - water mob, 1 - land and water mob, 2 - land mob
-     */
-    public AquaticSkill(int isAquatic) {
+    public AquaticSkill(boolean isAquatic, boolean isLand) {
         this.isAquatic = isAquatic;
+        this.isLand = isLand;
+    }
+
+    public AquaticSkill(boolean isAquatic) {
+        this(isAquatic, !isAquatic);
+    }
+
+    public AquaticSkill() {
+        this(true, false);
     }
 
     @Override
@@ -44,12 +70,12 @@ public class AquaticSkill<E extends LivingEntity> extends ShapeSkill<E> {
     @Override
     @Environment(EnvType.CLIENT)
     public @Nullable TextureAtlasSprite getIcon() {
-        if (isAquatic == 0) {
+        if (isAquatic && !isLand) {
             BakedModel itemIcon = Minecraft.getInstance().getItemRenderer().getItemModelShaper().getItemModel(Items.HEART_OF_THE_SEA);
             if (itemIcon != null) {
                 return itemIcon.getParticleIcon();
             }
-        } else if (isAquatic == 1) {
+        } else if (isAquatic) {
             return Minecraft.getInstance().getMobEffectTextures().get(MobEffects.WATER_BREATHING);
         }
         return super.getIcon();

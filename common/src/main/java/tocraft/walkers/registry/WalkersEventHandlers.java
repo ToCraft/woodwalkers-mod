@@ -51,7 +51,7 @@ public class WalkersEventHandlers {
 
     @SuppressWarnings({"deprecation"})
     public static void registerHandlerForDeprecatedEntityTags() {
-        ServerLevelEvents.LEVEL_LOAD.register((serverLevel) -> {
+        ServerLevelEvents.LEVEL_LOAD.register(serverLevel -> {
             for (EntityType<?> entityType : BuiltInRegistries.ENTITY_TYPE) {
                 // print warnings for deprecated entity tags
                 if (entityType.is(WalkersEntityTags.BURNS_IN_DAYLIGHT)) {

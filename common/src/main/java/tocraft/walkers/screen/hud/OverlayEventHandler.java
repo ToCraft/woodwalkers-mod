@@ -7,31 +7,22 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.Nullable;
 import tocraft.craftedcore.event.client.RenderEvents;
-import tocraft.walkers.Walkers;
 import tocraft.walkers.api.PlayerShape;
 import tocraft.walkers.skills.SkillRegistry;
 import tocraft.walkers.skills.impl.AttackForHealthSkill;
-import tocraft.walkers.skills.impl.UndrownableSkill;
 
 public class OverlayEventHandler {
     public static void initialize() {
-        RenderEvents.RENDER_HEALTH.register(new RenderHealth());
+        RenderEvents.RENDER_BREATH.register(new RenderBreath());
         RenderEvents.RENDER_FOOD.register(new RenderFood());
     }
 
-    private static class RenderHealth implements RenderEvents.OverlayRendering {
+    private static class RenderBreath implements RenderEvents.OverlayRendering {
         @Override
         public InteractionResult render(@Nullable GuiGraphics graphics, Player player) {
-            if (player != null) {
-                LivingEntity shape = PlayerShape.getCurrentShape(player);
-
-                if (shape != null) {
-                    if (Walkers.isAquatic(shape) < 2 || SkillRegistry.has(shape, UndrownableSkill.ID) && player.isEyeInFluid(FluidTags.WATER)) {
-                        return InteractionResult.FAIL;
-                    }
-                }
+            if (player != null && player.getAirSupply() == player.getMaxAirSupply() && player.isEyeInFluid(FluidTags.WATER)) {
+                return InteractionResult.FAIL;
             }
-
             return InteractionResult.PASS;
         }
     }

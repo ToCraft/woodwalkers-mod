@@ -1,3 +1,8 @@
+walkers 4.4.3
+================
+
+- update to CraftedCore 4.2 for better background performance
+
 walkers 4.4.2
 ================
 
