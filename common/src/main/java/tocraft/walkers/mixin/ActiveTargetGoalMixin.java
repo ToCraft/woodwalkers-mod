@@ -21,8 +21,8 @@ import tocraft.walkers.Walkers;
 import tocraft.walkers.api.PlayerHostility;
 import tocraft.walkers.api.PlayerShape;
 import tocraft.walkers.integrations.Integrations;
-import tocraft.walkers.skills.SkillRegistry;
-import tocraft.walkers.skills.impl.FearedSkill;
+import tocraft.walkers.traits.TraitRegistry;
+import tocraft.walkers.traits.impl.FearedTrait;
 
 @Mixin(NearestAttackableTargetGoal.class)
 public abstract class ActiveTargetGoalMixin extends TrackTargetGoalMixin {
@@ -42,8 +42,8 @@ public abstract class ActiveTargetGoalMixin extends TrackTargetGoalMixin {
                 // only cancel if the player does not have hostility
                 if (!hasHostility) {
                     // prey should ignore hunter
-                    for (FearedSkill<?> fearedSkill : SkillRegistry.get(shape, FearedSkill.ID).stream().map(entry -> (FearedSkill<?>) entry).toList()) {
-                        if (fearedSkill.isFeared(mob)) {
+                    for (FearedTrait<?> fearedTrait : TraitRegistry.get(shape, FearedTrait.ID).stream().map(entry -> (FearedTrait<?>) entry).toList()) {
+                        if (fearedTrait.isFeared(mob)) {
                             this.stop();
                             ci.cancel();
                         }
@@ -95,8 +95,8 @@ public abstract class ActiveTargetGoalMixin extends TrackTargetGoalMixin {
                 // only cancel if the player does not have hostility
                 if (!hasHostility) {
                     // prey should ignore hunter
-                    for (FearedSkill<?> fearedSkill : SkillRegistry.get(shape, FearedSkill.ID).stream().map(entry -> (FearedSkill<?>) entry).toList()) {
-                        if (fearedSkill.isFeared(mob)) {
+                    for (FearedTrait<?> fearedTrait : TraitRegistry.get(shape, FearedTrait.ID).stream().map(entry -> (FearedTrait<?>) entry).toList()) {
+                        if (fearedTrait.isFeared(mob)) {
                             cir.setReturnValue(false);
                             return;
                         }

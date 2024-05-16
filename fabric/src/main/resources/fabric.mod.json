@@ -3,14 +3,19 @@
   "id": "walkers",
   "version": "${version}",
   "name": "Walkers",
+  "icon": "icon.png",
   "description": "Play as your favorite entities!",
   "authors": [
-    "To_Craft",
-    "Draylar"
+    "To_Craft"
   ],
   "contributors": [
+    "Draylar",
     "Uncle_Chronos"
   ],
+  "contact": {
+    "issues": "https://github.com/ToCraft/woodwalkers-mod/issues",
+    "sources": "https://github.com/ToCraft/woodwalkers-mod"
+  },
   "license": "MIT",
   "environment": "*",
   "entrypoints": {
