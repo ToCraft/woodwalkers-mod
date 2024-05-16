@@ -1,0 +1,14 @@
+{
+  "traits": [
+    {
+      "type": "walkers:reinforcements",
+      "range": 32,
+      "reinforcements": [
+        "minecraft:husk"
+      ]
+    }
+  ],
+  "entity_types": [
+    "minecraft:husk"
+  ]
+}

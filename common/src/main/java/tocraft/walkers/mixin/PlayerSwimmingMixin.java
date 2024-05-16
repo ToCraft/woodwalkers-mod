@@ -9,8 +9,8 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import tocraft.walkers.api.PlayerShape;
-import tocraft.walkers.skills.SkillRegistry;
-import tocraft.walkers.skills.impl.CantSwimSkill;
+import tocraft.walkers.traits.TraitRegistry;
+import tocraft.walkers.traits.impl.CantSwimTrait;
 
 @Mixin(LivingEntity.class)
 public class PlayerSwimmingMixin {
@@ -22,7 +22,7 @@ public class PlayerSwimmingMixin {
         if (thisEntity instanceof Player player) {
             LivingEntity shape = PlayerShape.getCurrentShape(player);
 
-            if (SkillRegistry.has(shape, CantSwimSkill.ID)) {
+            if (TraitRegistry.has(shape, CantSwimTrait.ID)) {
                 ci.cancel();
             }
         }

@@ -17,9 +17,9 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import tocraft.walkers.Walkers;
 import tocraft.walkers.api.PlayerShape;
-import tocraft.walkers.skills.SkillRegistry;
-import tocraft.walkers.skills.impl.FearedSkill;
-import tocraft.walkers.skills.impl.PreySkill;
+import tocraft.walkers.traits.TraitRegistry;
+import tocraft.walkers.traits.impl.FearedTrait;
+import tocraft.walkers.traits.impl.PreyTrait;
 
 @Mixin(Mob.class)
 public class MobHunterPreyMixin {
@@ -53,8 +53,8 @@ public class MobHunterPreyMixin {
                             LivingEntity shape = PlayerShape.getCurrentShape((Player) player);
 
                             if (shape != null) {
-                                for (PreySkill<?> preySkill : SkillRegistry.get(shape, PreySkill.ID).stream().map(entry -> (PreySkill<?>) entry).toList()) {
-                                    if (preySkill.isHunter((Mob) (Object) this)) return true;
+                                for (PreyTrait<?> preyTrait : TraitRegistry.get(shape, PreyTrait.ID).stream().map(entry -> (PreyTrait<?>) entry).toList()) {
+                                    if (preyTrait.isHunter((Mob) (Object) this)) return true;
                                 }
                             }
 
@@ -72,8 +72,8 @@ public class MobHunterPreyMixin {
                     player -> {
                         LivingEntity shape = PlayerShape.getCurrentShape((Player) player);
                         if (shape != null) {
-                            for (FearedSkill<?> fearedSkill : SkillRegistry.get(shape, FearedSkill.ID).stream().map(entry -> (FearedSkill<?>) entry).toList()) {
-                                if (fearedSkill.isFeared(mob)) {
+                            for (FearedTrait<?> fearedTrait : TraitRegistry.get(shape, FearedTrait.ID).stream().map(entry -> (FearedTrait<?>) entry).toList()) {
+                                if (fearedTrait.isFeared(mob)) {
                                     return true;
                                 }
                             }

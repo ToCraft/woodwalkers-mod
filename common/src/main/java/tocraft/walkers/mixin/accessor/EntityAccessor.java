@@ -24,4 +24,7 @@ public interface EntityAccessor {
 
     @Invoker("playStepSound")
     void shape_callPlayStepSound(BlockPos pos, BlockState state);
+
+    @Invoker
+    String callGetEncodeId();
 }
