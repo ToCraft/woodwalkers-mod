@@ -67,6 +67,7 @@ public abstract class PlayerEntityMixin extends LivingEntityMixin {
         }
     }
 
+
     @Inject(method = "getStandingEyeHeight", at = @At("HEAD"), cancellable = true)
     private void shape_getStandingEyeHeight(Pose pose, EntityDimensions dimensions, CallbackInfoReturnable<Float> cir) {
         // cursed
