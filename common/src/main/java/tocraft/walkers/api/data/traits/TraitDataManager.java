@@ -84,7 +84,7 @@ public class TraitDataManager extends SynchronizedJsonReloadListener {
     ).apply(instance, instance.stable(TraitList::new)));
 
     protected TraitList traitListFromJson(JsonObject json) {
-        return (isDeprecatedSkills ? SKILL_LIST_CODEC : TRAIT_LIST_CODEC).parse(JsonOps.INSTANCE, json).getOrThrow(false, msg -> {
+        return (isDeprecatedSkills ? SKILL_LIST_CODEC : TRAIT_LIST_CODEC).parse(JsonOps.INSTANCE, json).getOrThrow(msg -> {
             throw new JsonParseException(msg);
         });
     }
@@ -100,7 +100,8 @@ public class TraitDataManager extends SynchronizedJsonReloadListener {
 
         @SuppressWarnings("unchecked")
         public List<EntityType<LivingEntity>> entityTypes() {
-            if (entityTagKeys.contains(new ResourceLocation("alexsmobs:bald_eagle"))) Walkers.LOGGER.warn("got that far");
+            if (entityTagKeys.contains(new ResourceLocation("alexsmobs:bald_eagle")))
+                Walkers.LOGGER.warn("got that far");
             return entityTypeKeys.stream().filter(BuiltInRegistries.ENTITY_TYPE::containsKey).map(type -> (EntityType<LivingEntity>) BuiltInRegistries.ENTITY_TYPE.get(type)).toList();
         }
 
