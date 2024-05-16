@@ -1,6 +1,7 @@
 modLoader = "javafml"
 loaderVersion = "[48,)"
-#issueTrackerURL = ""
+issueTrackerURL = "https://github.com/ToCraft/woodwalkers-mod/issues"
+displayURL = "https://github.com/ToCraft/woodwalkers-mod"
 license = "MIT"
 
 [[mods]]
@@ -8,11 +9,11 @@ modId = "walkers"
 version = "${version}"
 displayName = "Walkers"
 authors = "To_Craft"
+credits = "Original mod by Draylar"
 description = '''
 Become a Woodwalker/animagus!
 '''
-#logoFile = ""
-
+logoFile = "icon.png"
 [[dependencies.walkers]]
 modId = "forge"
 mandatory = true

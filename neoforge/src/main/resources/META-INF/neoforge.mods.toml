@@ -1,6 +1,7 @@
 modLoader = "javafml"
 loaderVersion = "[1,)"
-#issueTrackerURL = ""
+issueTrackerURL = "https://github.com/ToCraft/woodwalkers-mod/issues"
+displayURL = "https://github.com/ToCraft/woodwalkers-mod"
 license = "MIT"
 
 [[mixins]]
@@ -13,14 +14,16 @@ modId = "walkers"
 version = "${version}"
 displayName = "Walkers"
 authors = "To_Craft"
+credits = "Original mod by Draylar"
 description = '''
 Become a Woodwalker/animagus!
 '''
-#logoFile = ""
+logoFile = "icon.png"
 
 [[dependencies.walkers]]
 modId = "minecraft"
 mandatory = true
+type = "required"
 versionRange = "[${minecraft_version},)"
 ordering = "NONE"
 side = "BOTH"
@@ -28,6 +31,7 @@ side = "BOTH"
 [[dependencies.walkers]]
 modId = "craftedcore"
 mandatory = true
+type = "required"
 versionRange = "[${craftedcore_version},)"
 ordering = "AFTER"
 side = "BOTH"

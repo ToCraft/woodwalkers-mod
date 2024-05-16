@@ -1,0 +1,14 @@
+{
+  "traits": [
+    {
+      "type": "walkers:walk_on_powder_snow"
+    }
+  ],
+  "entity_types": [
+    "minecraft:endermite",
+    "minecraft:fox",
+    "minecraft:silverfish",
+    "minecraft:vex",
+    "minecraft:wither"
+  ]
+}
