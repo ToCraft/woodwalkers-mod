@@ -1,3 +1,8 @@
+walkers 4.4.4
+================
+
+- fix crash when handling mob AIs
+
 walkers 4.4.3
 ================
 
