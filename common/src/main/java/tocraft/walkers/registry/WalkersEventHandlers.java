@@ -18,10 +18,13 @@ import tocraft.craftedcore.event.common.PlayerEvents;
 import tocraft.walkers.Walkers;
 import tocraft.walkers.api.PlayerHostility;
 import tocraft.walkers.api.PlayerShape;
+import tocraft.walkers.traits.ShapeTrait;
 import tocraft.walkers.traits.TraitRegistry;
+import tocraft.walkers.traits.impl.CantInteractTrait;
 import tocraft.walkers.traits.impl.NocturnalTrait;
 import tocraft.walkers.traits.impl.RiderTrait;
 
+@SuppressWarnings("resource")
 public class WalkersEventHandlers {
 
     public static void initialize() {
@@ -29,6 +32,19 @@ public class WalkersEventHandlers {
         registerEntityRidingHandler();
         registerPlayerRidingHandler();
         registerLivingDeathHandler();
+
+        EntityEvents.INTERACT_WITH_PLAYER.register((player, entity, hand) -> {
+            LivingEntity shape = PlayerShape.getCurrentShape(player);
+            if (shape != null) {
+                for (ShapeTrait<LivingEntity> skill : TraitRegistry.get(shape, CantInteractTrait.ID)) {
+                    if (!((CantInteractTrait<LivingEntity>) skill).canInteractWithEntity(entity)) {
+                        return InteractionResult.FAIL;
+                    }
+                }
+            }
+
+            return InteractionResult.PASS;
+        });
 
         PlayerEvents.ALLOW_SLEEP_TIME.register((player, sleepingPos, vanillaResult) -> {
             if (TraitRegistry.has(PlayerShape.getCurrentShape(player), NocturnalTrait.ID)) {
