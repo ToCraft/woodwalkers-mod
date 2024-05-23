@@ -1,5 +1,7 @@
 package tocraft.walkers.impl.tick;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.Entity;
@@ -11,6 +13,7 @@ import tocraft.craftedcore.event.client.ClientTickEvents;
 import tocraft.walkers.Walkers;
 import tocraft.walkers.WalkersClient;
 import tocraft.walkers.ability.AbilityRegistry;
+import tocraft.walkers.api.ApiLevel;
 import tocraft.walkers.api.PlayerShape;
 import tocraft.walkers.api.blacklist.EntityBlacklist;
 import tocraft.walkers.api.variant.ShapeType;
@@ -20,6 +23,7 @@ import tocraft.walkers.network.impl.SwapPackets;
 import tocraft.walkers.network.impl.SwapVariantPackets;
 import tocraft.walkers.network.impl.UnlockPackets;
 
+@Environment(EnvType.CLIENT)
 public class KeyPressHandler implements ClientTickEvents.Client {
     private float currentTimer = 0f;
 
@@ -29,18 +33,26 @@ public class KeyPressHandler implements ClientTickEvents.Client {
             if (WalkersClient.ABILITY_KEY.consumeClick()) handleAbilityKey(client);
 
             if (WalkersClient.TRANSFORM_KEY.consumeClick()) {
-                SwapPackets.sendSwapRequest();
+                if (ApiLevel.getCurrentLevel().canMorph) {
+                    SwapPackets.sendSwapRequest();
+                } else {
+                    client.player.displayClientMessage(Component.translatable("walkers.feature_not_available"), true);
+                }
             }
 
             if (WalkersClient.VARIANTS_MENU_KEY.consumeClick() && Walkers.CONFIG.unlockEveryVariant) {
-                LivingEntity shape = PlayerShape.getCurrentShape(client.player);
-                if (shape != null) {
-                    ShapeType<?> shapeType = ShapeType.from(shape);
-                    if (WalkersClient.isRenderingVariantsMenu) {
-                        SwapVariantPackets.sendSwapRequest(shapeType.getVariantData() + WalkersClient.variantOffset);
+                if (ApiLevel.getCurrentLevel().allowVariantsMenu) {
+                    LivingEntity shape = PlayerShape.getCurrentShape(client.player);
+                    if (shape != null) {
+                        ShapeType<?> shapeType = ShapeType.from(shape);
+                        if (WalkersClient.isRenderingVariantsMenu) {
+                            SwapVariantPackets.sendSwapRequest(shapeType.getVariantData() + WalkersClient.variantOffset);
+                        }
+                        WalkersClient.variantOffset = 0;
+                        WalkersClient.isRenderingVariantsMenu = !WalkersClient.isRenderingVariantsMenu;
                     }
-                    WalkersClient.variantOffset = 0;
-                    WalkersClient.isRenderingVariantsMenu = !WalkersClient.isRenderingVariantsMenu;
+                } else {
+                    client.player.displayClientMessage(Component.translatable("walkers.feature_not_available"), true);
                 }
             }
 
@@ -48,10 +60,13 @@ public class KeyPressHandler implements ClientTickEvents.Client {
             if (WalkersClient.isRenderingVariantsMenu && (client.options.hideGui || !Walkers.CONFIG.unlockEveryVariant || client.screen != null || PlayerShape.getCurrentShape(client.player) == null))
                 WalkersClient.isRenderingVariantsMenu = false;
 
-            if (WalkersClient.UNLOCK_KEY.isDown())
-                handleUnlockKey(client);
-
-            else if (currentTimer != Walkers.CONFIG.unlockTimer) currentTimer = Walkers.CONFIG.unlockTimer;
+            if (WalkersClient.UNLOCK_KEY.isDown()) {
+                if (ApiLevel.getCurrentLevel().canUnlock) {
+                    handleUnlockKey(client);
+                } else {
+                    client.player.displayClientMessage(Component.translatable("walkers.feature_not_available"), true);
+                }
+            } else if (currentTimer != Walkers.CONFIG.unlockTimer) currentTimer = Walkers.CONFIG.unlockTimer;
         }
     }
 

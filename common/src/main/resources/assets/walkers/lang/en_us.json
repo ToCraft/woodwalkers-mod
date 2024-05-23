@@ -23,5 +23,6 @@
   "walkers.removeFromList": "Removed player %s from the blacklist/whitelist.",
   "walkers.blacklistListPlayer": "Player %s is listed.",
   "walkers.blacklistIsEmpty": "The blacklist/whitelist is empty.",
-  "walkers.variants.minecraft.snow_golem.0": "Headless %s"
+  "walkers.variants.minecraft.snow_golem.0": "Headless %s",
+  "walkers.feature_not_available": "This feature was overwritten by an addon."
 }

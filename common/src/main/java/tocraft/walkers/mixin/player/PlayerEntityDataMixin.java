@@ -35,6 +35,7 @@ import tocraft.walkers.traits.impl.RiderTrait;
 import java.util.Optional;
 import java.util.UUID;
 
+@SuppressWarnings("UnreachableCode")
 @Mixin(Player.class)
 public abstract class PlayerEntityDataMixin extends LivingEntity implements PlayerDataProvider {
 

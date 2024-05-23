@@ -22,5 +22,6 @@
   "walkers.addToList": "Fügte %s zu der Blacklist/Whitelist hinzu.",
   "walkers.removeFromList": "Entfernte %s von der Blacklist/Whitelist.",
   "walkers.blacklistListPlayer": "%s ist gelistet.",
-  "walkers.blacklistIsEmpty": "Die Blacklist/Whitelist ist leer."
+  "walkers.blacklistIsEmpty": "Die Blacklist/Whitelist ist leer.",
+  "walkers.feature_not_available": "Diese Funktion wurde von einem Addon überschrieben."
 }
