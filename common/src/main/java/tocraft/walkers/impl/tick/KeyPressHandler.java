@@ -71,7 +71,7 @@ public class KeyPressHandler implements ClientTickEvents.Client {
     @SuppressWarnings("ConstantConditions")
     private void handleUnlockKey(Minecraft client) {
         // check if player is blacklisted
-        if (client.player != null && Walkers.isPlayerBlacklisted(client.player.getUUID())) {
+        if (client.player != null && Walkers.isPlayerBlacklisted(client.player.getUUID()) && Walkers.CONFIG.blacklistPreventsUnlocking) {
             client.player.displayClientMessage(Component.translatable("walkers.player_blacklisted"), true);
             return;
         }

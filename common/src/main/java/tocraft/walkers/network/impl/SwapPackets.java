@@ -20,7 +20,7 @@ public class SwapPackets {
         ModernNetworking.registerReceiver(ModernNetworking.Side.C2S, NetworkHandler.SHAPE_REQUEST,
                 (context, packet) -> context.getPlayer().getServer().execute(() -> {
                     // check if player is blacklisted
-                    if (Walkers.isPlayerBlacklisted(context.getPlayer().getUUID())) {
+                    if (Walkers.isPlayerBlacklisted(context.getPlayer().getUUID()) && Walkers.CONFIG.blacklistPreventsMorphing) {
                         context.getPlayer().displayClientMessage(Component.translatable("walkers.player_blacklisted"), true);
                         return;
                     }

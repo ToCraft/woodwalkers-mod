@@ -39,7 +39,7 @@ public class UnlockPackets {
     public static void registerShapeUnlockRequestPacketHandler() {
         ModernNetworking.registerReceiver(ModernNetworking.Side.C2S, NetworkHandler.UNLOCK_REQUEST, (context, nbt) -> {
             // check if player is blacklisted
-            if (Walkers.isPlayerBlacklisted(context.getPlayer().getUUID()))
+            if (Walkers.isPlayerBlacklisted(context.getPlayer().getUUID()) && Walkers.CONFIG.blacklistPreventsUnlocking)
                 return;
 
             boolean validType = nbt.getBoolean("valid_type");

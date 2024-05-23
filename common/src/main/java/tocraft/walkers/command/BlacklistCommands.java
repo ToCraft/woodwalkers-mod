@@ -22,6 +22,18 @@ public class BlacklistCommands {
                         .executes(context -> setIsWhitelist(context.getSource(), BoolArgumentType.getBool(context, "value"))))
                 .build();
 
+        LiteralCommandNode<CommandSourceStack> preventUnlocking = Commands.literal("preventUnlocking")
+                .executes(context -> isWhitelist(context.getSource()))
+                .then(Commands.argument("value", BoolArgumentType.bool())
+                        .executes(context -> setPreventUnlocking(context.getSource(), BoolArgumentType.getBool(context, "value"))))
+                .build();
+
+        LiteralCommandNode<CommandSourceStack> preventMorphing = Commands.literal("preventMorphing")
+                .executes(context -> isWhitelist(context.getSource()))
+                .then(Commands.argument("value", BoolArgumentType.bool())
+                        .executes(context -> setPreventMorphing(context.getSource(), BoolArgumentType.getBool(context, "value"))))
+                .build();
+
         LiteralCommandNode<CommandSourceStack> addToList = Commands.literal("add")
                 .then(Commands.argument("players", EntityArgument.players())
                         .executes(context -> {
@@ -57,6 +69,8 @@ public class BlacklistCommands {
 
 
         rootNode.addChild(isWhitelist);
+        rootNode.addChild(preventUnlocking);
+        rootNode.addChild(preventMorphing);
         rootNode.addChild(listList);
         rootNode.addChild(addToList);
         rootNode.addChild(removeFromList);
@@ -76,7 +90,31 @@ public class BlacklistCommands {
             Walkers.CONFIG.sendToPlayer(player);
         }
 
-        source.sendSystemMessage(Component.translatable("walkers.setIsWhitelist", String.valueOf(value)));
+        source.sendSystemMessage(Component.translatable("walkers.setConfigEntry", "playerBlacklistIsWhitelist", String.valueOf(value)));
+        return 1;
+    }
+
+    private static int setPreventUnlocking(CommandSourceStack source, boolean value) {
+        Walkers.CONFIG.blacklistPreventsUnlocking = value;
+        Walkers.CONFIG.save();
+
+        for (ServerPlayer player : source.getServer().getPlayerList().getPlayers()) {
+            Walkers.CONFIG.sendToPlayer(player);
+        }
+
+        source.sendSystemMessage(Component.translatable("walkers.setConfigEntry", "blacklistPreventsUnlocking", String.valueOf(value)));
+        return 1;
+    }
+
+    private static int setPreventMorphing(CommandSourceStack source, boolean value) {
+        Walkers.CONFIG.blacklistPreventsMorphing = value;
+        Walkers.CONFIG.save();
+
+        for (ServerPlayer player : source.getServer().getPlayerList().getPlayers()) {
+            Walkers.CONFIG.sendToPlayer(player);
+        }
+
+        source.sendSystemMessage(Component.translatable("walkers.setConfigEntry", "blacklistPreventsMorphing", String.valueOf(value)));
         return 1;
     }
 

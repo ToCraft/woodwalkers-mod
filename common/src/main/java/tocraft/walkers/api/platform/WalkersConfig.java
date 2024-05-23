@@ -90,6 +90,10 @@ public class WalkersConfig implements Config {
     public List<UUID> playerUUIDBlacklist = new ArrayList<>();
     @Synchronize
     public boolean playerBlacklistIsWhitelist = false;
+    @Synchronize
+    public boolean blacklistPreventsUnlocking = true;
+    @Synchronize
+    public boolean blacklistPreventsMorphing = true;
 
     @Override
     public String getName() {
