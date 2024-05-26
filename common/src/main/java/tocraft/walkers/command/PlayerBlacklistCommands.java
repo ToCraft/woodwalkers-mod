@@ -12,7 +12,7 @@ import tocraft.walkers.Walkers;
 
 import java.util.UUID;
 
-public class BlacklistCommands {
+public class PlayerBlacklistCommands {
     public static LiteralCommandNode<CommandSourceStack> getRootNode() {
         LiteralCommandNode<CommandSourceStack> rootNode = Commands.literal("playerBlacklist").build();
 
@@ -78,7 +78,7 @@ public class BlacklistCommands {
     }
 
     private static int isWhitelist(CommandSourceStack source) {
-        source.sendSystemMessage(Component.translatable("walkers.isWhitelist", Walkers.CONFIG.playerBlacklistIsWhitelist));
+        source.sendSystemMessage(Component.translatable("walkers.playerBlacklist.isWhitelist", Walkers.CONFIG.playerBlacklistIsWhitelist));
         return 1;
     }
 
@@ -122,11 +122,11 @@ public class BlacklistCommands {
         for (UUID uuid : Walkers.CONFIG.playerUUIDBlacklist) {
             ServerPlayer player = source.getServer().getPlayerList().getPlayer(uuid);
             Component name = player != null ? player.getDisplayName() : Component.literal(uuid.toString());
-            source.sendSystemMessage(Component.translatable("walkers.blacklistListPlayer", name));
+            source.sendSystemMessage(Component.translatable("walkers.playerBlacklist.list", name));
         }
 
         if (Walkers.CONFIG.playerUUIDBlacklist.isEmpty())
-            source.sendSystemMessage(Component.translatable("walkers.blacklistIsEmpty"));
+            source.sendSystemMessage(Component.translatable("walkers.playerBlacklist.isEmpty"));
 
         return 1;
     }
@@ -141,7 +141,7 @@ public class BlacklistCommands {
 
         ServerPlayer player = source.getServer().getPlayerList().getPlayer(uuid);
         Component name = player != null ? player.getDisplayName() : Component.literal(uuid.toString());
-        source.sendSystemMessage(Component.translatable("walkers.addToList", name));
+        source.sendSystemMessage(Component.translatable("walkers.playerBlacklist.add", name));
     }
 
     private static void removeFromList(CommandSourceStack source, UUID uuid) {
@@ -154,6 +154,6 @@ public class BlacklistCommands {
 
         ServerPlayer player = source.getServer().getPlayerList().getPlayer(uuid);
         Component name = player != null ? player.getDisplayName() : Component.literal(uuid.toString());
-        source.sendSystemMessage(Component.translatable("walkers.removeFromList", name));
+        source.sendSystemMessage(Component.translatable("walkers.playerBlacklist.remove", name));
     }
 }
