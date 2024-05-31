@@ -13,7 +13,7 @@ import tocraft.craftedcore.event.client.ClientTickEvents;
 import tocraft.walkers.Walkers;
 import tocraft.walkers.WalkersClient;
 import tocraft.walkers.ability.AbilityRegistry;
-import tocraft.walkers.api.ApiLevel;
+import tocraft.walkers.api.platform.ApiLevel;
 import tocraft.walkers.api.PlayerShape;
 import tocraft.walkers.api.blacklist.EntityBlacklist;
 import tocraft.walkers.api.variant.ShapeType;

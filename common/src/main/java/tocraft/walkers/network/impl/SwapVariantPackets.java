@@ -9,7 +9,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import tocraft.craftedcore.network.ModernNetworking;
 import tocraft.walkers.Walkers;
-import tocraft.walkers.api.ApiLevel;
+import tocraft.walkers.api.platform.ApiLevel;
 import tocraft.walkers.api.PlayerShape;
 import tocraft.walkers.api.PlayerShapeChanger;
 import tocraft.walkers.api.variant.ShapeType;

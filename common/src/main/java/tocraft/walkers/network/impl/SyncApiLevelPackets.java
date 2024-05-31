@@ -3,7 +3,7 @@ package tocraft.walkers.network.impl;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerPlayer;
 import tocraft.craftedcore.network.ModernNetworking;
-import tocraft.walkers.api.ApiLevel;
+import tocraft.walkers.api.platform.ApiLevel;
 import tocraft.walkers.network.NetworkHandler;
 
 public class SyncApiLevelPackets {

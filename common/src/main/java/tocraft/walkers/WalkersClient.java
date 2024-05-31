@@ -10,7 +10,7 @@ import tocraft.craftedcore.event.client.ClientTickEvents;
 import tocraft.craftedcore.event.client.RenderEvents;
 import tocraft.craftedcore.registration.KeyBindingRegistry;
 import tocraft.walkers.ability.AbilityOverlayRenderer;
-import tocraft.walkers.api.ApiLevel;
+import tocraft.walkers.api.platform.ApiLevel;
 import tocraft.walkers.api.model.EntityArms;
 import tocraft.walkers.api.model.EntityUpdaters;
 import tocraft.walkers.eventhandler.ClientRespawnHandler;

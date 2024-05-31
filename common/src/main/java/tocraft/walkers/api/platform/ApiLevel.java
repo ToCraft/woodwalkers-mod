@@ -1,4 +1,4 @@
-package tocraft.walkers.api;
+package tocraft.walkers.api.platform;
 
 import org.jetbrains.annotations.Nullable;
 import tocraft.craftedcore.event.Event;
@@ -16,6 +16,16 @@ public enum ApiLevel {
         this.canMorph = canMorph;
         this.allowVariantsMenu = allowVariantsMenu;
         this.canUnlock = canUnlock;
+    }
+
+    /** Called in order to set the API Level of the mod
+     *
+     * @param apiLevel
+     */
+    public static void setApiLevel(ApiLevel apiLevel) {
+        if (ApiLevel.getCurrentLevel().compareTo(apiLevel) > 0) {
+            ApiLevel.ON_API_LEVEL_CHANGE_EVENT.invoke().onApiLevelChange(apiLevel);
+        }
     }
 
     /**
