@@ -18,7 +18,8 @@ public enum ApiLevel {
         this.canUnlock = canUnlock;
     }
 
-    /** Called in order to set the API Level of the mod
+    /**
+     * Called in order to set the API Level of the mod
      *
      * @param apiLevel
      */
