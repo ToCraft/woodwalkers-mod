@@ -35,6 +35,7 @@ public class TypeProviderRegistry {
         register(EntityType.ZOMBIE_VILLAGER, new ZombieVillagerTypeProvider());
         register(EntityType.TROPICAL_FISH, new TropicalFishTypeProvider());
         register(EntityType.SHULKER, new ShulkerTypeProvider());
+        register(EntityType.WOLF, new WolfTypeProvider());
 
         // handle Integrations
         Integrations.registerTypeProvider();
