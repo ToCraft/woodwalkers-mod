@@ -1,6 +1,5 @@
 package tocraft.walkers;
 
-import com.llamalad7.mixinextras.MixinExtrasBootstrap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.AdvancementProgress;
@@ -49,8 +48,6 @@ public class Walkers {
     }
 
     public void initialize() {
-        MixinExtrasBootstrap.init();
-
         TraitRegistry.initialize();
 
         WalkersCommand.initialize();

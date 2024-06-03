@@ -13,6 +13,7 @@ import org.spongepowered.asm.mixin.gen.Invoker;
 public interface LivingEntityAccessor {
     @Accessor
     boolean isJumping();
+
     @Invoker
     float callGetEyeHeight(Pose pose, EntityDimensions dimensions);
 

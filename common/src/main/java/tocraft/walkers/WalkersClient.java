@@ -1,6 +1,8 @@
 package tocraft.walkers;
 
 import com.mojang.blaze3d.platform.InputConstants;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.KeyMapping;
 import org.lwjgl.glfw.GLFW;
 import tocraft.craftedcore.event.client.ClientPlayerEvents;
@@ -10,12 +12,14 @@ import tocraft.craftedcore.registration.KeyBindingRegistry;
 import tocraft.walkers.ability.AbilityOverlayRenderer;
 import tocraft.walkers.api.model.EntityArms;
 import tocraft.walkers.api.model.EntityUpdaters;
+import tocraft.walkers.api.platform.ApiLevel;
 import tocraft.walkers.eventhandler.ClientRespawnHandler;
 import tocraft.walkers.impl.tick.KeyPressHandler;
 import tocraft.walkers.network.ClientNetworking;
 import tocraft.walkers.screen.hud.OverlayEventHandler;
 import tocraft.walkers.screen.hud.VariantMenu;
 
+@Environment(EnvType.CLIENT)
 public class WalkersClient {
     public static boolean isRenderingVariantsMenu = false;
     public static int variantOffset = 0;
@@ -45,5 +49,11 @@ public class WalkersClient {
         OverlayEventHandler.initialize();
 
         ClientPlayerEvents.CLIENT_PLAYER_RESPAWN.register(new ClientRespawnHandler());
+
+        ClientPlayerEvents.CLIENT_PLAYER_QUIT.register(player -> {
+            if (player != null && ApiLevel.getClientLevel() != null) {
+                ApiLevel.ON_API_LEVEL_CHANGE_EVENT.invoke().onApiLevelChange(ApiLevel.getClientLevel());
+            }
+        });
     }
 }
