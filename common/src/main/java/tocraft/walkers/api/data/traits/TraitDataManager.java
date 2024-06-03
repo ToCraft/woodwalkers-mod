@@ -100,7 +100,8 @@ public class TraitDataManager extends SynchronizedJsonReloadListener {
 
         @SuppressWarnings("unchecked")
         public List<EntityType<LivingEntity>> entityTypes() {
-            if (entityTagKeys.contains(new ResourceLocation("alexsmobs:bald_eagle"))) Walkers.LOGGER.warn("got that far");
+            if (entityTagKeys.contains(new ResourceLocation("alexsmobs:bald_eagle")))
+                Walkers.LOGGER.warn("got that far");
             return entityTypeKeys.stream().filter(BuiltInRegistries.ENTITY_TYPE::containsKey).map(type -> (EntityType<LivingEntity>) BuiltInRegistries.ENTITY_TYPE.get(type)).toList();
         }
 

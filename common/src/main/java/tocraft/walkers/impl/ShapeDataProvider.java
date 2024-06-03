@@ -12,7 +12,8 @@ public interface ShapeDataProvider {
 
     void walkers$setIsShape(boolean isShape);
 
-    @Nullable DamageSource walkers$playerDamageSource();
+    @Nullable
+    DamageSource walkers$playerDamageSource();
 
     void walkers$setPlayerDamageSource(DamageSource playerDamageSource);
 }

@@ -23,6 +23,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import tocraft.walkers.Walkers;
 import tocraft.walkers.api.FlightHelper;
 import tocraft.walkers.api.PlayerShape;
+import tocraft.walkers.api.blacklist.EntityBlacklist;
 import tocraft.walkers.api.events.ShapeEvents;
 import tocraft.walkers.api.variant.ShapeType;
 import tocraft.walkers.impl.DimensionsRefresher;
@@ -35,6 +36,7 @@ import tocraft.walkers.traits.impl.RiderTrait;
 import java.util.Optional;
 import java.util.UUID;
 
+@SuppressWarnings("UnreachableCode")
 @Mixin(Player.class)
 public abstract class PlayerEntityDataMixin extends LivingEntity implements PlayerDataProvider {
 
@@ -189,6 +191,11 @@ public abstract class PlayerEntityDataMixin extends LivingEntity implements Play
     public boolean walkers$updateShapes(@Nullable LivingEntity shape) {
         Player player = (Player) (Object) this;
         AttributeInstance healthAttribute = player.getAttribute(Attributes.MAX_HEALTH);
+
+        if (shape != null && EntityBlacklist.isBlacklisted(shape.getType())) {
+            return false;
+        }
+
         InteractionResult result = ShapeEvents.SWAP_SHAPE.invoke().swap((ServerPlayer) player, shape);
         if (result == InteractionResult.FAIL) {
             return false;

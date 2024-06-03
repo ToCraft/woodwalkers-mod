@@ -3,12 +3,14 @@ package tocraft.walkers.network;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import tocraft.craftedcore.event.common.PlayerEvents;
 import tocraft.craftedcore.network.ModernNetworking;
 import tocraft.walkers.ability.AbilityRegistry;
 import tocraft.walkers.api.PlayerAbilities;
 import tocraft.walkers.api.PlayerShape;
 import tocraft.walkers.network.impl.SwapPackets;
 import tocraft.walkers.network.impl.SwapVariantPackets;
+import tocraft.walkers.network.impl.SyncApiLevelPackets;
 import tocraft.walkers.network.impl.UnlockPackets;
 
 public class ServerNetworking implements NetworkHandler {
@@ -18,6 +20,8 @@ public class ServerNetworking implements NetworkHandler {
         UnlockPackets.registerShapeUnlockRequestPacketHandler();
         SwapVariantPackets.registerSwapVariantPacketHandler();
         registerUseAbilityPacketHandler();
+
+        PlayerEvents.PLAYER_JOIN.register(SyncApiLevelPackets::sendSyncPacket);
     }
 
     @SuppressWarnings("ConstantConditions")
