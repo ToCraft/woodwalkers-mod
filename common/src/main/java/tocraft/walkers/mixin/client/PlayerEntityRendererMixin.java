@@ -34,6 +34,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+import tocraft.craftedcore.math.math;
 import tocraft.walkers.Walkers;
 import tocraft.walkers.api.PlayerShape;
 import tocraft.walkers.api.model.ArmRenderingManipulator;
@@ -221,16 +222,23 @@ public abstract class PlayerEntityRendererMixin extends LivingEntityRenderer<Abs
                 arm = null;
                 sleeve = null;
 
-                if (model instanceof PlayerModel) {
-                    arm = ((PlayerModel<?>) model).rightArm;
-                    sleeve = ((PlayerModel<?>) model).rightSleeve;
-                } else if (model instanceof HumanoidModel) {
-                    arm = ((HumanoidModel<?>) model).rightArm;
-                    sleeve = null;
+                if (model instanceof HumanoidModel) {
+                    if (player.getMainArm() == HumanoidArm.RIGHT) {
+                        arm = ((HumanoidModel<?>) model).rightArm;
+                    } else {
+                        arm = ((HumanoidModel<?>) model).leftArm;
+                    }
+                    if (model instanceof PlayerModel) {
+                        sleeve = ((PlayerModel<?>) model).rightSleeve;
+                    }
                 } else {
                     Tuple<ModelPart, ArmRenderingManipulator<EntityModel<Entity>>> pair = EntityArms.get(shape, model);
                     if (pair != null) {
                         arm = pair.getA();
+                        // mirror matrices with player is left-handed
+                        if (player.getMainArm() == HumanoidArm.LEFT) {
+                            matrices.mulPose(math.getDegreesQuaternion(math.POSITIVE_Y(), 180));
+                        }
                         pair.getB().run(matrices, model);
                         matrices.translate(0, -.35, .5);
                     }
