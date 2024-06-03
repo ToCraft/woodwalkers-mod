@@ -13,10 +13,12 @@ public final class ShapeEvents {
 
     public static final Event<ShapeSwapCallback> SWAP_SHAPE = EventFactory.createWithInteractionResult();
 
+    @FunctionalInterface
     public interface ShapeSwapCallback {
         InteractionResult swap(ServerPlayer player, @Nullable LivingEntity to);
     }
 
+    @FunctionalInterface
     public interface UnlockShapeCallback {
         InteractionResult unlock(ServerPlayer player, ShapeType<?> type);
     }

@@ -10,6 +10,7 @@ import tocraft.craftedcore.network.ModernNetworking;
 import tocraft.craftedcore.network.client.ClientNetworking.ApplicablePacket;
 import tocraft.walkers.impl.DimensionsRefresher;
 import tocraft.walkers.impl.PlayerDataProvider;
+import tocraft.walkers.network.impl.SyncApiLevelPackets;
 import tocraft.walkers.network.impl.UnlockPackets;
 import tocraft.walkers.network.impl.VehiclePackets;
 
@@ -27,6 +28,8 @@ public class ClientNetworking implements NetworkHandler {
                 UnlockPackets::handleUnlockSyncPacket);
         ModernNetworking.registerReceiver(ModernNetworking.Side.S2C, NetworkHandler.CHANGE_VEHICLE_STATE,
                 VehiclePackets::handleSyncPacket);
+        ModernNetworking.registerReceiver(ModernNetworking.Side.S2C, NetworkHandler.SYNC_API_LEVEL,
+                (context, nbt) -> SyncApiLevelPackets.handleSyncPacket(nbt));
     }
 
     public static void runOrQueue(ModernNetworking.Context context, ApplicablePacket packet) {

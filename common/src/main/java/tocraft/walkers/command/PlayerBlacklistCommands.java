@@ -14,7 +14,7 @@ import tocraft.walkers.Walkers;
 
 import java.util.UUID;
 
-public class BlacklistCommands {
+public class PlayerBlacklistCommands {
     public static LiteralCommandNode<CommandSourceStack> getRootNode() {
         LiteralCommandNode<CommandSourceStack> rootNode = Commands.literal("playerBlacklist").build();
 
@@ -22,6 +22,18 @@ public class BlacklistCommands {
                 .executes(context -> isWhitelist(context.getSource()))
                 .then(Commands.argument("value", BoolArgumentType.bool())
                         .executes(context -> setIsWhitelist(context.getSource(), BoolArgumentType.getBool(context, "value"))))
+                .build();
+
+        LiteralCommandNode<CommandSourceStack> preventUnlocking = Commands.literal("preventUnlocking")
+                .executes(context -> isWhitelist(context.getSource()))
+                .then(Commands.argument("value", BoolArgumentType.bool())
+                        .executes(context -> setPreventUnlocking(context.getSource(), BoolArgumentType.getBool(context, "value"))))
+                .build();
+
+        LiteralCommandNode<CommandSourceStack> preventMorphing = Commands.literal("preventMorphing")
+                .executes(context -> isWhitelist(context.getSource()))
+                .then(Commands.argument("value", BoolArgumentType.bool())
+                        .executes(context -> setPreventMorphing(context.getSource(), BoolArgumentType.getBool(context, "value"))))
                 .build();
 
         LiteralCommandNode<CommandSourceStack> addToList = Commands.literal("add")
@@ -59,6 +71,8 @@ public class BlacklistCommands {
 
 
         rootNode.addChild(isWhitelist);
+        rootNode.addChild(preventUnlocking);
+        rootNode.addChild(preventMorphing);
         rootNode.addChild(listList);
         rootNode.addChild(addToList);
         rootNode.addChild(removeFromList);
@@ -66,7 +80,7 @@ public class BlacklistCommands {
     }
 
     private static int isWhitelist(CommandSourceStack source) {
-        source.sendSuccess(new TranslatableComponent("walkers.isWhitelist", Walkers.CONFIG.playerBlacklistIsWhitelist), true);
+        source.sendSuccess(new TranslatableComponent("walkers.playerBlacklist.isWhitelist", Walkers.CONFIG.playerBlacklistIsWhitelist), true);
         return 1;
     }
 
@@ -78,7 +92,31 @@ public class BlacklistCommands {
             Walkers.CONFIG.sendToPlayer(player);
         }
 
-        source.sendSuccess(new TranslatableComponent("walkers.setIsWhitelist", String.valueOf(value)), true);
+        source.sendSuccess(new TranslatableComponent("walkers.setConfigEntry", "playerBlacklistIsWhitelist", String.valueOf(value)), true);
+        return 1;
+    }
+
+    private static int setPreventUnlocking(CommandSourceStack source, boolean value) {
+        Walkers.CONFIG.blacklistPreventsUnlocking = value;
+        Walkers.CONFIG.save();
+
+        for (ServerPlayer player : source.getServer().getPlayerList().getPlayers()) {
+            Walkers.CONFIG.sendToPlayer(player);
+        }
+
+        source.sendSuccess(new TranslatableComponent("walkers.setConfigEntry", "blacklistPreventsUnlocking", String.valueOf(value)), true);
+        return 1;
+    }
+
+    private static int setPreventMorphing(CommandSourceStack source, boolean value) {
+        Walkers.CONFIG.blacklistPreventsMorphing = value;
+        Walkers.CONFIG.save();
+
+        for (ServerPlayer player : source.getServer().getPlayerList().getPlayers()) {
+            Walkers.CONFIG.sendToPlayer(player);
+        }
+
+        source.sendSuccess(new TranslatableComponent("walkers.setConfigEntry", "blacklistPreventsMorphing", String.valueOf(value)), true);
         return 1;
     }
 
@@ -86,11 +124,11 @@ public class BlacklistCommands {
         for (UUID uuid : Walkers.CONFIG.playerUUIDBlacklist) {
             ServerPlayer player = source.getServer().getPlayerList().getPlayer(uuid);
             Component name = player != null ? player.getDisplayName() : new TextComponent(uuid.toString());
-            source.sendSuccess(new TranslatableComponent("walkers.blacklistListPlayer", name), true);
+            source.sendSuccess(new TranslatableComponent("walkers.playerBlacklist.list", name), true);
         }
 
         if (Walkers.CONFIG.playerUUIDBlacklist.isEmpty())
-            source.sendSuccess(new TranslatableComponent("walkers.blacklistIsEmpty"), true);
+            source.sendSuccess(new TranslatableComponent("walkers.playerBlacklist.isEmpty"), true);
 
         return 1;
     }
@@ -105,7 +143,7 @@ public class BlacklistCommands {
 
         ServerPlayer player = source.getServer().getPlayerList().getPlayer(uuid);
         Component name = player != null ? player.getDisplayName() : new TextComponent(uuid.toString());
-        source.sendSuccess(new TranslatableComponent("walkers.addToList", name), true);
+        source.sendSuccess(new TranslatableComponent("walkers.playerBlacklist.add", name), true);
     }
 
     private static void removeFromList(CommandSourceStack source, UUID uuid) {
@@ -118,6 +156,6 @@ public class BlacklistCommands {
 
         ServerPlayer player = source.getServer().getPlayerList().getPlayer(uuid);
         Component name = player != null ? player.getDisplayName() : new TextComponent(uuid.toString());
-        source.sendSuccess(new TranslatableComponent("walkers.removeFromList", name), true);
+        source.sendSuccess(new TranslatableComponent("walkers.playerBlacklist.remove", name), true);
     }
 }

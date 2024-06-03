@@ -8,6 +8,7 @@ import org.jetbrains.annotations.Nullable;
 import tocraft.craftedcore.network.ModernNetworking;
 import tocraft.walkers.Walkers;
 import tocraft.walkers.api.PlayerShape;
+import tocraft.walkers.api.platform.ApiLevel;
 import tocraft.walkers.api.variant.ShapeType;
 import tocraft.walkers.impl.PlayerDataProvider;
 import tocraft.walkers.network.ClientNetworking;
@@ -20,8 +21,12 @@ public class SwapPackets {
         ModernNetworking.registerReceiver(ModernNetworking.Side.C2S, NetworkHandler.SHAPE_REQUEST,
                 (context, packet) -> context.getPlayer().getServer().execute(() -> {
                     // check if player is blacklisted
-                    if (Walkers.isPlayerBlacklisted(context.getPlayer().getUUID())) {
+                    if (Walkers.isPlayerBlacklisted(context.getPlayer().getUUID()) && Walkers.CONFIG.blacklistPreventsMorphing) {
                         context.getPlayer().displayClientMessage(new TranslatableComponent("walkers.player_blacklisted"), true);
+                        return;
+                    }
+
+                    if (!ApiLevel.getCurrentLevel().canMorph) {
                         return;
                     }
 
@@ -49,6 +54,10 @@ public class SwapPackets {
     }
 
     public static void sendSwapRequest() {
+        if (!ApiLevel.getCurrentLevel().canMorph) {
+            return;
+        }
+
         ModernNetworking.sendToServer(ClientNetworking.SHAPE_REQUEST, new CompoundTag());
     }
 }

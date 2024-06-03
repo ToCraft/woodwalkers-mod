@@ -102,7 +102,8 @@ public class WalkersCommand {
         rootNode.addChild(switchShape);
         rootNode.addChild(show2ndShape);
 
-        rootNode.addChild(BlacklistCommands.getRootNode());
+        rootNode.addChild(PlayerBlacklistCommands.getRootNode());
+        rootNode.addChild(EntityBlacklistCommands.getRootNode());
 
         dispatcher.getRoot().addChild(rootNode);
     }
@@ -181,6 +182,9 @@ public class WalkersCommand {
             boolean result = PlayerShape.updateShapes(player, (LivingEntity) created);
             if (result) {
                 source.sendSuccess(new TranslatableComponent("walkers.switchShape_success",
+                        player.getDisplayName(), new TranslatableComponent(created.getType().getDescriptionId())), true);
+            } else {
+                source.sendSuccess(new TranslatableComponent("walkers.switchShape_failure",
                         player.getDisplayName(), new TranslatableComponent(created.getType().getDescriptionId())), true);
             }
         }
