@@ -8,6 +8,7 @@ walkers 4.5
 - add "/walkers entityBlacklist" command
 - fix bugged first person view with better combat animation
 - add wolf variants for 1.20.6
+- support left main hand
 
 walkers 4.4.3
 ================
