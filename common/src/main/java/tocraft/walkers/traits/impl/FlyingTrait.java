@@ -1,7 +1,6 @@
 package tocraft.walkers.traits.impl;
 
 import com.mojang.serialization.Codec;
-import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;

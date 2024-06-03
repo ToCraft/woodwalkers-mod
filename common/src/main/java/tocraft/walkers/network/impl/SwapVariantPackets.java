@@ -11,6 +11,7 @@ import tocraft.craftedcore.network.ModernNetworking;
 import tocraft.walkers.Walkers;
 import tocraft.walkers.api.PlayerShape;
 import tocraft.walkers.api.PlayerShapeChanger;
+import tocraft.walkers.api.platform.ApiLevel;
 import tocraft.walkers.api.variant.ShapeType;
 import tocraft.walkers.api.variant.TypeProvider;
 import tocraft.walkers.api.variant.TypeProviderRegistry;
@@ -23,6 +24,10 @@ public class SwapVariantPackets {
     public static void registerSwapVariantPacketHandler() {
         ModernNetworking.registerReceiver(ModernNetworking.Side.C2S, NetworkHandler.VARIANT_REQUEST,
                 (context, packet) -> {
+                    if (!ApiLevel.getCurrentLevel().allowVariantsMenu) {
+                        return;
+                    }
+
                     int variantID = packet.getInt("variant_id");
                     context.getPlayer().getServer().execute(() -> {
                         if (Walkers.CONFIG.unlockEveryVariant) {
@@ -46,7 +51,7 @@ public class SwapVariantPackets {
                                 if (currentShapeType != null && currentShapeType.getVariantData() != variantID) {
                                     ShapeType<?> newShapeType = ShapeType.from(currentShapeType.getEntityType(), variantID);
                                     if (newShapeType != null) {
-                                        if (PlayerShapeChanger.change2ndShape((ServerPlayer) context.getPlayer(), newShapeType)) {
+                                        if (PlayerShapeChanger.change2ndShape((ServerPlayer) context.getPlayer(), newShapeType) || !ApiLevel.getCurrentLevel().canUnlock) {
                                             LivingEntity shape = newShapeType.create(context.getPlayer().level(), context.getPlayer());
                                             if (shape != null) {
                                                 PlayerShape.updateShapes((ServerPlayer) context.getPlayer(), shape);
@@ -62,6 +67,10 @@ public class SwapVariantPackets {
 
     public static void sendSwapRequest(int variantID) {
         if (Walkers.CONFIG.unlockEveryVariant) {
+            if (!ApiLevel.getCurrentLevel().allowVariantsMenu) {
+                return;
+            }
+
             CompoundTag packet = new CompoundTag();
             packet.putInt("variant_id", variantID);
             ModernNetworking.sendToServer(ClientNetworking.VARIANT_REQUEST, packet);

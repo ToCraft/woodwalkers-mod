@@ -1,3 +1,14 @@
+walkers 4.5
+================
+
+- fix crash when handling mob AIs
+- player blacklist can now be changed whether to prevent unlocking and / or morphing
+- create CantInteractTrait
+- create "ApiLevels" for improved ways of coding addons
+- add "/walkers entityBlacklist" command
+- fix bugged first person view with better combat animation
+- add wolf variants for 1.20.6
+
 walkers 4.4.3
 ================
 

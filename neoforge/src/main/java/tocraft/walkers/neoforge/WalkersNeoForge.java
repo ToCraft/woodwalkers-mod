@@ -2,7 +2,6 @@ package tocraft.walkers.neoforge;
 
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.loading.FMLEnvironment;
-import net.neoforged.neoforge.common.NeoForge;
 import tocraft.walkers.Walkers;
 import tocraft.walkers.WalkersClient;
 

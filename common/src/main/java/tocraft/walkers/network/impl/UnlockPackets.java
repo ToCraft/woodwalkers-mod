@@ -12,6 +12,7 @@ import tocraft.walkers.Walkers;
 import tocraft.walkers.api.PlayerShape;
 import tocraft.walkers.api.PlayerShapeChanger;
 import tocraft.walkers.api.blacklist.EntityBlacklist;
+import tocraft.walkers.api.platform.ApiLevel;
 import tocraft.walkers.api.variant.ShapeType;
 import tocraft.walkers.impl.PlayerDataProvider;
 import tocraft.walkers.network.ClientNetworking;
@@ -22,7 +23,7 @@ public class UnlockPackets {
     private static final String UNLOCK_KEY = "UnlockedShape";
 
     public static void handleUnlockSyncPacket(ModernNetworking.Context context, CompoundTag nbt) {
-        if (nbt != null) {
+        if (nbt != null && ApiLevel.getCurrentLevel().canUnlock) {
             CompoundTag idTag = nbt.getCompound(UNLOCK_KEY);
 
             ClientNetworking.runOrQueue(context, player -> {
@@ -39,8 +40,13 @@ public class UnlockPackets {
     public static void registerShapeUnlockRequestPacketHandler() {
         ModernNetworking.registerReceiver(ModernNetworking.Side.C2S, NetworkHandler.UNLOCK_REQUEST, (context, nbt) -> {
             // check if player is blacklisted
-            if (Walkers.isPlayerBlacklisted(context.getPlayer().getUUID()))
+            if (Walkers.isPlayerBlacklisted(context.getPlayer().getUUID()) && Walkers.CONFIG.blacklistPreventsUnlocking) {
                 return;
+            }
+
+            if (!ApiLevel.getCurrentLevel().canUnlock) {
+                return;
+            }
 
             boolean validType = nbt.getBoolean("valid_type");
             if (validType) {

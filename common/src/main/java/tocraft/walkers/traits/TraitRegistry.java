@@ -2,7 +2,6 @@ package tocraft.walkers.traits;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
-import com.mojang.serialization.Codec;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.EntityTypeTags;
@@ -21,6 +20,8 @@ import net.minecraft.world.entity.animal.horse.AbstractHorse;
 import net.minecraft.world.entity.boss.enderdragon.EnderDragon;
 import net.minecraft.world.entity.boss.wither.WitherBoss;
 import net.minecraft.world.entity.monster.*;
+import net.minecraft.world.entity.npc.Villager;
+import net.minecraft.world.entity.raid.Raider;
 import net.minecraft.world.level.block.Blocks;
 import org.jetbrains.annotations.Nullable;
 import tocraft.walkers.Walkers;
@@ -63,6 +64,7 @@ public class TraitRegistry {
         registerCodec(HumanoidTrait.ID, HumanoidTrait.CODEC);
         registerCodec(AttackForHealthTrait.ID, AttackForHealthTrait.CODEC);
         registerCodec(NocturnalTrait.ID, NocturnalTrait.CODEC);
+        registerCodec(CantInteractTrait.ID, CantInteractTrait.CODEC);
     }
 
     @SuppressWarnings("unchecked")
@@ -155,6 +157,8 @@ public class TraitRegistry {
         registerByPredicate(entity -> entity.getType().getCategory().equals(MobCategory.MONSTER), new AttackForHealthTrait<>());
         // nocturnal
         registerByPredicate(entity -> entity.getType().getCategory().equals(MobCategory.MONSTER), new NocturnalTrait<>());
+        // cant interact with...
+        registerByClass(Raider.class, new CantInteractTrait<>(List.of(Villager.class)));
 
         // handle Integrations
         Integrations.registerTraits();
