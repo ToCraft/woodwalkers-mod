@@ -1,5 +1,7 @@
 package tocraft.walkers.api.model;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 
@@ -10,6 +12,7 @@ import net.minecraft.world.entity.player.Player;
  *
  * @param <Entity>
  */
+@Environment(EnvType.CLIENT)
 @FunctionalInterface
 public interface EntityUpdater<Entity extends LivingEntity> {
 
