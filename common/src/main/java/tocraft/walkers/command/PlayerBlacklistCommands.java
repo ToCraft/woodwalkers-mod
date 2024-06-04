@@ -23,13 +23,11 @@ public class PlayerBlacklistCommands {
                 .build();
 
         LiteralCommandNode<CommandSourceStack> preventUnlocking = Commands.literal("preventUnlocking")
-                .executes(context -> isWhitelist(context.getSource()))
                 .then(Commands.argument("value", BoolArgumentType.bool())
                         .executes(context -> setPreventUnlocking(context.getSource(), BoolArgumentType.getBool(context, "value"))))
                 .build();
 
         LiteralCommandNode<CommandSourceStack> preventMorphing = Commands.literal("preventMorphing")
-                .executes(context -> isWhitelist(context.getSource()))
                 .then(Commands.argument("value", BoolArgumentType.bool())
                         .executes(context -> setPreventMorphing(context.getSource(), BoolArgumentType.getBool(context, "value"))))
                 .build();
