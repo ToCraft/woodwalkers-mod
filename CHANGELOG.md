@@ -2,6 +2,7 @@ walkers 4.5.1
 ================
 
 - better combat animation is only suppressed when morphed
+- cache the abilities so the latest registered can be used
 
 walkers 4.5
 ================

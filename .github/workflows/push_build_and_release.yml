@@ -12,7 +12,7 @@ on:
     inputs:
       release:
         description: 'Release'
-        required: true
+        required: false
         default: 'true'
       discord_message:
         description: 'Discord Message'
@@ -63,7 +63,8 @@ jobs:
     name: "Release"
     needs: build
     runs-on: ubuntu-latest
-    if: !contains(github.event.head_commit.message, '[no_release]') && github.event.inputs.release == 'true'
+    if: |
+      !contains(github.event.head_commit.message, '[no_release]') && github.event.inputs.release != 'false'
     steps:
       - uses: actions/checkout@v4
 
@@ -111,7 +112,8 @@ jobs:
     name: "Send Discord Release Message"
     needs: build
     runs-on: ubuntu-latest
-    if: github.event.inputs.discord_message == 'true'
+    if: |
+      github.event.inputs.discord_message == 'true'
     steps:
       - uses: actions/checkout@v4
 

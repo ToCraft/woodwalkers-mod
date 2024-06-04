@@ -73,13 +73,15 @@ public class AbilityRegistry {
         if (Walkers.CONFIG.abilityBlacklist.contains(BuiltInRegistries.ENTITY_TYPE.getKey(shape.getType()).toString()))
             return null;
 
+        // cache the ability so the latest registered can be used
+        ShapeAbility<L> ability = null;
         for (Map.Entry<Predicate<LivingEntity>, ShapeAbility<?>> entry : abilities.entrySet()) {
             if (entry.getKey().test(shape)) {
-                return (ShapeAbility<L>) entry.getValue();
+                ability = (ShapeAbility<L>) entry.getValue();
             }
         }
 
-        return null;
+        return ability;
     }
 
     public static <A extends LivingEntity> void registerByType(EntityType<A> type, ShapeAbility<A> ability) {
