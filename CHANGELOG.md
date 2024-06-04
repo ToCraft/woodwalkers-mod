@@ -1,3 +1,8 @@
+walkers 4.5.1
+================
+
+- better combat animation is only suppressed when morphed
+
 walkers 4.5
 ================
 
