@@ -9,6 +9,7 @@ import java.util.UUID;
 
 public interface PlayerDataProvider {
 
+    @Nullable
     ShapeType<?> walkers$get2ndShape();
 
     void walkers$set2ndShape(ShapeType<?> unlocked);
@@ -21,6 +22,7 @@ public interface PlayerDataProvider {
 
     void walkers$setAbilityCooldown(int cooldown);
 
+    @Nullable
     LivingEntity walkers$getCurrentShape();
 
     void walkers$setCurrentShape(@Nullable LivingEntity shape);
