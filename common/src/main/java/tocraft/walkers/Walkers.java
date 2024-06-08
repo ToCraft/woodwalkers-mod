@@ -34,6 +34,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+@SuppressWarnings({"resource"})
 public class Walkers {
 
     public static final Logger LOGGER = LoggerFactory.getLogger(Walkers.class);
@@ -63,7 +64,7 @@ public class Walkers {
     }
 
     public static void registerJoinSyncPacket() {
-        VersionChecker.registerDefaultGitHubChecker(MODID, "ToCraft", "woodwalkers-mod", Component.literal("Woodwalkers"));
+        VersionChecker.registerModrinthChecker(MODID, "woodwalkers", Component.literal("Woodwalkers"));
 
         PlayerEvents.PLAYER_JOIN.register(player -> {
             Int2ObjectMap<Object> trackers = ((ThreadedAnvilChunkStorageAccessor) ((ServerLevel) player.level())
