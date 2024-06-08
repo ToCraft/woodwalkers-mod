@@ -118,7 +118,7 @@ public class ShapeType<T extends LivingEntity> {
                         LIVING_TYPE_CASH.add((EntityType<? extends LivingEntity>) type);
                     }
                 } catch (Exception e) {
-                    Walkers.LOGGER.error(e.getLocalizedMessage());
+                    Walkers.LOGGER.error("{}: Caught an exception while getting shape types for entity type + {}: {}", ShapeType.class.getSimpleName(), type.toShortString(), e);
                 }
             }
         }

@@ -5,6 +5,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import org.jetbrains.annotations.Nullable;
 import tocraft.craftedcore.network.ModernNetworking;
 import tocraft.walkers.impl.PlayerDataProvider;
 import tocraft.walkers.network.NetworkHandler;
@@ -18,6 +19,7 @@ public class PlayerShape {
      *
      * @return the current {@link LivingEntity} shape associated with this component's player owner, or null if they have no shape equipped
      */
+    @Nullable
     public static LivingEntity getCurrentShape(Player player) {
         return ((PlayerDataProvider) player).walkers$getCurrentShape();
     }
