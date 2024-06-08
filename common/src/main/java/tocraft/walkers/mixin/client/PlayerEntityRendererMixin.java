@@ -34,7 +34,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import tocraft.craftedcore.math.math;
+import tocraft.craftedcore.util.Maths;
 import tocraft.walkers.Walkers;
 import tocraft.walkers.api.PlayerShape;
 import tocraft.walkers.api.model.ArmRenderingManipulator;
@@ -238,7 +238,7 @@ public abstract class PlayerEntityRendererMixin extends LivingEntityRenderer<Abs
                         arm = pair.getA();
                         // mirror matrices with player is left-handed
                         if (player.getMainArm() == HumanoidArm.LEFT) {
-                            matrices.mulPose(math.getDegreesQuaternion(math.POSITIVE_Y(), 180));
+                            matrices.mulPose(Maths.getDegreesQuaternion(Maths.POSITIVE_Y(), 180));
                         }
                         pair.getB().run(matrices, model);
                         matrices.translate(0, -.35, .5);
