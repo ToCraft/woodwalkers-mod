@@ -12,8 +12,8 @@ on:
     inputs:
       release:
         description: 'Release'
-        required: true
-        default: 'false'
+        required: false
+        default: 'true'
       discord_message:
         description: 'Discord Message'
         required: false
@@ -64,7 +64,7 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     if: |
-      !contains(github.event.head_commit.message, '[ci skip]') && !contains(github.event.head_commit.message, '[release]') && github.event.inputs.release == 'true'
+      !contains(github.event.head_commit.message, '[no_release]') && github.event.inputs.release != 'false'
     steps:
       - uses: actions/checkout@v4
 
@@ -78,6 +78,10 @@ jobs:
 
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v3
+
+      - name: Extract Artifact Type
+        run: |
+          cat $GITHUB_WORKSPACE/gradle.properties | grep ^artifact_type= >> $GITHUB_ENV
 
       - name: Publish to Maven, CurseForge & Modrinth
         run: ./gradlew publish modrinth curseforge --no-daemon
@@ -96,10 +100,14 @@ jobs:
       - name: Create version name
         run: echo "version_name_git=$minecraft_version-$mod_version" >> $GITHUB_ENV
       - name: Create GitHub Tag
+        if: |
+          ${{ env.artifact_type }} == 'release'
         uses: EndBug/latest-tag@latest
         with:
           ref: "${{ env.version_name_git }}"
       - name: Create GitHub Release
+        if: |
+          ${{ env.artifact_type }} == 'release'
         uses: softprops/action-gh-release@v2
         with:
           tag_name: "${{ env.version_name_git }}"
@@ -112,7 +120,8 @@ jobs:
     name: "Send Discord Release Message"
     needs: build
     runs-on: ubuntu-latest
-    if: github.event.inputs.discord_message == 'true'
+    if: |
+      github.event.inputs.discord_message == 'true'
     steps:
       - uses: actions/checkout@v4
 
@@ -128,3 +137,5 @@ jobs:
         uses: gradle/actions/setup-gradle@v3
       - name: Send Discord Message
         run: ./gradlew discordRelease --no-daemon
+        env:
+          DISCORD_WEB_HOOK: ${{ secrets.DISCORD_WEB_HOOK }}

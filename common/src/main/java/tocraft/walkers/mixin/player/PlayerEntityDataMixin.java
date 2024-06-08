@@ -43,12 +43,14 @@ public abstract class PlayerEntityDataMixin extends LivingEntity implements Play
     @Unique
     private static final String ABILITY_COOLDOWN_KEY = "AbilityCooldown";
     @Unique
+    @Nullable
     private ShapeType<?> walkers$unlocked;
     @Unique
     private int walkers$remainingTime = 0;
     @Unique
     private int walkers$abilityCooldown = 0;
     @Unique
+    @Nullable
     private LivingEntity walkers$shape = null;
     @Unique
     @Nullable
@@ -140,6 +142,7 @@ public abstract class PlayerEntityDataMixin extends LivingEntity implements Play
 
     @Unique
     @Override
+    @Nullable
     public ShapeType<?> walkers$get2ndShape() {
         return walkers$unlocked;
     }
@@ -175,6 +178,7 @@ public abstract class PlayerEntityDataMixin extends LivingEntity implements Play
 
     @Unique
     @Override
+    @Nullable
     public LivingEntity walkers$getCurrentShape() {
         return walkers$shape;
     }
