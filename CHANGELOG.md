@@ -3,6 +3,9 @@ walkers 4.5.1
 
 - better combat animation is only suppressed when morphed
 - cache the abilities so the latest registered can be used
+- fix wrong output when triggering /walkers playerBlacklist preventUnlocking/Morphing
+- better log crash on collecting shape types
+- update to craftedcore 4.2.4
 
 walkers 4.5
 ================
