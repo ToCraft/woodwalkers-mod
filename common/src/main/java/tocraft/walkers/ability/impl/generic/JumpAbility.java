@@ -1,5 +1,8 @@
-package tocraft.walkers.ability.impl;
+package tocraft.walkers.ability.impl.generic;
 
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -9,9 +12,22 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
-import tocraft.walkers.ability.ShapeAbility;
+import tocraft.walkers.Walkers;
+import tocraft.walkers.ability.GenericShapeAbility;
 
-public class HorseAbility<T extends Mob> extends ShapeAbility<T> {
+public class JumpAbility<T extends Mob> extends GenericShapeAbility<T> {
+    public static final ResourceLocation ID = Walkers.id("jump");
+    public static final MapCodec<JumpAbility<?>> CODEC = RecordCodecBuilder.mapCodec((instance) -> instance.stable(new JumpAbility<>()));
+
+    @Override
+    public ResourceLocation getId() {
+        return ID;
+    }
+
+    @Override
+    public MapCodec<? extends GenericShapeAbility<?>> codec() {
+        return CODEC;
+    }
 
     @Override
     public void onUse(Player player, T shape, Level world) {
