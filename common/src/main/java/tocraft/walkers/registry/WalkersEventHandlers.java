@@ -15,9 +15,11 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.ServerLevelAccessor;
 import tocraft.craftedcore.event.common.EntityEvents;
 import tocraft.craftedcore.event.common.PlayerEvents;
+import tocraft.craftedcore.event.common.ResourceEvents;
 import tocraft.walkers.Walkers;
 import tocraft.walkers.api.PlayerHostility;
 import tocraft.walkers.api.PlayerShape;
+import tocraft.walkers.impl.variant.WolfTypeProvider;
 import tocraft.walkers.traits.ShapeTrait;
 import tocraft.walkers.traits.TraitRegistry;
 import tocraft.walkers.traits.impl.CantInteractTrait;
@@ -32,6 +34,9 @@ public class WalkersEventHandlers {
         registerEntityRidingHandler();
         registerPlayerRidingHandler();
         registerLivingDeathHandler();
+
+        // set WolfTypeProvider Range when on server
+        ResourceEvents.DATA_PACK_SYNC.register(player -> WolfTypeProvider.setRange(player.level()));
 
         EntityEvents.INTERACT_WITH_PLAYER.register((player, entity, hand) -> {
             LivingEntity shape = PlayerShape.getCurrentShape(player);

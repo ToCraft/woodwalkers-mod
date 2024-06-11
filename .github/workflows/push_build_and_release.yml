@@ -18,6 +18,10 @@ on:
         description: 'Discord Message'
         required: false
         default: 'false'
+      clear_cache:
+        description: 'Clear Cache'
+        required: false
+        default: 'false'
 
 permissions:
   contents: write
@@ -27,6 +31,8 @@ jobs:
   clear-cache:
     name: "Clear Cache"
     runs-on: ubuntu-latest
+    if: |
+      github.event.inputs.clear_cache == 'true'
     steps:
       - name: Clear cache
         uses: actions/github-script@v6

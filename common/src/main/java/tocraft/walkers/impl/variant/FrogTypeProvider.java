@@ -5,6 +5,7 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.animal.FrogVariant;
 import net.minecraft.world.entity.animal.frog.Frog;
 import net.minecraft.world.level.Level;
 import tocraft.walkers.api.variant.TypeProvider;
@@ -28,7 +29,7 @@ public class FrogTypeProvider extends TypeProvider<Frog> {
     @Override
     public Frog create(EntityType<Frog> type, Level world, int data) {
         Frog frog = new Frog(type, world);
-        frog.setVariant(BuiltInRegistries.FROG_VARIANT.getHolder(data).orElseThrow());
+        frog.setVariant(BuiltInRegistries.FROG_VARIANT.getHolder(data).orElse(BuiltInRegistries.FROG_VARIANT.getHolderOrThrow(FrogVariant.TEMPERATE)));
         return frog;
     }
 
@@ -39,7 +40,7 @@ public class FrogTypeProvider extends TypeProvider<Frog> {
 
     @Override
     public int getRange() {
-        return 2;
+        return BuiltInRegistries.FROG_VARIANT.size() - 1;
     }
 
     @Override

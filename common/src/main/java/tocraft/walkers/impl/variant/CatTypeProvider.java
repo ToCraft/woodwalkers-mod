@@ -47,7 +47,7 @@ public class CatTypeProvider extends TypeProvider<Cat> {
 
     @Override
     public int getRange() {
-        return 10;
+        return BuiltInRegistries.CAT_VARIANT.size() - 1;
     }
 
     @Override
