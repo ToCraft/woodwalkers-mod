@@ -3,6 +3,7 @@ walkers 4.6
 
 - fix crash with WolfTypeProvider (1.20.6+)
 - improve Ability Datapack System
+- add entityBlacklistIsWhitelist with config
 
 walkers 4.5.1
 ================
