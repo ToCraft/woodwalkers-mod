@@ -196,7 +196,7 @@ public abstract class PlayerEntityTickMixin extends LivingEntity {
     @Inject(method = "tick", at = @At("HEAD"))
     private void sheepServerTick(CallbackInfo info) {
         if (walkers$IS_TALL_GRASS == null)
-            walkers$IS_TALL_GRASS = BlockStatePredicate.forBlock(level().registryAccess().registryOrThrow(Registries.BLOCK).get(new ResourceLocation("grass")));
+            walkers$IS_TALL_GRASS = BlockStatePredicate.forBlock(level().registryAccess().registryOrThrow(Registries.BLOCK).get(ResourceLocation.parse("grass")));
 
         if (!level().isClientSide && this.isAlive()) {
             ServerPlayer serverPlayer = (ServerPlayer) (Object) this;

@@ -38,7 +38,7 @@ public class AbilityRegistry {
     private static final Map<ResourceLocation, MapCodec<? extends GenericShapeAbility<?>>> abilityCodecById = new HashMap<>();
     private static final Map<MapCodec<? extends GenericShapeAbility<?>>, ResourceLocation> abilityIdByCodec = new IdentityHashMap<>();
 
-    public static void registerDefault() {
+    public static void initialize() {
         // register codecs
         registerCodec(ShootFireballAbility.ID, ShootFireballAbility.CODEC);
         registerCodec(ClearEffectsAbility.ID, ClearEffectsAbility.CODEC);
@@ -50,7 +50,9 @@ public class AbilityRegistry {
         registerCodec(ThrowPotionsAbility.ID, ThrowPotionsAbility.CODEC);
         registerCodec(SaturateAbility.ID, SaturateAbility.CODEC);
         registerCodec(ShootSnowballAbility.ID, ShootSnowballAbility.CODEC);
+    }
 
+    public static void registerDefault() {
         // Register generic Abilities first (since the last registered ability will be the used one
         registerByPredicate(livingEntity -> livingEntity instanceof NeutralMob, new AngerAbility<>());
         registerByPredicate(entity -> entity.getType().is(EntityTypeTags.RAIDERS), new RaidAbility<>());

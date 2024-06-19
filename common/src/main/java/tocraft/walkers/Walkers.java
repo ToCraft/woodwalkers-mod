@@ -16,6 +16,7 @@ import tocraft.craftedcore.config.ConfigLoader;
 import tocraft.craftedcore.event.common.EntityEvents;
 import tocraft.craftedcore.event.common.PlayerEvents;
 import tocraft.craftedcore.platform.VersionChecker;
+import tocraft.walkers.ability.AbilityRegistry;
 import tocraft.walkers.api.PlayerShape;
 import tocraft.walkers.api.WalkersTickHandlers;
 import tocraft.walkers.api.data.DataManager;
@@ -50,6 +51,7 @@ public class Walkers {
 
     public void initialize() {
         TraitRegistry.initialize();
+        AbilityRegistry.initialize();
 
         WalkersCommand.initialize();
         WalkersEventHandlers.initialize();
@@ -78,7 +80,7 @@ public class Walkers {
     }
 
     public static ResourceLocation id(String name) {
-        return new ResourceLocation(MODID, name);
+        return ResourceLocation.fromNamespaceAndPath(MODID, name);
     }
 
     public static boolean hasFlyingPermissions(ServerPlayer player) {
@@ -96,7 +98,7 @@ public class Walkers {
 
                 boolean hasPermission = true;
                 for (String requiredAdvancement : requiredAdvancements) {
-                    AdvancementHolder advancement = player.server.getAdvancements().get(new ResourceLocation(requiredAdvancement));
+                    AdvancementHolder advancement = player.server.getAdvancements().get(ResourceLocation.parse(requiredAdvancement));
                     if (advancement != null) {
                         AdvancementProgress progress = player.getAdvancements().getOrStartProgress(advancement);
 

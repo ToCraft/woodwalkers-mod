@@ -17,6 +17,7 @@ import net.minecraft.world.entity.projectile.SmallFireball;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import tocraft.walkers.Walkers;
 import tocraft.walkers.ability.GenericShapeAbility;
@@ -66,9 +67,9 @@ public class ShootFireballAbility<T extends Mob> extends GenericShapeAbility<T> 
             fireball = new LargeFireball(
                     world,
                     player,
-                    player.getLookAngle().x,
-                    player.getLookAngle().y,
-                    player.getLookAngle().z,
+                    new Vec3(player.getLookAngle().x,
+                            player.getLookAngle().y,
+                            player.getLookAngle().z),
                     2);
             fireball.moveTo(fireball.getX(), fireball.getY() + 1.75, fireball.getZ(), fireball.getYRot(), fireball.getXRot());
             fireball.absMoveTo(fireball.getX(), fireball.getY(), fireball.getZ());
@@ -78,9 +79,9 @@ public class ShootFireballAbility<T extends Mob> extends GenericShapeAbility<T> 
                     player.getX(),
                     player.getEyeY(),
                     player.getZ(),
-                    player.getLookAngle().x,
-                    player.getLookAngle().y,
-                    player.getLookAngle().z);
+                    new Vec3(player.getLookAngle().x,
+                            player.getLookAngle().y,
+                            player.getLookAngle().z));
         }
 
         fireball.setOwner(player);

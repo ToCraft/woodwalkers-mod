@@ -27,13 +27,13 @@ public class SnifferAbility<T extends Mob> extends ShapeAbility<T> {
         BlockPos playerPos = player.blockPosition();
         BlockPos blockPos = new BlockPos(playerPos.getX(), playerPos.getY() - 1, playerPos.getZ());
         List<Block> diggableBlocks = new ArrayList<>();
-        diggableBlocks.add(BuiltInRegistries.BLOCK.get(new ResourceLocation("minecraft:dirt")));
-        diggableBlocks.add(BuiltInRegistries.BLOCK.get(new ResourceLocation("minecraft:grass_block")));
-        diggableBlocks.add(BuiltInRegistries.BLOCK.get(new ResourceLocation("minecraft:podzol")));
-        diggableBlocks.add(BuiltInRegistries.BLOCK.get(new ResourceLocation("minecraft:rooted_dirt")));
-        diggableBlocks.add(BuiltInRegistries.BLOCK.get(new ResourceLocation("minecraft:moss_block")));
-        diggableBlocks.add(BuiltInRegistries.BLOCK.get(new ResourceLocation("minecraft:mud")));
-        diggableBlocks.add(BuiltInRegistries.BLOCK.get(new ResourceLocation("minecraft:muddy_mangrove_roots")));
+        diggableBlocks.add(BuiltInRegistries.BLOCK.get(ResourceLocation.parse("minecraft:dirt")));
+        diggableBlocks.add(BuiltInRegistries.BLOCK.get(ResourceLocation.parse("minecraft:grass_block")));
+        diggableBlocks.add(BuiltInRegistries.BLOCK.get(ResourceLocation.parse("minecraft:podzol")));
+        diggableBlocks.add(BuiltInRegistries.BLOCK.get(ResourceLocation.parse("minecraft:rooted_dirt")));
+        diggableBlocks.add(BuiltInRegistries.BLOCK.get(ResourceLocation.parse("minecraft:moss_block")));
+        diggableBlocks.add(BuiltInRegistries.BLOCK.get(ResourceLocation.parse("minecraft:mud")));
+        diggableBlocks.add(BuiltInRegistries.BLOCK.get(ResourceLocation.parse("minecraft:muddy_mangrove_roots")));
 
         // checks, if the block bellow the player is in the 'diggableBlocks'-List
         if (diggableBlocks.contains(world.getBlockState(blockPos).getBlock()) && Math.random() <= 0.5D) {

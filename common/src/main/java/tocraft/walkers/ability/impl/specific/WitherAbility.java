@@ -19,7 +19,7 @@ public class WitherAbility<T extends Mob> extends ShapeAbility<T> {
 
         if (!world.isClientSide) {
             Vec3 lookDirection = player.getLookAngle();
-            WitherSkull skull = new WitherSkull(world, player, lookDirection.x, lookDirection.y, lookDirection.z);
+            WitherSkull skull = new WitherSkull(world, player, new Vec3(lookDirection.x, lookDirection.y, lookDirection.z));
             skull.setPosRaw(player.getX(), player.getY() + 2, player.getZ());
             skull.shootFromRotation(player, player.getXRot(), player.getYRot(), 0.0F, 1.5F, 1.0F);
             world.addFreshEntity(skull);
