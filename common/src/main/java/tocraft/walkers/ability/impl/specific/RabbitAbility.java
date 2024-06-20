@@ -1,4 +1,4 @@
-package tocraft.walkers.ability.impl;
+package tocraft.walkers.ability.impl.specific;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundEvents;

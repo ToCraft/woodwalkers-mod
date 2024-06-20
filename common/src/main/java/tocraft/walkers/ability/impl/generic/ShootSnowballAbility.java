@@ -1,5 +1,8 @@
-package tocraft.walkers.ability.impl;
+package tocraft.walkers.ability.impl.generic;
 
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Mob;
@@ -9,9 +12,12 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
-import tocraft.walkers.ability.ShapeAbility;
+import tocraft.walkers.Walkers;
+import tocraft.walkers.ability.GenericShapeAbility;
 
-public class SnowGolemAbility<T extends Mob> extends ShapeAbility<T> {
+public class ShootSnowballAbility<T extends Mob> extends GenericShapeAbility<T> {
+    public static final ResourceLocation ID = Walkers.id("shoot_snowball");
+    public static final Codec<ShootSnowballAbility<?>> CODEC = RecordCodecBuilder.create((instance) -> instance.stable(new ShootSnowballAbility<>()));
 
     @Override
     public void onUse(Player player, T shape, Level world) {
@@ -35,5 +41,15 @@ public class SnowGolemAbility<T extends Mob> extends ShapeAbility<T> {
     @Override
     public int getDefaultCooldown() {
         return 10;
+    }
+
+    @Override
+    public ResourceLocation getId() {
+        return ID;
+    }
+
+    @Override
+    public Codec<? extends GenericShapeAbility<?>> codec() {
+        return CODEC;
     }
 }

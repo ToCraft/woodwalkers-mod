@@ -1,5 +1,6 @@
 package tocraft.walkers.command;
 
+import com.mojang.brigadier.arguments.BoolArgumentType;
 import com.mojang.brigadier.tree.LiteralCommandNode;
 import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.CommandSourceStack;
@@ -39,11 +40,40 @@ public class EntityBlacklistCommands {
                 .executes(context -> clearEntities(context.getSource()))
                 .build();
 
+
+        LiteralCommandNode<CommandSourceStack> isWhitelist = Commands.literal("isWhitelist")
+                .executes(context -> {
+                    isWhitelist(context.getSource());
+                    return 1;
+                })
+                .then(Commands.argument("value", BoolArgumentType.bool())
+                        .executes(context -> {
+                            setIsWhitelist(context.getSource(), BoolArgumentType.getBool(context, "value"));
+                            return 1;
+                        }))
+                .build();
+
         rootNode.addChild(listList);
         rootNode.addChild(clearList);
         rootNode.addChild(addToList);
         rootNode.addChild(removeFromList);
+        rootNode.addChild(isWhitelist);
         return rootNode;
+    }
+
+    private static void isWhitelist(CommandSourceStack source) {
+        source.sendSystemMessage(Component.translatable("walkers.getConfigEntry", "entityBlacklistIsWhitelist", Walkers.CONFIG.entityBlacklistIsWhitelist));
+    }
+
+    private static void setIsWhitelist(CommandSourceStack source, boolean value) {
+        Walkers.CONFIG.entityBlacklistIsWhitelist = value;
+        Walkers.CONFIG.save();
+
+        for (ServerPlayer player : source.getServer().getPlayerList().getPlayers()) {
+            Walkers.CONFIG.sendToPlayer(player);
+        }
+
+        source.sendSystemMessage(Component.translatable("walkers.setConfigEntry", "entityBlacklistIsWhitelist", String.valueOf(value)));
     }
 
     private static int clearEntities(CommandSourceStack source) {

@@ -31,7 +31,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import tocraft.walkers.ability.AbilityRegistry;
-import tocraft.walkers.ability.impl.GrassEaterAbility;
+import tocraft.walkers.ability.impl.specific.GrassEaterAbility;
 import tocraft.walkers.api.PlayerAbilities;
 import tocraft.walkers.api.PlayerShape;
 import tocraft.walkers.api.WalkersTickHandler;

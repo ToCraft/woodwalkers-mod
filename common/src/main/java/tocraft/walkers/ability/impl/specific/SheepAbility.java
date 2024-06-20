@@ -1,4 +1,4 @@
-package tocraft.walkers.ability.impl;
+package tocraft.walkers.ability.impl.specific;
 
 import net.minecraft.world.entity.animal.Sheep;
 import net.minecraft.world.entity.player.Player;

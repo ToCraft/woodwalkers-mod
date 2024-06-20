@@ -7,6 +7,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.level.Level;
 import tocraft.walkers.Walkers;
 
+@SuppressWarnings("resource")
 public abstract class ShapeAbility<E extends LivingEntity> {
     /**
      * Defines the use action of this ability. Implementers can assume the ability checks, such as cool-downs, have successfully passed.
