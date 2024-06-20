@@ -1,16 +1,26 @@
 package tocraft.walkers.impl.variant;
 
+import com.google.common.collect.ImmutableMap;
+import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.animal.FrogVariant;
 import net.minecraft.world.entity.animal.frog.Frog;
 import net.minecraft.world.level.Level;
 import tocraft.walkers.api.variant.TypeProvider;
 
-import java.util.Objects;
+import java.util.Map;
 
 public class FrogTypeProvider extends TypeProvider<Frog> {
+
+    private static final Map<Integer, String> PREFIX_BY_ID = ImmutableMap
+            .<Integer, String>builder()
+            .put(0, "Temperate")
+            .put(1, "Warm")
+            .put(2, "Cold")
+            .build();
 
     @Override
     public int getVariantData(Frog entity) {
@@ -20,7 +30,7 @@ public class FrogTypeProvider extends TypeProvider<Frog> {
     @Override
     public Frog create(EntityType<Frog> type, Level world, int data) {
         Frog frog = new Frog(type, world);
-        frog.setVariant(Objects.requireNonNull(BuiltInRegistries.FROG_VARIANT.byId(data)));
+        frog.setVariant(BuiltInRegistries.FROG_VARIANT.getHolder(data).map(Holder.Reference::value).orElse(FrogVariant.TEMPERATE));
         return frog;
     }
 
@@ -36,6 +46,7 @@ public class FrogTypeProvider extends TypeProvider<Frog> {
 
     @Override
     public Component modifyText(Frog frog, MutableComponent text) {
-        return Component.literal(frog.getVariant().texture().getPath() + " ").append(text);
+        int variant = getVariantData(frog);
+        return Component.literal(PREFIX_BY_ID.containsKey(variant) ? PREFIX_BY_ID.get(variant) + " " : "").append(text);
     }
 }

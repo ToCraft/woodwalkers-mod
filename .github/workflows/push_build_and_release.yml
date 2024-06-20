@@ -18,11 +18,40 @@ on:
         description: 'Discord Message'
         required: false
         default: 'false'
+      clear_cache:
+        description: 'Clear Cache'
+        required: false
+        default: 'false'
 
 permissions:
   contents: write
+  actions: write
 
 jobs:
+  clear-cache:
+    name: "Clear Cache"
+    runs-on: ubuntu-latest
+    if: |
+      github.event.inputs.clear_cache == 'true'
+    steps:
+      - name: Clear cache
+        uses: actions/github-script@v6
+        with:
+          script: |
+            console.log("About to clear")
+            const caches = await github.rest.actions.getActionsCacheList({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+            })
+            for (const cache of caches.data.actions_caches) {
+              console.log(cache)
+              github.rest.actions.deleteActionsCacheById({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                cache_id: cache.id,
+              })
+            }
+            console.log("Clear completed")
   build:
     name: "Build"
     runs-on: ubuntu-latest
@@ -42,7 +71,7 @@ jobs:
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v3
       - name: Build files
-        run: ./gradlew check build --no-daemon
+        run: ./gradlew check build --parallel
 
       - name: Setting mod version
         run: |
@@ -84,14 +113,14 @@ jobs:
           cat $GITHUB_WORKSPACE/gradle.properties | grep ^artifact_type= >> $GITHUB_ENV
 
       - name: Publish to Maven, CurseForge & Modrinth
-        run: ./gradlew publish modrinth curseforge --no-daemon
+        run: ./gradlew publish modrinth curseforge --parallel
         env:
           MAVEN_PASS: ${{ secrets.MAVEN_PASS }}
           CURSEFORGE_TOKEN: ${{ secrets.CURSEFORGE_TOKEN }}
           MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
 
       - name: Extract Changelog for GitHub
-        run: ./gradlew extractNewestChangelog --no-daemon
+        run: ./gradlew extractNewestChangelog --parallel
       - name: Create version data
         run: |
           cat $GITHUB_WORKSPACE/gradle.properties | grep ^archives_base_name= >> $GITHUB_ENV
@@ -136,6 +165,6 @@ jobs:
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v3
       - name: Send Discord Message
-        run: ./gradlew discordRelease --no-daemon
+        run: ./gradlew discordRelease --parallel
         env:
           DISCORD_WEB_HOOK: ${{ secrets.DISCORD_WEB_HOOK }}

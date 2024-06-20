@@ -1,4 +1,4 @@
-package tocraft.walkers.ability.impl;
+package tocraft.walkers.ability.impl.specific;
 
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.LivingEntity;
@@ -12,13 +12,15 @@ import net.minecraft.world.level.Level;
 import tocraft.walkers.ability.ShapeAbility;
 import tocraft.walkers.mixin.accessor.ShulkerAccessor;
 
+@SuppressWarnings("resource")
 public class ShulkerAbility<T extends Shulker> extends ShapeAbility<T> {
-
     @Override
     public void onUse(Player player, T shape, Level world) {
         LivingEntity target = player.level().getNearestEntity(player.level().getEntitiesOfClass(LivingEntity.class, player.getBoundingBox().inflate(20, 4.0, 20), livingEntity -> true), TargetingConditions.forCombat().range(20).selector((livingEntity) -> !livingEntity.is(player)), player, player.getX(), player.getEyeY(), player.getZ());
 
-        player.level().addFreshEntity(new ShulkerBullet(player.level(), player, target, player.getDirection().getAxis()));
+        if (target != null) {
+            player.level().addFreshEntity(new ShulkerBullet(player.level(), player, target, player.getDirection().getAxis()));
+        }
         player.playSound(SoundEvents.SHULKER_SHOOT, 2.0F, (player.getRandom().nextFloat() - player.getRandom().nextFloat()) * 0.2F + 1.0F);
 
         ((ShulkerAccessor) shape).callSetRawPeekAmount(100);
