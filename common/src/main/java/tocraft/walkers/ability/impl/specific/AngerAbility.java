@@ -1,6 +1,7 @@
-package tocraft.walkers.ability.impl;
+package tocraft.walkers.ability.impl.specific;
 
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
@@ -12,6 +13,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
+import tocraft.walkers.Walkers;
 import tocraft.walkers.ability.ShapeAbility;
 import tocraft.walkers.api.PlayerShape;
 import tocraft.walkers.mixin.EntityTrackerAccessor;
@@ -58,6 +60,8 @@ public class AngerAbility<T extends Mob> extends ShapeAbility<T> {
                         listener -> PlayerShape.sync((ServerPlayer) player, listener.getPlayer())
                 );
             }
+        } else {
+            Walkers.LOGGER.error("{}: Registered for unvalid entity {}!", AngerAbility.class.getSimpleName(), BuiltInRegistries.ENTITY_TYPE.getKey(oShape.getType()));
         }
     }
 

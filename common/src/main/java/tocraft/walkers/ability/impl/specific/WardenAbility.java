@@ -1,27 +1,27 @@
-package tocraft.walkers.ability.impl;
+package tocraft.walkers.ability.impl.specific;
 
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.Level.ExplosionInteraction;
 import tocraft.walkers.ability.ShapeAbility;
+import tocraft.walkers.impl.SonicBoomUser;
 
-public class CreeperAbility<T extends Mob> extends ShapeAbility<T> {
+public class WardenAbility<T extends Mob> extends ShapeAbility<T> {
 
     @Override
     public void onUse(Player player, T shape, Level world) {
-        world.explode(player, player.getX(), player.getY(), player.getZ(), 3.0f, ExplosionInteraction.NONE);
+        ((SonicBoomUser) player).shape$ability_startSonicBoom();
     }
 
     @Override
     public Item getIcon() {
-        return Items.TNT;
+        return Items.ECHO_SHARD;
     }
 
     @Override
     public int getDefaultCooldown() {
-        return 100;
+        return 200;
     }
 }

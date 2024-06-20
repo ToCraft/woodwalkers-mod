@@ -1,4 +1,4 @@
-package tocraft.walkers.ability.impl;
+package tocraft.walkers.ability.impl.specific;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -17,7 +17,6 @@ import net.minecraft.world.phys.Vec3;
 import tocraft.walkers.ability.ShapeAbility;
 
 public class EvokerAbility<T extends Mob> extends ShapeAbility<T> {
-
     @Override
     public void onUse(Player player, T shape, Level world) {
         // spawn vexes while sneaking
