@@ -3,7 +3,6 @@ package tocraft.walkers.mixin;
 import net.minecraft.network.protocol.game.ClientboundUpdateAttributesPacket;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.players.PlayerList;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import org.spongepowered.asm.mixin.Mixin;
@@ -20,7 +19,7 @@ public class PlayerManagerMixin {
 
     @SuppressWarnings("ConstantConditions")
     @Inject(method = "respawn", at = @At("RETURN"))
-    private void onRespawn(ServerPlayer player, boolean bl, Entity.RemovalReason removalReason, CallbackInfoReturnable<ServerPlayer> cir) {
+    private void onRespawn(ServerPlayer player, boolean alive, CallbackInfoReturnable<ServerPlayer> cir) {
         LivingEntity shape = PlayerShape.getCurrentShape(player);
 
         // refresh entity hitbox dimensions after death

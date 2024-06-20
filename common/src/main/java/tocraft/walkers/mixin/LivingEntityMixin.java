@@ -17,7 +17,6 @@ import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.animal.Parrot;
 import net.minecraft.world.entity.animal.Sheep;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -41,7 +40,6 @@ import tocraft.walkers.traits.impl.*;
 
 import java.util.List;
 
-@SuppressWarnings("resource")
 @Mixin(LivingEntity.class)
 public abstract class LivingEntityMixin extends Entity implements NearbySongAccessor {
     @Shadow
@@ -240,8 +238,8 @@ public abstract class LivingEntityMixin extends Entity implements NearbySongAcce
     }
 
 
-    @Inject(method = "eat(Lnet/minecraft/world/level/Level;Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/food/FoodProperties;)Lnet/minecraft/world/item/ItemStack;", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;addEatEffect(Lnet/minecraft/world/food/FoodProperties;)V"))
-    private void regenerateWoolFromFood(Level level, ItemStack food, FoodProperties foodProperties, CallbackInfoReturnable<ItemStack> cir) {
+    @Inject(method = "eat", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;addEatEffect(Lnet/minecraft/world/food/FoodProperties;)V"))
+    private void regenerateWoolFromFood(Level level, ItemStack food, CallbackInfoReturnable<ItemStack> cir) {
         if ((Object) this instanceof Player player) {
             LivingEntity shape = PlayerShape.getCurrentShape(player);
             if (shape instanceof Sheep sheepShape) {
@@ -251,8 +249,8 @@ public abstract class LivingEntityMixin extends Entity implements NearbySongAcce
         }
     }
 
-    @Inject(method = "eat(Lnet/minecraft/world/level/Level;Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/food/FoodProperties;)Lnet/minecraft/world/item/ItemStack;", at = @At(value = "RETURN"))
-    private void dieFromCookies(Level level, ItemStack food, FoodProperties foodProperties, CallbackInfoReturnable<ItemStack> cir) {
+    @Inject(method = "eat", at = @At(value = "RETURN"))
+    private void dieFromCookies(Level level, ItemStack food, CallbackInfoReturnable<ItemStack> cir) {
         if ((Object) this instanceof Player player) {
             LivingEntity shape = PlayerShape.getCurrentShape(player);
             if (shape instanceof Parrot) {

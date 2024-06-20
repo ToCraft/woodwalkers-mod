@@ -9,7 +9,6 @@ import net.minecraft.world.entity.projectile.DragonFireball;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.phys.Vec3;
 import tocraft.walkers.Walkers;
 import tocraft.walkers.ability.GenericShapeAbility;
 
@@ -32,9 +31,9 @@ public class ShootDragonFireball<T extends Mob> extends GenericShapeAbility<T> {
         DragonFireball dragonFireball = new DragonFireball(
                 world,
                 player,
-                new Vec3(player.getLookAngle().x,
-                        player.getLookAngle().y,
-                        player.getLookAngle().z)
+                player.getLookAngle().x,
+                player.getLookAngle().y,
+                player.getLookAngle().z
         );
 
         dragonFireball.setOwner(player);

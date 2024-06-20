@@ -3,7 +3,6 @@ package tocraft.walkers.mixin.player;
 import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.protocol.game.ClientboundGameEventPacket;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.damagesource.DamageSource;
@@ -24,7 +23,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.vehicle.Boat;
 import net.minecraft.world.food.FoodData;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
@@ -168,7 +166,7 @@ public abstract class PlayerEntityMixin extends LivingEntityMixin {
                                 // damage stack instead of burning player
                                 itemStack.setDamageValue(itemStack.getDamageValue() + player.getRandom().nextInt(2));
                                 if (itemStack.getDamageValue() >= itemStack.getMaxDamage()) {
-                                    player.onEquippedItemBroken(itemStack.getItem(), EquipmentSlot.HEAD);
+                                    player.broadcastBreakEvent(EquipmentSlot.HEAD);
                                     player.setItemSlot(EquipmentSlot.HEAD, ItemStack.EMPTY);
                                 }
                             }
@@ -198,7 +196,8 @@ public abstract class PlayerEntityMixin extends LivingEntityMixin {
                 daylightTestPosition = daylightTestPosition.above();
             }
 
-            return brightnessAtEyes > 0.5F && random.nextFloat() * 30.0F < (brightnessAtEyes - 0.4F) * 2.0F && level().canSeeSky(daylightTestPosition);
+            return brightnessAtEyes > 0.5F && random.nextFloat() * 30.0F < (brightnessAtEyes - 0.4F) * 2.0F
+                    && level().canSeeSky(daylightTestPosition);
         }
 
         return false;
@@ -276,15 +275,17 @@ public abstract class PlayerEntityMixin extends LivingEntityMixin {
         Player ownPlayer = (Player) (Object) this;
         if (ownPlayer.isAlive() && PlayerShape.getCurrentShape(ownPlayer) instanceof Slime slimeShape && (entity instanceof Player targetPlayer && !(PlayerShape.getCurrentShape(targetPlayer) instanceof Slime))) {
             int i = slimeShape.getSize();
-            if (this.distanceToSqr(targetPlayer) < 0.6 * (double) i * 0.6 * (double) i && ownPlayer.hasLineOfSight(targetPlayer) && targetPlayer.hurt(ownPlayer.damageSources().mobAttack(ownPlayer), (float) ownPlayer.getAttributeValue(Attributes.ATTACK_DAMAGE))) {
+            if (this.distanceToSqr(targetPlayer) < 0.6 * (double) i * 0.6 * (double) i
+                    && ownPlayer.hasLineOfSight(targetPlayer)
+                    && targetPlayer.hurt(ownPlayer.damageSources().mobAttack(ownPlayer), (float) ownPlayer.getAttributeValue(Attributes.ATTACK_DAMAGE))) {
                 this.playSound(SoundEvents.SLIME_ATTACK, 1.0F, (this.random.nextFloat() - this.random.nextFloat()) * 0.2F + 1.0F);
-                EnchantmentHelper.doPostAttackEffects((ServerLevel) ownPlayer.level(), targetPlayer, ownPlayer.damageSources().mobAttack(ownPlayer));
+                this.doEnchantDamageEffects(ownPlayer, targetPlayer);
             }
         }
     }
 
     @Inject(method = "hurt", at = @At("HEAD"))
-    private void handeReinforcementsTrait(DamageSource source, float amount, CallbackInfoReturnable<Boolean> cir) {
+    private void handeReinforcementstrait(DamageSource source, float amount, CallbackInfoReturnable<Boolean> cir) {
         Player player = (Player) (Object) this;
         LivingEntity shape = PlayerShape.getCurrentShape(player);
         if (source.getEntity() instanceof LivingEntity livingAttacker && shape != null) {

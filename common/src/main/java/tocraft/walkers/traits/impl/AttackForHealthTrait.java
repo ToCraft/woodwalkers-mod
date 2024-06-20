@@ -34,6 +34,6 @@ public class AttackForHealthTrait<E extends LivingEntity> extends ShapeTrait<E> 
     @Override
     @Environment(EnvType.CLIENT)
     public @Nullable TextureAtlasSprite getIcon() {
-        return Minecraft.getInstance().getGuiSprites().getSprite(ResourceLocation.parse("hud/food_half"));
+        return Minecraft.getInstance().getGuiSprites().getSprite(new ResourceLocation("hud/food_half"));
     }
 }

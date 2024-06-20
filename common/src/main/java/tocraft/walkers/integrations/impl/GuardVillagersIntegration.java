@@ -14,7 +14,7 @@ import java.util.List;
 
 public class GuardVillagersIntegration extends AbstractIntegration {
     public static final String MODID = "guardvillagers";
-    public static final ResourceLocation GUARD_VILLAGER_TYPE = ResourceLocation.fromNamespaceAndPath(MODID, "guard");
+    public static final ResourceLocation GUARD_VILLAGER_TYPE = new ResourceLocation(MODID, "guard");
 
     @Override
     public void registerTraits() {

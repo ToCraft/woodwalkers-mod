@@ -50,7 +50,7 @@ public class UnlockPackets {
 
             boolean validType = nbt.getBoolean("valid_type");
             if (validType) {
-                ResourceLocation typeId = ResourceLocation.parse(nbt.getString("type_id"));
+                ResourceLocation typeId = new ResourceLocation(nbt.getString("type_id"));
                 EntityType<? extends LivingEntity> entityType = (EntityType<? extends LivingEntity>) BuiltInRegistries.ENTITY_TYPE.get(typeId);
 
                 int variant = nbt.getInt("variant");

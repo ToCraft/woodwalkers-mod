@@ -69,7 +69,7 @@ public class MoreMobVariantsIntegration extends AbstractIntegration {
             List<ResourceLocation> variants = getVariants(type);
             CompoundTag nbt = new CompoundTag();
             entity.saveWithoutId(nbt);
-            ResourceLocation id = ResourceLocation.parse(nbt.getString("VariantID"));
+            ResourceLocation id = new ResourceLocation(nbt.getString("VariantID"));
             return variants.indexOf(id);
         }
 
@@ -98,7 +98,7 @@ public class MoreMobVariantsIntegration extends AbstractIntegration {
             List<ResourceLocation> variants = getVariants(type);
             CompoundTag nbt = new CompoundTag();
             entity.saveWithoutId(nbt);
-            ResourceLocation id = ResourceLocation.parse(nbt.getString("VariantID"));
+            ResourceLocation id = new ResourceLocation(nbt.getString("VariantID"));
             return Component.literal(formatTypePrefix(id.getPath()) + " ").append(text);
         }
     }

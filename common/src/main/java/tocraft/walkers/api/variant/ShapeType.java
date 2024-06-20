@@ -71,7 +71,7 @@ public class ShapeType<T extends LivingEntity> {
 
     @Nullable
     public static ShapeType<?> from(CompoundTag compound) {
-        ResourceLocation id = ResourceLocation.parse(compound.getString("EntityID"));
+        ResourceLocation id = new ResourceLocation(compound.getString("EntityID"));
         if (!BuiltInRegistries.ENTITY_TYPE.containsKey(id)) {
             return null;
         }

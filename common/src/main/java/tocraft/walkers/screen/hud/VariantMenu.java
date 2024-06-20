@@ -27,7 +27,7 @@ public class VariantMenu {
             if (level != null && minecraft.player != null) {
                 ShapeType<?> currentShapeType = ShapeType.from(PlayerShape.getCurrentShape(minecraft.player));
                 if (currentShapeType != null) {
-                    boolean hasSpecialVariant = Walkers.hasSpecialShape(minecraft.player.getUUID()) && BuiltInRegistries.ENTITY_TYPE.getKey(currentShapeType.getEntityType()).equals(ResourceLocation.parse("minecraft:wolf"));
+                    boolean hasSpecialVariant = Walkers.hasSpecialShape(minecraft.player.getUUID()) && BuiltInRegistries.ENTITY_TYPE.getKey(currentShapeType.getEntityType()).equals(new ResourceLocation("minecraft:wolf"));
 
                     int currentVariantId = currentShapeType.getVariantData();
 

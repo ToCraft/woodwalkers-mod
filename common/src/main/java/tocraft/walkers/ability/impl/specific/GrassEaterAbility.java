@@ -33,6 +33,6 @@ public class GrassEaterAbility<T extends LivingEntity> extends ShapeAbility<T> {
 
     @Override
     public Item getIcon() {
-        return BuiltInRegistries.ITEM.get(ResourceLocation.parse("short_grass"));
+        return BuiltInRegistries.ITEM.get(new ResourceLocation("short_grass"));
     }
 }

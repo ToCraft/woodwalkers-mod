@@ -37,7 +37,7 @@ public class SwapVariantPackets {
                             int range = typeProvider != null ? typeProvider.getRange() : -1;
 
                             // switch to special shape
-                            if (Walkers.hasSpecialShape(context.getPlayer().getUUID()) && BuiltInRegistries.ENTITY_TYPE.getKey(currentShapeType.getEntityType()).equals(ResourceLocation.parse("minecraft:wolf")) && variantID == range + 1) {
+                            if (Walkers.hasSpecialShape(context.getPlayer().getUUID()) && BuiltInRegistries.ENTITY_TYPE.getKey(currentShapeType.getEntityType()).equals(new ResourceLocation("minecraft:wolf")) && variantID == range + 1) {
                                 Entity created;
                                 CompoundTag nbt = new CompoundTag();
 
