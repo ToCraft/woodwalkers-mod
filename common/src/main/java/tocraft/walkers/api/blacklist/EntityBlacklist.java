@@ -26,7 +26,8 @@ public class EntityBlacklist {
         for (TagKey<EntityType<?>> entityTypeTagKey : tagBlacklist) {
             if (entityType.is(entityTypeTagKey)) return true;
         }
-        return Walkers.CONFIG.entityBlacklist.contains(EntityType.getKey(entityType).toString());
+
+        return Walkers.CONFIG.entityBlacklistIsWhitelist != Walkers.CONFIG.entityBlacklist.contains(EntityType.getKey(entityType).toString());
     }
 
     public static void registerByType(EntityType<?> entityType) {

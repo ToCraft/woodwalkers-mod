@@ -78,7 +78,7 @@ public class PlayerBlacklistCommands {
     }
 
     private static int isWhitelist(CommandSourceStack source) {
-        source.sendSuccess(new TranslatableComponent("walkers.playerBlacklist.isWhitelist", Walkers.CONFIG.playerBlacklistIsWhitelist), true);
+        source.sendSuccess(new TranslatableComponent("walkers.getConfigEntry", "playerBlacklistIsWhitelist", Walkers.CONFIG.playerBlacklistIsWhitelist), true);
         return 1;
     }
 

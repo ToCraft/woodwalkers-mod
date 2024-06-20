@@ -277,7 +277,7 @@ public class TraitRegistry {
     }
 
     @Nullable
-    public static ResourceLocation gettraitId(Codec<? extends ShapeTrait<?>> traitCodec) {
+    public static ResourceLocation getTraitId(Codec<? extends ShapeTrait<?>> traitCodec) {
         return traitIdByCodec.get(traitCodec);
     }
 
@@ -317,7 +317,7 @@ public class TraitRegistry {
                 resourceLocation -> Optional.ofNullable(TraitRegistry.getTraitCodec(resourceLocation))
                         .map(DataResult::success)
                         .orElseGet(() -> DataResult.error("Unknown shape trait: " + resourceLocation)),
-                traitCodec -> Optional.ofNullable(gettraitId(traitCodec))
+                traitCodec -> Optional.ofNullable(getTraitId(traitCodec))
                         .map(DataResult::success)
                         .orElseGet(() -> DataResult.error("Unknown shape trait codec: " + traitCodec))
         );

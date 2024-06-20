@@ -1,4 +1,4 @@
-package tocraft.walkers.ability.impl;
+package tocraft.walkers.ability.impl.specific;
 
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.EntityType;
@@ -12,7 +12,6 @@ import net.minecraft.world.phys.Vec3;
 import tocraft.walkers.ability.ShapeAbility;
 
 public class LlamaAbility<T extends Mob> extends ShapeAbility<T> {
-
     @Override
     public void onUse(Player player, T shape, Level world) {
         LlamaSpit spit = new LlamaSpit(EntityType.LLAMA_SPIT, world);

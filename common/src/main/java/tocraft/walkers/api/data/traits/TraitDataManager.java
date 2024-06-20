@@ -53,34 +53,30 @@ public class TraitDataManager extends SynchronizedJsonReloadListener {
                         TraitRegistry.registerByType(entityType, traitList.traitList().stream().map(trait -> (ShapeTrait<LivingEntity>) trait).toList());
                     }
 
-                    if (!traitList.entityTypes().isEmpty())
-                        Walkers.LOGGER.info("{}: {} registered for {}", getClass().getSimpleName(), traitList.entityTypes(), traitList.traitList().stream().map(trait -> trait.getClass().getSimpleName()).toArray(String[]::new));
+                    if (!traitList.entityTypes().isEmpty()) {
+                        logRegistration(traitList.entityTypes(), traitList.traitList());
+                    }
 
                     // entity tags
                     for (TagKey<EntityType<?>> entityTag : traitList.entityTags()) {
                         TraitRegistry.registerByTag(entityTag, traitList.traitList().stream().map(trait -> (ShapeTrait<LivingEntity>) trait).toList());
                     }
 
-                    if (!traitList.entityTags().isEmpty())
-                        Walkers.LOGGER.info("{}: {} registered for {}", getClass().getSimpleName(), traitList.entityTags(), traitList.traitList().stream().map(trait -> trait.getClass().getSimpleName()).toArray(String[]::new));
+                    if (!traitList.entityTags().isEmpty()) {
+                        logRegistration(traitList.entityTags(), traitList.traitList());
+                    }
                 }
             }
         }
     }
 
-    public static Codec<TraitList> TRAIT_LIST_CODEC = RecordCodecBuilder.create((instance) -> instance.group(
-            Codec.STRING.optionalFieldOf("required_mod", "").forGetter(TraitList::requiredMod),
-            Codec.list(ResourceLocation.CODEC).optionalFieldOf("entity_types", new ArrayList<>()).forGetter(TraitList::entityTypeKeys),
-            Codec.list(ResourceLocation.CODEC).optionalFieldOf("entity_tags", new ArrayList<>()).forGetter(TraitList::entityTagKeys),
-            Codec.list(TraitRegistry.getTraitCodec()).fieldOf("traits").forGetter(TraitList::traitList)
-    ).apply(instance, instance.stable(TraitList::new)));
+    private static void logRegistration(Object key, List<ShapeTrait<?>> traitList) {
+        Walkers.LOGGER.info("{}: {} registered for {}", TraitDataManager.class.getSimpleName(), key, traitList.stream().map(trait -> trait.getClass().getSimpleName()).toArray(String[]::new));
+    }
 
-    public Codec<TraitList> SKILL_LIST_CODEC = RecordCodecBuilder.create((instance) -> instance.group(
-            Codec.STRING.optionalFieldOf("required_mod", "").forGetter(TraitList::requiredMod),
-            Codec.list(ResourceLocation.CODEC).optionalFieldOf("entity_types", new ArrayList<>()).forGetter(TraitList::entityTypeKeys),
-            Codec.list(ResourceLocation.CODEC).optionalFieldOf("entity_tags", new ArrayList<>()).forGetter(TraitList::entityTagKeys),
-            Codec.list(TraitRegistry.getTraitCodec()).fieldOf("skills").forGetter(TraitList::traitList)
-    ).apply(instance, instance.stable(TraitList::new)));
+    public static Codec<TraitList> TRAIT_LIST_CODEC = RecordCodecBuilder.create((instance) -> instance.group(Codec.STRING.optionalFieldOf("required_mod", "").forGetter(TraitList::requiredMod), Codec.list(ResourceLocation.CODEC).optionalFieldOf("entity_types", new ArrayList<>()).forGetter(TraitList::entityTypeKeys), Codec.list(ResourceLocation.CODEC).optionalFieldOf("entity_tags", new ArrayList<>()).forGetter(TraitList::entityTagKeys), Codec.list(TraitRegistry.getTraitCodec()).fieldOf("traits").forGetter(TraitList::traitList)).apply(instance, instance.stable(TraitList::new)));
+
+    public Codec<TraitList> SKILL_LIST_CODEC = RecordCodecBuilder.create((instance) -> instance.group(Codec.STRING.optionalFieldOf("required_mod", "").forGetter(TraitList::requiredMod), Codec.list(ResourceLocation.CODEC).optionalFieldOf("entity_types", new ArrayList<>()).forGetter(TraitList::entityTypeKeys), Codec.list(ResourceLocation.CODEC).optionalFieldOf("entity_tags", new ArrayList<>()).forGetter(TraitList::entityTagKeys), Codec.list(TraitRegistry.getTraitCodec()).fieldOf("skills").forGetter(TraitList::traitList)).apply(instance, instance.stable(TraitList::new)));
 
     protected TraitList traitListFromJson(JsonObject json) {
         return (isDeprecatedSkills ? SKILL_LIST_CODEC : TRAIT_LIST_CODEC).parse(JsonOps.INSTANCE, json).getOrThrow(false, msg -> {
@@ -90,8 +86,7 @@ public class TraitDataManager extends SynchronizedJsonReloadListener {
 
     @SuppressWarnings("unused")
     public record TraitList(String requiredMod, List<ResourceLocation> entityTypeKeys,
-                            List<ResourceLocation> entityTagKeys,
-                            List<ShapeTrait<?>> traitList) {
+                            List<ResourceLocation> entityTagKeys, List<ShapeTrait<?>> traitList) {
 
         public TraitList(List<EntityType<?>> entityTypeKeys, List<TagKey<EntityType<?>>> entityTagKeys, List<ShapeTrait<?>> traitList, String requiredMod) {
             this(requiredMod, entityTypeKeys.stream().map(EntityType::getKey).toList(), entityTagKeys.stream().map(TagKey::location).toList(), traitList);
@@ -99,8 +94,6 @@ public class TraitDataManager extends SynchronizedJsonReloadListener {
 
         @SuppressWarnings("unchecked")
         public List<EntityType<LivingEntity>> entityTypes() {
-            if (entityTagKeys.contains(new ResourceLocation("alexsmobs:bald_eagle")))
-                Walkers.LOGGER.warn("got that far");
             return entityTypeKeys.stream().filter(Registry.ENTITY_TYPE::containsKey).map(type -> (EntityType<LivingEntity>) Registry.ENTITY_TYPE.get(type)).toList();
         }
 
