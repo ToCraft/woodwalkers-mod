@@ -7,7 +7,7 @@ on:
       - '**.properties'
       - '**/src/**'
     branches:
-      - "*"
+      - "1.**"
   workflow_dispatch:
     inputs:
       release:
@@ -18,40 +18,12 @@ on:
         description: 'Discord Message'
         required: false
         default: 'false'
-      clear_cache:
-        description: 'Clear Cache'
-        required: false
-        default: 'false'
 
 permissions:
   contents: write
   actions: write
 
 jobs:
-  clear-cache:
-    name: "Clear Cache"
-    runs-on: ubuntu-latest
-    if: |
-      github.event.inputs.clear_cache == 'true'
-    steps:
-      - name: Clear cache
-        uses: actions/github-script@v6
-        with:
-          script: |
-            console.log("About to clear")
-            const caches = await github.rest.actions.getActionsCacheList({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-            })
-            for (const cache of caches.data.actions_caches) {
-              console.log(cache)
-              github.rest.actions.deleteActionsCacheById({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                cache_id: cache.id,
-              })
-            }
-            console.log("Clear completed")
   build:
     name: "Build"
     runs-on: ubuntu-latest
