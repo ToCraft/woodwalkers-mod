@@ -5,7 +5,6 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -23,8 +22,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import tocraft.walkers.Walkers;
 import tocraft.walkers.api.FlightHelper;
 import tocraft.walkers.api.PlayerShape;
-import tocraft.walkers.api.blacklist.EntityBlacklist;
-import tocraft.walkers.api.events.ShapeEvents;
 import tocraft.walkers.api.variant.ShapeType;
 import tocraft.walkers.impl.DimensionsRefresher;
 import tocraft.walkers.impl.PlayerDataProvider;
@@ -192,18 +189,9 @@ public abstract class PlayerEntityDataMixin extends LivingEntity implements Play
     @SuppressWarnings("ConstantConditions")
     @Unique
     @Override
-    public boolean walkers$updateShapes(@Nullable LivingEntity shape) {
+    public void walkers$updateShapes(@Nullable LivingEntity shape) {
         Player player = (Player) (Object) this;
         AttributeInstance healthAttribute = player.getAttribute(Attributes.MAX_HEALTH);
-
-        if (shape != null && EntityBlacklist.isBlacklisted(shape.getType())) {
-            return false;
-        }
-
-        InteractionResult result = ShapeEvents.SWAP_SHAPE.invoke().swap((ServerPlayer) player, shape);
-        if (result == InteractionResult.FAIL) {
-            return false;
-        }
 
         this.walkers$shape = shape;
 
@@ -292,8 +280,6 @@ public abstract class PlayerEntityDataMixin extends LivingEntity implements Play
                     listener -> PlayerShape.sync((ServerPlayer) player, listener.getPlayer())
             );
         }
-
-        return true;
     }
 
     @Unique

@@ -2,11 +2,14 @@ package tocraft.walkers.api;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.Nullable;
 import tocraft.craftedcore.network.ModernNetworking;
+import tocraft.walkers.api.blacklist.EntityBlacklist;
+import tocraft.walkers.api.events.ShapeEvents;
 import tocraft.walkers.impl.PlayerDataProvider;
 import tocraft.walkers.network.NetworkHandler;
 
@@ -33,7 +36,18 @@ public class PlayerShape {
      * @param entity {@link LivingEntity} new shape for this component, or null to clear
      */
     public static boolean updateShapes(ServerPlayer player, LivingEntity entity) {
-        return ((PlayerDataProvider) player).walkers$updateShapes(entity);
+        if (entity != null && EntityBlacklist.isBlacklisted(entity.getType())) {
+            return false;
+        }
+
+        InteractionResult result = ShapeEvents.SWAP_SHAPE.invoke().swap(player, entity);
+        if (result == InteractionResult.FAIL) {
+            return false;
+        }
+
+        ((PlayerDataProvider) player).walkers$updateShapes(entity);
+
+        return true;
     }
 
     public static void sync(ServerPlayer player) {

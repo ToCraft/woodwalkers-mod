@@ -1,3 +1,8 @@
+walkers 4.7
+================
+
+- fix blacklist apply to commands
+
 walkers 4.6
 ================
 

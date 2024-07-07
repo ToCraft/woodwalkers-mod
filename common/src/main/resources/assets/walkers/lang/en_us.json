@@ -14,7 +14,6 @@
   "walkers.show2ndShapeNot_positive": "%s has %s unlocked as 2ndShape.",
   "walkers.switchShape_human_success": "%s is now using the first shape.",
   "walkers.switchShape_success": "Set the current shape of %s to %s.",
-  "walkers.switchShape_failure": "Couldn't set the current shape of %s to %s.",
   "walkers.unlock_entity": "Unlocked %s as second shape.",
   "walkers.unlock_entity_blacklisted": "This Entity is not available for you.",
   "walkers.unlock_progress": "You feel it tingling.",

@@ -21,6 +21,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import org.jetbrains.annotations.Nullable;
 import tocraft.craftedcore.event.common.CommandEvents;
+import tocraft.walkers.api.PlayerAbilities;
 import tocraft.walkers.api.PlayerShape;
 import tocraft.walkers.api.PlayerShapeChanger;
 import tocraft.walkers.api.variant.ShapeType;
@@ -113,8 +114,10 @@ public class WalkersCommand {
 
         if (((PlayerDataProvider) player).walkers$get2ndShape() != null) {
             ShapeType<?> type = ((PlayerDataProvider) player).walkers$get2ndShape();
-            source.sendSystemMessage(Component.translatable("walkers.show2ndShapeNot_positive",
-                    player.getDisplayName(), ShapeType.createTooltipText(type.create(player.level(), player))));
+            if (type != null) {
+                source.sendSystemMessage(Component.translatable("walkers.show2ndShapeNot_positive",
+                        player.getDisplayName(), ShapeType.createTooltipText(type.create(player.level(), player))));
+            }
 
             return 1;
         } else {
@@ -126,12 +129,10 @@ public class WalkersCommand {
 
     private static void remove2ndShape(CommandSourceStack source, ServerPlayer player) {
 
-        boolean result = PlayerShapeChanger.change2ndShape(player, null);
+        change2ndShape(player, null);
 
-        if (result) {
-            player.displayClientMessage(Component.translatable("walkers.remove_entity"), true);
-            source.sendSystemMessage(Component.translatable("walkers.deletion_success", player.getDisplayName()));
-        }
+        player.displayClientMessage(Component.translatable("walkers.remove_entity"), true);
+        source.sendSystemMessage(Component.translatable("walkers.deletion_success", player.getDisplayName()));
     }
 
     @SuppressWarnings("unchecked")
@@ -154,13 +155,11 @@ public class WalkersCommand {
         }
 
         if (((PlayerDataProvider) player).walkers$get2ndShape() != type) {
-            boolean result = PlayerShapeChanger.change2ndShape(player, type);
+            change2ndShape(player, type);
 
-            if (result) {
-                player.sendSystemMessage(Component.translatable("walkers.unlock_entity", name));
-                source.sendSystemMessage(
-                        Component.translatable("walkers.grant_success", name, player.getDisplayName()));
-            }
+            player.sendSystemMessage(Component.translatable("walkers.unlock_entity", name));
+            source.sendSystemMessage(
+                    Component.translatable("walkers.grant_success", name, player.getDisplayName()));
         } else {
             source.sendSystemMessage(Component.translatable("walkers.already_has", player.getDisplayName(), name));
         }
@@ -180,14 +179,9 @@ public class WalkersCommand {
         }
 
         if (created instanceof LivingEntity) {
-            boolean result = PlayerShape.updateShapes(player, (LivingEntity) created);
-            if (result) {
-                source.sendSystemMessage(Component.translatable("walkers.switchShape_success",
-                        player.getDisplayName(), Component.translatable(created.getType().getDescriptionId())));
-            } else {
-                source.sendSystemMessage(Component.translatable("walkers.switchShape_failure",
-                        player.getDisplayName(), Component.translatable(created.getType().getDescriptionId())));
-            }
+            ((PlayerDataProvider) player).walkers$updateShapes((LivingEntity) created);
+            source.sendSystemMessage(Component.translatable("walkers.switchShape_success",
+                    player.getDisplayName(), Component.translatable(created.getType().getDescriptionId())));
         }
     }
 
@@ -198,5 +192,11 @@ public class WalkersCommand {
             source.sendSystemMessage(
                     Component.translatable("walkers.switchShape_human_success", player.getDisplayName()));
         }
+    }
+
+    private static void change2ndShape(ServerPlayer player, ShapeType<?> newShape) {
+        ((PlayerDataProvider) player).walkers$set2ndShape(newShape);
+        PlayerShapeChanger.sync(player);
+        PlayerAbilities.sync(player);
     }
 }

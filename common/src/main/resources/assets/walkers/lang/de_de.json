@@ -14,7 +14,6 @@
   "walkers.show2ndShapeNot_positive": "%s hat als zweite Gestalt %s.",
   "walkers.switchShape_human_success": "%s ist wieder in der ersten Gestalt.",
   "walkers.switchShape_success": "Die aktuelle Gestalt von %s ist jetzt %s.",
-  "walkers.switchShape_failure": "Konnte die Gestalt von %s nicht auf %s ändern.",
   "walkers.unlock_entity": "Schaltete %s als deine zweite Gestalt frei.",
   "walkers.unlock_entity_blacklisted": "Diese Gestalt ist für dich nicht verfügbar.",
   "walkers.unlock_progress": "Du spürst es kribbeln.",
