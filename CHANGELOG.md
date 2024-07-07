@@ -1,7 +1,8 @@
 walkers 4.7
 ================
 
-- fix blacklist apply to commands
+- fix blacklist applies to commands
+- add Mutant Monsters Integration
 
 walkers 4.6
 ================
