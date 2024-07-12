@@ -3,7 +3,6 @@ package tocraft.walkers.ability;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.MapCodec;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.tags.EntityTypeTags;
@@ -11,24 +10,33 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.NeutralMob;
-import net.minecraft.world.entity.animal.*;
+import net.minecraft.world.entity.animal.MushroomCow;
 import net.minecraft.world.entity.animal.goat.Goat;
 import net.minecraft.world.entity.animal.horse.AbstractHorse;
 import net.minecraft.world.entity.animal.horse.Llama;
+//#if MC>1194
 import net.minecraft.world.entity.animal.sniffer.Sniffer;
+//#endif
 import net.minecraft.world.entity.boss.enderdragon.EnderDragon;
 import net.minecraft.world.entity.boss.wither.WitherBoss;
 import net.minecraft.world.entity.monster.*;
+import net.minecraft.world.entity.animal.*;
+//#if MC>1182
 import net.minecraft.world.entity.monster.warden.Warden;
+//#endif
+//#if MC>=1205
+import java.util.function.Function;
+//#endif
 import net.minecraft.world.item.Items;
 import org.jetbrains.annotations.Nullable;
+import tocraft.craftedcore.patched.CRegistries;
+import tocraft.craftedcore.patched.Identifier;
 import tocraft.walkers.Walkers;
 import tocraft.walkers.ability.impl.generic.*;
 import tocraft.walkers.ability.impl.specific.*;
 import tocraft.walkers.integrations.Integrations;
 
 import java.util.*;
-import java.util.function.Function;
 import java.util.function.Predicate;
 
 @SuppressWarnings("unused")
@@ -72,10 +80,14 @@ public class AbilityRegistry {
         registerByClass(Llama.class, new LlamaAbility<>());
         registerByClass(Witch.class, new ThrowPotionsAbility<>());
         registerByClass(Evoker.class, new EvokerAbility<>());
+        //#if MC>1182
         registerByClass(Warden.class, new WardenAbility<>());
+        //#endif
         registerByClass(Wolf.class, new AngerAbility<>(SoundEvents.WOLF_PANT, SoundEvents.WOLF_GROWL));
         registerByClass(Sheep.class, new SheepAbility<>());
+        //#if MC>1194
         registerByClass(Sniffer.class, new SnifferAbility<>());
+        //#endif
         registerByClass(Chicken.class, new ChickenAbility<>());
         registerByClass(MushroomCow.class, new SaturateAbility<>());
         registerByClass(Bee.class, new AngerAbility<>(SoundEvents.BEE_LOOP, SoundEvents.BEE_LOOP_AGGRESSIVE));
@@ -105,7 +117,7 @@ public class AbilityRegistry {
     @SuppressWarnings("unchecked")
     public static <L extends LivingEntity> ShapeAbility<L> get(L shape) {
         // check ability blacklist
-        if (Walkers.CONFIG.abilityBlacklist.contains(BuiltInRegistries.ENTITY_TYPE.getKey(shape.getType()).toString()))
+        if (Walkers.CONFIG.abilityBlacklist.contains(Walkers.getEntityTypeRegistry().getKey(shape.getType()).toString()))
             return null;
 
         // cache the ability so the latest registered can be used
@@ -144,7 +156,7 @@ public class AbilityRegistry {
     public static <L extends LivingEntity> boolean has(L shape) {
         // check ability blacklist
 
-        if (Walkers.CONFIG.abilityBlacklist.contains(BuiltInRegistries.ENTITY_TYPE.getKey(shape.getType()).toString()))
+        if (Walkers.CONFIG.abilityBlacklist.contains(Walkers.getEntityTypeRegistry().getKey(shape.getType()).toString()))
             return false;
         return abilities.keySet().stream().anyMatch(predicate -> predicate.test(shape));
     }
@@ -172,11 +184,15 @@ public class AbilityRegistry {
         Codec<MapCodec<? extends GenericShapeAbility<?>>> codec = ResourceLocation.CODEC.flatXmap(
                 resourceLocation -> Optional.ofNullable(AbilityRegistry.getAbilityCodec(resourceLocation))
                         .map(DataResult::success)
-                        .orElseGet(() -> DataResult.error(() -> "Unknown shape ability: " + resourceLocation)),
+                        .orElseGet(() -> Walkers.dataError("Unknown shape ability: " + resourceLocation)),
                 abilityCodec -> Optional.ofNullable(getAbilityId(abilityCodec))
                         .map(DataResult::success)
-                        .orElseGet(() -> DataResult.error(() -> "Unknown shape ability codec: " + abilityCodec))
+                        .orElseGet(() -> Walkers.dataError("Unknown shape ability codec: " + abilityCodec))
         );
+        //#if MC>=1205
         return codec.dispatchStable(GenericShapeAbility::codec, Function.identity());
+        //#else
+        //$$ return codec.dispatchStable(GenericShapeAbility::codec, MapCodec::codec);
+        //#endif
     }
 }

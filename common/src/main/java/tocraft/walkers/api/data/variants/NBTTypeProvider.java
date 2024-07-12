@@ -3,7 +3,6 @@ package tocraft.walkers.api.data.variants;
 import com.mojang.datafixers.util.Either;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -11,13 +10,13 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
+import tocraft.craftedcore.patched.CRegistries;
+import tocraft.craftedcore.patched.Identifier;
+import tocraft.craftedcore.patched.TComponent;
 import tocraft.walkers.Walkers;
 import tocraft.walkers.api.variant.TypeProvider;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 // this is amazing
 public class NBTTypeProvider<T extends LivingEntity> extends TypeProvider<T> {
@@ -137,7 +136,7 @@ public class NBTTypeProvider<T extends LivingEntity> extends TypeProvider<T> {
         }
 
         CompoundTag compoundTag = tag.copy();
-        compoundTag.putString("id", BuiltInRegistries.ENTITY_TYPE.getKey(type).toString());
+        compoundTag.putString("id", Objects.requireNonNull(Walkers.getEntityTypeRegistry().getKey(type)).toString());
         return (T) EntityType.loadEntityRecursive(compoundTag, world, entity -> entity);
     }
 
@@ -154,7 +153,7 @@ public class NBTTypeProvider<T extends LivingEntity> extends TypeProvider<T> {
     @Override
     public Component modifyText(T entity, MutableComponent text) {
         if (nameMap.containsKey(String.valueOf(getVariantData(entity))))
-            return Component.translatable(nameMap.get(String.valueOf(getVariantData(entity))), text);
+            return TComponent.translatable(nameMap.get(String.valueOf(getVariantData(entity))), text);
         else
             return text;
     }

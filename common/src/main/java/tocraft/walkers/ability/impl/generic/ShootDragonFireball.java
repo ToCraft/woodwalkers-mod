@@ -29,13 +29,23 @@ public class ShootDragonFireball<T extends Mob> extends GenericShapeAbility<T> {
 
     @Override
     public void onUse(Player player, T shape, Level world) {
+        //#if MC>1206
+        //$$ DragonFireball dragonFireball = new DragonFireball(
+        //$$         world,
+        //$$         player,
+        //$$         new Vec3(player.getLookAngle().x,
+        //$$                 player.getLookAngle().y,
+        //$$                 player.getLookAngle().z)
+        //$$ );
+        //#else
         DragonFireball dragonFireball = new DragonFireball(
                 world,
                 player,
-                new Vec3(player.getLookAngle().x,
-                        player.getLookAngle().y,
-                        player.getLookAngle().z)
+                player.getLookAngle().x,
+                player.getLookAngle().y,
+                player.getLookAngle().z
         );
+        //#endif
 
         dragonFireball.setOwner(player);
         world.addFreshEntity(dragonFireball);

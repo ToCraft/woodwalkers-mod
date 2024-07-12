@@ -9,7 +9,11 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
+//#if MC>1182
 import net.minecraft.world.level.Level.ExplosionInteraction;
+//#else
+//$$ import net.minecraft.world.level.Explosion;
+//#endif
 import tocraft.walkers.Walkers;
 import tocraft.walkers.ability.GenericShapeAbility;
 
@@ -41,7 +45,11 @@ public class ExplosionAbility<T extends Mob> extends GenericShapeAbility<T> {
 
     @Override
     public void onUse(Player player, T shape, Level world) {
+        //#if MC>1182
         world.explode(player, player.getX(), player.getY(), player.getZ(), 3.0f, ExplosionInteraction.NONE);
+        //#else
+        //$$ world.explode(player, player.getX(), player.getY(), player.getZ(), 3.0f, Explosion.BlockInteraction.NONE);
+        //#endif
     }
 
     @Override

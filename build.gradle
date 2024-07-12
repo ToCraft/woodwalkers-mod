@@ -1,13 +1,216 @@
-plugins {
-    id "architectury-plugin" version "3.4-SNAPSHOT"
-    id "dev.architectury.loom" version "1.6-SNAPSHOT" apply false
+buildscript {
+    repositories {
+        mavenCentral()
+        gradlePluginPortal()
+        maven { url "https://maven.tocraft.dev/public" }
+    }
+    dependencies {
+        classpath group: 'com.diluv.schoomp', name: 'Schoomp', version: '1.2.6+'
+        classpath "dev.tocraft:preprocessor:0.91-SNAPSHOT"
+    }
 }
 
-apply from: "https://raw.githubusercontent.com/ToCraft/GradleMaster/main/main.gradle"
+import com.diluv.schoomp.Webhook
+import com.diluv.schoomp.message.Message
+import com.diluv.schoomp.message.embed.Embed
+
+architectury {
+    minecraft = project.name
+}
+
+// Read version-specific properties file
+project.ext.set("props", new Properties())
+file("../../props/${project.name}.properties").withInputStream { project.props.load(it) }
+
+println()
+println "Minecraft: ${project.name} (Java ${project.props.java})"
+if (project.props.mappings != null) {
+    println "├── Parchment: ${project.props.mappings}"
+
+}
+if (project.props.fabric != null) {
+    println "├── Fabric: ${project.props.fabric}"
+}
+if (project.props.forge != null) {
+    println "├── Forge: ${project.props.forge}"
+}
+if (project.props.neoforge != null) {
+    println "├── NeoForge: ${project.props.neoforge}"
+}
+
+List<String> supportedVersions = new ArrayList<>();
+supportedVersions.add(project.name)
+if (project.props.supported_versions != null) {
+    project.props.supported_versions.split(",").each {
+        String version = (it as String).trim()
+        if (!supportedVersions.contains(version)) {
+            supportedVersions.add(version)
+        }
+    }
+}
+project.ext.set("supported_versions", supportedVersions)
+println("└── Supported Minecraft Versions: ${project.supported_versions}")
+println()
+
+layout.buildDirectory.set(rootDir.toPath().resolve("build/$project.name").toFile())
+
+apply plugin: "dev.tocraft.preprocessor"
+
+subprojects {
+    layout.buildDirectory.set(parent.layout.buildDirectory.file(project.name).get().asFile)
+
+    apply plugin: "dev.architectury.loom"
+    apply plugin: "maven-publish"
+    apply plugin: "dev.tocraft.preprocessor"
+
+    preprocess {
+        vars.put("MC", project.props.mc_id != null ? project.props.mc_id : project.name.replaceAll(".", ""))
+    }
+
+    loom {
+        silentMojangMappingsLicense()
+    }
+
+    dependencies {
+        minecraft "com.mojang:minecraft:${parent.name}"
+        mappings loom.layered() {
+            officialMojangMappings()
+            if (project.hasProperty("parchmentmc_mappings")) {
+                parchment("org.parchmentmc.data:parchment-${parent.name}:" + project.getProperty("parchmentmc_mappings") + "@zip")
+            }
+
+        }
+    }
+}
+
+allprojects {
+    apply plugin: "java"
+    apply plugin: "architectury-plugin"
+
+    archivesBaseName = project.archives_base_name
+    version = project.mod_version
+    group = project.maven_group
+
+    repositories {
+        maven { url "https://maven.tocraft.dev/public" }
+    }
+
+    tasks.withType(JavaCompile).configureEach {
+        options.encoding = "UTF-8"
+        options.release.set Integer.parseInt(project.props.java)
+    }
+
+    ext {
+        // Original by Flemmli97
+        releaseChangelog = { int versions ->
+            try {
+                String changelog = ""
+                int match = 0
+                String previousIT = ""
+                project.file("CHANGELOG.md").eachLine {
+                    if (it.contains("================")) {
+                        match++
+                        //changelog += previousIT
+                    }
+                    if (match <= versions) {
+                        changelog += previousIT + "\n"
+                    }
+                    previousIT = it
+                    return
+                }
+                return changelog + "\n\n"
+            } catch (exception) {
+                return "${project.archives_base_name} ${project.mod_version}\n==========\nThere was an error generating the changelog" + exception.getLocalizedMessage()
+            }
+        }
+    }
+
+    java {
+        withSourcesJar()
+    }
+}
+
+//Splits the changelog into multiple parts if they get bigger than discords embed field size (1024)
+static def discordChangelog() {
+    def changelog = releaseChangelog(1)
+    List<String> res = new ArrayList()
+    if (changelog.size() < 1024) {
+        res.add(changelog)
+        return res
+    }
+    String temp = ""
+    changelog.split("\n" as Closure).each {
+        it = it + "\n"
+        if ((temp.size() + it.size()) >= 1024) {
+            res.add(temp)
+            temp = it
+        } else
+            temp += it
+    }
+    res.add(temp)
+    return res
+}
+
+// based on the code by Flemmli97
+tasks.register('discordRelease') {
+    doLast {
+        try {
+            def webhook = new Webhook(System.getenv("DISCORD_WEB_HOOK"), "${project.name} Upload")
+
+            def message = new Message()
+            message.setUsername("Mod Release")
+            def content = "${project.name} ${project.mod_version} has been released!"
+            if (project.hasProperty("ping_role")) {
+                content = "<@&${project.getProperty("ping_role")}> " + content
+            }
+            message.setContent(content)
+            message.setAvatarUrl("https://avatars.githubusercontent.com/u/38883321")
+
+            def embed = new Embed()
+
+            def changelog = discordChangelog()
+            if (changelog.size() == 1)
+                embed.addField('Change Log', "```md\n${changelog.get(0) ?: 'Unavailable :('}```", false)
+            else
+                changelog.forEach {
+                    embed.addField("Change Log", "```md\n${it}```", false)
+                }
+            embed.setColor(0xFF8000)
+            message.addEmbed(embed)
+
+            webhook.sendMessage(message)
+        }
+
+        catch (IOException ignored) {
+            println 'Failed to push to the Discord webhook.'
+        }
+        println "Send Changelog to Discord."
+    }
+}
+
+tasks.register('extractNewestChangelog') {
+    String fileName = "extracted.CHANGELOG.md";
+    // delete file if exists
+    delete fileName
+    doLast {
+        // write changelog
+        FileWriter fw = new FileWriter(fileName);
+        fw.write(releaseChangelog(1));
+        fw.close()
+        println "Extracted newest Changelog to \"extracted.CHANGELOG.md\""
+    }
+}
 
 ext {
     mod_meta = [
-            minecraft_version  : minecraft_version, version: version,
+            minecraft_version  : project.name,
+            version            : version,
             craftedcore_version: craftedcore_version
     ]
+}
+
+allprojects {
+    repositories {
+        mavenLocal()
+    }
 }

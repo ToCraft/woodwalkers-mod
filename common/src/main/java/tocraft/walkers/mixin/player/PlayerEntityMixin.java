@@ -19,7 +19,9 @@ import net.minecraft.world.entity.monster.Ravager;
 import net.minecraft.world.entity.monster.Slime;
 import net.minecraft.world.entity.monster.Spider;
 import net.minecraft.world.entity.monster.WitherSkeleton;
+//#if MC>1182
 import net.minecraft.world.entity.monster.warden.Warden;
+//#endif
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.vehicle.Boat;
 import net.minecraft.world.food.FoodData;
@@ -36,6 +38,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+import tocraft.craftedcore.patched.CEntity;
 import tocraft.walkers.api.PlayerShape;
 import tocraft.walkers.mixin.LivingEntityMixin;
 import tocraft.walkers.mixin.accessor.EntityAccessor;
@@ -55,10 +58,11 @@ public abstract class PlayerEntityMixin extends LivingEntityMixin {
         super(type, world);
     }
 
+    //#if MC>=1205
     @Inject(method = "getDefaultDimensions", at = @At("HEAD"), cancellable = true)
     private void getDimensions(Pose pose, CallbackInfoReturnable<EntityDimensions> cir) {
         LivingEntity entity = PlayerShape.getCurrentShape((Player) (Object) this);
-
+    
         if (entity != null) {
             EntityDimensions shapeDimensions = entity.getDimensions(pose);
             if (pose == Pose.CROUCHING && TraitRegistry.has(entity, HumanoidTrait.ID)) {
@@ -68,6 +72,21 @@ public abstract class PlayerEntityMixin extends LivingEntityMixin {
             }
         }
     }
+    //#else
+    //$$ @Inject(method = "getDimensions", at = @At("HEAD"), cancellable = true)
+    //$$ private void getDimensions(Pose pose, CallbackInfoReturnable<EntityDimensions> cir) {
+    //$$     LivingEntity entity = PlayerShape.getCurrentShape((Player) (Object) this);
+    //$$
+    //$$     if (entity != null) {
+    //$$         EntityDimensions shapeDimensions = entity.getDimensions(pose);
+    //$$         if (pose == Pose.CROUCHING && TraitRegistry.has(entity, HumanoidTrait.ID)) {
+    //$$             cir.setReturnValue(EntityDimensions.scalable(shapeDimensions.width, shapeDimensions.height * 1.5F / 1.8F));
+    //$$         } else {
+    //$$             cir.setReturnValue(shapeDimensions);
+    //$$         }
+    //$$     }
+    //$$ }
+    //#endif
 
     @Inject(method = "attack", at = @At("HEAD"))
     protected void shape_tryAttack(Entity target, CallbackInfo ci) {
@@ -75,8 +94,10 @@ public abstract class PlayerEntityMixin extends LivingEntityMixin {
 
         if (shape instanceof IronGolem golem) {
             ((IronGolemEntityAccessor) golem).setAttackTicksLeft(10);
+        //#if MC>1182
         } else if (shape instanceof Warden warden) {
             warden.attackAnimationState.start(tickCount);
+        //#endif
         } else if (shape instanceof Ravager ravager) {
             ((RavagerEntityAccessor) ravager).setAttackTick(10);
         } else if (shape instanceof WitherSkeleton && target instanceof LivingEntity livingTarget) {
@@ -87,7 +108,11 @@ public abstract class PlayerEntityMixin extends LivingEntityMixin {
             int i = pufferfish.getPuffState();
 
             if (target instanceof LivingEntity livingTarget) {
+                //#if MC>1182
                 if (livingTarget.hurt(this.damageSources().mobAttack((Player) (Object) this), (float) (1 + i))) {
+                //#else
+                //$$ if (livingTarget.hurt(DamageSource.mobAttack((Player) (Object) this), (float) (1 + i))) {
+                //#endif
                     livingTarget.addEffect(new MobEffectInstance(MobEffects.POISON, 60 * i, 0), (Player) (Object) this);
                     this.playSound(SoundEvents.PUFFER_FISH_STING, 1.0F, 1.0F);
 
@@ -123,10 +148,11 @@ public abstract class PlayerEntityMixin extends LivingEntityMixin {
         }
     }
 
+    //#if MC>1182
     @Inject(method = "tick", at = @At("HEAD"))
     private void tickWardenSneakingAnimation(CallbackInfo ci) {
         LivingEntity shape = PlayerShape.getCurrentShape((Player) (Object) this);
-
+    
         if (shape instanceof Warden warden) {
             if (isShiftKeyDown()) {
                 if (!warden.sniffAnimationState.isStarted()) {
@@ -137,13 +163,14 @@ public abstract class PlayerEntityMixin extends LivingEntityMixin {
             }
         }
     }
+    //#endif
 
     @Inject(method = "tick", at = @At("HEAD"))
     private void tickFire(CallbackInfo ci) {
         Player player = (Player) (Object) this;
         LivingEntity shape = PlayerShape.getCurrentShape(player);
 
-        if (!player.level().isClientSide && !player.isCreative() && !player.isSpectator()) {
+        if (!CEntity.level(player).isClientSide && !player.isCreative() && !player.isSpectator()) {
             // check if the player is shape
             if (shape != null) {
                 // check if the player's current shape burns in sunlight
@@ -156,7 +183,7 @@ public abstract class PlayerEntityMixin extends LivingEntityMixin {
                     if (bl) {
 
                         // Can't burn in the rain
-                        if (player.level().isRaining()) {
+                        if (CEntity.level(player).isRaining()) {
                             return;
                         }
 
@@ -168,7 +195,11 @@ public abstract class PlayerEntityMixin extends LivingEntityMixin {
                                 // damage stack instead of burning player
                                 itemStack.setDamageValue(itemStack.getDamageValue() + player.getRandom().nextInt(2));
                                 if (itemStack.getDamageValue() >= itemStack.getMaxDamage()) {
-                                    player.onEquippedItemBroken(itemStack.getItem(), EquipmentSlot.HEAD);
+                                    //#if MC>1206
+                                    //$$ player.onEquippedItemBroken(itemStack.getItem(), EquipmentSlot.HEAD);
+                                    //#else
+                                    player.broadcastBreakEvent(EquipmentSlot.HEAD);
+                                    //#endif
                                     player.setItemSlot(EquipmentSlot.HEAD, ItemStack.EMPTY);
                                 }
                             }
@@ -178,7 +209,11 @@ public abstract class PlayerEntityMixin extends LivingEntityMixin {
 
                         // set player on fire
                         if (bl) {
+                            //#if MC>=1205
                             player.igniteForSeconds(8);
+                            //#else
+                            //$$ player.setSecondsOnFire(8);
+                            //#endif
                         }
                     }
                 }
@@ -189,16 +224,21 @@ public abstract class PlayerEntityMixin extends LivingEntityMixin {
     @SuppressWarnings("deprecation")
     @Unique
     private boolean walkers$isInDaylight() {
-        if (level().isDay() && !level().isClientSide) {
+        if (CEntity.level(this).isDay() && !CEntity.level(this).isClientSide) {
+            //#if MC>1182
             float brightnessAtEyes = getLightLevelDependentMagicValue();
             BlockPos daylightTestPosition = BlockPos.containing(getX(), (double) Math.round(getY()), getZ());
+            //#else
+            //$$ float brightnessAtEyes = getBrightness();
+            //$$ BlockPos daylightTestPosition = new BlockPos(getX(), (double) Math.round(getY()), getZ());
+            //#endif
 
             // move test position up one block for boats
             if (getVehicle() instanceof Boat) {
                 daylightTestPosition = daylightTestPosition.above();
             }
 
-            return brightnessAtEyes > 0.5F && random.nextFloat() * 30.0F < (brightnessAtEyes - 0.4F) * 2.0F && level().canSeeSky(daylightTestPosition);
+            return brightnessAtEyes > 0.5F && random.nextFloat() * 30.0F < (brightnessAtEyes - 0.4F) * 2.0F && CEntity.level(this).canSeeSky(daylightTestPosition);
         }
 
         return false;
@@ -214,10 +254,14 @@ public abstract class PlayerEntityMixin extends LivingEntityMixin {
             // check if the player is morphed
             if (shape != null) {
                 // damage player if they are a shape that gets hurt by low or high temperatures
-                final boolean couldEnoughToSnow = level().getBiome(blockPosition()).value().coldEnoughToSnow(blockPosition());
+                final boolean couldEnoughToSnow = CEntity.level(this).getBiome(blockPosition()).value().coldEnoughToSnow(blockPosition());
                 for (TemperatureTrait<?> temperaturetrait : TraitRegistry.get(shape, TemperatureTrait.ID).stream().map(entry -> (TemperatureTrait<?>) entry).toList()) {
                     if (!temperaturetrait.coldEnoughToSnow == couldEnoughToSnow) {
-                        player.hurt(level().damageSources().onFire(), 1.0f);
+                        //#if MC>1182
+                        player.hurt(CEntity.level(this).damageSources().onFire(), 1.0f);
+                        //#else
+                        //$$ player.hurt(DamageSource.ON_FIRE, 1.0f);
+                        //#endif
                         break;
                     }
                 }
@@ -237,7 +281,7 @@ public abstract class PlayerEntityMixin extends LivingEntityMixin {
             shape.setPose(player.getPose());
             shape.setSwimming(player.isSwimming());
 
-            if (!level().isClientSide) {
+            if (!CEntity.level(this).isClientSide) {
                 shape.setPosRaw(player.getX(), player.getY(), player.getZ());
                 shape.setYHeadRot(player.getYHeadRot());
                 shape.setJumping(((LivingEntityAccessor) player).isJumping());
@@ -253,7 +297,7 @@ public abstract class PlayerEntityMixin extends LivingEntityMixin {
                     ((TamableAnimal) shape).setOrderedToSit(player.isShiftKeyDown());
                 } else if (shape instanceof Fox) {
                     ((Fox) shape).setSitting(player.isShiftKeyDown());
-                    ((Fox) shape).setJumping(!player.onGround());
+                    ((Fox) shape).setJumping(!CEntity.isOnGround(player));
                 }
 
                 ((EntityAccessor) shape).shape_callSetFlag(7, player.isFallFlying());
@@ -276,9 +320,18 @@ public abstract class PlayerEntityMixin extends LivingEntityMixin {
         Player ownPlayer = (Player) (Object) this;
         if (ownPlayer.isAlive() && PlayerShape.getCurrentShape(ownPlayer) instanceof Slime slimeShape && (entity instanceof Player targetPlayer && !(PlayerShape.getCurrentShape(targetPlayer) instanceof Slime))) {
             int i = slimeShape.getSize();
-            if (this.distanceToSqr(targetPlayer) < 0.6 * (double) i * 0.6 * (double) i && ownPlayer.hasLineOfSight(targetPlayer) && targetPlayer.hurt(ownPlayer.damageSources().mobAttack(ownPlayer), (float) ownPlayer.getAttributeValue(Attributes.ATTACK_DAMAGE))) {
+            //#if MC>1182
+            boolean wasHurt = targetPlayer.hurt(ownPlayer.damageSources().mobAttack(ownPlayer), (float) ownPlayer.getAttributeValue(Attributes.ATTACK_DAMAGE));
+            //#else
+            //$$ boolean wasHurt = targetPlayer.hurt(DamageSource.mobAttack(ownPlayer), (float) ownPlayer.getAttributeValue(Attributes.ATTACK_DAMAGE));
+            //#endif
+            if (this.distanceToSqr(targetPlayer) < 0.6 * (double) i * 0.6 * (double) i && ownPlayer.hasLineOfSight(targetPlayer) && wasHurt) {
                 this.playSound(SoundEvents.SLIME_ATTACK, 1.0F, (this.random.nextFloat() - this.random.nextFloat()) * 0.2F + 1.0F);
-                EnchantmentHelper.doPostAttackEffects((ServerLevel) ownPlayer.level(), targetPlayer, ownPlayer.damageSources().mobAttack(ownPlayer));
+                //#if MC>1206
+                //$$ EnchantmentHelper.doPostAttackEffects((ServerLevel) CEntity.level(ownPlayer), targetPlayer, ownPlayer.damageSources().mobAttack(ownPlayer));
+                //#else
+                this.doEnchantDamageEffects(ownPlayer, targetPlayer);
+                //#endif
             }
         }
     }
@@ -291,7 +344,7 @@ public abstract class PlayerEntityMixin extends LivingEntityMixin {
             for (ReinforcementsTrait<LivingEntity> reinforcementTrait : TraitRegistry.get(shape, ReinforcementsTrait.ID).stream().map(trait -> (ReinforcementsTrait<LivingEntity>) trait).toList()) {
                 double d = reinforcementTrait.getRange();
                 AABB aABB = AABB.unitCubeFromLowerCorner(this.position()).inflate(d, 10.0, d);
-                Iterator<? extends LivingEntity> var5 = this.level().getEntitiesOfClass(Mob.class, aABB, EntitySelector.NO_SPECTATORS.and(entity -> {
+                Iterator<? extends LivingEntity> var5 = CEntity.level(this).getEntitiesOfClass(Mob.class, aABB, EntitySelector.NO_SPECTATORS.and(entity -> {
                     if (reinforcementTrait.hasReinforcements()) {
                         return reinforcementTrait.isReinforcement(entity);
                     } else {

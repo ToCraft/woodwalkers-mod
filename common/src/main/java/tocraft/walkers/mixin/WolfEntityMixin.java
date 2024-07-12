@@ -35,10 +35,17 @@ public abstract class WolfEntityMixin extends TamableAnimal {
             ((Wolf) (Object) this).getEntityData().set(walkers$isSpecial, false);
     }
 
+    //#if MC>1204
     @Inject(method = "defineSynchedData", at = @At("RETURN"))
     protected void onInitDataTracker(SynchedEntityData.Builder builder, CallbackInfo ci) {
         builder.define(walkers$isSpecial, false);
     }
+    //#else
+    //$$ @Inject(method = "defineSynchedData", at = @At("RETURN"))
+    //$$ protected void onInitDataTracker(CallbackInfo ci) {
+    //$$     this.getEntityData().define(walkers$isSpecial, false);
+    //$$ }
+    //#endif
 
     @Inject(method = "addAdditionalSaveData", at = @At("RETURN"))
     protected void onWriteCustomDataToNbt(CompoundTag nbt, CallbackInfo ci) {

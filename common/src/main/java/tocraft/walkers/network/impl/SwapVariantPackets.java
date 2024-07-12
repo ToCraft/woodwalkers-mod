@@ -1,13 +1,13 @@
 package tocraft.walkers.network.impl;
 
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import tocraft.craftedcore.network.ModernNetworking;
+import tocraft.craftedcore.patched.CEntity;
+import tocraft.craftedcore.patched.Identifier;
 import tocraft.walkers.Walkers;
 import tocraft.walkers.api.PlayerShape;
 import tocraft.walkers.api.PlayerShapeChanger;
@@ -37,13 +37,13 @@ public class SwapVariantPackets {
                             int range = typeProvider != null ? typeProvider.getRange() : -1;
 
                             // switch to special shape
-                            if (Walkers.hasSpecialShape(context.getPlayer().getUUID()) && BuiltInRegistries.ENTITY_TYPE.getKey(currentShapeType.getEntityType()).equals(ResourceLocation.parse("minecraft:wolf")) && variantID == range + 1) {
+                            if (Walkers.hasSpecialShape(context.getPlayer().getUUID()) && Walkers.getEntityTypeRegistry().getKey(currentShapeType.getEntityType()).equals(Identifier.parse("minecraft:wolf")) && variantID == range + 1) {
                                 Entity created;
                                 CompoundTag nbt = new CompoundTag();
 
                                 nbt.putBoolean("isSpecial", true);
-                                nbt.putString("id", BuiltInRegistries.ENTITY_TYPE.getKey(currentShapeType.getEntityType()).toString());
-                                created = EntityType.loadEntityRecursive(nbt, context.getPlayer().level(), it -> it);
+                                nbt.putString("id", Walkers.getEntityTypeRegistry().getKey(currentShapeType.getEntityType()).toString());
+                                created = EntityType.loadEntityRecursive(nbt, CEntity.level(context.getPlayer()), it -> it);
                                 PlayerShape.updateShapes((ServerPlayer) context.getPlayer(), (LivingEntity) created);
                             }
                             // switch normally
@@ -52,7 +52,7 @@ public class SwapVariantPackets {
                                     ShapeType<?> newShapeType = ShapeType.from(currentShapeType.getEntityType(), variantID);
                                     if (newShapeType != null) {
                                         if (PlayerShapeChanger.change2ndShape((ServerPlayer) context.getPlayer(), newShapeType) || !ApiLevel.getCurrentLevel().canUnlock) {
-                                            LivingEntity shape = newShapeType.create(context.getPlayer().level(), context.getPlayer());
+                                            LivingEntity shape = newShapeType.create(CEntity.level(context.getPlayer()), context.getPlayer());
                                             if (shape != null) {
                                                 PlayerShape.updateShapes((ServerPlayer) context.getPlayer(), shape);
                                             }

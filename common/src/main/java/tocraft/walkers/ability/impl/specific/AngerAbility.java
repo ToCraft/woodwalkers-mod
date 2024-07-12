@@ -1,7 +1,6 @@
 package tocraft.walkers.ability.impl.specific;
 
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
@@ -61,7 +60,7 @@ public class AngerAbility<T extends Mob> extends ShapeAbility<T> {
                 );
             }
         } else {
-            Walkers.LOGGER.error("{}: Registered for unvalid entity {}!", AngerAbility.class.getSimpleName(), BuiltInRegistries.ENTITY_TYPE.getKey(oShape.getType()));
+            Walkers.LOGGER.error("{}: Registered for unvalid entity {}!", AngerAbility.class.getSimpleName(), Walkers.getEntityTypeRegistry().getKey(oShape.getType()));
         }
     }
 

@@ -8,6 +8,7 @@ import net.minecraft.world.entity.animal.Wolf;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.food.Foods;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
@@ -21,6 +22,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.function.Supplier;
 
+@SuppressWarnings("unused")
 @Mixin(LivingEntity.class)
 public abstract class LivingEntityFoodMixin extends Entity {
 
@@ -34,15 +36,25 @@ public abstract class LivingEntityFoodMixin extends Entity {
     @Inject(
             method = "addEatEffect",
             at = @At(value = "HEAD"), locals = LocalCapture.CAPTURE_FAILHARD, cancellable = true)
+    //#if MC>=1205
     private void removeFleshHungerForWolves(FoodProperties foodProperties, CallbackInfo ci) {
+    //#else
+    //$$ private void removeFleshHungerForWolves(ItemStack food, Level level, LivingEntity livingEntity, CallbackInfo ci) {
+    //#endif
         if ((LivingEntity) (Object) this instanceof Player player) {
             LivingEntity shape = PlayerShape.getCurrentShape(player);
 
             // If this player is a Wolf and the item they are eating is an item wolves are immune to, cancel the method.
             if (shape instanceof Wolf) {
+                //#if MC>=1205
                 if (WOLVES_IGNORE.get().contains(foodProperties)) {
                     ci.cancel();
                 }
+                //#else
+                //$$ if (WOLVES_IGNORE.get().contains(food.getItem().getFoodProperties())) {
+                //$$     ci.cancel();
+                //$$ }
+                //#endif
             }
         }
     }

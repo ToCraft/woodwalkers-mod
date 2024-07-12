@@ -5,11 +5,14 @@ import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.JsonOps;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.core.registries.Registries;
+import net.minecraft.core.Registry;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
+import net.minecraft.world.entity.EntityType;
 import tocraft.craftedcore.data.SynchronizedJsonReloadListener;
+import tocraft.craftedcore.patched.CRegistries;
+import tocraft.craftedcore.patched.Identifier;
 import tocraft.walkers.Walkers;
 import tocraft.walkers.api.blacklist.EntityBlacklist;
 
@@ -34,12 +37,13 @@ public class EntityBlacklistDataManager extends SynchronizedJsonReloadListener {
             if (mapEntry.getKey().getPath().equals("blacklist")) {
                 Pair<List<ResourceLocation>, List<ResourceLocation>> someBlacklist = blacklistFromJson(mapEntry.getValue().getAsJsonObject());
                 for (ResourceLocation resourceLocation : someBlacklist.getFirst()) {
-                    if (BuiltInRegistries.ENTITY_TYPE.containsKey(resourceLocation)) {
-                        EntityBlacklist.registerByType(BuiltInRegistries.ENTITY_TYPE.get(resourceLocation));
+                    if (Walkers.getEntityTypeRegistry().containsKey(resourceLocation)) {
+                        EntityBlacklist.registerByType((EntityType<?>) Walkers.getEntityTypeRegistry().get(resourceLocation));
                     }
                 }
                 for (ResourceLocation resourceLocation : someBlacklist.getSecond()) {
-                    EntityBlacklist.registerByTag(TagKey.create(Registries.ENTITY_TYPE, resourceLocation));
+                    //noinspection unchecked
+                    EntityBlacklist.registerByTag(TagKey.create((ResourceKey<? extends Registry<EntityType<?>>>) Walkers.getEntityTypeRegistry().key(), resourceLocation));
                 }
             }
         }
@@ -51,6 +55,12 @@ public class EntityBlacklistDataManager extends SynchronizedJsonReloadListener {
     ).apply(instance, instance.stable(Pair::new)));
 
     protected static Pair<List<ResourceLocation>, List<ResourceLocation>> blacklistFromJson(JsonObject json) {
+        //#if MC>=1205
         return BLACKLIST_CODEC.parse(JsonOps.INSTANCE, json).getOrThrow(JsonParseException::new);
+        //#else
+        //$$ return BLACKLIST_CODEC.parse(JsonOps.INSTANCE, json).getOrThrow(false, msg -> {
+        //$$     throw new JsonParseException(msg);
+        //$$ });
+        //#endif
     }
 }

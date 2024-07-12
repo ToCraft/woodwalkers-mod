@@ -1,3 +1,4 @@
+//#if MC>1182
 package tocraft.walkers.ability.impl.specific;
 
 import net.minecraft.world.entity.Mob;
@@ -25,3 +26,4 @@ public class WardenAbility<T extends Mob> extends ShapeAbility<T> {
         return 200;
     }
 }
+//#endif

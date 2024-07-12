@@ -5,6 +5,7 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.monster.MagmaCube;
 import net.minecraft.world.level.Level;
+import tocraft.craftedcore.patched.TComponent;
 import tocraft.walkers.api.variant.TypeProvider;
 import tocraft.walkers.mixin.accessor.SlimeEntityAccessor;
 
@@ -34,6 +35,6 @@ public class MagmaCubeTypeProvider extends TypeProvider<MagmaCube> {
 
     @Override
     public Component modifyText(MagmaCube entity, MutableComponent text) {
-        return Component.literal(String.format("Size %d ", entity.getSize())).append(text);
+        return TComponent.literal(String.format("Size %d ", entity.getSize())).append(text);
     }
 }

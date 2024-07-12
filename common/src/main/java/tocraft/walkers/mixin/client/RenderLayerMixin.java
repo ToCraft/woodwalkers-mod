@@ -18,7 +18,11 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(RenderLayer.class)
 public abstract class RenderLayerMixin {
     @Inject(method = "coloredCutoutModelCopyLayerRender", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/model/EntityModel;copyPropertiesTo(Lnet/minecraft/client/model/EntityModel;)V", ordinal = 0))
-    private static <T extends LivingEntity> void onRenderLayer(EntityModel<T> modelParent, EntityModel<T> model, ResourceLocation resourceLocation, PoseStack poseStack, MultiBufferSource multiBufferSource, int i, T livingEntity, float f, float g, float h, float j, float k, float l, int m, CallbackInfo ci) {
+    //#if MC>=1210
+    //$$ private static <T extends LivingEntity> void onRenderLayer(EntityModel<T> modelParent, EntityModel<T> model, ResourceLocation resourceLocation, PoseStack poseStack, MultiBufferSource multiBufferSource, int i, T livingEntity, float f, float g, float h, float j, float k, float l, int m, CallbackInfo ci) {
+    //#else
+    private static <T extends LivingEntity> void onRenderLayer(EntityModel<T> modelParent, EntityModel<T> model, ResourceLocation textureLocation, PoseStack poseStack, MultiBufferSource buffer, int packedLight, T entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float partialTicks, float red, float green, float blue, CallbackInfo ci) {
+    //#endif
         if (modelParent instanceof HumanoidModel<T> humanoidModelParent && model instanceof HumanoidModel<T> humanoidModel) {
             humanoidModel.crouching = humanoidModelParent.crouching;
         }

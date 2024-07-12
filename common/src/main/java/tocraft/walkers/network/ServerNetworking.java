@@ -5,6 +5,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import tocraft.craftedcore.event.common.PlayerEvents;
 import tocraft.craftedcore.network.ModernNetworking;
+import tocraft.craftedcore.patched.CEntity;
 import tocraft.walkers.ability.AbilityRegistry;
 import tocraft.walkers.api.PlayerAbilities;
 import tocraft.walkers.api.PlayerShape;
@@ -21,11 +22,13 @@ public class ServerNetworking implements NetworkHandler {
         SwapVariantPackets.registerSwapVariantPacketHandler();
         registerUseAbilityPacketHandler();
 
+        //#if MC>=1205
         ModernNetworking.registerType(SHAPE_SYNC);
         ModernNetworking.registerType(ABILITY_SYNC);
         ModernNetworking.registerType(UNLOCK_SYNC);
         ModernNetworking.registerType(CHANGE_VEHICLE_STATE);
         ModernNetworking.registerType(SYNC_API_LEVEL);
+        //#endif
 
         PlayerEvents.PLAYER_JOIN.register(SyncApiLevelPackets::sendSyncPacket);
     }
@@ -43,7 +46,7 @@ public class ServerNetworking implements NetworkHandler {
                     if (AbilityRegistry.has(shape)) {
                         // Check cooldown
                         if (PlayerAbilities.canUseAbility(player)) {
-                            AbilityRegistry.get(shape).onUse(player, shape, context.getPlayer().level());
+                            AbilityRegistry.get(shape).onUse(player, shape, CEntity.level(context.getPlayer()));
                             PlayerAbilities.setCooldown(player, AbilityRegistry.get(shape).getCooldown(shape));
                             PlayerAbilities.sync((ServerPlayer) player);
                         }

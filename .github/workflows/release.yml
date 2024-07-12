@@ -1,0 +1,168 @@
+name: Build and Release
+
+on:
+  push:
+    paths:
+      - '**.gradle'
+      - '**.properties'
+      - '**/src/**'
+    branches:
+      - "main"
+      - "master"
+  workflow_dispatch:
+    inputs:
+      clear_cache:
+        description: 'Clear Cache'
+        required: false
+        default: 'true'
+      release:
+        description: 'Release'
+        required: false
+        default: 'true'
+      discord_message:
+        description: 'Send Discord Message'
+        required: false
+        default: 'true'
+
+permissions:
+  contents: write
+  actions: write
+
+jobs:
+  clear-cache:
+    name: "Clear Cache"
+    runs-on: ubuntu-latest
+    if: |
+      github.event.inputs.clear_cache == 'true'
+    steps:
+      - name: Clear cache
+        uses: actions/github-script@v6
+        with:
+          script: |
+            console.log("About to clear")
+            const caches = await github.rest.actions.getActionsCacheList({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+            })
+            for (const cache of caches.data.actions_caches) {
+              console.log(cache)
+              github.rest.actions.deleteActionsCacheById({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                cache_id: cache.id,
+              })
+            }
+            console.log("Clear completed")
+  release:
+    name: "Release"
+    runs-on: ubuntu-latest
+    if: |
+      !contains(github.event.head_commit.message, '[no_release]') && github.event.inputs.release != 'false'
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: 21
+          distribution: 'temurin'
+      - name: Validate Gradle Wrapper
+        uses: gradle/actions/wrapper-validation@v3
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v3
+
+      - name: Extract Artifact Type
+        run: |
+          cat $GITHUB_WORKSPACE/gradle.properties | grep ^artifact_type= >> $GITHUB_ENV
+
+      - name: Publish 1.18.2
+        run: ./gradlew -Pminecraft="1.18.2" publish modrinth curseforge --parallel
+        env:
+          MAVEN_PASS: ${{ secrets.MAVEN_PASS }}
+          CURSEFORGE_TOKEN: ${{ secrets.CURSEFORGE_TOKEN }}
+          MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
+      - name: Publish 1.19.4
+        run: ./gradlew -Pminecraft="1.19.4" publish modrinth curseforge --parallel
+        env:
+          MAVEN_PASS: ${{ secrets.MAVEN_PASS }}
+          CURSEFORGE_TOKEN: ${{ secrets.CURSEFORGE_TOKEN }}
+          MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
+      - name: Publish 1.20.1
+        run: ./gradlew -Pminecraft="1.20.1" publish modrinth curseforge --parallel
+        env:
+          MAVEN_PASS: ${{ secrets.MAVEN_PASS }}
+          CURSEFORGE_TOKEN: ${{ secrets.CURSEFORGE_TOKEN }}
+          MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
+      - name: Publish 1.20.2
+        run: ./gradlew -Pminecraft="1.20.2" publish modrinth curseforge --parallel
+        env:
+          MAVEN_PASS: ${{ secrets.MAVEN_PASS }}
+          CURSEFORGE_TOKEN: ${{ secrets.CURSEFORGE_TOKEN }}
+          MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
+      - name: Publish 1.20.4
+        run: ./gradlew -Pminecraft="1.20.4" publish modrinth curseforge --parallel
+        env:
+          MAVEN_PASS: ${{ secrets.MAVEN_PASS }}
+          CURSEFORGE_TOKEN: ${{ secrets.CURSEFORGE_TOKEN }}
+          MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
+      - name: Publish 1.20.6
+        run: ./gradlew -Pminecraft="1.20.6" publish modrinth curseforge --parallel
+        env:
+          MAVEN_PASS: ${{ secrets.MAVEN_PASS }}
+          CURSEFORGE_TOKEN: ${{ secrets.CURSEFORGE_TOKEN }}
+          MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
+      - name: Publish 1.21
+        run: ./gradlew -Pminecraft="1.21" publish modrinth curseforge --parallel
+        env:
+          MAVEN_PASS: ${{ secrets.MAVEN_PASS }}
+          CURSEFORGE_TOKEN: ${{ secrets.CURSEFORGE_TOKEN }}
+          MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
+
+      - name: Extract Changelog for GitHub
+        run: ./gradlew extractNewestChangelog --parallel
+      - name: Create version data
+        run: |
+          cat $GITHUB_WORKSPACE/gradle.properties | grep ^archives_base_name= >> $GITHUB_ENV
+          cat $GITHUB_WORKSPACE/gradle.properties | grep ^minecraft= >> $GITHUB_ENV
+          cat $GITHUB_WORKSPACE/gradle.properties | grep ^mod_version= >> $GITHUB_ENV
+      - name: Create GitHub Tag
+        if: |
+          ${{ env.artifact_type }} == 'release'
+        uses: EndBug/latest-tag@latest
+        with:
+          ref: "${{ env.$mod_version }}"
+      - name: Create GitHub Release
+        if: |
+          ${{ env.artifact_type }} == 'release'
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: "${{ env.$mod_version }}"
+          files: |
+            fabric/build/libs/${{ env.archives_base_name }}-${{ env.mod_version }}-fabric.jar,
+            forge/build/libs/${{ env.archives_base_name }}-${{ env.mod_version }}-forge.jar,
+            neoforge/build/libs/${{ env.archives_base_name }}-${{ env.mod_version }}-neoforge.jar
+          body_path: ${{ github.workspace }}/extracted.CHANGELOG.md
+  discord_message:
+    name: "Send Discord Release Message"
+    needs: build
+    runs-on: ubuntu-latest
+    if: |
+      github.event.inputs.discord_message == 'true'
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: 21
+          distribution: 'temurin'
+      - name: Validate Gradle Wrapper
+        uses: gradle/actions/wrapper-validation@v3
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v3
+      - name: Send Discord Message
+        run: ./gradlew discordRelease --parallel
+        env:
+          DISCORD_WEB_HOOK: ${{ secrets.DISCORD_WEB_HOOK }}

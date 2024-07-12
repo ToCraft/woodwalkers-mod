@@ -8,6 +8,7 @@ import org.jetbrains.annotations.Nullable;
 import tocraft.craftedcore.client.CraftedCoreClient;
 import tocraft.craftedcore.network.ModernNetworking;
 import tocraft.craftedcore.network.client.ClientNetworking.ApplicablePacket;
+import tocraft.craftedcore.patched.CEntity;
 import tocraft.walkers.impl.DimensionsRefresher;
 import tocraft.walkers.impl.PlayerDataProvider;
 import tocraft.walkers.network.impl.SyncApiLevelPackets;
@@ -71,7 +72,7 @@ public class ClientNetworking implements NetworkHandler {
 
                     // ensure entity data exists
                     if (shape == null || !type.get().equals(shape.getType())) {
-                        shape = (LivingEntity) type.get().create(syncTarget.level());
+                        shape = (LivingEntity) type.get().create(CEntity.level(syncTarget));
                         data.walkers$setCurrentShape(shape);
 
                         // refresh player dimensions/hitbox on client

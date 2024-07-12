@@ -7,6 +7,8 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
+import tocraft.craftedcore.patched.Identifier;
+import tocraft.craftedcore.patched.TComponent;
 import tocraft.walkers.Walkers;
 import tocraft.walkers.api.variant.TypeProvider;
 import tocraft.walkers.api.variant.TypeProviderRegistry;
@@ -69,7 +71,7 @@ public class MoreMobVariantsIntegration extends AbstractIntegration {
             List<ResourceLocation> variants = getVariants(type);
             CompoundTag nbt = new CompoundTag();
             entity.saveWithoutId(nbt);
-            ResourceLocation id = ResourceLocation.parse(nbt.getString("VariantID"));
+            ResourceLocation id = Identifier.parse(nbt.getString("VariantID"));
             return variants.indexOf(id);
         }
 
@@ -98,8 +100,8 @@ public class MoreMobVariantsIntegration extends AbstractIntegration {
             List<ResourceLocation> variants = getVariants(type);
             CompoundTag nbt = new CompoundTag();
             entity.saveWithoutId(nbt);
-            ResourceLocation id = ResourceLocation.parse(nbt.getString("VariantID"));
-            return Component.literal(formatTypePrefix(id.getPath()) + " ").append(text);
+            ResourceLocation id = Identifier.parse(nbt.getString("VariantID"));
+            return TComponent.literal(formatTypePrefix(id.getPath()) + " ").append(text);
         }
     }
 }

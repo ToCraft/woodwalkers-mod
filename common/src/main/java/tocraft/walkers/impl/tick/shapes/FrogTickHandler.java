@@ -1,21 +1,23 @@
+//#if MC>1182
 package tocraft.walkers.impl.tick.shapes;
 
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.animal.frog.Frog;
 import net.minecraft.world.entity.player.Player;
+import tocraft.craftedcore.patched.CEntity;
 import tocraft.walkers.api.WalkersTickHandler;
 
 public class FrogTickHandler implements WalkersTickHandler<Frog> {
 
     @Override
     public void tick(Player player, Frog frog) {
-        if (player.level().isClientSide) {
-            boolean walk = player.onGround() && player.getDeltaMovement().horizontalDistanceSqr() > 1.0E-6 && !player.isInWaterOrBubble();
+        if (CEntity.level(player).isClientSide) {
+            boolean walk = CEntity.isOnGround(player) && player.getDeltaMovement().horizontalDistanceSqr() > 1.0E-6 && !player.isInWaterOrBubble();
             boolean swim = player.getDeltaMovement().horizontalDistanceSqr() > 1.0E-6 && player.isInWaterOrBubble();
 
             // Jumping
-            if (!player.onGround() && !swim && !walk && !player.isInWaterOrBubble()) {
+            if (!CEntity.isOnGround(player) && !swim && !walk && !player.isInWaterOrBubble()) {
                 frog.jumpAnimationState.startIfStopped(frog.tickCount);
             } else {
                 frog.jumpAnimationState.stop();
@@ -31,7 +33,7 @@ public class FrogTickHandler implements WalkersTickHandler<Frog> {
             }
 
             // Random croaking
-            if (player.level().random.nextDouble() <= 0.001) {
+            if (CEntity.level(player).random.nextDouble() <= 0.001) {
                 frog.croakAnimationState.start(player.tickCount);
             }
 
@@ -47,3 +49,4 @@ public class FrogTickHandler implements WalkersTickHandler<Frog> {
         }
     }
 }
+//#endif

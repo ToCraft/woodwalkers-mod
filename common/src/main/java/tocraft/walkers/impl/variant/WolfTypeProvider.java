@@ -1,3 +1,4 @@
+//#if MC>=1205
 package tocraft.walkers.impl.variant;
 
 import net.fabricmc.api.EnvType;
@@ -12,6 +13,7 @@ import net.minecraft.world.entity.animal.Wolf;
 import net.minecraft.world.entity.animal.WolfVariant;
 import net.minecraft.world.entity.animal.WolfVariants;
 import net.minecraft.world.level.Level;
+import tocraft.craftedcore.patched.TComponent;
 import tocraft.craftedcore.platform.PlatformData;
 import tocraft.walkers.api.variant.TypeProvider;
 
@@ -70,6 +72,7 @@ public class WolfTypeProvider extends TypeProvider<Wolf> {
     @Override
     public Component modifyText(Wolf entity, MutableComponent text) {
         setRange(entity.level());
-        return Component.literal(formatTypePrefix(Objects.requireNonNull(entity.level().registryAccess().registryOrThrow(Registries.WOLF_VARIANT).getKey(entity.getVariant().value())).getPath()) + " ").append(text);
+        return TComponent.literal(formatTypePrefix(Objects.requireNonNull(entity.level().registryAccess().registryOrThrow(Registries.WOLF_VARIANT).getKey(entity.getVariant().value())).getPath()) + " ").append(text);
     }
 }
+//#endif

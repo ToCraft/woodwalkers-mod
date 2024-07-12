@@ -1,12 +1,18 @@
 package tocraft.walkers;
 
+import com.mojang.serialization.DataResult;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
+//#if MC>1201
 import net.minecraft.advancements.AdvancementHolder;
+//#else
+//$$ import net.minecraft.advancements.Advancement;
+//#endif
 import net.minecraft.advancements.AdvancementProgress;
-import net.minecraft.network.chat.Component;
+import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.FlyingMob;
 import net.minecraft.world.entity.LivingEntity;
 import org.slf4j.Logger;
@@ -15,6 +21,10 @@ import tocraft.craftedcore.VIPs;
 import tocraft.craftedcore.config.ConfigLoader;
 import tocraft.craftedcore.event.common.EntityEvents;
 import tocraft.craftedcore.event.common.PlayerEvents;
+import tocraft.craftedcore.patched.CEntity;
+import tocraft.craftedcore.patched.CRegistries;
+import tocraft.craftedcore.patched.Identifier;
+import tocraft.craftedcore.patched.TComponent;
 import tocraft.craftedcore.platform.VersionChecker;
 import tocraft.walkers.ability.AbilityRegistry;
 import tocraft.walkers.api.PlayerShape;
@@ -66,21 +76,21 @@ public class Walkers {
     }
 
     public static void registerJoinSyncPacket() {
-        VersionChecker.registerModrinthChecker(MODID, "woodwalkers", Component.literal("Woodwalkers"));
+        VersionChecker.registerModrinthChecker(MODID, "woodwalkers", TComponent.literal("Woodwalkers"));
 
         PlayerEvents.PLAYER_JOIN.register(player -> {
-            Int2ObjectMap<Object> trackers = ((ThreadedAnvilChunkStorageAccessor) ((ServerLevel) player.level())
+            Int2ObjectMap<Object> trackers = ((ThreadedAnvilChunkStorageAccessor) ((ServerLevel) CEntity.level(player))
                     .getChunkSource().chunkMap).getEntityMap();
             trackers.forEach((entityid, tracking) -> {
-                if (player.level().getEntity(entityid) instanceof ServerPlayer) {
-                    PlayerShape.sync(((ServerPlayer) player.serverLevel().getEntity(entityid)), player);
+                if (CEntity.level(player).getEntity(entityid) instanceof ServerPlayer) {
+                    PlayerShape.sync((ServerPlayer) CEntity.level(player).getEntity(entityid), player);
                 }
             });
         });
     }
 
     public static ResourceLocation id(String name) {
-        return ResourceLocation.fromNamespaceAndPath(MODID, name);
+        return Identifier.parse(MODID, name);
     }
 
     public static boolean hasFlyingPermissions(ServerPlayer player) {
@@ -98,7 +108,11 @@ public class Walkers {
 
                 boolean hasPermission = true;
                 for (String requiredAdvancement : requiredAdvancements) {
-                    AdvancementHolder advancement = player.server.getAdvancements().get(ResourceLocation.parse(requiredAdvancement));
+                    //#if MC>1201
+                    AdvancementHolder advancement = player.server.getAdvancements().get(Identifier.parse(requiredAdvancement));
+                    //#else
+                    //$$ Advancement advancement = player.server.getAdvancements().getAdvancement(Identifier.parse(requiredAdvancement));
+                    //#endif
                     if (advancement != null) {
                         AdvancementProgress progress = player.getAdvancements().getOrStartProgress(advancement);
 
@@ -123,5 +137,18 @@ public class Walkers {
 
     public static boolean hasSpecialShape(UUID uuid) {
         return devs.contains(uuid) || VIPs.getCachedPatreons().contains(uuid);
+    }
+
+    public static Registry<EntityType<?>> getEntityTypeRegistry() {
+        //noinspection unchecked
+        return ((Registry<EntityType<?>>) CRegistries.getRegistry(Identifier.parse("entity_type")));
+    }
+
+    public static <R> DataResult<R> dataError(final String message) {
+        //#if MC>1182
+        return DataResult.error(() -> message);
+        //#else
+        //$$ return DataResult.error(message);
+        //#endif
     }
 }

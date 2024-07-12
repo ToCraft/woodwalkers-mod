@@ -20,7 +20,11 @@ public class PlayerManagerMixin {
 
     @SuppressWarnings("ConstantConditions")
     @Inject(method = "respawn", at = @At("RETURN"))
-    private void onRespawn(ServerPlayer player, boolean bl, Entity.RemovalReason removalReason, CallbackInfoReturnable<ServerPlayer> cir) {
+    //#if MC>=1210
+    //$$ private void onRespawn(ServerPlayer player, boolean bl, Entity.RemovalReason removalReason, CallbackInfoReturnable<ServerPlayer> cir) {
+    //#else
+    private void onRespawn(ServerPlayer player, boolean alive, CallbackInfoReturnable<ServerPlayer> cir) {
+    //#endif
         LivingEntity shape = PlayerShape.getCurrentShape(player);
 
         // refresh entity hitbox dimensions after death

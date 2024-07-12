@@ -6,6 +6,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.animal.Sheep;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.Level;
+import tocraft.craftedcore.patched.TComponent;
 import tocraft.walkers.api.variant.TypeProvider;
 
 public class SheepTypeProvider extends TypeProvider<Sheep> {
@@ -34,6 +35,6 @@ public class SheepTypeProvider extends TypeProvider<Sheep> {
 
     @Override
     public Component modifyText(Sheep sheep, MutableComponent text) {
-        return Component.literal(formatTypePrefix(DyeColor.byId(getVariantData(sheep)).getName()) + " ").append(text);
+        return TComponent.literal(formatTypePrefix(DyeColor.byId(getVariantData(sheep)).getName()) + " ").append(text);
     }
 }

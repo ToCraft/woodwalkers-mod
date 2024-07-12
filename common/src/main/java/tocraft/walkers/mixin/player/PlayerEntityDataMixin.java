@@ -1,7 +1,6 @@
 package tocraft.walkers.mixin.player;
 
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -19,6 +18,7 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import tocraft.craftedcore.patched.CEntity;
 import tocraft.walkers.Walkers;
 import tocraft.walkers.api.FlightHelper;
 import tocraft.walkers.api.PlayerShape;
@@ -104,7 +104,7 @@ public abstract class PlayerEntityDataMixin extends LivingEntity implements Play
         // put entity type ID under the key "id", or "minecraft:empty" if no shape is
         // equipped (or the shape entity type is invalid)
         tag.putString("id",
-                walkers$shape == null ? "minecraft:empty" : BuiltInRegistries.ENTITY_TYPE.getKey(walkers$shape.getType()).toString());
+                walkers$shape == null ? "minecraft:empty" : Walkers.getEntityTypeRegistry().getKey(walkers$shape.getType()).toString());
         tag.put("EntityData", entityTag);
         return tag;
     }
@@ -126,7 +126,7 @@ public abstract class PlayerEntityDataMixin extends LivingEntity implements Play
             // ensure entity data exists
             if (!entityTag.isEmpty()) {
                 if (walkers$shape == null || !type.get().equals(walkers$shape.getType())) {
-                    walkers$shape = (LivingEntity) type.get().create(level());
+                    walkers$shape = (LivingEntity) type.get().create(CEntity.level(this));
 
                     // refresh player dimensions/hitbox on client
                     ((DimensionsRefresher) this).shape_refreshDimensions();
@@ -270,10 +270,10 @@ public abstract class PlayerEntityDataMixin extends LivingEntity implements Play
         }
 
         // sync with client
-        if (!player.level().isClientSide) {
+        if (!CEntity.level(player).isClientSide) {
             PlayerShape.sync((ServerPlayer) player);
 
-            Int2ObjectMap<Object> trackers = ((ThreadedAnvilChunkStorageAccessor) ((ServerLevel) player.level())
+            Int2ObjectMap<Object> trackers = ((ThreadedAnvilChunkStorageAccessor) ((ServerLevel) CEntity.level(player))
                     .getChunkSource().chunkMap).getEntityMap();
             Object tracking = trackers.get(player.getId());
             ((EntityTrackerAccessor) tracking).getSeenBy().forEach(

@@ -8,9 +8,12 @@ import net.minecraft.commands.arguments.EntityArgument;
 import net.minecraft.commands.arguments.UuidArgument;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
+import tocraft.craftedcore.patched.TComponent;
 import tocraft.walkers.Walkers;
 
 import java.util.UUID;
+
+import static tocraft.craftedcore.patched.CCommandSourceStack.sendSuccess;
 
 public class PlayerBlacklistCommands {
     public static LiteralCommandNode<CommandSourceStack> getRootNode() {
@@ -76,7 +79,7 @@ public class PlayerBlacklistCommands {
     }
 
     private static int isWhitelist(CommandSourceStack source) {
-        source.sendSystemMessage(Component.translatable("walkers.getConfigEntry", "playerBlacklistIsWhitelist", Walkers.CONFIG.playerBlacklistIsWhitelist));
+        sendSuccess(source, TComponent.translatable("walkers.getConfigEntry", "playerBlacklistIsWhitelist", Walkers.CONFIG.playerBlacklistIsWhitelist), false);
         return 1;
     }
 
@@ -88,7 +91,7 @@ public class PlayerBlacklistCommands {
             Walkers.CONFIG.sendToPlayer(player);
         }
 
-        source.sendSystemMessage(Component.translatable("walkers.setConfigEntry", "playerBlacklistIsWhitelist", String.valueOf(value)));
+        sendSuccess(source, TComponent.translatable("walkers.setConfigEntry", "playerBlacklistIsWhitelist", String.valueOf(value)), false);
         return 1;
     }
 
@@ -100,7 +103,7 @@ public class PlayerBlacklistCommands {
             Walkers.CONFIG.sendToPlayer(player);
         }
 
-        source.sendSystemMessage(Component.translatable("walkers.setConfigEntry", "blacklistPreventsUnlocking", String.valueOf(value)));
+        sendSuccess(source, TComponent.translatable("walkers.setConfigEntry", "blacklistPreventsUnlocking", String.valueOf(value)), false);
         return 1;
     }
 
@@ -112,19 +115,19 @@ public class PlayerBlacklistCommands {
             Walkers.CONFIG.sendToPlayer(player);
         }
 
-        source.sendSystemMessage(Component.translatable("walkers.setConfigEntry", "blacklistPreventsMorphing", String.valueOf(value)));
+        sendSuccess(source, TComponent.translatable("walkers.setConfigEntry", "blacklistPreventsMorphing", String.valueOf(value)), false);
         return 1;
     }
 
     private static int listPlayers(CommandSourceStack source) {
         for (UUID uuid : Walkers.CONFIG.playerUUIDBlacklist) {
             ServerPlayer player = source.getServer().getPlayerList().getPlayer(uuid);
-            Component name = player != null ? player.getDisplayName() : Component.literal(uuid.toString());
-            source.sendSystemMessage(Component.translatable("walkers.playerBlacklist.list", name));
+            Component name = player != null ? player.getDisplayName() : TComponent.literal(uuid.toString());
+            sendSuccess(source, TComponent.translatable("walkers.playerBlacklist.list", name), false);
         }
 
         if (Walkers.CONFIG.playerUUIDBlacklist.isEmpty())
-            source.sendSystemMessage(Component.translatable("walkers.playerBlacklist.isEmpty"));
+            sendSuccess(source, TComponent.translatable("walkers.playerBlacklist.isEmpty"), false);
 
         return 1;
     }
@@ -138,8 +141,8 @@ public class PlayerBlacklistCommands {
         }
 
         ServerPlayer player = source.getServer().getPlayerList().getPlayer(uuid);
-        Component name = player != null ? player.getDisplayName() : Component.literal(uuid.toString());
-        source.sendSystemMessage(Component.translatable("walkers.playerBlacklist.add", name));
+        Component name = player != null ? player.getDisplayName() : TComponent.literal(uuid.toString());
+        sendSuccess(source, TComponent.translatable("walkers.playerBlacklist.add", name), false);
     }
 
     private static void removeFromList(CommandSourceStack source, UUID uuid) {
@@ -151,7 +154,7 @@ public class PlayerBlacklistCommands {
         }
 
         ServerPlayer player = source.getServer().getPlayerList().getPlayer(uuid);
-        Component name = player != null ? player.getDisplayName() : Component.literal(uuid.toString());
-        source.sendSystemMessage(Component.translatable("walkers.playerBlacklist.remove", name));
+        Component name = player != null ? player.getDisplayName() : TComponent.literal(uuid.toString());
+        sendSuccess(source, TComponent.translatable("walkers.playerBlacklist.remove", name), false);
     }
 }

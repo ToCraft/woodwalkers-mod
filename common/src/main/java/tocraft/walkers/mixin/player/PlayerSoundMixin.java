@@ -15,6 +15,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+import tocraft.craftedcore.patched.CEntity;
 import tocraft.walkers.Walkers;
 import tocraft.walkers.api.PlayerShape;
 import tocraft.walkers.mixin.LivingEntityMixin;
@@ -45,7 +46,7 @@ public abstract class PlayerSoundMixin extends LivingEntityMixin {
     private void tickAmbientSounds(CallbackInfo ci) {
         LivingEntity shape = PlayerShape.getCurrentShape((Player) (Object) this);
 
-        if (!level().isClientSide && Walkers.CONFIG.playAmbientSounds && shape instanceof Mob mobShape) {
+        if (!CEntity.level(this).isClientSide && Walkers.CONFIG.playAmbientSounds && shape instanceof Mob mobShape) {
 
             if (this.isAlive() && this.random.nextInt(1000) < this.shape_ambientSoundChance++) {
                 // reset sound delay
@@ -60,10 +61,10 @@ public abstract class PlayerSoundMixin extends LivingEntityMixin {
                     // By default, players can not hear their own ambient noises.
                     // This is because ambient noises can be very annoying.
                     if (Walkers.CONFIG.hearSelfAmbient) {
-                        this.level().playSound(null, this.getX(), this.getY(), this.getZ(), sound,
+                        CEntity.level(this).playSound(null, this.getX(), this.getY(), this.getZ(), sound,
                                 this.getSoundSource(), volume, pitch);
                     } else {
-                        this.level().playSound((Player) (Object) this, this.getX(), this.getY(), this.getZ(), sound,
+                        CEntity.level(this).playSound((Player) (Object) this, this.getX(), this.getY(), this.getZ(), sound,
                                 this.getSoundSource(), volume, pitch);
                     }
                 }
@@ -72,14 +73,16 @@ public abstract class PlayerSoundMixin extends LivingEntityMixin {
     }
 
 
+    //#if MC>1194
     @Inject(method = "playStepSound", at = @At("HEAD"))
-    private void handleSpeSounds(BlockPos pos, BlockState state, CallbackInfo ci) {
+    private void handleStepSounds(BlockPos pos, BlockState state, CallbackInfo ci) {
         LivingEntity shape = PlayerShape.getCurrentShape((Player) (Object) this);
-
+    
         if (shape != null) {
             ((EntityAccessor) shape).shape_callPlayStepSound(pos, state);
         }
     }
+    //#endif
 
     @Inject(method = "getDeathSound", at = @At("HEAD"), cancellable = true)
     private void getDeathSound(CallbackInfoReturnable<SoundEvent> cir) {

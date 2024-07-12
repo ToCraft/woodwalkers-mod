@@ -4,8 +4,6 @@ import com.google.gson.*;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.JsonOps;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.EntityType;
@@ -79,11 +77,19 @@ public class TraitDataManager extends SynchronizedJsonReloadListener {
 
     public Codec<TraitList> SKILL_LIST_CODEC = RecordCodecBuilder.create((instance) -> instance.group(Codec.STRING.optionalFieldOf("required_mod", "").forGetter(TraitList::requiredMod), Codec.list(ResourceLocation.CODEC).optionalFieldOf("entity_types", new ArrayList<>()).forGetter(TraitList::entityTypeKeys), Codec.list(ResourceLocation.CODEC).optionalFieldOf("entity_tags", new ArrayList<>()).forGetter(TraitList::entityTagKeys), Codec.list(TraitRegistry.getTraitCodec()).fieldOf("skills").forGetter(TraitList::traitList)).apply(instance, instance.stable(TraitList::new)));
 
+    //#if MC>=1205
     protected TraitList traitListFromJson(JsonObject json) {
         return (isDeprecatedSkills ? SKILL_LIST_CODEC : TRAIT_LIST_CODEC).parse(JsonOps.INSTANCE, json).getOrThrow(msg -> {
             throw new JsonParseException(msg);
         });
     }
+    //#else
+    //$$ protected TraitList traitListFromJson(JsonObject json) {
+    //$$     return (isDeprecatedSkills ? SKILL_LIST_CODEC : TRAIT_LIST_CODEC).parse(JsonOps.INSTANCE, json).getOrThrow(false, msg -> {
+    //$$         throw new JsonParseException(msg);
+    //$$     });
+    //$$ }
+    //#endif
 
     @SuppressWarnings("unused")
     public record TraitList(String requiredMod, List<ResourceLocation> entityTypeKeys,
@@ -95,11 +101,11 @@ public class TraitDataManager extends SynchronizedJsonReloadListener {
 
         @SuppressWarnings("unchecked")
         public List<EntityType<LivingEntity>> entityTypes() {
-            return entityTypeKeys.stream().filter(BuiltInRegistries.ENTITY_TYPE::containsKey).map(type -> (EntityType<LivingEntity>) BuiltInRegistries.ENTITY_TYPE.get(type)).toList();
+            return entityTypeKeys.stream().filter(Walkers.getEntityTypeRegistry()::containsKey).map(type -> (EntityType<LivingEntity>) Walkers.getEntityTypeRegistry().get(type)).toList();
         }
 
         public List<TagKey<EntityType<?>>> entityTags() {
-            return entityTagKeys().stream().map(tag -> TagKey.create(Registries.ENTITY_TYPE, tag)).toList();
+            return entityTagKeys().stream().map(tag -> TagKey.create(Walkers.getEntityTypeRegistry().key(), tag)).toList();
         }
 
         public boolean isEmpty() {

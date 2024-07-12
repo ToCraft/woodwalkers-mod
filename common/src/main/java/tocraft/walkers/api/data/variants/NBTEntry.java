@@ -64,7 +64,11 @@ public record NBTEntry<T>(String nbtType, String nbtField, Map<Integer, T> param
         List<Integer> index = new ArrayList<>();
         if (!parameterList.isEmpty()) {
             if (isMutable && value instanceof String) {
+                //#if MC>=1205
                 MutableComponent tagDataMutable = Component.Serializer.fromJsonLenient((String) value, RegistryAccess.EMPTY);
+                //#else
+                //$$ MutableComponent tagDataMutable = Component.Serializer.fromJsonLenient((String) value);
+                //#endif
                 if (tagDataMutable != null) {
                     value = (T) tagDataMutable.getString();
                 }
@@ -72,7 +76,11 @@ public record NBTEntry<T>(String nbtType, String nbtField, Map<Integer, T> param
             for (int i : parameterList.keySet()) {
                 T parameterT = parameterList.get(i);
                 if (isMutable && parameterT instanceof String) {
+                    //#if MC>=1205
                     MutableComponent parameterMutable = Component.Serializer.fromJsonLenient((String) parameterT, RegistryAccess.EMPTY);
+                    //#else
+                    //$$ MutableComponent parameterMutable = Component.Serializer.fromJsonLenient((String) parameterT);
+                    //#endif
                     if (parameterMutable != null) {
                         parameterT = (T) parameterMutable.getString();
                     }

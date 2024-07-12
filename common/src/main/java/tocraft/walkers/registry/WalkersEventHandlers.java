@@ -16,10 +16,14 @@ import net.minecraft.world.level.ServerLevelAccessor;
 import tocraft.craftedcore.event.common.EntityEvents;
 import tocraft.craftedcore.event.common.PlayerEvents;
 import tocraft.craftedcore.event.common.ResourceEvents;
+import tocraft.craftedcore.patched.CEntity;
 import tocraft.walkers.Walkers;
+import tocraft.walkers.api.FlightHelper;
 import tocraft.walkers.api.PlayerHostility;
 import tocraft.walkers.api.PlayerShape;
+//#if MC>=1205
 import tocraft.walkers.impl.variant.WolfTypeProvider;
+//#endif
 import tocraft.walkers.traits.ShapeTrait;
 import tocraft.walkers.traits.TraitRegistry;
 import tocraft.walkers.traits.impl.CantInteractTrait;
@@ -36,7 +40,9 @@ public class WalkersEventHandlers {
         registerLivingDeathHandler();
 
         // set WolfTypeProvider Range when on server
-        ResourceEvents.DATA_PACK_SYNC.register(player -> WolfTypeProvider.setRange(player.level()));
+        //#if MC>=1205
+        ResourceEvents.DATA_PACK_SYNC.register(player -> WolfTypeProvider.setRange(CEntity.level(player)));
+        //#endif
 
         EntityEvents.INTERACT_WITH_PLAYER.register((player, entity, hand) -> {
             LivingEntity shape = PlayerShape.getCurrentShape(player);
@@ -53,7 +59,7 @@ public class WalkersEventHandlers {
 
         PlayerEvents.ALLOW_SLEEP_TIME.register((player, sleepingPos, vanillaResult) -> {
             if (TraitRegistry.has(PlayerShape.getCurrentShape(player), NocturnalTrait.ID)) {
-                return player.level().isDay() ? InteractionResult.SUCCESS : InteractionResult.FAIL;
+                return CEntity.level(player).isDay() ? InteractionResult.SUCCESS : InteractionResult.FAIL;
             }
             return InteractionResult.PASS;
         });
@@ -65,11 +71,19 @@ public class WalkersEventHandlers {
                 return newTime;
             }
         });
+
+        PlayerEvents.AWARD_ADVANCEMENT.register((player, advancement, criterionKey) -> {
+            if (Walkers.hasFlyingPermissions(player)) {
+                FlightHelper.grantFlightTo(player);
+                player.getAbilities().setFlyingSpeed(Walkers.CONFIG.flySpeed);
+                player.onUpdateAbilities();
+            }
+        });
     }
 
     public static void registerHostilityUpdateHandler() {
         EntityEvents.INTERACT_WITH_PLAYER.register((player, entity, hand) -> {
-            if (!player.level().isClientSide && Walkers.CONFIG.playerCanTriggerHostiles && entity instanceof Monster) {
+            if (!CEntity.level(player).isClientSide && Walkers.CONFIG.playerCanTriggerHostiles && entity instanceof Monster) {
                 PlayerHostility.set(player, Walkers.CONFIG.hostilityTime);
             }
 
@@ -110,15 +124,24 @@ public class WalkersEventHandlers {
 
     public static void registerLivingDeathHandler() {
         EntityEvents.LIVING_DEATH.register((entity, damageSource) -> {
-            if (!entity.level().isClientSide()) {
+            if (!CEntity.level(entity).isClientSide()) {
                 if (entity instanceof Villager villager && damageSource.getEntity() instanceof Player player && PlayerShape.getCurrentShape(player) instanceof Zombie) {
-                    if (!(player.level().getDifficulty() != Difficulty.HARD && player.getRandom().nextBoolean())) {
+                    if (!(CEntity.level(player).getDifficulty() != Difficulty.HARD && player.getRandom().nextBoolean())) {
                         ZombieVillager zombievillager = villager.convertTo(EntityType.ZOMBIE_VILLAGER, false);
                         if (zombievillager != null) {
-                            zombievillager.finalizeSpawn((ServerLevelAccessor) player.level(), player.level().getCurrentDifficultyAt(zombievillager.blockPosition()), MobSpawnType.CONVERSION, new Zombie.ZombieGroupData(false, true));
-                            zombievillager.setVillagerData(villager.getVillagerData());
-                            zombievillager.setGossips(villager.getGossips().store(NbtOps.INSTANCE));
+                            //#if MC>=1205
+                            zombievillager.finalizeSpawn((ServerLevelAccessor) CEntity.level(player), CEntity.level(player).getCurrentDifficultyAt(zombievillager.blockPosition()), MobSpawnType.CONVERSION, new Zombie.ZombieGroupData(false, true));
                             zombievillager.setTradeOffers(villager.getOffers());
+                            //#else
+                            //$$ zombievillager.finalizeSpawn((ServerLevelAccessor) CEntity.level(player), CEntity.level(player).getCurrentDifficultyAt(zombievillager.blockPosition()), MobSpawnType.CONVERSION, new Zombie.ZombieGroupData(false, true), null);
+                            //$$ zombievillager.setTradeOffers(villager.getOffers().createTag());
+                            //#endif
+                            zombievillager.setVillagerData(villager.getVillagerData());
+                            //#if MC>1182
+                            zombievillager.setGossips(villager.getGossips().store(NbtOps.INSTANCE));
+                            //#else
+                            //$$ zombievillager.setGossips(villager.getGossips().store(NbtOps.INSTANCE).getValue());
+                            //#endif
                             zombievillager.setVillagerXp(villager.getVillagerXp());
                         }
                     }

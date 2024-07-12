@@ -9,6 +9,7 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
 import org.jetbrains.annotations.Nullable;
+import tocraft.craftedcore.patched.Identifier;
 import tocraft.walkers.Walkers;
 import tocraft.walkers.traits.ShapeTrait;
 
@@ -31,9 +32,11 @@ public class AttackForHealthTrait<E extends LivingEntity> extends ShapeTrait<E> 
         return false;
     }
 
+    //#if MC>1201
     @Override
     @Environment(EnvType.CLIENT)
     public @Nullable TextureAtlasSprite getIcon() {
-        return Minecraft.getInstance().getGuiSprites().getSprite(ResourceLocation.parse("hud/food_half"));
+        return Minecraft.getInstance().getGuiSprites().getSprite(Identifier.parse("hud/food_half"));
     }
+    //#endif
 }

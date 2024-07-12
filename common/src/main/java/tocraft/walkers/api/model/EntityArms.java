@@ -139,6 +139,7 @@ public class EntityArms {
                     stack.mulPose(Maths.getDegreesQuaternion(Maths.POSITIVE_Y(), -15));
                     stack.translate(0, -.25, .25);
                 });
+        //#if MC>1182
         register(CamelModel.class, new GenericEntityArm<>(),
                 (stack, model) -> stack.translate(0, -.25, 0));
         register(FoxModel.class, new GenericEntityArm<>(),
@@ -156,6 +157,7 @@ public class EntityArms {
                     stack.scale(5, 5, 5);
                     stack.translate(.2, .5, -.35);
                 });
+        //#endif
         register(VexModel.class, new GenericEntityArm<>("root", "body", "right_arm"),
                 (stack, model) -> {
                     stack.scale(5, 5, 5);

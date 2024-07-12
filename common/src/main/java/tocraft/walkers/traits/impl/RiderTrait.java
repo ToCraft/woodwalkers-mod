@@ -3,8 +3,6 @@ package tocraft.walkers.traits.impl;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.EntityType;
@@ -22,18 +20,18 @@ import java.util.stream.Stream;
 public class RiderTrait<E extends LivingEntity> extends ShapeTrait<E> {
     public static final ResourceLocation ID = Walkers.id("rider");
     public static final MapCodec<RiderTrait<?>> CODEC = RecordCodecBuilder.mapCodec((instance) -> instance.group(
-            Codec.list(ResourceLocation.CODEC).optionalFieldOf("rideable", new ArrayList<>()).forGetter(o -> o.rideableTypes.stream().map(BuiltInRegistries.ENTITY_TYPE::getKey).toList()),
+            Codec.list(ResourceLocation.CODEC).optionalFieldOf("rideable", new ArrayList<>()).forGetter(o -> o.rideableTypes.stream().map(Walkers.getEntityTypeRegistry()::getKey).toList()),
             Codec.list(ResourceLocation.CODEC).optionalFieldOf("rideable_tags", new ArrayList<>()).forGetter(o -> o.rideableTags.stream().map(TagKey::location).toList())
     ).apply(instance, instance.stable((rideableTypeIds, rideableTagIds) -> {
         List<EntityType<?>> rideableTypes = new ArrayList<>();
         List<TagKey<EntityType<?>>> rideableTags = new ArrayList<>();
         for (ResourceLocation rideableTypeId : rideableTypeIds) {
-            if (BuiltInRegistries.ENTITY_TYPE.containsKey(rideableTypeId)) {
-                rideableTypes.add(BuiltInRegistries.ENTITY_TYPE.get(rideableTypeId));
+            if (Walkers.getEntityTypeRegistry().containsKey(rideableTypeId)) {
+                rideableTypes.add(Walkers.getEntityTypeRegistry().get(rideableTypeId));
             }
         }
         for (ResourceLocation rideableTagId : rideableTagIds) {
-            rideableTags.add(TagKey.create(Registries.ENTITY_TYPE, rideableTagId));
+            rideableTags.add(TagKey.create(Walkers.getEntityTypeRegistry().key(), rideableTagId));
         }
         return new RiderTrait<>(new ArrayList<>(), rideableTypes, new ArrayList<>(), rideableTags);
     })));

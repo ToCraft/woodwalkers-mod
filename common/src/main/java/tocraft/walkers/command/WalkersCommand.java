@@ -2,15 +2,14 @@ package tocraft.walkers.command;
 
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.tree.LiteralCommandNode;
+//#if MC>1182
 import net.minecraft.commands.CommandBuildContext;
+//#endif
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.CompoundTagArgument;
 import net.minecraft.commands.arguments.EntityArgument;
-import net.minecraft.commands.arguments.ResourceArgument;
 import net.minecraft.commands.synchronization.SuggestionProviders;
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -21,18 +20,31 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import org.jetbrains.annotations.Nullable;
 import tocraft.craftedcore.event.common.CommandEvents;
+import tocraft.craftedcore.patched.CEntity;
+import tocraft.craftedcore.patched.CEntitySummonArgument;
+import tocraft.craftedcore.patched.TComponent;
+import tocraft.walkers.Walkers;
 import tocraft.walkers.api.PlayerAbilities;
 import tocraft.walkers.api.PlayerShape;
 import tocraft.walkers.api.PlayerShapeChanger;
 import tocraft.walkers.api.variant.ShapeType;
 import tocraft.walkers.impl.PlayerDataProvider;
+import static tocraft.craftedcore.patched.CCommandSourceStack.sendSuccess;
 
 public class WalkersCommand {
+    //#if MC>1182
     public static void initialize() {
         CommandEvents.REGISTRATION.register((dispatcher, ctx, selection) -> register(dispatcher, ctx));
     }
-
     private static void register(CommandDispatcher<CommandSourceStack> dispatcher, CommandBuildContext ctx) {
+    //#else
+    //$$ public static void initialize() {
+    //$$     CommandEvents.REGISTRATION.register((dispatcher, ctx) -> register(dispatcher));
+    //$$ }
+    //$$
+    //$$ private static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
+    //$$     Object ctx = null;
+    //#endif
         LiteralCommandNode<CommandSourceStack> rootNode = Commands.literal("walkers")
                 .requires(source -> source.hasPermission(2)).build();
 
@@ -50,11 +62,10 @@ public class WalkersCommand {
          */
         LiteralCommandNode<CommandSourceStack> change2ndShape = Commands.literal("change2ndShape")
                 .then(Commands.argument("player", EntityArgument.players())
-                        .then(Commands.argument("shape", ResourceArgument.resource(ctx, Registries.ENTITY_TYPE))
+                        .then(Commands.argument("shape", CEntitySummonArgument.id(ctx))
                                 .suggests(SuggestionProviders.SUMMONABLE_ENTITIES).executes(context -> {
                                     change2ndShape(context.getSource(), EntityArgument.getPlayer(context, "player"),
-                                            EntityType.getKey(ResourceArgument
-                                                    .getSummonableEntityType(context, "shape").value()),
+                                            CEntitySummonArgument.getEntityTypeId(context, "shape"),
                                             null);
                                     return 1;
                                 }).then(Commands.argument("nbt", CompoundTagArgument.compoundTag())
@@ -63,8 +74,7 @@ public class WalkersCommand {
 
                                             change2ndShape(context.getSource(),
                                                     EntityArgument.getPlayer(context, "player"),
-                                                    EntityType.getKey(ResourceArgument
-                                                            .getSummonableEntityType(context, "shape").value()),
+                                                    CEntitySummonArgument.getEntityTypeId(context, "shape"),
                                                     nbt);
 
                                             return 1;
@@ -74,11 +84,10 @@ public class WalkersCommand {
         LiteralCommandNode<CommandSourceStack> switchShape = Commands.literal("switchShape").then(Commands.argument("player", EntityArgument.players()).then(Commands.literal("normal").executes(context -> {
                     switchShapeToNormal(context.getSource(), EntityArgument.getPlayer(context, "player"));
                     return 1;
-                })).then(Commands.argument("shape", ResourceArgument.resource(ctx, Registries.ENTITY_TYPE))
+                })).then(Commands.argument("shape", CEntitySummonArgument.id(ctx))
                         .suggests(SuggestionProviders.SUMMONABLE_ENTITIES).executes(context -> {
                             switchShape(context.getSource(), EntityArgument.getPlayer(context, "player"),
-                                    EntityType.getKey(
-                                            ResourceArgument.getSummonableEntityType(context, "shape").value()),
+                                    CEntitySummonArgument.getEntityTypeId(context, "shape"),
                                     null);
 
                             return 1;
@@ -86,8 +95,7 @@ public class WalkersCommand {
                             CompoundTag nbt = CompoundTagArgument.getCompoundTag(context, "nbt");
 
                             switchShape(context.getSource(), EntityArgument.getPlayer(context, "player"),
-                                    EntityType.getKey(
-                                            ResourceArgument.getSummonableEntityType(context, "shape").value()),
+                                    CEntitySummonArgument.getEntityTypeId(context, "shape"),
                                     nbt);
 
                             return 1;
@@ -105,7 +113,11 @@ public class WalkersCommand {
         rootNode.addChild(show2ndShape);
 
         rootNode.addChild(PlayerBlacklistCommands.getRootNode());
+        //#if MC>1182
         rootNode.addChild(EntityBlacklistCommands.getRootNode(ctx));
+        //#else
+        //$$ rootNode.addChild(EntityBlacklistCommands.getRootNode());
+        //#endif
 
         dispatcher.getRoot().addChild(rootNode);
     }
@@ -115,13 +127,13 @@ public class WalkersCommand {
         if (((PlayerDataProvider) player).walkers$get2ndShape() != null) {
             ShapeType<?> type = ((PlayerDataProvider) player).walkers$get2ndShape();
             if (type != null) {
-                source.sendSystemMessage(Component.translatable("walkers.show2ndShapeNot_positive",
-                        player.getDisplayName(), ShapeType.createTooltipText(type.create(player.level(), player))));
+                sendSuccess(source, TComponent.translatable("walkers.show2ndShapeNot_positive",
+                        player.getDisplayName(), ShapeType.createTooltipText(type.create(CEntity.level(player), player))), false);
             }
 
             return 1;
         } else {
-            source.sendSystemMessage(Component.translatable("walkers.show2ndShapeNot_failed", player.getDisplayName()));
+            sendSuccess(source, TComponent.translatable("walkers.show2ndShapeNot_failed", player.getDisplayName()), false);
         }
 
         return 0;
@@ -131,15 +143,15 @@ public class WalkersCommand {
 
         change2ndShape(player, null);
 
-        player.displayClientMessage(Component.translatable("walkers.remove_entity"), true);
-        source.sendSystemMessage(Component.translatable("walkers.deletion_success", player.getDisplayName()));
+        player.displayClientMessage(TComponent.translatable("walkers.remove_entity"), true);
+        sendSuccess(source, TComponent.translatable("walkers.deletion_success", player.getDisplayName()), false);
     }
 
     @SuppressWarnings("unchecked")
     private static void change2ndShape(CommandSourceStack source, ServerPlayer player, ResourceLocation id,
                                        @Nullable CompoundTag nbt) {
-        ShapeType<LivingEntity> type = ShapeType.from((EntityType<LivingEntity>) BuiltInRegistries.ENTITY_TYPE.get(id));
-        Component name = Component.translatable(type.getEntityType().getDescriptionId());
+        ShapeType<LivingEntity> type = ShapeType.from((EntityType<LivingEntity>) Walkers.getEntityTypeRegistry().get(id));
+        Component name = TComponent.translatable(type.getEntityType().getDescriptionId());
 
         // If the specified granting NBT is not null, change the ShapeType to reflect
         // potential variants.
@@ -157,11 +169,11 @@ public class WalkersCommand {
         if (((PlayerDataProvider) player).walkers$get2ndShape() != type) {
             change2ndShape(player, type);
 
-            player.sendSystemMessage(Component.translatable("walkers.unlock_entity", name));
-            source.sendSystemMessage(
-                    Component.translatable("walkers.grant_success", name, player.getDisplayName()));
+            player.displayClientMessage(TComponent.translatable("walkers.unlock_entity", name), false);
+            sendSuccess(source, 
+                    TComponent.translatable("walkers.grant_success", name, player.getDisplayName()), false);
         } else {
-            source.sendSystemMessage(Component.translatable("walkers.already_has", player.getDisplayName(), name));
+            sendSuccess(source, TComponent.translatable("walkers.already_has", player.getDisplayName(), name), false);
         }
     }
 
@@ -174,14 +186,14 @@ public class WalkersCommand {
             ServerLevel serverWorld = source.getLevel();
             created = EntityType.loadEntityRecursive(copy, serverWorld, it -> it);
         } else {
-            EntityType<?> entity = BuiltInRegistries.ENTITY_TYPE.get(shape);
-            created = entity.create(player.level());
+            EntityType<?> entity = Walkers.getEntityTypeRegistry().get(shape);
+            created = entity.create(CEntity.level(player));
         }
 
         if (created instanceof LivingEntity) {
             ((PlayerDataProvider) player).walkers$updateShapes((LivingEntity) created);
-            source.sendSystemMessage(Component.translatable("walkers.switchShape_success",
-                    player.getDisplayName(), Component.translatable(created.getType().getDescriptionId())));
+            sendSuccess(source, TComponent.translatable("walkers.switchShape_success",
+                    player.getDisplayName(), TComponent.translatable(created.getType().getDescriptionId())), false);
         }
     }
 
@@ -189,8 +201,8 @@ public class WalkersCommand {
         boolean result = PlayerShape.updateShapes(player, null);
 
         if (result) {
-            source.sendSystemMessage(
-                    Component.translatable("walkers.switchShape_human_success", player.getDisplayName()));
+            sendSuccess(source,
+                    TComponent.translatable("walkers.switchShape_human_success", player.getDisplayName()), false);
         }
     }
 

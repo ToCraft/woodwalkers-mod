@@ -9,6 +9,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+import tocraft.craftedcore.patched.client.CMinecraft;
 import tocraft.walkers.impl.PlayerDataProvider;
 
 import java.util.Optional;
@@ -21,7 +22,7 @@ public abstract class ClientEntityMixin {
     private void getClientVehicle(CallbackInfoReturnable<Entity> cir) {
         if ((Object) this instanceof AbstractClientPlayer clientPlayer && cir.getReturnValue() == null) {
             Optional<UUID> vehiclePlayerID = ((PlayerDataProvider) clientPlayer).walkers$getVehiclePlayerUUID();
-            if (vehiclePlayerID.isPresent() && Minecraft.getInstance().isLocalPlayer(vehiclePlayerID.get())) {
+            if (vehiclePlayerID.isPresent() && CMinecraft.isLocalPlayer(vehiclePlayerID.get())) {
                 cir.setReturnValue(Minecraft.getInstance().player);
             }
         }

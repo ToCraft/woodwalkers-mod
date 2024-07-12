@@ -1,3 +1,4 @@
+//#if MC>1182
 package tocraft.walkers.mixin.client.accessor;
 
 import net.fabricmc.api.EnvType;
@@ -18,3 +19,4 @@ public interface LimbAnimatorAccessor {
     @Accessor("speedOld")
     void setPrevSpeed(float prevSpeed);
 }
+//#endif

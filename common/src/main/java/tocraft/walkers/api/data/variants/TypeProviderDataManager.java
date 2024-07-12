@@ -6,12 +6,13 @@ import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.JsonOps;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import org.jetbrains.annotations.Nullable;
 import tocraft.craftedcore.data.SynchronizedJsonReloadListener;
+import tocraft.craftedcore.patched.CRegistries;
+import tocraft.craftedcore.patched.Identifier;
 import tocraft.craftedcore.platform.PlatformData;
 import tocraft.walkers.Walkers;
 import tocraft.walkers.api.variant.TypeProvider;
@@ -89,7 +90,7 @@ public class TypeProviderDataManager extends SynchronizedJsonReloadListener {
         if (typeProviderOptional.isPresent()) {
             typeProvider = typeProviderOptional.get();
         } else if (parent.isPresent()) {
-            typeProvider = TypeProviderRegistry.getProvider((EntityType<? extends LivingEntity>) BuiltInRegistries.ENTITY_TYPE.get(parent.get()));
+            typeProvider = TypeProviderRegistry.getProvider((EntityType<? extends LivingEntity>) Walkers.getEntityTypeRegistry().get(parent.get()));
         } else if (typeProviderClassOptional.isPresent()) {
             try {
                 typeProvider = Class.forName(typeProviderClassOptional.get()).asSubclass(TypeProvider.class).getDeclaredConstructor().newInstance();
@@ -107,7 +108,13 @@ public class TypeProviderDataManager extends SynchronizedJsonReloadListener {
     })));
 
     private static Either<TypeProviderEntry<?>, String> typeProviderFromJson(JsonObject json) {
+        //#if MC>=1205
         return TYPE_PROVIDER_LIST_CODEC.parse(JsonOps.INSTANCE, json).getOrThrow(JsonParseException::new);
+        //#else
+        //$$ return TYPE_PROVIDER_LIST_CODEC.parse(JsonOps.INSTANCE, json).getOrThrow(false, msg -> {
+        //$$     throw new JsonParseException(msg);
+        //$$ });
+        //#endif
     }
 
     @SuppressWarnings("unused")
@@ -122,8 +129,8 @@ public class TypeProviderDataManager extends SynchronizedJsonReloadListener {
         @SuppressWarnings("unchecked")
         @Nullable
         public EntityType<L> entityType() {
-            if ((requiredMod() == null || requiredMod().isBlank() || PlatformData.isModLoaded(requiredMod())) && BuiltInRegistries.ENTITY_TYPE.containsKey(entityTypeKey()))
-                return (EntityType<L>) BuiltInRegistries.ENTITY_TYPE.get(entityTypeKey());
+            if ((requiredMod() == null || requiredMod().isBlank() || PlatformData.isModLoaded(requiredMod())) && Walkers.getEntityTypeRegistry().containsKey(entityTypeKey()))
+                return (EntityType<L>) Walkers.getEntityTypeRegistry().get(entityTypeKey());
             else
                 return null;
         }

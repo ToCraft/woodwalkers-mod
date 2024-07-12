@@ -7,13 +7,13 @@ import com.google.gson.JsonParseException;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.JsonOps;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import tocraft.craftedcore.data.SynchronizedJsonReloadListener;
+import tocraft.craftedcore.patched.CRegistries;
+import tocraft.craftedcore.patched.Identifier;
 import tocraft.craftedcore.platform.PlatformData;
 import tocraft.walkers.Walkers;
 import tocraft.walkers.ability.AbilityRegistry;
@@ -39,9 +39,15 @@ public class AbilityDataManager extends SynchronizedJsonReloadListener {
         AbilityRegistry.registerDefault();
 
         for (Map.Entry<ResourceLocation, JsonElement> mapEntry : map.entrySet()) {
+            //#if MC>=1205
             AbilityList abilityList = ABILITY_LIST_CODEC.parse(JsonOps.INSTANCE, mapEntry.getValue().getAsJsonObject()).getOrThrow(msg -> {
                 throw new JsonParseException(msg);
             });
+            //#else
+            //$$ AbilityList abilityList = ABILITY_LIST_CODEC.parse(JsonOps.INSTANCE, mapEntry.getValue().getAsJsonObject()).getOrThrow(false, msg -> {
+            //$$     throw new JsonParseException(msg);
+            //$$ });
+            //#endif
 
             if (!abilityList.isEmpty()) {
                 if (abilityList.requiredMod() == null || abilityList.requiredMod().isBlank() || PlatformData.isModLoaded(abilityList.requiredMod())) {
@@ -89,11 +95,11 @@ public class AbilityDataManager extends SynchronizedJsonReloadListener {
 
         @SuppressWarnings("unchecked")
         public List<EntityType<LivingEntity>> entityTypes() {
-            return entityTypeKeys.stream().filter(BuiltInRegistries.ENTITY_TYPE::containsKey).map(type -> (EntityType<LivingEntity>) BuiltInRegistries.ENTITY_TYPE.get(type)).toList();
+            return entityTypeKeys.stream().filter(Walkers.getEntityTypeRegistry()::containsKey).map(type -> (EntityType<LivingEntity>) Walkers.getEntityTypeRegistry().get(type)).toList();
         }
 
         public List<TagKey<EntityType<?>>> entityTags() {
-            return entityTagKeys().stream().map(tag -> TagKey.create(Registries.ENTITY_TYPE, tag)).toList();
+            return entityTagKeys().stream().map(tag -> TagKey.create(Walkers.getEntityTypeRegistry().key(), tag)).toList();
         }
 
         public boolean isEmpty() {

@@ -2,10 +2,12 @@ package tocraft.walkers.api;
 
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+//#if MC>1182
 import tocraft.walkers.impl.tick.shapes.FrogTickHandler;
+import tocraft.walkers.impl.tick.shapes.WardenTickHandler;
+//#endif
 import tocraft.walkers.impl.tick.shapes.JumpBoostTickHandler;
 import tocraft.walkers.impl.tick.shapes.SnowGolemTickHandler;
-import tocraft.walkers.impl.tick.shapes.WardenTickHandler;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -15,12 +17,14 @@ public class WalkersTickHandlers {
     private static final Map<EntityType<?>, WalkersTickHandler<?>> HANDLERS = new LinkedHashMap<>();
 
     public static void initialize() {
+        //#if MC>1182
         register(EntityType.WARDEN, new WardenTickHandler());
         register(EntityType.FROG, new FrogTickHandler());
+        register(EntityType.CAMEL, new JumpBoostTickHandler<>(0));
+        //#endif
         register(EntityType.SNOW_GOLEM, new SnowGolemTickHandler());
         register(EntityType.RABBIT, new JumpBoostTickHandler<>(1));
         register(EntityType.GOAT, new JumpBoostTickHandler<>(2));
-        register(EntityType.CAMEL, new JumpBoostTickHandler<>(0));
         register(EntityType.MAGMA_CUBE, new JumpBoostTickHandler<>(2));
         register(EntityType.SLIME, new JumpBoostTickHandler<>(2));
     }

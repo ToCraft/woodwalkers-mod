@@ -2,32 +2,40 @@ package tocraft.walkers.command;
 
 import com.mojang.brigadier.arguments.BoolArgumentType;
 import com.mojang.brigadier.tree.LiteralCommandNode;
-import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
-import net.minecraft.commands.arguments.ResourceArgument;
+//#if MC>1182
+import net.minecraft.commands.CommandBuildContext;
+//#endif
 import net.minecraft.commands.synchronization.SuggestionProviders;
-import net.minecraft.core.registries.Registries;
-import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.entity.EntityType;
+import tocraft.craftedcore.patched.CEntitySummonArgument;
+import tocraft.craftedcore.patched.TComponent;
 import tocraft.walkers.Walkers;
+import static tocraft.craftedcore.patched.CCommandSourceStack.sendSuccess;
 
 public class EntityBlacklistCommands {
+    //#if MC>1182
     public static LiteralCommandNode<CommandSourceStack> getRootNode(CommandBuildContext ctx) {
+        //#else
+        //$$ public static LiteralCommandNode<CommandSourceStack> getRootNode() {
+        //$$     // just 'coz I'm lazy
+        //$$     Object ctx = null;
+        //#endif
         LiteralCommandNode<CommandSourceStack> rootNode = Commands.literal("entityBlacklist").build();
 
         LiteralCommandNode<CommandSourceStack> addToList = Commands.literal("add")
-                .then(Commands.argument("entity", ResourceArgument.resource(ctx, Registries.ENTITY_TYPE)).suggests(SuggestionProviders.SUMMONABLE_ENTITIES)
+                .then(Commands.argument("entity", CEntitySummonArgument.id(ctx)).suggests(SuggestionProviders.SUMMONABLE_ENTITIES)
                         .executes(context -> {
-                            addToList(context.getSource(), ResourceArgument.getEntityType(context, "entity").value());
+                            addToList(context.getSource(), CEntitySummonArgument.getEntityTypeId(context, "entity"));
                             return 1;
                         }))
                 .build();
         LiteralCommandNode<CommandSourceStack> removeFromList = Commands.literal("remove")
-                .then(Commands.argument("entity", ResourceArgument.resource(ctx, Registries.ENTITY_TYPE)).suggests(SuggestionProviders.SUMMONABLE_ENTITIES)
+                .then(Commands.argument("entity", CEntitySummonArgument.id(ctx)).suggests(SuggestionProviders.SUMMONABLE_ENTITIES)
                         .executes(context -> {
-                            removeFromList(context.getSource(), ResourceArgument.getEntityType(context, "entity").value());
+                            removeFromList(context.getSource(), CEntitySummonArgument.getEntityTypeId(context, "entity"));
                             return 1;
                         }))
                 .build();
@@ -62,7 +70,7 @@ public class EntityBlacklistCommands {
     }
 
     private static void isWhitelist(CommandSourceStack source) {
-        source.sendSystemMessage(Component.translatable("walkers.getConfigEntry", "entityBlacklistIsWhitelist", Walkers.CONFIG.entityBlacklistIsWhitelist));
+        sendSuccess(source, TComponent.translatable("walkers.getConfigEntry", "entityBlacklistIsWhitelist", Walkers.CONFIG.entityBlacklistIsWhitelist), false);
     }
 
     private static void setIsWhitelist(CommandSourceStack source, boolean value) {
@@ -73,7 +81,7 @@ public class EntityBlacklistCommands {
             Walkers.CONFIG.sendToPlayer(player);
         }
 
-        source.sendSystemMessage(Component.translatable("walkers.setConfigEntry", "entityBlacklistIsWhitelist", String.valueOf(value)));
+        sendSuccess(source, TComponent.translatable("walkers.setConfigEntry", "entityBlacklistIsWhitelist", String.valueOf(value)), false);
     }
 
     private static int clearEntities(CommandSourceStack source) {
@@ -84,42 +92,42 @@ public class EntityBlacklistCommands {
             Walkers.CONFIG.sendToPlayer(player);
         }
 
-        source.sendSystemMessage(Component.translatable("walkers.entityBlacklist.clear"));
+        sendSuccess(source, TComponent.translatable("walkers.entityBlacklist.clear"), false);
 
         return 1;
     }
 
     private static int listEntities(CommandSourceStack source) {
         for (String s : Walkers.CONFIG.entityBlacklist) {
-            source.sendSystemMessage(Component.translatable("walkers.entityBlacklist.list", s));
+            sendSuccess(source, TComponent.translatable("walkers.entityBlacklist.list", s), false);
         }
 
         if (Walkers.CONFIG.entityBlacklist.isEmpty()) {
-            source.sendSystemMessage(Component.translatable("walkers.entityBlacklist.isEmpty"));
+            sendSuccess(source, TComponent.translatable("walkers.entityBlacklist.isEmpty"), false);
         }
 
         return 1;
     }
 
-    private static void addToList(CommandSourceStack source, EntityType<?> type) {
-        Walkers.CONFIG.entityBlacklist.add(EntityType.getKey(type).toString());
+    private static void addToList(CommandSourceStack source, ResourceLocation type) {
+        Walkers.CONFIG.entityBlacklist.add(type.toString());
         Walkers.CONFIG.save();
 
         for (ServerPlayer player : source.getServer().getPlayerList().getPlayers()) {
             Walkers.CONFIG.sendToPlayer(player);
         }
 
-        source.sendSystemMessage(Component.translatable("walkers.entityBlacklist.add", EntityType.getKey(type).toString()));
+        sendSuccess(source, TComponent.translatable("walkers.entityBlacklist.add", type.toString()), false);
     }
 
-    private static void removeFromList(CommandSourceStack source, EntityType<?> type) {
-        Walkers.CONFIG.entityBlacklist.remove(EntityType.getKey(type).toString());
+    private static void removeFromList(CommandSourceStack source, ResourceLocation type) {
+        Walkers.CONFIG.entityBlacklist.remove(type.toString());
         Walkers.CONFIG.save();
 
         for (ServerPlayer player : source.getServer().getPlayerList().getPlayers()) {
             Walkers.CONFIG.sendToPlayer(player);
         }
 
-        source.sendSystemMessage(Component.translatable("walkers.entityBlacklist.remove", EntityType.getKey(type).toString()));
+        sendSuccess(source, TComponent.translatable("walkers.entityBlacklist.remove", type.toString()), false);
     }
 }

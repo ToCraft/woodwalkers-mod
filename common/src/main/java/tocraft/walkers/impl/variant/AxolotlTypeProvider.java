@@ -5,6 +5,7 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.animal.axolotl.Axolotl;
 import net.minecraft.world.level.Level;
+import tocraft.craftedcore.patched.TComponent;
 import tocraft.walkers.api.variant.TypeProvider;
 import tocraft.walkers.mixin.accessor.AxolotlEntityAccessor;
 
@@ -35,6 +36,6 @@ public class AxolotlTypeProvider extends TypeProvider<Axolotl> {
 
     @Override
     public Component modifyText(Axolotl entity, MutableComponent text) {
-        return Component.literal(formatTypePrefix(Axolotl.Variant.values()[getVariantData(entity)].getName()) + " ").append(text);
+        return TComponent.literal(formatTypePrefix(Axolotl.Variant.values()[getVariantData(entity)].getName()) + " ").append(text);
     }
 }

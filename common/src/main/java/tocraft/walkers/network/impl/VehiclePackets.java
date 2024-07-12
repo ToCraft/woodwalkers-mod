@@ -2,9 +2,11 @@ package tocraft.walkers.network.impl;
 
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import tocraft.craftedcore.network.ModernNetworking;
+import tocraft.craftedcore.patched.CEntity;
 import tocraft.walkers.impl.PlayerDataProvider;
 import tocraft.walkers.mixin.EntityTrackerAccessor;
 import tocraft.walkers.mixin.ThreadedAnvilChunkStorageAccessor;
@@ -33,7 +35,7 @@ public class VehiclePackets {
 
         if (isRidingPlayer) tag.putUUID("playerVehicleID", player.getVehicle().getUUID());
 
-        Int2ObjectMap<Object> trackers = ((ThreadedAnvilChunkStorageAccessor) (player.serverLevel()).getChunkSource().chunkMap).getEntityMap();
+        Int2ObjectMap<Object> trackers = ((ThreadedAnvilChunkStorageAccessor) ((ServerLevel) CEntity.level(player)).getChunkSource().chunkMap).getEntityMap();
         Object tracking = trackers.get(player.getId());
         // Send to all clients
         if (tracking != null)

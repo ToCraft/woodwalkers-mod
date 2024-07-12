@@ -1,6 +1,5 @@
 package tocraft.walkers.api.blacklist;
 
-import net.minecraft.core.registries.Registries;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.EntityType;
 import tocraft.walkers.Walkers;
@@ -15,7 +14,7 @@ public class EntityBlacklist {
 
     public static void registerDefault() {
         // support deprecated entity tags
-        registerByTag(TagKey.create(Registries.ENTITY_TYPE, Walkers.id("blacklisted")));
+        registerByTag(TagKey.create(Walkers.getEntityTypeRegistry().key(), Walkers.id("blacklisted")));
 
         // handle Integrations
         Integrations.registerEntityBlacklist();

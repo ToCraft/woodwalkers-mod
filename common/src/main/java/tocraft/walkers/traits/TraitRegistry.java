@@ -3,7 +3,6 @@ package tocraft.walkers.traits;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.MapCodec;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.EntityTypeTags;
 import net.minecraft.tags.FluidTags;
@@ -16,7 +15,9 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.entity.ambient.Bat;
 import net.minecraft.world.entity.animal.*;
+//#if MC>1182
 import net.minecraft.world.entity.animal.allay.Allay;
+//#endif
 import net.minecraft.world.entity.animal.horse.AbstractHorse;
 import net.minecraft.world.entity.boss.enderdragon.EnderDragon;
 import net.minecraft.world.entity.boss.wither.WitherBoss;
@@ -26,6 +27,7 @@ import net.minecraft.world.entity.raid.Raider;
 import net.minecraft.world.level.block.Blocks;
 import org.jetbrains.annotations.Nullable;
 import tocraft.walkers.Walkers;
+import tocraft.walkers.ability.GenericShapeAbility;
 import tocraft.walkers.ability.ShapeAbility;
 import tocraft.walkers.integrations.Integrations;
 import tocraft.walkers.traits.impl.*;
@@ -79,7 +81,9 @@ public class TraitRegistry {
         registerByClass(Stray.class, new BurnInDaylightTrait<>());
         registerByClass(Phantom.class, new BurnInDaylightTrait<>());
         // flying
+        //#if MC>1182
         registerByClass(Allay.class, new FlyingTrait<>());
+        //#endif
         registerByClass(Bat.class, new FlyingTrait<>());
         registerByClass(Bee.class, new FlyingTrait<>());
         registerByClass(Blaze.class, new FlyingTrait<>());
@@ -137,23 +141,23 @@ public class TraitRegistry {
         registerByPredicate(entity -> entity.getType().getCategory().getName().contains("water") && entity.canBreatheUnderwater(), new AquaticTrait<>());
         registerByPredicate(entity -> entity.getType().getCategory().getName().contains("water") != entity.canBreatheUnderwater(), new AquaticTrait<>(true, true));
         // dolphin don't like sun
-        registerByClass(Dolphin.class, new BurnInDaylightTrait<>());
+        registerByClass(Dolphin.class, new AquaticTrait<>());
         // walk on powder snow
         registerByClass(Rabbit.class, new WalkOnPowderSnow<>());
         // slow falling
         registerByClass(Chicken.class, new SlowFallingTrait<>());
         // support deprecated entity tags
-        registerByTag(TagKey.create(Registries.ENTITY_TYPE, Walkers.id("burns_in_daylight")), new BurnInDaylightTrait<>());
-        registerByTag(TagKey.create(Registries.ENTITY_TYPE, Walkers.id("flying")), new FlyingTrait<>(false));
-        registerByTag(TagKey.create(Registries.ENTITY_TYPE, Walkers.id("slow_falling")), new SlowFallingTrait<>());
-        registerByTag(TagKey.create(Registries.ENTITY_TYPE, Walkers.id("wolf_prey")), PreyTrait.ofHunterClass(Wolf.class));
-        registerByTag(TagKey.create(Registries.ENTITY_TYPE, Walkers.id("fox_prey")), PreyTrait.ofHunterClass(Fox.class));
-        registerByTag(TagKey.create(Registries.ENTITY_TYPE, Walkers.id("hurt_by_high_temperature")), new TemperatureTrait<>());
-        registerByTag(TagKey.create(Registries.ENTITY_TYPE, Walkers.id("ravager_riding")), RiderTrait.ofRideableClass(Ravager.class));
-        registerByTag(TagKey.create(Registries.ENTITY_TYPE, Walkers.id("lava_walking")), new StandOnFluidTrait<>(FluidTags.LAVA));
-        registerByTag(TagKey.create(Registries.ENTITY_TYPE, Walkers.id("fall_through_blocks")), new NoPhysicsTrait<>());
-        registerByTag(TagKey.create(Registries.ENTITY_TYPE, Walkers.id("cant_swim")), new CantSwimTrait<>());
-        registerByTag(TagKey.create(Registries.ENTITY_TYPE, Walkers.id("undrownable")), new UndrownableTrait<>());
+        registerByTag(TagKey.create(Walkers.getEntityTypeRegistry().key(), Walkers.id("burns_in_daylight")), new BurnInDaylightTrait<>());
+        registerByTag(TagKey.create(Walkers.getEntityTypeRegistry().key(), Walkers.id("flying")), new FlyingTrait<>(false));
+        registerByTag(TagKey.create(Walkers.getEntityTypeRegistry().key(), Walkers.id("slow_falling")), new SlowFallingTrait<>());
+        registerByTag(TagKey.create(Walkers.getEntityTypeRegistry().key(), Walkers.id("wolf_prey")), PreyTrait.ofHunterClass(Wolf.class));
+        registerByTag(TagKey.create(Walkers.getEntityTypeRegistry().key(), Walkers.id("fox_prey")), PreyTrait.ofHunterClass(Fox.class));
+        registerByTag(TagKey.create(Walkers.getEntityTypeRegistry().key(), Walkers.id("hurt_by_high_temperature")), new TemperatureTrait<>());
+        registerByTag(TagKey.create(Walkers.getEntityTypeRegistry().key(), Walkers.id("ravager_riding")), RiderTrait.ofRideableClass(Ravager.class));
+        registerByTag(TagKey.create(Walkers.getEntityTypeRegistry().key(), Walkers.id("lava_walking")), new StandOnFluidTrait<>(FluidTags.LAVA));
+        registerByTag(TagKey.create(Walkers.getEntityTypeRegistry().key(), Walkers.id("fall_through_blocks")), new NoPhysicsTrait<>());
+        registerByTag(TagKey.create(Walkers.getEntityTypeRegistry().key(), Walkers.id("cant_swim")), new CantSwimTrait<>());
+        registerByTag(TagKey.create(Walkers.getEntityTypeRegistry().key(), Walkers.id("undrownable")), new UndrownableTrait<>());
         // Attack for Health
         registerByPredicate(entity -> entity.getType().getCategory().equals(MobCategory.MONSTER), new AttackForHealthTrait<>());
         // nocturnal
@@ -319,11 +323,15 @@ public class TraitRegistry {
         Codec<MapCodec<? extends ShapeTrait<?>>> codec = ResourceLocation.CODEC.flatXmap(
                 resourceLocation -> Optional.ofNullable(TraitRegistry.getTraitCodec(resourceLocation))
                         .map(DataResult::success)
-                        .orElseGet(() -> DataResult.error(() -> "Unknown shape trait: " + resourceLocation)),
+                        .orElseGet(() -> Walkers.dataError("Unknown shape trait: " + resourceLocation)),
                 traitCodec -> Optional.ofNullable(getTraitId(traitCodec))
                         .map(DataResult::success)
-                        .orElseGet(() -> DataResult.error(() -> "Unknown shape trait codec: " + traitCodec))
+                        .orElseGet(() -> Walkers.dataError("Unknown shape trait codec: " + traitCodec))
         );
+        //#if MC>=1205
         return codec.dispatchStable(ShapeTrait::codec, Function.identity());
+        //#else
+        //$$ return codec.dispatchStable(ShapeTrait::codec, MapCodec::codec);
+        //#endif
     }
 }

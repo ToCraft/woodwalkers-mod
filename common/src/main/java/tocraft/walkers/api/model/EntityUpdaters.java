@@ -14,6 +14,7 @@ import net.minecraft.world.entity.animal.Parrot;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
+import tocraft.craftedcore.patched.CEntity;
 import tocraft.walkers.api.model.impl.ShulkerEntityUpdater;
 import tocraft.walkers.api.model.impl.SquidEntityUpdater;
 import tocraft.walkers.impl.NearbySongAccessor;
@@ -73,14 +74,14 @@ public class EntityUpdaters {
 
     public static void init() {
         // register specific entity animation handling
-        EntityUpdaters.register(EntityType.BAT, (player, bat) -> bat.setResting(!player.level().getBlockState(player.blockPosition().above()).isAir()));
+        EntityUpdaters.register(EntityType.BAT, (player, bat) -> bat.setResting(!CEntity.level(player).getBlockState(player.blockPosition().above()).isAir()));
 
         EntityUpdaters.register(EntityType.PARROT, (player, parrot) -> {
             parrot.setRecordPlayingNearby(player.blockPosition(), ((NearbySongAccessor) player).shape_isNearbySongPlaying());
             ((ParrotEntityAccessor) parrot).callCalculateFlapping();
             // imitate sounds
             if (player.getRandom().nextInt(400) == 0) {
-                Parrot.imitateNearbyMobs(player.level(), player);
+                Parrot.imitateNearbyMobs(CEntity.level(player), player);
             }
         });
 
@@ -127,9 +128,9 @@ public class EntityUpdaters {
         EntityUpdaters.register(EntityType.CHICKEN, (player, chicken) -> {
             chicken.oFlap = chicken.flap;
             chicken.oFlapSpeed = chicken.flapSpeed;
-            chicken.flapSpeed += (player.onGround() ? -1.0F : 4.0F) * 0.3F;
+            chicken.flapSpeed += (CEntity.isOnGround(player) ? -1.0F : 4.0F) * 0.3F;
             chicken.flapSpeed = Mth.clamp(chicken.flapSpeed, 0.0F, 1.0F);
-            if (!player.onGround() && chicken.flapping < 1.0F) {
+            if (!CEntity.isOnGround(player) && chicken.flapping < 1.0F) {
                 chicken.flapping = 1.0F;
             }
             chicken.flapping *= 0.9F;
@@ -138,7 +139,7 @@ public class EntityUpdaters {
 
         // make strider shaking and purple when out of lava
         EntityUpdaters.register(EntityType.STRIDER, (player, strider) -> {
-            BlockState blockState = player.level().getBlockState(player.blockPosition());
+            BlockState blockState = CEntity.level(player).getBlockState(player.blockPosition());
             boolean bl = blockState.is(BlockTags.STRIDER_WARM_BLOCKS) || player.getFluidHeight(FluidTags.LAVA) > 0.0;
             strider.setSuffocating(!bl);
         });
