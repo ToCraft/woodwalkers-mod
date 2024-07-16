@@ -287,15 +287,15 @@ public abstract class LivingEntityMixin extends Entity implements NearbySongAcce
 
 
     //#if MC>1206
-    //$$ @Inject(method = "eat(Lnet/minecraft/world/level/Level;Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/food/FoodProperties;)Lnet/minecraft/world/item/ItemStack;", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;addEatEffect(Lnet/minecraft/world/food/FoodProperties;)V"))
-    //$$ private void regenerateWoolFromFood(Level level, ItemStack food, FoodProperties foodProperties, CallbackInfoReturnable<ItemStack> cir) {
+    @Inject(method = "eat(Lnet/minecraft/world/level/Level;Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/food/FoodProperties;)Lnet/minecraft/world/item/ItemStack;", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;addEatEffect(Lnet/minecraft/world/food/FoodProperties;)V"))
+    private void regenerateWoolFromFood(Level level, ItemStack food, FoodProperties foodProperties, CallbackInfoReturnable<ItemStack> cir) {
     //#else
     //#if MC==1206
-    @Inject(method = "eat", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;addEatEffect(Lnet/minecraft/world/food/FoodProperties;)V"))
+    //$$ @Inject(method = "eat", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;addEatEffect(Lnet/minecraft/world/food/FoodProperties;)V"))
     //#else
     //$$ @Inject(method = "eat", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;addEatEffect(Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/level/Level;Lnet/minecraft/world/entity/LivingEntity;)V"))
     //#endif
-    private void regenerateWoolFromFood(Level level, ItemStack food, CallbackInfoReturnable<ItemStack> cir) {
+    //$$ private void regenerateWoolFromFood(Level level, ItemStack food, CallbackInfoReturnable<ItemStack> cir) {
         //#endif
         if ((Object) this instanceof Player player) {
             LivingEntity shape = PlayerShape.getCurrentShape(player);
@@ -307,11 +307,11 @@ public abstract class LivingEntityMixin extends Entity implements NearbySongAcce
     }
 
     //#if MC>1206
-    //$$ @Inject(method = "eat(Lnet/minecraft/world/level/Level;Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/food/FoodProperties;)Lnet/minecraft/world/item/ItemStack;", at = @At(value = "RETURN"))
-    //$$ private void dieFromCookies(Level level, ItemStack food, FoodProperties foodProperties, CallbackInfoReturnable<ItemStack> cir) {
+    @Inject(method = "eat(Lnet/minecraft/world/level/Level;Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/food/FoodProperties;)Lnet/minecraft/world/item/ItemStack;", at = @At(value = "RETURN"))
+    private void dieFromCookies(Level level, ItemStack food, FoodProperties foodProperties, CallbackInfoReturnable<ItemStack> cir) {
     //#else
-    @Inject(method = "eat", at = @At(value = "RETURN"))
-    private void dieFromCookies(Level level, ItemStack food, CallbackInfoReturnable<ItemStack> cir) {
+    //$$ @Inject(method = "eat", at = @At(value = "RETURN"))
+    //$$ private void dieFromCookies(Level level, ItemStack food, CallbackInfoReturnable<ItemStack> cir) {
         //#endif
         if ((Object) this instanceof Player player) {
             LivingEntity shape = PlayerShape.getCurrentShape(player);

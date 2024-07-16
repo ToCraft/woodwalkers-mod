@@ -15,30 +15,6 @@ permissions:
   actions: write
 
 jobs:
-  clear-cache:
-    name: "Clear Cache"
-    runs-on: ubuntu-latest
-    if: |
-      github.event.inputs.clear_cache == 'true'
-    steps:
-      - name: Clear cache
-        uses: actions/github-script@v6
-        with:
-          script: |
-            console.log("About to clear")
-            const caches = await github.rest.actions.getActionsCacheList({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-            })
-            for (const cache of caches.data.actions_caches) {
-              console.log(cache)
-              github.rest.actions.deleteActionsCacheById({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                cache_id: cache.id,
-              })
-            }
-            console.log("Clear completed")
   build:
     name: "Build"
     runs-on: ubuntu-latest
@@ -57,31 +33,19 @@ jobs:
 
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v3
-      - name: Build  1.18.2
-        run: ./gradlew -Pminecraft="1.18.2" check build --parallel
-      - name: Build  1.19.4
-        run: ./gradlew -Pminecraft="1.19.4" check build --parallel
-      - name: Build  1.20.1
-        run: ./gradlew -Pminecraft="1.20.1" check build --parallel
-      - name: Build  1.20.2
-        run: ./gradlew -Pminecraft="1.20.2" check build --parallel
-      - name: Build  1.20.4
-        run: ./gradlew -Pminecraft="1.20.4" check build --parallel
-      - name: Build  1.20.6
-        run: ./gradlew -Pminecraft="1.20.6" check build --parallel
-      - name: Build  1.21
-        run: ./gradlew -Pminecraft="1.21" check build --parallel
+      - name: Build
+        run: ./gradlew check build --parallel
 
       - name: Setting mod version
         run: |
           cat $GITHUB_WORKSPACE/gradle.properties | grep ^archives_base_name= >> $GITHUB_ENV
-          cat $GITHUB_WORKSPACE/gradle.properties | grep ^minecraft= >> $GITHUB_ENV
           cat $GITHUB_WORKSPACE/gradle.properties | grep ^mod_version= >> $GITHUB_ENV
       - uses: actions/upload-artifact@v4
         with:
-          name: "[${{ env.minecraft }}] ${{ env.archives_base_name }}-${{ env.mod_version }}"
+          name: "${{ env.archives_base_name }}-${{ env.mod_version }}"
           path: |
             build/**/**/libs/
+            !build/*/libs/
             !build/**/craftedcore/libs/
             !build/libs/
             !**/*-dev.jar

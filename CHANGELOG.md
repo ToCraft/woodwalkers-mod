@@ -1,8 +1,11 @@
-walkers 4.7
+walkers 5
 ================
 
-- fix blacklist applies to commands
+- **rework multi-version structure**
+- update to CraftedCore 5
+- fix how blacklists apply to commands
 - add Mutant Monsters Integration
+- fix ConcurrentModificationException when loading traits
 
 walkers 4.6
 ================

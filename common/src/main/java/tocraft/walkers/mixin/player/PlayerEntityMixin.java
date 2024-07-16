@@ -196,9 +196,9 @@ public abstract class PlayerEntityMixin extends LivingEntityMixin {
                                 itemStack.setDamageValue(itemStack.getDamageValue() + player.getRandom().nextInt(2));
                                 if (itemStack.getDamageValue() >= itemStack.getMaxDamage()) {
                                     //#if MC>1206
-                                    //$$ player.onEquippedItemBroken(itemStack.getItem(), EquipmentSlot.HEAD);
+                                    player.onEquippedItemBroken(itemStack.getItem(), EquipmentSlot.HEAD);
                                     //#else
-                                    player.broadcastBreakEvent(EquipmentSlot.HEAD);
+                                    //$$ player.broadcastBreakEvent(EquipmentSlot.HEAD);
                                     //#endif
                                     player.setItemSlot(EquipmentSlot.HEAD, ItemStack.EMPTY);
                                 }
@@ -328,9 +328,9 @@ public abstract class PlayerEntityMixin extends LivingEntityMixin {
             if (this.distanceToSqr(targetPlayer) < 0.6 * (double) i * 0.6 * (double) i && ownPlayer.hasLineOfSight(targetPlayer) && wasHurt) {
                 this.playSound(SoundEvents.SLIME_ATTACK, 1.0F, (this.random.nextFloat() - this.random.nextFloat()) * 0.2F + 1.0F);
                 //#if MC>1206
-                //$$ EnchantmentHelper.doPostAttackEffects((ServerLevel) CEntity.level(ownPlayer), targetPlayer, ownPlayer.damageSources().mobAttack(ownPlayer));
+                EnchantmentHelper.doPostAttackEffects((ServerLevel) CEntity.level(ownPlayer), targetPlayer, ownPlayer.damageSources().mobAttack(ownPlayer));
                 //#else
-                this.doEnchantDamageEffects(ownPlayer, targetPlayer);
+                //$$ this.doEnchantDamageEffects(ownPlayer, targetPlayer);
                 //#endif
             }
         }

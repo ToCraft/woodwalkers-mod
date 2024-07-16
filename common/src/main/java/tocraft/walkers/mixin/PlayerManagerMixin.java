@@ -21,9 +21,9 @@ public class PlayerManagerMixin {
     @SuppressWarnings("ConstantConditions")
     @Inject(method = "respawn", at = @At("RETURN"))
     //#if MC>=1210
-    //$$ private void onRespawn(ServerPlayer player, boolean bl, Entity.RemovalReason removalReason, CallbackInfoReturnable<ServerPlayer> cir) {
+    private void onRespawn(ServerPlayer player, boolean bl, Entity.RemovalReason removalReason, CallbackInfoReturnable<ServerPlayer> cir) {
     //#else
-    private void onRespawn(ServerPlayer player, boolean alive, CallbackInfoReturnable<ServerPlayer> cir) {
+    //$$ private void onRespawn(ServerPlayer player, boolean alive, CallbackInfoReturnable<ServerPlayer> cir) {
     //#endif
         LivingEntity shape = PlayerShape.getCurrentShape(player);
 

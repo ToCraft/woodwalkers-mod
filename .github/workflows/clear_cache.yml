@@ -11,8 +11,6 @@ jobs:
   clear-cache:
     name: "Clear Cache"
     runs-on: ubuntu-latest
-    if: |
-      github.event.inputs.clear_cache == 'true'
     steps:
       - name: Clear cache
         uses: actions/github-script@v6

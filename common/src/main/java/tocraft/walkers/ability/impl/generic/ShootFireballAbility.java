@@ -26,7 +26,7 @@ import tocraft.walkers.ability.GenericShapeAbility;
 import java.util.Optional;
 
 //#if MC>=1210
-//$$ import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.phys.Vec3;
 //#endif
 
 public class ShootFireballAbility<T extends Mob> extends GenericShapeAbility<T> {
@@ -72,43 +72,43 @@ public class ShootFireballAbility<T extends Mob> extends GenericShapeAbility<T> 
         Fireball fireball;
         if (isLarge) {
             //#if MC>1206
-            //$$ fireball = new LargeFireball(
-            //$$         world,
-            //$$         player,
-            //$$         new Vec3(player.getLookAngle().x,
-            //$$                 player.getLookAngle().y,
-            //$$                 player.getLookAngle().z),
-            //$$         2);
-            //#else
             fireball = new LargeFireball(
                     world,
                     player,
-                    player.getLookAngle().x,
-                    player.getLookAngle().y,
-                    player.getLookAngle().z,
+                    new Vec3(player.getLookAngle().x,
+                            player.getLookAngle().y,
+                            player.getLookAngle().z),
                     2);
+            //#else
+            //$$ fireball = new LargeFireball(
+            //$$         world,
+            //$$         player,
+            //$$         player.getLookAngle().x,
+            //$$         player.getLookAngle().y,
+            //$$         player.getLookAngle().z,
+            //$$         2);
             //#endif
             fireball.moveTo(fireball.getX(), fireball.getY() + 1.75, fireball.getZ(), fireball.getYRot(), fireball.getXRot());
             fireball.absMoveTo(fireball.getX(), fireball.getY(), fireball.getZ());
         } else {
             //#if MC>1206
-            //$$ fireball = new SmallFireball(
-            //$$         world,
-            //$$         player.getX(),
-            //$$         player.getEyeY(),
-            //$$         player.getZ(),
-            //$$         new Vec3(player.getLookAngle().x,
-            //$$                 player.getLookAngle().y,
-            //$$                 player.getLookAngle().z));
-            //#else
             fireball = new SmallFireball(
                     world,
                     player.getX(),
                     player.getEyeY(),
                     player.getZ(),
-                    player.getLookAngle().x,
-                    player.getLookAngle().y,
-                    player.getLookAngle().z);
+                    new Vec3(player.getLookAngle().x,
+                            player.getLookAngle().y,
+                            player.getLookAngle().z));
+            //#else
+            //$$ fireball = new SmallFireball(
+            //$$         world,
+            //$$         player.getX(),
+            //$$         player.getEyeY(),
+            //$$         player.getZ(),
+            //$$         player.getLookAngle().x,
+            //$$         player.getLookAngle().y,
+            //$$         player.getLookAngle().z);
             //#endif
         }
 

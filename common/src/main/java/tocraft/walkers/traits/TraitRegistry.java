@@ -27,21 +27,21 @@ import net.minecraft.world.entity.raid.Raider;
 import net.minecraft.world.level.block.Blocks;
 import org.jetbrains.annotations.Nullable;
 import tocraft.walkers.Walkers;
-import tocraft.walkers.ability.GenericShapeAbility;
 import tocraft.walkers.ability.ShapeAbility;
 import tocraft.walkers.integrations.Integrations;
 import tocraft.walkers.traits.impl.*;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
 @SuppressWarnings("unused")
 public class TraitRegistry {
-    private static final Map<Predicate<LivingEntity>, List<ShapeTrait<?>>> traitsByPredicates = new HashMap<>();
-    private static final Map<EntityType<? extends LivingEntity>, List<ShapeTrait<?>>> traitsByEntityTypes = new HashMap<>();
-    private static final Map<TagKey<EntityType<?>>, List<ShapeTrait<?>>> traitsByEntityTags = new HashMap<>();
-    private static final Map<Class<? extends LivingEntity>, List<ShapeTrait<?>>> traitsByEntityClasses = new HashMap<>();
+    private static final Map<Predicate<LivingEntity>, List<ShapeTrait<?>>> traitsByPredicates = new ConcurrentHashMap<>();
+    private static final Map<EntityType<? extends LivingEntity>, List<ShapeTrait<?>>> traitsByEntityTypes = new ConcurrentHashMap<>();
+    private static final Map<TagKey<EntityType<?>>, List<ShapeTrait<?>>> traitsByEntityTags = new ConcurrentHashMap<>();
+    private static final Map<Class<? extends LivingEntity>, List<ShapeTrait<?>>> traitsByEntityClasses = new ConcurrentHashMap<>();
     private static final Map<ResourceLocation, MapCodec<? extends ShapeTrait<?>>> traitCodecById = new HashMap<>();
     private static final Map<MapCodec<? extends ShapeTrait<?>>, ResourceLocation> traitIdByCodec = new IdentityHashMap<>();
 
