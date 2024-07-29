@@ -2,10 +2,7 @@ package tocraft.walkers.integrations;
 
 import net.minecraft.world.entity.Entity;
 import tocraft.craftedcore.platform.PlatformData;
-import tocraft.walkers.integrations.impl.GuardVillagersIntegration;
-import tocraft.walkers.integrations.impl.MobBattleModIntegration;
-import tocraft.walkers.integrations.impl.MoreMobVariantsIntegration;
-import tocraft.walkers.integrations.impl.MutantMonstersIntegration;
+import tocraft.walkers.integrations.impl.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -18,6 +15,7 @@ public class Integrations {
         register(GuardVillagersIntegration.MODID, new GuardVillagersIntegration());
         register(MoreMobVariantsIntegration.MODID, new MoreMobVariantsIntegration());
         register(MutantMonstersIntegration.MODID, new MutantMonstersIntegration());
+        register(AlexMobsIntegration.MODID, new AlexMobsIntegration());
     }
 
     public static void registerAbilities() {

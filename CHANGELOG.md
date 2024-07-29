@@ -1,3 +1,8 @@
+walkers 5.1
+================
+
+- add FearedTrait & PreyTrait for Alex's Mobs
+
 walkers 5
 ================
 
