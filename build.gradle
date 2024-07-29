@@ -59,6 +59,10 @@ apply plugin: "dev.tocraft.preprocessor"
 subprojects {
     layout.buildDirectory.set(parent.layout.buildDirectory.file(project.name).get().asFile)
 
+    repositories {
+        mavenLocal()
+    }
+
     apply plugin: "dev.architectury.loom"
     apply plugin: "maven-publish"
     apply plugin: "dev.tocraft.preprocessor"
