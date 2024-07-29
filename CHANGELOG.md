@@ -1,3 +1,8 @@
+walkers 5.1
+================
+
+- fix blacklist commands stack
+
 walkers 5
 ================
 

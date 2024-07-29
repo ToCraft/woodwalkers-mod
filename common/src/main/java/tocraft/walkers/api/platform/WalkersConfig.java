@@ -87,7 +87,7 @@ public class WalkersConfig implements Config {
     @Synchronize
     public List<String> abilityBlacklist = new ArrayList<>();
     @Synchronize
-    public List<String> entityBlacklist = new ArrayList<>();
+    public Set<String> entityBlacklist = new HashSet<>();
     @Synchronize
     public boolean entityBlacklistIsWhitelist = false;
     @Synchronize
