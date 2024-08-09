@@ -49,7 +49,7 @@ jobs:
           cat $GITHUB_WORKSPACE/gradle.properties | grep ^mod_version= >> $GITHUB_ENV
 
       - name: Build + Publish to Maven, Modrinth & CurseForge + Pack the ZIP for GH-Release
-        run: ./gradlew check build publish modrinth curseforge packTheMod --parallel
+        run: ./gradlew check build publish modrinth curseforge packTheMod
         env:
           MAVEN_PASS: ${{ secrets.MAVEN_PASS }}
           CURSEFORGE_TOKEN: ${{ secrets.CURSEFORGE_TOKEN }}
@@ -69,7 +69,7 @@ jobs:
 
 
       - name: Extract Changelog for GitHub
-        run: ./gradlew extractNewestChangelog --parallel
+        run: ./gradlew extractNewestChangelog
       - name: Create version data
         run: |
           cat $GITHUB_WORKSPACE/gradle.properties | grep ^archives_base_name= >> $GITHUB_ENV
@@ -100,6 +100,6 @@ jobs:
         uses: gradle/actions/setup-gradle@v4
 
       - name: Send Discord Message
-        run: ./gradlew discordRelease --parallel
+        run: ./gradlew discordRelease
         env:
           DISCORD_WEB_HOOK: ${{ secrets.DISCORD_WEB_HOOK }}
