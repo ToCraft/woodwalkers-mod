@@ -25,6 +25,7 @@ import net.minecraft.world.entity.animal.*;
 import net.minecraft.world.entity.monster.warden.Warden;
 //#endif
 //#if MC>=1205
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 //#endif
 import net.minecraft.world.item.Items;
@@ -42,7 +43,7 @@ import java.util.function.Predicate;
 @SuppressWarnings("unused")
 public class AbilityRegistry {
 
-    private static final Map<Predicate<LivingEntity>, ShapeAbility<?>> abilities = new LinkedHashMap<>();
+    private static final Map<Predicate<LivingEntity>, ShapeAbility<?>> abilities = new ConcurrentHashMap<>();
     private static final Map<ResourceLocation, MapCodec<? extends GenericShapeAbility<?>>> abilityCodecById = new HashMap<>();
     private static final Map<MapCodec<? extends GenericShapeAbility<?>>, ResourceLocation> abilityIdByCodec = new IdentityHashMap<>();
 

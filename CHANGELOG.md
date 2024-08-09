@@ -2,6 +2,7 @@ walkers 5.1
 ================
 
 - fix blacklist commands stack
+- fix ConcurrentModificationException on AbilityRegistry
 
 walkers 5
 ================
