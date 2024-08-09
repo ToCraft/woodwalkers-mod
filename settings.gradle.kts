@@ -57,19 +57,11 @@ file("props").listFiles()?.forEach {
     project(":$version:common").apply {
         buildFileName = "../../../common/build.gradle.kts"
     }
-    include(":$version:testmod-common")
-    project(":$version:testmod-common").apply {
-        buildFileName = "../../../testmod-common/build.gradle.kts"
-    }
 
     if (foundFabric) {
         include(":$version:fabric")
         project(":$version:fabric").apply {
             buildFileName = "../../../fabric/build.gradle.kts"
-        }
-        include(":$version:testmod-fabric")
-        project(":$version:testmod-fabric").apply {
-            buildFileName = "../../../testmod-fabric/build.gradle.kts"
         }
     }
     if (foundForge) {
@@ -77,19 +69,11 @@ file("props").listFiles()?.forEach {
         project(":$version:forge").apply {
             buildFileName = "../../../forge/build.gradle.kts"
         }
-        include(":$version:testmod-forge")
-        project(":$version:testmod-forge").apply {
-            buildFileName = "../../../testmod-forge/build.gradle.kts"
-        }
     }
     if (foundNeoForge) {
         include(":$version:neoforge")
         project(":$version:neoforge").apply {
             buildFileName = "../../../neoforge/build.gradle.kts"
-        }
-        include(":$version:testmod-neoforge")
-        project(":$version:testmod-neoforge").apply {
-            buildFileName = "../../../testmod-neoforge/build.gradle.kts"
         }
     }
 }
