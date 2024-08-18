@@ -14,7 +14,7 @@ tasks.withType<ProcessResources> {
 
 loom {
     forge {
-        mixinConfigs.add("skinshifter.mixins.json")
+        mixinConfigs.add("walkers.mixins.json")
     }
 }
 

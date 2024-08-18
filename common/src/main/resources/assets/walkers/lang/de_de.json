@@ -17,8 +17,6 @@
   "walkers.unlock_entity": "Schaltete %s als deine zweite Gestalt frei.",
   "walkers.unlock_entity_blacklisted": "Diese Gestalt ist für dich nicht verfügbar.",
   "walkers.unlock_progress": "Du spürst es kribbeln.",
-  "walkers.setConfigEntry": "Der Config-Eintrag %s wurde auf %s gesetzt.",
-  "walkers.getConfigEntry": "Der Config-Eintrag %s ist auf %s gesetzt.",
   "walkers.playerBlacklist.add": "Fügte %s zu der Blacklist/Whitelist hinzu.",
   "walkers.playerBlacklist.remove": "Entfernte %s von der Blacklist/Whitelist.",
   "walkers.playerBlacklist.list": "%s ist gelistet.",
