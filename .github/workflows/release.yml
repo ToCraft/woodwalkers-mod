@@ -1,22 +1,20 @@
-name: Build and Release
+name: Release
 
 on:
   push:
     paths:
       - '**.gradle'
+      - '**.gradle.kts'
       - '**.properties'
       - '**/src/**'
     branches:
       - "main"
       - "master"
+      - "1.**"
   workflow_dispatch:
     inputs:
       release:
         description: 'Release'
-        required: false
-        default: 'true'
-      discord_message:
-        description: 'Send Discord Message'
         required: false
         default: 'true'
 
@@ -33,29 +31,29 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Set up JDK 21
+      - name: Set up JDK 22
         uses: actions/setup-java@v4
         with:
-          java-version: 21
-          distribution: 'temurin'
-      - name: Validate Gradle Wrapper
-        uses: gradle/actions/wrapper-validation@v3
-
+          java-version: 22
+          distribution: "temurin"
       - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v3
+        uses: gradle/actions/setup-gradle@v4
 
-      - name: Extract Artifact Type, Archive Base Name & Mod Version
+      - name: Extract Artifact Data
         run: |
           cat $GITHUB_WORKSPACE/gradle.properties | grep ^artifact_type= >> $GITHUB_ENV
           cat $GITHUB_WORKSPACE/gradle.properties | grep ^archives_base_name= >> $GITHUB_ENV
           cat $GITHUB_WORKSPACE/gradle.properties | grep ^mod_version= >> $GITHUB_ENV
+          cat $GITHUB_WORKSPACE/gradle.properties | grep ^archives_base_name= >> $GITHUB_ENV
+          cat $GITHUB_WORKSPACE/gradle.properties | grep ^mod_version= >> $GITHUB_ENV
 
-      - name: Build + Publish to Maven, Modrinth & CurseForge
-        run: ./gradlew check build publish modrinth curseforge --parallel
+      - name: Build + Release via Gradle
+        run: ./gradlew check build release
         env:
           MAVEN_PASS: ${{ secrets.MAVEN_PASS }}
           CURSEFORGE_TOKEN: ${{ secrets.CURSEFORGE_TOKEN }}
           MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
+          DISCORD_WEB_HOOK: ${{ secrets.DISCORD_WEB_HOOK }}
       - uses: actions/upload-artifact@v4
         with:
           name: "${{ env.archives_base_name }}-${{ env.mod_version }}"
@@ -69,18 +67,6 @@ jobs:
             !**/*-transformProduction*.jar
             !**/testmod*/
 
-
-      - name: Extract Changelog for GitHub
-        run: ./gradlew extractNewestChangelog --parallel
-      - name: Create version data
-        run: |
-          cat $GITHUB_WORKSPACE/gradle.properties | grep ^archives_base_name= >> $GITHUB_ENV
-          cat $GITHUB_WORKSPACE/gradle.properties | grep ^mod_version= >> $GITHUB_ENV
-      - name: Download artifact
-        id: download-artifact
-        uses: dawidd6/action-download-artifact@v6
-        with:
-          skip_unpack: true
       - name: Create GitHub Release
         if: |
           ${{ env.artifact_type }} == 'release'
@@ -88,29 +74,5 @@ jobs:
         with:
           tag_name: "${{ env.mod_version }}"
           files: |
-            build/**/fabric/build/libs/${{ env.archives_base_name }}-${{ env.mod_version }}-*-fabric.jar,
-            build/**/forge/build/libs/${{ env.archives_base_name }}-${{ env.mod_version }}-*-forge.jar,
-            build/**/neoforge/build/libs/${{ env.archives_base_name }}-${{ env.mod_version }}-*-neoforge.jar
+            build/${{ env.archives_base_name }}-${{ env.mod_version }}.zip
           body_path: ${{ github.workspace }}/extracted.CHANGELOG.md
-  discord_message:
-    name: "Send Discord Release Message"
-    runs-on: ubuntu-latest
-    if: |
-      github.event.inputs.discord_message == 'true'
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Set up JDK 21
-        uses: actions/setup-java@v4
-        with:
-          java-version: 21
-          distribution: 'temurin'
-      - name: Validate Gradle Wrapper
-        uses: gradle/actions/wrapper-validation@v3
-
-      - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v3
-      - name: Send Discord Message
-        run: ./gradlew discordRelease --parallel
-        env:
-          DISCORD_WEB_HOOK: ${{ secrets.DISCORD_WEB_HOOK }}

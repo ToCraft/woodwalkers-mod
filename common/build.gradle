@@ -1,5 +1,0 @@
-apply from: "https://raw.githubusercontent.com/ToCraft/GradleMaster/v2/common.gradle"
-
-dependencies {
-    modApi "dev.tocraft:craftedcore:${parent.name}-${rootProject.craftedcore_version}"
-}
