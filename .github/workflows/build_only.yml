@@ -9,6 +9,8 @@ on:
       - '**/src/**'
     branches-ignore:
       - "1.**"
+      - "main"
+      - "master"
   workflow_dispatch:
 
 permissions:
