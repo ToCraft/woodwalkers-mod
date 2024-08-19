@@ -10,7 +10,7 @@ import java.util.Map;
 public class Integrations {
     private static final Map<String, AbstractIntegration> INTEGRATIONS = new HashMap<>();
 
-    static {
+    public static void initIntegrations() {
         register(MobBattleModIntegration.MODID, new MobBattleModIntegration());
         register(GuardVillagersIntegration.MODID, new GuardVillagersIntegration());
         register(MoreMobVariantsIntegration.MODID, new MoreMobVariantsIntegration());
@@ -58,7 +58,8 @@ public class Integrations {
     }
 
     public static void register(String modid, AbstractIntegration integration) {
-        if (PlatformData.isModLoaded(modid))
+        if (PlatformData.isModLoaded(modid)) {
             INTEGRATIONS.put(modid, integration);
+        }
     }
 }

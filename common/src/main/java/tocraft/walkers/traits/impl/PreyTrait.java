@@ -40,6 +40,8 @@ public class PreyTrait<E extends LivingEntity> extends ShapeTrait<E> {
     private final List<EntityType<?>> hunterTypes;
     private final List<Class<? extends LivingEntity>> hunterClasses;
     private final List<TagKey<EntityType<?>>> hunterTags;
+    private final int priority;
+    private final int randInt;
 
     public static PreyTrait<?> ofHunterType(EntityType<?>... hunter) {
         return new PreyTrait<>(new ArrayList<>(), List.of(hunter), new ArrayList<>(), new ArrayList<>());
@@ -61,10 +63,16 @@ public class PreyTrait<E extends LivingEntity> extends ShapeTrait<E> {
     }
 
     public PreyTrait(@NotNull List<Predicate<LivingEntity>> hunterPredicates, @NotNull List<EntityType<?>> hunterTypes, @NotNull List<Class<? extends LivingEntity>> hunterClasses, @NotNull List<TagKey<EntityType<?>>> hunterTags) {
+        this(hunterPredicates, hunterTypes, hunterClasses, hunterTags, 7, 10);
+    }
+
+    public PreyTrait(@NotNull List<Predicate<LivingEntity>> hunterPredicates, @NotNull List<EntityType<?>> hunterTypes, @NotNull List<Class<? extends LivingEntity>> hunterClasses, @NotNull List<TagKey<EntityType<?>>> hunterTags, int priority, int randInt) {
         this.hunterPredicates = hunterPredicates;
         this.hunterTypes = hunterTypes;
         this.hunterClasses = hunterClasses;
         this.hunterTags = hunterTags;
+        this.priority = priority;
+        this.randInt = randInt;
     }
 
     public boolean isHunter(LivingEntity entity) {
@@ -79,6 +87,14 @@ public class PreyTrait<E extends LivingEntity> extends ShapeTrait<E> {
             if (hunterPredicate.test(entity)) return true;
         }
         return false;
+    }
+
+    public int getPriority() {
+        return priority;
+    }
+
+    public int getRandInt() {
+        return randInt;
     }
 
     @Override

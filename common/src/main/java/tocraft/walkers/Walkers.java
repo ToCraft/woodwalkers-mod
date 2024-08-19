@@ -60,6 +60,8 @@ public class Walkers {
     }
 
     public void initialize() {
+        Integrations.initIntegrations();
+
         TraitRegistry.initialize();
         AbilityRegistry.initialize();
 

@@ -25,6 +25,7 @@ import net.minecraft.world.entity.monster.*;
 import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.entity.raid.Raider;
 import net.minecraft.world.level.block.Blocks;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 import tocraft.walkers.Walkers;
 import tocraft.walkers.ability.ShapeAbility;
@@ -106,7 +107,7 @@ public class TraitRegistry {
         // ocelot prey
         registerByClass(Chicken.class, (PreyTrait<Chicken>) PreyTrait.ofHunterClass(Ocelot.class));
         // hostile attacked by iron golem
-        registerByPredicate(entity -> entity instanceof Enemy && !(entity instanceof Creeper), PreyTrait.ofHunterClass(IronGolem.class));
+        registerByPredicate(entity -> entity instanceof Enemy && !(entity instanceof Creeper), new PreyTrait<>(List.of(), List.of(), List.of(IronGolem.class), List.of(), 3, 5));
         // hurt by high temperature
         registerByClass(SnowGolem.class, new TemperatureTrait<>());
         // ravager riding
@@ -202,13 +203,47 @@ public class TraitRegistry {
      */
     public static synchronized <L extends LivingEntity> List<ShapeTrait<L>> get(L shape, ResourceLocation traitId) {
         List<ShapeTrait<L>> traits = getAll(shape);
-        List<ShapeTrait<L>> filteredtraits = new ArrayList<>();
+        List<ShapeTrait<L>> filteredTraits = new ArrayList<>();
         for (ShapeTrait<L> trait : traits) {
             if (trait.getId() == traitId) {
-                filteredtraits.add(trait);
+                filteredTraits.add(trait);
             }
         }
-        return filteredtraits;
+        return filteredTraits;
+    }
+
+    @ApiStatus.Experimental
+    public static synchronized Map<ShapeTrait<?>, Predicate<LivingEntity>> getAllRegisteredById(ResourceLocation traitId) {
+        Map<ShapeTrait<?>, Predicate<LivingEntity>> traits = new HashMap<>();
+        for (Map.Entry<EntityType<? extends LivingEntity>, List<ShapeTrait<?>>> traitList : traitsByEntityTypes.entrySet()) {
+            for (ShapeTrait<?> trait : traitList.getValue()) {
+                if (trait.getId() == traitId) {
+                    traits.put(trait, entity -> entity.getType().equals(traitList.getKey()));
+                }
+            }
+        }
+        for (Map.Entry<Class<? extends LivingEntity>, List<ShapeTrait<?>>> traitList : traitsByEntityClasses.entrySet()) {
+            for (ShapeTrait<?> trait : traitList.getValue()) {
+                if (trait.getId() == traitId) {
+                    traits.put(trait, entity -> traitList.getKey().isInstance(entity));
+                }
+            }
+        }
+        for (Map.Entry<TagKey<EntityType<?>>, List<ShapeTrait<?>>> traitList : traitsByEntityTags.entrySet()) {
+            for (ShapeTrait<?> trait : traitList.getValue()) {
+                if (trait.getId() == traitId) {
+                    traits.put(trait, entity -> entity.getType().is(traitList.getKey()));
+                }
+            }
+        }
+        for (Map.Entry<Predicate<LivingEntity>, List<ShapeTrait<?>>> traitList : traitsByPredicates.entrySet()) {
+            for (ShapeTrait<?> trait : traitList.getValue()) {
+                if (trait.getId() == traitId) {
+                    traits.put(trait, traitList.getKey());
+                }
+            }
+        }
+        return traits;
     }
 
     public static <A extends LivingEntity> void registerByType(EntityType<A> type, ShapeTrait<A> trait) {
@@ -263,9 +298,9 @@ public class TraitRegistry {
         registerByPredicate(entityPredicate, List.of(trait));
     }
 
-    public static void registerByPredicate(Predicate<LivingEntity> entityPredicate, List<ShapeTrait<?>> newtraits) {
+    public static void registerByPredicate(Predicate<LivingEntity> entityPredicate, List<ShapeTrait<?>> newTraits) {
         List<ShapeTrait<?>> traits = traitsByPredicates.containsKey(entityPredicate) ? traitsByPredicates.get(entityPredicate) : new ArrayList<>();
-        for (ShapeTrait<?> trait : newtraits) {
+        for (ShapeTrait<?> trait : newTraits) {
             if (trait.canBeRegisteredMultipleTimes() || traits.stream().noneMatch(entry -> entry.getId().equals(trait.getId()))) {
                 traits.add(trait);
             }
