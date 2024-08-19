@@ -8,6 +8,7 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import tocraft.walkers.Walkers;
 import tocraft.walkers.traits.ShapeTrait;
 
@@ -61,7 +62,10 @@ public class RiderTrait<E extends LivingEntity> extends ShapeTrait<E> {
         this.rideableTags = rideableTags;
     }
 
-    public boolean isRideable(LivingEntity entity) {
+    public boolean isRideable(@Nullable LivingEntity entity) {
+        if (entity == null) {
+            return false;
+        }
         if (rideableTypes.contains(entity.getType())) return true;
         for (Class<? extends LivingEntity> rideableClass : rideableClasses) {
             if (rideableClass.isInstance(entity)) return true;

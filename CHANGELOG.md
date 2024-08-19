@@ -5,6 +5,7 @@ walkers 5.1
 - add FearedTrait & PreyTrait for Alex's Mobs
 - fix ConcurrentModificationException on AbilityRegistry
 - rework registration of PreyTrait & FearedTrait
+- fix crash when clicking on player
 
 walkers 5
 ================
