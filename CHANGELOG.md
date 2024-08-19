@@ -3,6 +3,7 @@ walkers 5.1
 
 - fix blacklist commands stack
 - fix ConcurrentModificationException on AbilityRegistry
+- fix crash when clicking on player
 
 walkers 5
 ================
