@@ -7,6 +7,7 @@ walkers 5.1
 - rework registration of PreyTrait & FearedTrait
 - fix crash when clicking on player
 - add compatibility for PlayerAbilityLib
+- fix Bat Animation for 1.20.4+
 
 walkers 5
 ================

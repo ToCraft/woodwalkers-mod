@@ -24,6 +24,10 @@ import tocraft.walkers.mixin.accessor.ParrotEntityAccessor;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+//#if MC>=1203
+import tocraft.walkers.mixin.accessor.BatAccessor;
+//#endif
+
 /**
  * Registry class for {@link EntityUpdater} instances.
  *
@@ -74,7 +78,12 @@ public class EntityUpdaters {
 
     public static void init() {
         // register specific entity animation handling
-        EntityUpdaters.register(EntityType.BAT, (player, bat) -> bat.setResting(!CEntity.level(player).getBlockState(player.blockPosition().above()).isAir()));
+        EntityUpdaters.register(EntityType.BAT, (player, bat) -> {
+            bat.setResting(!CEntity.level(player).getBlockState(player.blockPosition().above()).isAir());
+            //#if MC>=1203
+            ((BatAccessor) bat).callSetupAnimationStates();
+            //#endif
+        });
 
         EntityUpdaters.register(EntityType.PARROT, (player, parrot) -> {
             parrot.setRecordPlayingNearby(player.blockPosition(), ((NearbySongAccessor) player).shape_isNearbySongPlaying());
