@@ -4,12 +4,6 @@
   "package": "tocraft.walkers.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
-    //#if MC<=1182
-    //$$ "accessor.HorseAccessor",
-    //$$ "accessor.MushroomCowAccessor",
-    //#else
-    "player.PlayerSonicBoomMixin",
-    //#endif
     "ActiveTargetGoalMixin",
     "AvoidEntityGoalMixin",
     "AxolotlAttackablesSensorMixin",
@@ -40,6 +34,9 @@
     "WitchMixin",
     "WolfEntityMixin",
     "accessor.AxolotlEntityAccessor",
+    //#if MC>=1203
+    "accessor.BatAccessor",
+    //#endif
     "accessor.BiomeAccessor",
     "accessor.CreeperEntityAccessor",
     "accessor.DolphinAccessor",
@@ -61,6 +58,7 @@
     "player.PlayerEntityDataMixin",
     "player.PlayerEntityMixin",
     "player.PlayerEntityTickMixin",
+    "player.PlayerSonicBoomMixin",
     "player.PlayerSoundMixin",
     "player.PlayerTrackingMixin",
     "player.ServerPlayerEntityMixin"
