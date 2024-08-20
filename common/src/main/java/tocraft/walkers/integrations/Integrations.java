@@ -6,17 +6,18 @@ import tocraft.walkers.integrations.impl.*;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Supplier;
 
 public class Integrations {
     private static final Map<String, AbstractIntegration> INTEGRATIONS = new HashMap<>();
 
     public static void initIntegrations() {
-        register(MobBattleModIntegration.MODID, new MobBattleModIntegration());
-        register(GuardVillagersIntegration.MODID, new GuardVillagersIntegration());
-        register(MoreMobVariantsIntegration.MODID, new MoreMobVariantsIntegration());
-        register(MutantMonstersIntegration.MODID, new MutantMonstersIntegration());
-        register(AlexMobsIntegration.MODID, new AlexMobsIntegration());
-        register(PlayerAbilityLibIntegration.MODID, new PlayerAbilityLibIntegration());
+        register(MobBattleModIntegration.MODID, MobBattleModIntegration::new);
+        register(GuardVillagersIntegration.MODID, GuardVillagersIntegration::new);
+        register(MoreMobVariantsIntegration.MODID, MoreMobVariantsIntegration::new);
+        register(MutantMonstersIntegration.MODID, MutantMonstersIntegration::new);
+        register(AlexMobsIntegration.MODID, AlexMobsIntegration::new);
+        register(PlayerAbilityLibIntegration.MODID, PlayerAbilityLibIntegration::new);
     }
 
     public static void registerAbilities() {
@@ -59,7 +60,14 @@ public class Integrations {
     }
 
     public static void register(String modid, AbstractIntegration integration) {
-        if (PlatformData.isModLoaded(modid))
+        if (PlatformData.isModLoaded(modid)) {
             INTEGRATIONS.put(modid, integration);
+        }
+    }
+
+    public static void register(String modid, Supplier<AbstractIntegration> integration) {
+        if (PlatformData.isModLoaded(modid)) {
+            INTEGRATIONS.put(modid, integration.get());
+        }
     }
 }

@@ -3,6 +3,7 @@ package tocraft.walkers.integrations.impl;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.monster.Enemy;
+import org.jetbrains.annotations.Nullable;
 import tocraft.craftedcore.patched.Identifier;
 import tocraft.walkers.Walkers;
 import tocraft.walkers.integrations.AbstractIntegration;
@@ -10,7 +11,8 @@ import tocraft.walkers.mixin.accessor.EntityAccessor;
 import tocraft.walkers.traits.TraitRegistry;
 import tocraft.walkers.traits.impl.PreyTrait;
 
-import java.util.ArrayList;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.List;
 
 public class GuardVillagersIntegration extends AbstractIntegration {
@@ -19,22 +21,28 @@ public class GuardVillagersIntegration extends AbstractIntegration {
 
     @Override
     public void registerTraits() {
-        TraitRegistry.registerByPredicate(entity -> entity instanceof Enemy && !getMobBlackList().contains(((EntityAccessor) entity).callGetEncodeId()), new PreyTrait<>(List.of(hunter -> EntityType.getKey(hunter.getType()).equals(GUARD_VILLAGER_TYPE))));
+        List<String> mobBlacklist = getMobBlackList();
+        TraitRegistry.registerByPredicate(entity -> entity instanceof Enemy && mobBlacklist != null && !mobBlacklist.contains(((EntityAccessor) entity).callGetEncodeId()), new PreyTrait<>(List.of(hunter -> EntityType.getKey(hunter.getType()).equals(GUARD_VILLAGER_TYPE))));
     }
 
-    private static List<String> CACHED_MOB_BLACKLIST = new ArrayList<>();
-
     @SuppressWarnings("unchecked")
-    private static List<String> getMobBlackList() {
+    @Nullable
+    private List<String> getMobBlackList() {
         try {
             Class<?> configClass = Class.forName("tallestegg.guardvillagers.configuration.GuardConfig");
-            CACHED_MOB_BLACKLIST = (List<String>) configClass.getDeclaredField("MobBlackList").get(null);
-            return CACHED_MOB_BLACKLIST;
-        } catch (ClassNotFoundException | IllegalAccessException |
-                 NoSuchFieldException e) {
-            Walkers.LOGGER.error("{}: failed to get the mob blacklist for {}: {}", GuardVillagersIntegration.class.getSimpleName(), MODID, e);
+            //#if MC<=1204
+            //$$ Field MobBlackList = configClass.getField("MobBlackList");
+            //$$ return (List<String>) MobBlackList.get(null);
+            //#else
+            Object commonConfig = configClass.getDeclaredField("COMMON").get(null);
+            Field MobBlackListField = commonConfig.getClass().getDeclaredField("MobBlackList");
+            Object MobBlacklist = MobBlackListField.get(commonConfig);
+            Method getMobBlacklist = MobBlacklist.getClass().getDeclaredMethod("get");
+            return (List<String>) getMobBlacklist.invoke(MobBlacklist);
+            //#endif
+        } catch (ReflectiveOperationException e) {
+            Walkers.LOGGER.error("{}: failed to get the mob blacklist: {}", GuardVillagersIntegration.class, e);
+            return null;
         }
-
-        return CACHED_MOB_BLACKLIST;
     }
 }
