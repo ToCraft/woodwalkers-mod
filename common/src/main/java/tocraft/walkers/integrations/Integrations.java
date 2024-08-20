@@ -16,6 +16,7 @@ public class Integrations {
         register(MoreMobVariantsIntegration.MODID, new MoreMobVariantsIntegration());
         register(MutantMonstersIntegration.MODID, new MutantMonstersIntegration());
         register(AlexMobsIntegration.MODID, new AlexMobsIntegration());
+        register(PlayerAbilityLibIntegration.MODID, new PlayerAbilityLibIntegration());
     }
 
     public static void registerAbilities() {
@@ -58,8 +59,7 @@ public class Integrations {
     }
 
     public static void register(String modid, AbstractIntegration integration) {
-        if (PlatformData.isModLoaded(modid)) {
+        if (PlatformData.isModLoaded(modid))
             INTEGRATIONS.put(modid, integration);
-        }
     }
 }

@@ -6,6 +6,7 @@ walkers 5.1
 - fix ConcurrentModificationException on AbilityRegistry
 - rework registration of PreyTrait & FearedTrait
 - fix crash when clicking on player
+- add compatibility for PlayerAbilityLib
 
 walkers 5
 ================
