@@ -1,22 +1,34 @@
 package tocraft.walkers.api;
 
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.InteractionResult;
+import tocraft.craftedcore.event.Event;
+import tocraft.craftedcore.event.EventFactory;
 
-public class FlightHelper {
+@FunctionalInterface
+public interface FlightHelper {
+    Event<FlightHelper> GRANT = EventFactory.createWithInteractionResult();
+    Event<FlightHelper> REVOKE = EventFactory.createWithInteractionResult();
 
-    public static void grantFlightTo(ServerPlayer player) {
-        player.getAbilities().mayfly = true;
+    InteractionResult event(ServerPlayer player);
+
+    static void grantFlightTo(ServerPlayer player) {
+        if (!GRANT.invoke().event(player).consumesAction()) {
+            player.getAbilities().mayfly = true;
+        }
     }
 
-    public static boolean hasFlight(ServerPlayer player) {
+    static boolean hasFlight(ServerPlayer player) {
         return player.getAbilities().mayfly;
     }
 
-    public static void revokeFlight(ServerPlayer player) {
-        if (player.gameMode.isSurvival()) {
-            player.getAbilities().mayfly = false;
-        }
+    static void revokeFlight(ServerPlayer player) {
+        if (!REVOKE.invoke().event(player).consumesAction()) {
+            if (player.gameMode.isSurvival()) {
+                player.getAbilities().mayfly = false;
+            }
 
-        player.getAbilities().flying = false;
+            player.getAbilities().flying = false;
+        }
     }
 }
