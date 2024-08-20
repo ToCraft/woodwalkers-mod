@@ -18,6 +18,7 @@ walkers 5
 - fix how blacklists apply to commands
 - add Mutant Monsters Integration
 - fix ConcurrentModificationException when loading traits
+- fix item pos for allays
 
 walkers 4.6
 ================
