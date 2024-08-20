@@ -62,6 +62,17 @@ public class WalkersCommand {
          */
         LiteralCommandNode<CommandSourceStack> change2ndShape = Commands.literal("change2ndShape")
                 .then(Commands.argument("player", EntityArgument.players())
+                        .then(Commands.argument("entity", EntityArgument.entity())
+                                .executes(context -> {
+                                    Entity entity = EntityArgument.getEntity(context, "entity");
+                                    CompoundTag nbt = new CompoundTag();
+                                    entity.saveWithoutId(nbt);
+                                    change2ndShape(context.getSource(),
+                                            EntityArgument.getPlayer(context, "player"),
+                                            EntityType.getKey(entity.getType()),
+                                            nbt);
+                                    return 1;
+                                }))
                         .then(Commands.argument("shape", CEntitySummonArgument.id(ctx))
                                 .suggests(SuggestionProviders.SUMMONABLE_ENTITIES).executes(context -> {
                                     change2ndShape(context.getSource(), EntityArgument.getPlayer(context, "player"),
@@ -81,10 +92,22 @@ public class WalkersCommand {
                                         }))))
                 .build();
 
-        LiteralCommandNode<CommandSourceStack> switchShape = Commands.literal("switchShape").then(Commands.argument("player", EntityArgument.players()).then(Commands.literal("normal").executes(context -> {
+        LiteralCommandNode<CommandSourceStack> switchShape = Commands.literal("switchShape").then(Commands.argument("player", EntityArgument.players())
+                        .then(Commands.literal("normal").executes(context -> {
                     switchShapeToNormal(context.getSource(), EntityArgument.getPlayer(context, "player"));
                     return 1;
-                })).then(Commands.argument("shape", CEntitySummonArgument.id(ctx))
+                }))
+                    .then(Commands.argument("entity", EntityArgument.entity())
+                                .executes(context -> {
+                                    Entity entity = EntityArgument.getEntity(context, "entity");
+                                    CompoundTag nbt = new CompoundTag();
+                                    entity.saveWithoutId(nbt);
+                                    switchShape(context.getSource(),
+                                            EntityArgument.getPlayer(context, "player"),
+                                            EntityType.getKey(entity.getType()),
+                                            nbt);
+                                    return 1;
+                                })).then(Commands.argument("shape", CEntitySummonArgument.id(ctx))
                         .suggests(SuggestionProviders.SUMMONABLE_ENTITIES).executes(context -> {
                             switchShape(context.getSource(), EntityArgument.getPlayer(context, "player"),
                                     CEntitySummonArgument.getEntityTypeId(context, "shape"),
