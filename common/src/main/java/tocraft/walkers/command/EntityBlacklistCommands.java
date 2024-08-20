@@ -71,7 +71,7 @@ public class EntityBlacklistCommands {
     }
 
     private static void isWhitelist(CommandSourceStack source) {
-        sendSuccess(source, TComponent.translatable("walkers.getConfigEntry", "entityBlacklistIsWhitelist", Walkers.CONFIG.entityBlacklistIsWhitelist), false);
+        sendSuccess(source, TComponent.translatable("craftedcore.config.get", "entityBlacklistIsWhitelist", Walkers.CONFIG.entityBlacklistIsWhitelist), false);
     }
 
     private static void setIsWhitelist(CommandSourceStack source, boolean value) {
@@ -82,7 +82,7 @@ public class EntityBlacklistCommands {
             Walkers.CONFIG.sendToPlayer(player);
         }
 
-        sendSuccess(source, TComponent.translatable("walkers.setConfigEntry", "entityBlacklistIsWhitelist", String.valueOf(value)), false);
+        sendSuccess(source, TComponent.translatable("craftedcore.config.set", "entityBlacklistIsWhitelist", String.valueOf(value)), false);
     }
 
     private static int clearEntities(CommandSourceStack source) {

@@ -25,17 +25,15 @@ import net.minecraft.world.entity.animal.*;
 import net.minecraft.world.entity.monster.warden.Warden;
 //#endif
 //#if MC>=1205
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 //#endif
 import net.minecraft.world.item.Items;
 import org.jetbrains.annotations.Nullable;
-import tocraft.craftedcore.patched.CRegistries;
-import tocraft.craftedcore.patched.Identifier;
 import tocraft.walkers.Walkers;
 import tocraft.walkers.ability.impl.generic.*;
 import tocraft.walkers.ability.impl.specific.*;
 import tocraft.walkers.integrations.Integrations;
+import java.util.concurrent.ConcurrentHashMap;
 
 import java.util.*;
 import java.util.function.Predicate;

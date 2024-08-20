@@ -17,8 +17,6 @@
   "walkers.unlock_entity": "Unlocked %s as second shape.",
   "walkers.unlock_entity_blacklisted": "This Entity is not available for you.",
   "walkers.unlock_progress": "You feel it tingling.",
-  "walkers.setConfigEntry": "Config entry %s is now %s",
-  "walkers.getConfigEntry": "Config entry %s is set to %s",
   "walkers.playerBlacklist.add": "Added player %s to the blacklist/whitelist.",
   "walkers.playerBlacklist.remove": "Removed player %s from the blacklist/whitelist.",
   "walkers.playerBlacklist.list": "Player %s is listed.",

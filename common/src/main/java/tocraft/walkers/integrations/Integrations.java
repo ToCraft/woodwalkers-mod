@@ -2,10 +2,7 @@ package tocraft.walkers.integrations;
 
 import net.minecraft.world.entity.Entity;
 import tocraft.craftedcore.platform.PlatformData;
-import tocraft.walkers.integrations.impl.GuardVillagersIntegration;
-import tocraft.walkers.integrations.impl.MobBattleModIntegration;
-import tocraft.walkers.integrations.impl.MoreMobVariantsIntegration;
-import tocraft.walkers.integrations.impl.MutantMonstersIntegration;
+import tocraft.walkers.integrations.impl.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -13,11 +10,12 @@ import java.util.Map;
 public class Integrations {
     private static final Map<String, AbstractIntegration> INTEGRATIONS = new HashMap<>();
 
-    static {
+    public static void initIntegrations() {
         register(MobBattleModIntegration.MODID, new MobBattleModIntegration());
         register(GuardVillagersIntegration.MODID, new GuardVillagersIntegration());
         register(MoreMobVariantsIntegration.MODID, new MoreMobVariantsIntegration());
         register(MutantMonstersIntegration.MODID, new MutantMonstersIntegration());
+        register(AlexMobsIntegration.MODID, new AlexMobsIntegration());
     }
 
     public static void registerAbilities() {
@@ -60,7 +58,8 @@ public class Integrations {
     }
 
     public static void register(String modid, AbstractIntegration integration) {
-        if (PlatformData.isModLoaded(modid))
+        if (PlatformData.isModLoaded(modid)) {
             INTEGRATIONS.put(modid, integration);
+        }
     }
 }
