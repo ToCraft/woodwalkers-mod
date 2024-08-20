@@ -28,6 +28,10 @@ import java.util.Map;
 import tocraft.walkers.mixin.accessor.BatAccessor;
 //#endif
 
+//#if MC>1182
+import tocraft.walkers.mixin.accessor.AllayAccessor;
+//#endif
+
 /**
  * Registry class for {@link EntityUpdater} instances.
  *
@@ -77,6 +81,17 @@ public class EntityUpdaters {
     }
 
     public static void init() {
+        //#if MC>1182
+        EntityUpdaters.register(EntityType.ALLAY, (player, allay) -> {
+            ((AllayAccessor) allay).setHoldingItemAnimationTicks0(((AllayAccessor) allay).getHoldingItemAnimationTicks());
+            if (allay.hasItemInHand()) {
+                ((AllayAccessor) allay).setHoldingItemAnimationTicks(Mth.clamp(((AllayAccessor) allay).getHoldingItemAnimationTicks() + 1.0F, 0.0F, 5.0F));
+            } else {
+                ((AllayAccessor) allay).setHoldingItemAnimationTicks(Mth.clamp(((AllayAccessor) allay).getHoldingItemAnimationTicks() - 1.0F, 0.0F, 5.0F));
+            }
+        });
+        //#endif
+
         // register specific entity animation handling
         EntityUpdaters.register(EntityType.BAT, (player, bat) -> {
             bat.setResting(!CEntity.level(player).getBlockState(player.blockPosition().above()).isAir());

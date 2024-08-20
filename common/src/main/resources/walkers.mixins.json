@@ -33,6 +33,9 @@
     "VillagerHostilesSensorMixin",
     "WitchMixin",
     "WolfEntityMixin",
+    //#if MC>1182
+    "accessor.AllayAccessor",
+    //#endif
     "accessor.AxolotlEntityAccessor",
     //#if MC>=1203
     "accessor.BatAccessor",
