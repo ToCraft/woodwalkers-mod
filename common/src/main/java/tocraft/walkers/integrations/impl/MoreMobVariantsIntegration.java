@@ -14,7 +14,6 @@ import tocraft.walkers.api.variant.TypeProvider;
 import tocraft.walkers.api.variant.TypeProviderRegistry;
 import tocraft.walkers.integrations.AbstractIntegration;
 
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
@@ -46,12 +45,11 @@ public class MoreMobVariantsIntegration extends AbstractIntegration {
             List<Object> variants = (List<Object>) getVariants.invoke(null, type);
             List<ResourceLocation> variantIds = new ArrayList<>();
             for (Object variant : variants) {
-                ResourceLocation id = (ResourceLocation) variant.getClass().getMethod("getIdentifier").invoke(variant);
+                ResourceLocation id = (ResourceLocation) variant.getClass().getDeclaredMethod("getIdentifier").invoke(variant);
                 variantIds.add(id);
             }
             return variantIds;
-        } catch (ClassNotFoundException | NoSuchMethodException | IllegalAccessException |
-                 InvocationTargetException e) {
+        } catch (ReflectiveOperationException e) {
             Walkers.LOGGER.error("{}: failed to get the mob blacklist for {}: {}", GuardVillagersIntegration.class.getSimpleName(), MODID, e);
         }
 

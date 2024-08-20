@@ -8,6 +8,7 @@ walkers 5.1
 - fix crash when clicking on player
 - add compatibility for PlayerAbilityLib
 - fix Bat Animation for 1.20.4+
+- background improvements & fixes
 
 walkers 5
 ================

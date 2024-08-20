@@ -58,7 +58,9 @@
     "player.PlayerEntityDataMixin",
     "player.PlayerEntityMixin",
     "player.PlayerEntityTickMixin",
+    //#if MC>1182
     "player.PlayerSonicBoomMixin",
+    //#endif
     "player.PlayerSoundMixin",
     "player.PlayerTrackingMixin",
     "player.ServerPlayerEntityMixin"

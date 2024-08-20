@@ -36,7 +36,7 @@ public class PlayerAbilityLibIntegration extends AbstractIntegration {
     private Object getAbilitySource(ResourceLocation id) {
         try {
             Class<?> palClass = Class.forName("io.github.ladysnake.pal.Pal");
-            Method getAbilitySource = palClass.getMethod("getAbilitySource", ResourceLocation.class);
+            Method getAbilitySource = palClass.getDeclaredMethod("getAbilitySource", ResourceLocation.class);
             return getAbilitySource.invoke(null, id);
         } catch (ClassNotFoundException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
             error(e);
@@ -48,7 +48,7 @@ public class PlayerAbilityLibIntegration extends AbstractIntegration {
     private Object getVanillaFlightAbility() {
         try {
             Class<?> vanillaAbilitiesClass = Class.forName("io.github.ladysnake.pal.VanillaAbilities");
-            Field ALLOW_FLYING = vanillaAbilitiesClass.getField("ALLOW_FLYING");
+            Field ALLOW_FLYING = vanillaAbilitiesClass.getDeclaredField("ALLOW_FLYING");
             return ALLOW_FLYING.get(null);
         } catch (ClassNotFoundException | IllegalAccessException | NoSuchFieldException e) {
             error(e);
@@ -60,10 +60,10 @@ public class PlayerAbilityLibIntegration extends AbstractIntegration {
         if (FLYING_MORPH_SOURCE != null && ALLOW_FLIGHT_ABILITY != null) {
             try {
                 Class<?> palClass = Class.forName("io.github.ladysnake.pal.Pal");
-                Method grantAbility = palClass.getMethod("grantAbility", Player.class, ALLOW_FLIGHT_ABILITY.getClass(), FLYING_MORPH_SOURCE.getClass());
+                Method grantAbility = palClass.getDeclaredMethod("grantAbility", Player.class, ALLOW_FLIGHT_ABILITY.getClass(), FLYING_MORPH_SOURCE.getClass());
                 grantAbility.invoke(null, player, ALLOW_FLIGHT_ABILITY, FLYING_MORPH_SOURCE);
                 return true;
-            } catch (ClassNotFoundException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+            } catch (ReflectiveOperationException e) {
                 error(e);
             }
         }
@@ -74,10 +74,10 @@ public class PlayerAbilityLibIntegration extends AbstractIntegration {
         if (FLYING_MORPH_SOURCE != null && ALLOW_FLIGHT_ABILITY != null) {
             try {
                 Class<?> palClass = Class.forName("io.github.ladysnake.pal.Pal");
-                Method revokeAbility = palClass.getMethod("revokeAbility", Player.class, ALLOW_FLIGHT_ABILITY.getClass(), FLYING_MORPH_SOURCE.getClass());
+                Method revokeAbility = palClass.getDeclaredMethod("revokeAbility", Player.class, ALLOW_FLIGHT_ABILITY.getClass(), FLYING_MORPH_SOURCE.getClass());
                 revokeAbility.invoke(null, player, ALLOW_FLIGHT_ABILITY, FLYING_MORPH_SOURCE);
                 return true;
-            } catch (ClassNotFoundException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+            } catch (ReflectiveOperationException e) {
                 error(e);
             }
         }
