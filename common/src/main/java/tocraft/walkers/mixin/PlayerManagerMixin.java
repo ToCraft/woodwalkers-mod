@@ -37,8 +37,15 @@ public class PlayerManagerMixin {
                         .setBaseValue(Math.min(Walkers.CONFIG.maxHealth, shape.getMaxHealth()));
                 player.setHealth(player.getMaxHealth());
             }
+            // Re-sync amor for shapes
+            if (Walkers.CONFIG.scalingAmor) {
+                player.getAttribute(Attributes.ARMOR)
+                        .setBaseValue(Math.min(Walkers.CONFIG.maxAmor, shape.getAttributeBaseValue(Attributes.ARMOR)));
+                player.getAttribute(Attributes.ARMOR_TOUGHNESS)
+                        .setBaseValue(Math.min(Walkers.CONFIG.maxAmor, shape.getAttributeBaseValue(Attributes.ARMOR_TOUGHNESS)));
+            }
             // sync max health & attack damage with clients
-            if ((Walkers.CONFIG.scalingHealth || Walkers.CONFIG.percentScalingHealth)) {
+            if (Walkers.CONFIG.scalingHealth || Walkers.CONFIG.percentScalingHealth || Walkers.CONFIG.scalingAmor) {
                 player.connection.send(new ClientboundUpdateAttributesPacket(player.getId(),
                         player.getAttributes().getSyncableAttributes()));
             }
