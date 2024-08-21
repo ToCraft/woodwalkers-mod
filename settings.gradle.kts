@@ -10,7 +10,7 @@ pluginManagement {
 }
 
 // set to only use one minecraft version
-val minecraft = ""
+val minecraft = "1.21"
 
 file("props").listFiles()?.forEach {
     var forcedVersion : String? = startParameter.projectProperties["minecraft"]

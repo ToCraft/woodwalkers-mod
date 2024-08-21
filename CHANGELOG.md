@@ -8,6 +8,9 @@ walkers 5.1
 - fix crash when clicking on player
 - add compatibility for PlayerAbilityLib
 - fix Bat Animation for 1.20.4+
+- fix item pos for allays
+- allow selectors & multiple players in commands
+- add scaling armor attribute & armor toughness attribute
 - background improvements & fixes
 
 walkers 5
@@ -18,8 +21,6 @@ walkers 5
 - fix how blacklists apply to commands
 - add Mutant Monsters Integration
 - fix ConcurrentModificationException when loading traits
-- fix item pos for allays
-- allow selectors & multiple players in commands
 
 walkers 4.6
 ================

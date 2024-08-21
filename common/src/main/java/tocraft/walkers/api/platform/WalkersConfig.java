@@ -26,6 +26,9 @@ public class WalkersConfig implements Config {
     public boolean scalingHealth = true;
     public boolean percentScalingHealth = true;
     public int maxHealth = 40;
+    public boolean scalingAmor = true;
+    public  int maxAmor = 30;
+    public int maxAmorToughness = 20;
     public int endermanAbilityTeleportDistance = 32;
     @Synchronize
     public boolean showPlayerNametag = false;

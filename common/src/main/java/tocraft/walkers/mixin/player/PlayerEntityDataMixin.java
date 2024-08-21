@@ -192,6 +192,8 @@ public abstract class PlayerEntityDataMixin extends LivingEntity implements Play
     public void walkers$updateShapes(@Nullable LivingEntity shape) {
         Player player = (Player) (Object) this;
         AttributeInstance healthAttribute = player.getAttribute(Attributes.MAX_HEALTH);
+        AttributeInstance armorAttribute = player.getAttribute(Attributes.ARMOR);
+        AttributeInstance armorToughnessAttribute = player.getAttribute(Attributes.ARMOR_TOUGHNESS);
 
         this.walkers$shape = shape;
 
@@ -213,6 +215,16 @@ public abstract class PlayerEntityDataMixin extends LivingEntity implements Play
                 else
                     player.setHealth(Math.min(player.getHealth(), player.getMaxHealth()));
             }
+            if (Walkers.CONFIG.scalingAmor) {
+                AttributeInstance shapeArmorAttribute = shape.getAttribute(Attributes.ARMOR);
+                if (armorAttribute != null && shapeArmorAttribute != null) {
+                    armorAttribute.setBaseValue(Math.min(Walkers.CONFIG.maxAmor, shapeArmorAttribute.getBaseValue()));
+                }
+                AttributeInstance shapeArmorToughnessAttribute = shape.getAttribute(Attributes.ARMOR_TOUGHNESS);
+                if (armorToughnessAttribute != null && shapeArmorToughnessAttribute != null) {
+                    armorToughnessAttribute.setBaseValue(Math.min(Walkers.CONFIG.maxAmor, shapeArmorToughnessAttribute.getBaseValue()));
+                }
+            }
         }
 
         // If the shape is null (going back to player), set the player's base health
@@ -222,6 +234,14 @@ public abstract class PlayerEntityDataMixin extends LivingEntity implements Play
 
             if (Walkers.CONFIG.scalingHealth && healthAttribute != null) {
                 healthAttribute.setBaseValue(20);
+            }
+            if (Walkers.CONFIG.scalingAmor) {
+                if (armorAttribute != null) {
+                    armorAttribute.setBaseValue(0);
+                }
+                if (armorToughnessAttribute != null) {
+                    armorAttribute.setBaseValue(0);
+                }
             }
 
             // Clear health value if needed
