@@ -75,7 +75,7 @@ public class WalkersEventHandlers {
         PlayerEvents.AWARD_ADVANCEMENT.register((player, advancement, criterionKey) -> {
             if (Walkers.hasFlyingPermissions(player)) {
                 FlightHelper.grantFlightTo(player);
-                player.getAbilities().setFlyingSpeed(Walkers.CONFIG.flySpeed);
+                FlightHelper.updateFlyingSpeed(player);
                 player.onUpdateAbilities();
             }
         });

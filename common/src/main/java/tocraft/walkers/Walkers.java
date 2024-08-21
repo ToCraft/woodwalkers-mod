@@ -96,8 +96,9 @@ public class Walkers {
     }
 
     public static boolean hasFlyingPermissions(ServerPlayer player) {
-        if (player.isCreative())
+        if (player.isCreative()) {
             return true;
+        }
 
         LivingEntity shape = PlayerShape.getCurrentShape(player);
 

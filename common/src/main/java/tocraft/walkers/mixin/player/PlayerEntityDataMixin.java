@@ -225,17 +225,19 @@ public abstract class PlayerEntityDataMixin extends LivingEntity implements Play
             }
 
             // Clear health value if needed
-            if (Walkers.CONFIG.percentScalingHealth)
+            if (Walkers.CONFIG.percentScalingHealth) {
                 player.setHealth(Math.min(currentHealthPercent * player.getMaxHealth(), player.getMaxHealth()));
-            else
+            }
+            else {
                 player.setHealth(Math.min(player.getHealth(), player.getMaxHealth()));
+            }
         }
 
         // update flight properties on player depending on shape
         ServerPlayer serverPlayer = (ServerPlayer) player;
         if (Walkers.hasFlyingPermissions((ServerPlayer) player)) {
             FlightHelper.grantFlightTo(serverPlayer);
-            player.getAbilities().setFlyingSpeed(Walkers.CONFIG.flySpeed);
+            FlightHelper.updateFlyingSpeed(player);
             player.onUpdateAbilities();
         } else if (!player.isCreative()) {
             FlightHelper.revokeFlight(serverPlayer);

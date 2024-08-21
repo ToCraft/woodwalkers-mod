@@ -34,7 +34,7 @@ public abstract class ServerPlayerEntityMixin extends Player {
         if (Walkers.hasFlyingPermissions(player)) {
             if (!FlightHelper.hasFlight(player)) {
                 FlightHelper.grantFlightTo(player);
-                getAbilities().setFlyingSpeed(Walkers.CONFIG.flySpeed);
+                FlightHelper.updateFlyingSpeed(this);
                 onUpdateAbilities();
             }
 
