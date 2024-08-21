@@ -52,8 +52,10 @@ public class WalkersCommand {
          * Used to remove the second shape of the specified Player.
          */
         LiteralCommandNode<CommandSourceStack> remove2ndShape = Commands.literal("remove2ndShape")
-                .then(Commands.argument("player", EntityArgument.players()).executes(context -> {
-                    remove2ndShape(context.getSource(), EntityArgument.getPlayer(context, "player"));
+                .then(Commands.argument("players", EntityArgument.players()).executes(context -> {
+                    for (ServerPlayer player : EntityArgument.getPlayers(context, "players")) {
+                        remove2ndShape(context.getSource(), player);
+                    }
                     return 1;
                 })).build();
 
@@ -61,40 +63,48 @@ public class WalkersCommand {
          * Used to give the specified shape to the specified Player.
          */
         LiteralCommandNode<CommandSourceStack> change2ndShape = Commands.literal("change2ndShape")
-                .then(Commands.argument("player", EntityArgument.players())
+                .then(Commands.argument("players", EntityArgument.players())
                         .then(Commands.argument("entity", EntityArgument.entity())
                                 .executes(context -> {
                                     Entity entity = EntityArgument.getEntity(context, "entity");
                                     CompoundTag nbt = new CompoundTag();
                                     entity.saveWithoutId(nbt);
-                                    change2ndShape(context.getSource(),
-                                            EntityArgument.getPlayer(context, "player"),
-                                            EntityType.getKey(entity.getType()),
-                                            nbt);
+                                    for (ServerPlayer player : EntityArgument.getPlayers(context, "players")) {
+                                        change2ndShape(context.getSource(),
+                                                player,
+                                                EntityType.getKey(entity.getType()),
+                                                nbt);
+                                    }
+
                                     return 1;
                                 }))
                         .then(Commands.argument("shape", CEntitySummonArgument.id(ctx))
                                 .suggests(SuggestionProviders.SUMMONABLE_ENTITIES).executes(context -> {
-                                    change2ndShape(context.getSource(), EntityArgument.getPlayer(context, "player"),
-                                            CEntitySummonArgument.getEntityTypeId(context, "shape"),
-                                            null);
+                                    for (ServerPlayer player : EntityArgument.getPlayers(context, "players")) {
+                                        change2ndShape(context.getSource(),
+                                                player,
+                                                CEntitySummonArgument.getEntityTypeId(context, "shape"),
+                                                null);
+                                    }
                                     return 1;
                                 }).then(Commands.argument("nbt", CompoundTagArgument.compoundTag())
                                         .executes(context -> {
                                             CompoundTag nbt = CompoundTagArgument.getCompoundTag(context, "nbt");
-
-                                            change2ndShape(context.getSource(),
-                                                    EntityArgument.getPlayer(context, "player"),
-                                                    CEntitySummonArgument.getEntityTypeId(context, "shape"),
-                                                    nbt);
-
+                                            for (ServerPlayer player : EntityArgument.getPlayers(context, "players")) {
+                                                change2ndShape(context.getSource(),
+                                                        player,
+                                                        CEntitySummonArgument.getEntityTypeId(context, "shape"),
+                                                        nbt);
+                                            }
                                             return 1;
                                         }))))
                 .build();
 
-        LiteralCommandNode<CommandSourceStack> switchShape = Commands.literal("switchShape").then(Commands.argument("player", EntityArgument.players())
+        LiteralCommandNode<CommandSourceStack> switchShape = Commands.literal("switchShape").then(Commands.argument("players", EntityArgument.players())
                         .then(Commands.literal("normal").executes(context -> {
-                    switchShapeToNormal(context.getSource(), EntityArgument.getPlayer(context, "player"));
+                            for (ServerPlayer player : EntityArgument.getPlayers(context, "players")) {
+                                switchShapeToNormal(context.getSource(), player);
+                            }
                     return 1;
                 }))
                     .then(Commands.argument("entity", EntityArgument.entity())
@@ -102,32 +112,42 @@ public class WalkersCommand {
                                     Entity entity = EntityArgument.getEntity(context, "entity");
                                     CompoundTag nbt = new CompoundTag();
                                     entity.saveWithoutId(nbt);
-                                    switchShape(context.getSource(),
-                                            EntityArgument.getPlayer(context, "player"),
-                                            EntityType.getKey(entity.getType()),
-                                            nbt);
+                                    for (ServerPlayer player : EntityArgument.getPlayers(context, "players")) {
+                                        switchShape(context.getSource(),
+                                                player,
+                                                EntityType.getKey(entity.getType()),
+                                                nbt);
+                                    }
                                     return 1;
                                 })).then(Commands.argument("shape", CEntitySummonArgument.id(ctx))
                         .suggests(SuggestionProviders.SUMMONABLE_ENTITIES).executes(context -> {
-                            switchShape(context.getSource(), EntityArgument.getPlayer(context, "player"),
-                                    CEntitySummonArgument.getEntityTypeId(context, "shape"),
-                                    null);
-
+                                    for (ServerPlayer player : EntityArgument.getPlayers(context, "players")) {
+                                        switchShape(context.getSource(),
+                                                player,
+                                                CEntitySummonArgument.getEntityTypeId(context, "shape"),
+                                                null);
+                                    }
                             return 1;
                         }).then(Commands.argument("nbt", CompoundTagArgument.compoundTag()).executes(context -> {
                             CompoundTag nbt = CompoundTagArgument.getCompoundTag(context, "nbt");
-
-                            switchShape(context.getSource(), EntityArgument.getPlayer(context, "player"),
-                                    CEntitySummonArgument.getEntityTypeId(context, "shape"),
-                                    nbt);
-
+                            for (ServerPlayer player : EntityArgument.getPlayers(context, "players")) {
+                                switchShape(context.getSource(),
+                                        player,
+                                        CEntitySummonArgument.getEntityTypeId(context, "shape"),
+                                        nbt);
+                            }
                             return 1;
                         }))))
                 .build();
 
         LiteralCommandNode<CommandSourceStack> show2ndShape = Commands.literal("show2ndShape")
-                .then(Commands.argument("player", EntityArgument.player())
-                        .executes(context -> show2ndShape(context.getSource(), EntityArgument.getPlayer(context, "player"))))
+                .then(Commands.argument("players", EntityArgument.players())
+                        .executes(context -> {
+                            for (ServerPlayer player : EntityArgument.getPlayers(context, "players")) {
+                                show2ndShape(context.getSource(), player);
+                            }
+                            return 1;
+                        }))
                 .build();
 
         rootNode.addChild(remove2ndShape);
@@ -145,21 +165,16 @@ public class WalkersCommand {
         dispatcher.getRoot().addChild(rootNode);
     }
 
-    private static int show2ndShape(CommandSourceStack source, ServerPlayer player) {
-
+    private static void show2ndShape(CommandSourceStack source, ServerPlayer player) {
         if (((PlayerDataProvider) player).walkers$get2ndShape() != null) {
             ShapeType<?> type = ((PlayerDataProvider) player).walkers$get2ndShape();
             if (type != null) {
                 sendSuccess(source, TComponent.translatable("walkers.show2ndShapeNot_positive",
                         player.getDisplayName(), ShapeType.createTooltipText(type.create(CEntity.level(player), player))), false);
             }
-
-            return 1;
         } else {
             sendSuccess(source, TComponent.translatable("walkers.show2ndShapeNot_failed", player.getDisplayName()), false);
         }
-
-        return 0;
     }
 
     private static void remove2ndShape(CommandSourceStack source, ServerPlayer player) {

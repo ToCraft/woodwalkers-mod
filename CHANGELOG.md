@@ -19,7 +19,7 @@ walkers 5
 - add Mutant Monsters Integration
 - fix ConcurrentModificationException when loading traits
 - fix item pos for allays
-- allow selectors in commands
+- allow selectors & multiple players in commands
 
 walkers 4.6
 ================
