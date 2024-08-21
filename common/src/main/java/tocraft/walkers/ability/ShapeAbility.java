@@ -1,5 +1,6 @@
 package tocraft.walkers.ability;
 
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
@@ -22,7 +23,7 @@ public abstract class ShapeAbility<E extends LivingEntity> {
      * @return cooldown of this ability, in ticks, after it is used.
      */
     public int getCooldown(E entity) {
-        String id = Walkers.getEntityTypeRegistry().getKey(entity.getType()).toString();
+        String id = EntityType.getKey(entity.getType()).toString();
 
         // put default cool-down into config if it's not already present
         if (!CEntity.level(entity).isClientSide() && !Walkers.CONFIG.abilityCooldownMap.containsKey(id)) {

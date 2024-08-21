@@ -6,6 +6,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelPart;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -43,7 +44,7 @@ public class GenericEntityArm<L extends LivingEntity, T extends EntityModel<L>> 
 
     @Override
     public ModelPart getArm(LivingEntity entity, T model) {
-        ModelLayerLocation modelLayer = modelLayerLocation != null ? modelLayerLocation : new ModelLayerLocation(Walkers.getEntityTypeRegistry().getKey(entity.getType()), "main");
+        ModelLayerLocation modelLayer = modelLayerLocation != null ? modelLayerLocation : new ModelLayerLocation(EntityType.getKey(entity.getType()), "main");
         ModelPart modelPart = Minecraft.getInstance().getEntityModels().bakeLayer(modelLayer);
         for (String part : modelParts) {
             modelPart = modelPart.getChild(part);

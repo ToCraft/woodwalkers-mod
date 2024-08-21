@@ -30,7 +30,7 @@ public class CantInteractTrait<E extends LivingEntity> extends ShapeTrait<E> {
     public static final ResourceLocation ID = Walkers.id("cant_interact");
     public static final MapCodec<CantInteractTrait<?>> CODEC = RecordCodecBuilder.mapCodec((instance) -> instance.group(
             Codec.BOOL.optionalFieldOf("can_only_interact_with_listed", false).forGetter(o -> o.canOnlyInteractWithListed),
-            Codec.list(ResourceLocation.CODEC).optionalFieldOf("types", new ArrayList<>()).forGetter(o -> o.types.stream().map(o1 -> Walkers.getEntityTypeRegistry().getKey(o1)).toList()),
+            Codec.list(ResourceLocation.CODEC).optionalFieldOf("types", new ArrayList<>()).forGetter(o -> o.types.stream().map(o1 -> EntityType.getKey(o1)).toList()),
             Codec.list(ResourceLocation.CODEC).optionalFieldOf("tags", new ArrayList<>()).forGetter(o -> o.tags.stream().map(TagKey::location).toList())
     ).apply(instance, instance.stable((canOnlyInteractWithListed, typeIds, tagIds) -> {
         List<EntityType<?>> reinforcements = new ArrayList<>();

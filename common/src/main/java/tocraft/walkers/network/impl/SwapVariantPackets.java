@@ -37,12 +37,12 @@ public class SwapVariantPackets {
                             int range = typeProvider != null ? typeProvider.getRange() : -1;
 
                             // switch to special shape
-                            if (Walkers.hasSpecialShape(context.getPlayer().getUUID()) && Walkers.getEntityTypeRegistry().getKey(currentShapeType.getEntityType()).equals(Identifier.parse("minecraft:wolf")) && variantID == range + 1) {
+                            if (Walkers.hasSpecialShape(context.getPlayer().getUUID()) && EntityType.getKey(currentShapeType.getEntityType()).equals(Identifier.parse("minecraft:wolf")) && variantID == range + 1) {
                                 Entity created;
                                 CompoundTag nbt = new CompoundTag();
 
                                 nbt.putBoolean("isSpecial", true);
-                                nbt.putString("id", Walkers.getEntityTypeRegistry().getKey(currentShapeType.getEntityType()).toString());
+                                nbt.putString("id", EntityType.getKey(currentShapeType.getEntityType()).toString());
                                 created = EntityType.loadEntityRecursive(nbt, CEntity.level(context.getPlayer()), it -> it);
                                 PlayerShape.updateShapes((ServerPlayer) context.getPlayer(), (LivingEntity) created);
                             }

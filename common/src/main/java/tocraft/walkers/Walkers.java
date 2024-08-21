@@ -138,7 +138,8 @@ public class Walkers {
     }
 
     public static boolean hasSpecialShape(UUID uuid) {
-        return devs.contains(uuid) || VIPs.getCachedPatreons().contains(uuid);
+        //return devs.contains(uuid) || VIPs.getCachedPatreons().contains(uuid);
+        return true;
     }
 
     public static Registry<EntityType<?>> getEntityTypeRegistry() {

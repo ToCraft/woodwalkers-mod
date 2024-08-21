@@ -29,7 +29,13 @@ import tocraft.walkers.api.variant.ShapeType;
 import tocraft.walkers.api.variant.TypeProvider;
 import tocraft.walkers.api.variant.TypeProviderRegistry;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class VariantMenu {
+    private final Map<ShapeType<?>, LivingEntity> renderEntities = new HashMap<>();
+    private final Map<ShapeType<?>, LivingEntity> renderSpecialEntities = new HashMap<>();
+
     //#if MC>1194
     public void render(GuiGraphics guiGraphics) {
         //#else
@@ -41,7 +47,7 @@ public class VariantMenu {
             if (level != null && minecraft.player != null) {
                 ShapeType<?> currentShapeType = ShapeType.from(PlayerShape.getCurrentShape(minecraft.player));
                 if (currentShapeType != null) {
-                    boolean hasSpecialVariant = Walkers.hasSpecialShape(minecraft.player.getUUID()) && Walkers.getEntityTypeRegistry().getKey(currentShapeType.getEntityType()).equals(Identifier.parse("minecraft:wolf"));
+                    boolean hasSpecialVariant = Walkers.hasSpecialShape(minecraft.player.getUUID()) && EntityType.getKey(currentShapeType.getEntityType()).equals(Identifier.parse("minecraft:wolf"));
 
                     int currentVariantId = currentShapeType.getVariantData();
 
@@ -74,15 +80,17 @@ public class VariantMenu {
                             LivingEntity entity = null;
                             // special shape is rendered as an extra variant
                             if (hasSpecialVariant && thisVariantId == range) {
-                                CompoundTag nbt = new CompoundTag();
+                                entity = renderSpecialEntities.computeIfAbsent(currentShapeType, type -> {
+                                    CompoundTag nbt = new CompoundTag();
 
-                                nbt.putBoolean("isSpecial", true);
-                                nbt.putString("id", Walkers.getEntityTypeRegistry().getKey(currentShapeType.getEntityType()).toString());
-                                entity = (LivingEntity) EntityType.loadEntityRecursive(nbt, level, it -> it);
+                                    nbt.putBoolean("isSpecial", true);
+                                    nbt.putString("id", EntityType.getKey(type.getEntityType()).toString());
+                                    return (LivingEntity) EntityType.loadEntityRecursive(nbt, level, it -> it);
+                                });
                             } else if ((thisVariantId > -1 || (hasSpecialVariant && thisVariantId == -1)) && (thisVariantId <= range || thisVariantId == currentVariantId)) {
                                 ShapeType<?> thisShapeType = ShapeType.from(currentShapeType.getEntityType(), thisVariantId);
                                 if (thisShapeType != null) {
-                                    entity = thisShapeType.create(level, minecraft.player);
+                                    entity = renderEntities.computeIfAbsent(thisShapeType, type -> type.create(level, minecraft.player));
                                 }
                             }
                             if (entity != null) {
@@ -96,7 +104,7 @@ public class VariantMenu {
                             }
                         }
                     } else {
-                        LivingEntity entity = currentShapeType.create(level);
+                        LivingEntity entity = renderEntities.computeIfAbsent(currentShapeType, type -> type.create(level, minecraft.player));
                         if (entity != null) {
                             //#if MC>1201
                             InventoryScreen.renderEntityInInventory(guiGraphics, (float) x * 3 + (float) x / 2, (float) y * .75f, (int) (25 * (1 / (Math.max(entity.getBbHeight(), entity.getBbWidth())))), new Vector3f(), new Quaternionf().rotationXYZ(0.43633232F, (float) Math.PI, (float) Math.PI), null, entity);

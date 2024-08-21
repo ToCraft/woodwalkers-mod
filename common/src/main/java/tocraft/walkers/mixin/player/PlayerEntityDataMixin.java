@@ -104,7 +104,7 @@ public abstract class PlayerEntityDataMixin extends LivingEntity implements Play
         // put entity type ID under the key "id", or "minecraft:empty" if no shape is
         // equipped (or the shape entity type is invalid)
         tag.putString("id",
-                walkers$shape == null ? "minecraft:empty" : Walkers.getEntityTypeRegistry().getKey(walkers$shape.getType()).toString());
+                walkers$shape == null ? "minecraft:empty" : EntityType.getKey(walkers$shape.getType()).toString());
         tag.put("EntityData", entityTag);
         return tag;
     }

@@ -23,6 +23,7 @@ import tocraft.walkers.screen.hud.VariantMenu;
 public class WalkersClient {
     public static boolean isRenderingVariantsMenu = false;
     public static int variantOffset = 0;
+    private final VariantMenu variantMenu = new VariantMenu();
 
     public static final KeyMapping UNLOCK_KEY = new KeyMapping("key.walkers_unlock", InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_U, "key.categories.walkers");
     public static final KeyMapping TRANSFORM_KEY = new KeyMapping("key.walkers", InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_G, "key.categories.walkers");
@@ -43,7 +44,7 @@ public class WalkersClient {
 
         // Register event handlers
         ClientTickEvents.CLIENT_PRE.register(new KeyPressHandler());
-        RenderEvents.HUD_RENDERING.register((guiGraphics, tickDelta) -> new VariantMenu().render(guiGraphics));
+        RenderEvents.HUD_RENDERING.register((guiGraphics, tickDelta) -> variantMenu.render(guiGraphics));
         ClientNetworking.registerPacketHandlers();
 
         OverlayEventHandler.initialize();

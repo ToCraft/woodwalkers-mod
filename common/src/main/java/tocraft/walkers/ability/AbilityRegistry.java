@@ -116,7 +116,7 @@ public class AbilityRegistry {
     @SuppressWarnings("unchecked")
     public static <L extends LivingEntity> ShapeAbility<L> get(L shape) {
         // check ability blacklist
-        if (Walkers.CONFIG.abilityBlacklist.contains(Walkers.getEntityTypeRegistry().getKey(shape.getType()).toString()))
+        if (Walkers.CONFIG.abilityBlacklist.contains(EntityType.getKey(shape.getType()).toString()))
             return null;
 
         // cache the ability so the latest registered can be used
@@ -155,7 +155,7 @@ public class AbilityRegistry {
     public static <L extends LivingEntity> boolean has(L shape) {
         // check ability blacklist
 
-        if (Walkers.CONFIG.abilityBlacklist.contains(Walkers.getEntityTypeRegistry().getKey(shape.getType()).toString()))
+        if (Walkers.CONFIG.abilityBlacklist.contains(EntityType.getKey(shape.getType()).toString()))
             return false;
         return abilities.keySet().stream().anyMatch(predicate -> predicate.test(shape));
     }

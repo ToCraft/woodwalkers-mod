@@ -136,7 +136,7 @@ public class NBTTypeProvider<T extends LivingEntity> extends TypeProvider<T> {
         }
 
         CompoundTag compoundTag = tag.copy();
-        compoundTag.putString("id", Objects.requireNonNull(Walkers.getEntityTypeRegistry().getKey(type)).toString());
+        compoundTag.putString("id", Objects.requireNonNull(EntityType.getKey(type)).toString());
         return (T) EntityType.loadEntityRecursive(compoundTag, world, entity -> entity);
     }
 

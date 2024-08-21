@@ -19,7 +19,7 @@ import java.util.function.Predicate;
 public class FearedTrait<E extends LivingEntity> extends ShapeTrait<E> {
     public static final ResourceLocation ID = Walkers.id("feared");
     public static final MapCodec<FearedTrait<?>> CODEC = RecordCodecBuilder.mapCodec((instance) -> instance.group(
-            Codec.list(ResourceLocation.CODEC).optionalFieldOf("fearful", new ArrayList<>()).forGetter(o -> o.fearfulTypes.stream().map(o1 -> Walkers.getEntityTypeRegistry().getKey(o1)).toList()),
+            Codec.list(ResourceLocation.CODEC).optionalFieldOf("fearful", new ArrayList<>()).forGetter(o -> o.fearfulTypes.stream().map(EntityType::getKey).toList()),
             Codec.list(ResourceLocation.CODEC).optionalFieldOf("fearful_tags", new ArrayList<>()).forGetter(o -> o.fearfulTags.stream().map(TagKey::location).toList())
     ).apply(instance, instance.stable((preyLocations, preyTagLocations) -> {
         List<EntityType<?>> fearfulTypes = new ArrayList<>();

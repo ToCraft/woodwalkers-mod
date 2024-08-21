@@ -6,6 +6,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.NeutralMob;
 import net.minecraft.world.entity.player.Player;
@@ -60,7 +61,7 @@ public class AngerAbility<T extends Mob> extends ShapeAbility<T> {
                 );
             }
         } else {
-            Walkers.LOGGER.error("{}: Registered for unvalid entity {}!", AngerAbility.class.getSimpleName(), Walkers.getEntityTypeRegistry().getKey(oShape.getType()));
+            Walkers.LOGGER.error("{}: Registered for unvalid entity {}!", AngerAbility.class.getSimpleName(), EntityType.getKey(oShape.getType()));
         }
     }
 

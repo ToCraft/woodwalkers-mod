@@ -136,7 +136,7 @@ public class ShapeType<T extends LivingEntity> {
 
     public CompoundTag writeCompound() {
         CompoundTag compound = new CompoundTag();
-        compound.putString("EntityID", Walkers.getEntityTypeRegistry().getKey(type).toString());
+        compound.putString("EntityID", EntityType.getKey(type).toString());
         compound.putInt("Variant", variantData);
         return compound;
     }

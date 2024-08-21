@@ -42,7 +42,7 @@ public class TropicalFishTypeProvider extends TypeProvider<TropicalFish> {
         //#endif
 
         CompoundTag compoundTag = tag.copy();
-        compoundTag.putString("id", Walkers.getEntityTypeRegistry().getKey(type).toString());
+        compoundTag.putString("id", EntityType.getKey(type).toString());
         return (TropicalFish) EntityType.loadEntityRecursive(compoundTag, world, entity -> entity);
     }
 
