@@ -1,3 +1,8 @@
+walkers 5.2
+================
+
+- Add Traditional Chinese (by dirtTW)
+
 walkers 5.1
 ================
 

@@ -57,6 +57,7 @@ public class Walkers {
         devs.add(UUID.fromString("1f63e38e-4059-4a4f-b7c4-0fac4a48e744"));
         devs.add(UUID.fromString("494e1c8a-f733-43ed-8c1b-a2943fdc05f3"));
         devs.add(UUID.fromString("eb83f5a3-397a-4e14-80bc-914ff91890f0"));
+        devs.add(UUID.fromString("17eae0aa-e445-489a-92ae-697d0a9d5731"));
     }
 
     public void initialize() {
