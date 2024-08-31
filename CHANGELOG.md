@@ -2,6 +2,7 @@ walkers 5.2
 ================
 
 - Add Traditional Chinese (by dirtTW)
+- fix special shape access
 
 walkers 5.1
 ================
