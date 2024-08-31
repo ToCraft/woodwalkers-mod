@@ -7,6 +7,8 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 
 @Mixin(Dolphin.class)
 public interface DolphinAccessor {
-    @Accessor
-    TargetingConditions getSWIM_WITH_PLAYER_TARGETING();
+     @Accessor
+     static TargetingConditions getSWIM_WITH_PLAYER_TARGETING() {
+         throw new AssertionError();
+     }
 }
