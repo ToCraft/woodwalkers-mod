@@ -4,6 +4,7 @@ walkers 5.2
 - Add Traditional Chinese (by dirtTW)
 - fix special shape access
 - add charged creeper variant
+- add comments to config
 
 walkers 5.1
 ================
