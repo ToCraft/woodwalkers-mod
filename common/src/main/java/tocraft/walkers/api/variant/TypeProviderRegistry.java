@@ -17,6 +17,7 @@ public class TypeProviderRegistry {
     private static final Map<EntityType<? extends LivingEntity>, TypeProvider<? extends LivingEntity>> VARIANT_BY_TYPE = new LinkedHashMap<>();
 
     public static void registerDefault() {
+        register(EntityType.CREEPER, new CreeperTypeProvider());
         register(EntityType.SHEEP, new SheepTypeProvider());
         register(EntityType.AXOLOTL, new AxolotlTypeProvider());
         register(EntityType.PARROT, new ParrotTypeProvider());

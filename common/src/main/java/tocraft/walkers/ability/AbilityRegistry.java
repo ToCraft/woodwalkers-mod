@@ -67,7 +67,9 @@ public class AbilityRegistry {
         // Register 'normal' Abilities
         registerByClass(AbstractHorse.class, new JumpAbility<>());
         registerByClass(Blaze.class, new ShootFireballAbility<>(Items.BLAZE_POWDER, false));
-        registerByClass(Creeper.class, new ExplosionAbility<>());
+        // higher explosion radius when charged
+        registerByPredicate(entity -> entity instanceof Creeper && !((Creeper) entity).isPowered(), new ExplosionAbility<>());
+        registerByPredicate(entity -> entity instanceof Creeper && ((Creeper) entity).isPowered(), new ExplosionAbility<>(6));
         registerByClass(EnderDragon.class, new ShootDragonFireball<>());
         registerByClass(EnderMan.class, new TeleportationAbility<>());
         registerByClass(Ghast.class, new ShootFireballAbility<>(Items.FIRE_CHARGE, true));
