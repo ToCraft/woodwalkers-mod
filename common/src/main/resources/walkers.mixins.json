@@ -40,6 +40,7 @@
     //#if MC>=1203
     "accessor.BatAccessor",
     //#endif
+    "accessor.AbstractHorseAccessor",
     "accessor.BiomeAccessor",
     "accessor.CreeperEntityAccessor",
     "accessor.DolphinAccessor",

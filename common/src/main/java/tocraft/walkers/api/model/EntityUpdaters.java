@@ -15,6 +15,7 @@ import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import tocraft.craftedcore.patched.CEntity;
+import tocraft.walkers.api.model.impl.AbstractHorseEntityUpdater;
 import tocraft.walkers.api.model.impl.ShulkerEntityUpdater;
 import tocraft.walkers.api.model.impl.SquidEntityUpdater;
 import tocraft.walkers.impl.NearbySongAccessor;
@@ -27,7 +28,6 @@ import java.util.Map;
 //#if MC>=1203
 import tocraft.walkers.mixin.accessor.BatAccessor;
 //#endif
-
 //#if MC>1182
 import tocraft.walkers.mixin.accessor.AllayAccessor;
 //#endif
@@ -81,6 +81,10 @@ public class EntityUpdaters {
     }
 
     public static void init() {
+        EntityUpdaters.register(EntityType.HORSE, new AbstractHorseEntityUpdater<>());
+        EntityUpdaters.register(EntityType.DONKEY, new AbstractHorseEntityUpdater<>());
+        EntityUpdaters.register(EntityType.MULE, new AbstractHorseEntityUpdater<>());
+
         //#if MC>1182
         EntityUpdaters.register(EntityType.ALLAY, (player, allay) -> {
             ((AllayAccessor) allay).setHoldingItemAnimationTicks0(((AllayAccessor) allay).getHoldingItemAnimationTicks());
