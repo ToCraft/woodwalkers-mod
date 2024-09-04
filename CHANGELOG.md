@@ -1,3 +1,8 @@
+walkers 5.3
+================
+
+- fix Generic Abilities overwrite Specific Abilities
+
 walkers 5.2
 ================
 

@@ -33,7 +33,6 @@ import tocraft.walkers.Walkers;
 import tocraft.walkers.ability.impl.generic.*;
 import tocraft.walkers.ability.impl.specific.*;
 import tocraft.walkers.integrations.Integrations;
-import java.util.concurrent.ConcurrentHashMap;
 
 import java.util.*;
 import java.util.function.Predicate;
@@ -41,7 +40,8 @@ import java.util.function.Predicate;
 @SuppressWarnings("unused")
 public class AbilityRegistry {
 
-    private static final Map<Predicate<LivingEntity>, ShapeAbility<?>> abilities = new ConcurrentHashMap<>();
+    private static final Map<Predicate<LivingEntity>, ShapeAbility<?>> specificAbilities = Collections.synchronizedMap(new LinkedHashMap<>());
+    private static final Map<Predicate<LivingEntity>, GenericShapeAbility<?>> genericAbilities = Collections.synchronizedMap(new LinkedHashMap<>());
     private static final Map<ResourceLocation, MapCodec<? extends GenericShapeAbility<?>>> abilityCodecById = new HashMap<>();
     private static final Map<MapCodec<? extends GenericShapeAbility<?>>, ResourceLocation> abilityIdByCodec = new IdentityHashMap<>();
 
@@ -100,14 +100,12 @@ public class AbilityRegistry {
         // handle Integrations
         Integrations.registerAbilities();
 
-        for (ShapeAbility<?> sAbility : abilities.values()) {
-            if (sAbility instanceof GenericShapeAbility<?> ability) {
-                if (!abilityCodecById.containsKey(ability.getId())) {
-                    Walkers.LOGGER.warn("{} isn't registered!", ability.getId());
-                }
-                if (ability.getId() == null || ability.codec() == null) {
-                    Walkers.LOGGER.warn("{} isn't correctly setup!", ability.getClass().getSimpleName());
-                }
+        for (GenericShapeAbility<?> ability : genericAbilities.values()) {
+            if (!abilityCodecById.containsKey(ability.getId())) {
+                Walkers.LOGGER.warn("{} isn't registered!", ability.getId());
+            }
+            if (ability.getId() == null || ability.codec() == null) {
+                Walkers.LOGGER.warn("{} isn't correctly setup!", ability.getClass().getSimpleName());
             }
         }
     }
@@ -123,9 +121,16 @@ public class AbilityRegistry {
 
         // cache the ability so the latest registered can be used
         ShapeAbility<L> ability = null;
-        for (Map.Entry<Predicate<LivingEntity>, ShapeAbility<?>> entry : abilities.entrySet()) {
+        for (Map.Entry<Predicate<LivingEntity>, ShapeAbility<?>> entry : specificAbilities.entrySet()) {
             if (entry.getKey().test(shape)) {
                 ability = (ShapeAbility<L>) entry.getValue();
+                // don't break so it'll access the last registered ability
+            }
+        }
+        for (Map.Entry<Predicate<LivingEntity>, GenericShapeAbility<?>> entry : genericAbilities.entrySet()) {
+            if (entry.getKey().test(shape)) {
+                ability = (ShapeAbility<L>) entry.getValue();
+                // don't break so it'll access the last registered ability
             }
         }
 
@@ -136,7 +141,7 @@ public class AbilityRegistry {
         registerByPredicate(livingEntity -> type.equals(livingEntity.getType()), ability);
     }
 
-    public static void registerByTag(TagKey<EntityType<?>> entityTag, GenericShapeAbility<LivingEntity> ability) {
+    public static void registerByTag(TagKey<EntityType<?>> entityTag, ShapeAbility<LivingEntity> ability) {
         registerByPredicate(livingEntity -> livingEntity.getType().is(entityTag), ability);
     }
 
@@ -151,7 +156,11 @@ public class AbilityRegistry {
      * @param ability         your {@link ShapeAbility}
      */
     public static void registerByPredicate(Predicate<LivingEntity> entityPredicate, ShapeAbility<?> ability) {
-        abilities.put(entityPredicate, ability);
+        if (ability instanceof GenericShapeAbility<?> genericShapeAbility) {
+            genericAbilities.put(entityPredicate, genericShapeAbility);
+        } else {
+            specificAbilities.put(entityPredicate, ability);
+        }
     }
 
     public static <L extends LivingEntity> boolean has(L shape) {
@@ -159,11 +168,12 @@ public class AbilityRegistry {
 
         if (Walkers.CONFIG.abilityBlacklist.contains(EntityType.getKey(shape.getType()).toString()))
             return false;
-        return abilities.keySet().stream().anyMatch(predicate -> predicate.test(shape));
+        return specificAbilities.keySet().stream().anyMatch(predicate -> predicate.test(shape)) || genericAbilities.keySet().stream().anyMatch(predicate -> predicate.test(shape));
     }
 
     public static void clearAll() {
-        abilities.clear();
+        specificAbilities.clear();
+        genericAbilities.clear();
     }
 
     public static void registerCodec(ResourceLocation abilityId, MapCodec<? extends GenericShapeAbility<?>> abilityCodec) {
