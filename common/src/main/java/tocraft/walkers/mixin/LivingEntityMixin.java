@@ -1,6 +1,5 @@
 package tocraft.walkers.mixin;
 
-import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.fabricmc.api.EnvType;
@@ -50,6 +49,8 @@ public abstract class LivingEntityMixin extends Entity implements NearbySongAcce
 
     @Shadow
     public abstract boolean hurt(DamageSource source, float amount);
+
+    @Shadow public abstract void remove(RemovalReason reason);
 
     protected LivingEntityMixin(EntityType<?> type, Level world) {
         super(type, world);
@@ -148,6 +149,17 @@ public abstract class LivingEntityMixin extends Entity implements NearbySongAcce
                     }
                 }
             }
+
+            for (ShapeTrait<LivingEntity> immunityTrait : TraitRegistry.get(shape, ImmunityTrait.ID)) {
+                //#if MC>=1205
+                if (((ImmunityTrait<LivingEntity>) immunityTrait).effect.equals(effect.value())) {
+                //#else
+                //$$ if (((ImmunityTrait<LivingEntity>) immunityTrait).effect.equals(effect)) {
+                //#endif
+                    cir.setReturnValue(false);
+                    return;
+                }
+            }
         }
     }
 
@@ -169,6 +181,17 @@ public abstract class LivingEntityMixin extends Entity implements NearbySongAcce
                             return;
                         }
                     }
+                }
+            }
+
+            for (ShapeTrait<LivingEntity> immunityTrait : TraitRegistry.get(shape, ImmunityTrait.ID)) {
+                //#if MC>=1205
+                if (((ImmunityTrait<LivingEntity>) immunityTrait).effect.equals(effect.value())) {
+                    //#else
+                    //$$ if (((ImmunityTrait<LivingEntity>) immunityTrait).effect.equals(effect)) {
+                    //#endif
+                    cir.setReturnValue(null);
+                    return;
                 }
             }
         }

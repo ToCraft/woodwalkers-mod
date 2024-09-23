@@ -29,7 +29,7 @@ import java.util.function.Function;
 import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.core.component.DataComponents;
 //#else
-import net.minecraft.world.item.alchemy.PotionUtils;
+//$$ import net.minecraft.world.item.alchemy.PotionUtils;
 //#endif
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -112,8 +112,8 @@ public class AbilityRegistry {
         poisonedArrows.set(DataComponents.POTION_CONTENTS, new PotionContents(Potions.POISON));
         registerByClass(Bogged.class, new GetItemAbility<>(poisonedArrows));
         //#else
-        PotionUtils.setPotion(slownessArrows, Potions.SLOWNESS);
-        PotionUtils.setPotion(poisonedArrows, Potions.POISON);
+        //$$ PotionUtils.setPotion(slownessArrows, Potions.SLOWNESS);
+        //$$ PotionUtils.setPotion(poisonedArrows, Potions.POISON);
         //#endif
         registerByClass(Stray.class, new GetItemAbility<>(slownessArrows));
 

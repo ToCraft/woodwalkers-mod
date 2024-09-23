@@ -69,6 +69,7 @@ public class TraitRegistry {
         registerCodec(AttackForHealthTrait.ID, AttackForHealthTrait.CODEC);
         registerCodec(NocturnalTrait.ID, NocturnalTrait.CODEC);
         registerCodec(CantInteractTrait.ID, CantInteractTrait.CODEC);
+        registerCodec(ImmunityTrait.ID, ImmunityTrait.CODEC);
     }
 
     @SuppressWarnings("unchecked")
@@ -167,6 +168,14 @@ public class TraitRegistry {
         registerByPredicate(entity -> entity.getType().getCategory().equals(MobCategory.MONSTER), new NocturnalTrait<>());
         // cant interact with...
         registerByClass(Raider.class, new CantInteractTrait<>(List.of(Villager.class)));
+        // immunity
+        //#if MC>=1205
+        registerByClass(WitherBoss.class, new ImmunityTrait<>(MobEffects.WITHER.value()));
+        registerByClass(WitherSkeleton.class, new ImmunityTrait<>(MobEffects.WITHER.value()));
+        //#else
+        //$$ registerByClass(WitherBoss.class, new ImmunityTrait<>(MobEffects.WITHER));
+        //$$ registerByClass(WitherSkeleton.class, new ImmunityTrait<>(MobEffects.WITHER));
+        //#endif
 
         // handle Integrations
         Integrations.registerTraits();

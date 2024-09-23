@@ -15,6 +15,8 @@
     "LivingEntityFoodMixin",
     "LivingEntityMixin",
     "LookAtPlayerGoalMixin",
+    "MobEffectInstanceMixin",
+    "MobEffectMixin",
     "MobEntityDataMixin",
     "MobHunterPreyMixin",
     "PiglinBrainMixin",
@@ -33,14 +35,10 @@
     "VillagerHostilesSensorMixin",
     "WitchMixin",
     "WolfEntityMixin",
-    //#if MC>1182
-    "accessor.AllayAccessor",
-    //#endif
-    "accessor.AxolotlEntityAccessor",
-    //#if MC>=1203
-    "accessor.BatAccessor",
-    //#endif
     "accessor.AbstractHorseAccessor",
+    "accessor.AllayAccessor",
+    "accessor.AxolotlEntityAccessor",
+    "accessor.BatAccessor",
     "accessor.BiomeAccessor",
     "accessor.CreeperEntityAccessor",
     "accessor.DolphinAccessor",
@@ -62,9 +60,7 @@
     "player.PlayerEntityDataMixin",
     "player.PlayerEntityMixin",
     "player.PlayerEntityTickMixin",
-    //#if MC>1182
     "player.PlayerSonicBoomMixin",
-    //#endif
     "player.PlayerSoundMixin",
     "player.PlayerTrackingMixin",
     "player.ServerPlayerEntityMixin"
