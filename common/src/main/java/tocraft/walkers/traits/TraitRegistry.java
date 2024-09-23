@@ -84,6 +84,8 @@ public class TraitRegistry {
         // flying
         //#if MC>1182
         registerByClass(Allay.class, new FlyingTrait<>());
+        registerByClass(Allay.class, new MobEffectTrait<>(new MobEffectInstance(MobEffects.REGENERATION, 40, 2, false, false)));
+        registerByClass(Allay.class, new AttackForHealthTrait<>());
         //#endif
         registerByClass(Bat.class, new FlyingTrait<>());
         registerByClass(Bee.class, new FlyingTrait<>());
