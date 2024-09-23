@@ -3,6 +3,7 @@ package tocraft.walkers.ability;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.MapCodec;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.tags.EntityTypeTags;
@@ -27,7 +28,10 @@ import net.minecraft.world.entity.monster.warden.Warden;
 //#if MC>=1205
 import java.util.function.Function;
 //#endif
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.alchemy.PotionContents;
+import net.minecraft.world.item.alchemy.Potions;
 import org.jetbrains.annotations.Nullable;
 import tocraft.walkers.Walkers;
 import tocraft.walkers.ability.impl.generic.*;
@@ -57,6 +61,7 @@ public class AbilityRegistry {
         registerCodec(ThrowPotionsAbility.ID, ThrowPotionsAbility.CODEC);
         registerCodec(SaturateAbility.ID, SaturateAbility.CODEC);
         registerCodec(ShootSnowballAbility.ID, ShootSnowballAbility.CODEC);
+        registerCodec(GetItemAbility.ID, GetItemAbility.CODEC);
     }
 
     public static void registerDefault() {
@@ -96,6 +101,14 @@ public class AbilityRegistry {
         registerByClass(Pufferfish.class, new PufferfishAbility<>());
         registerByClass(Turtle.class, new TurtleAbility<>());
         registerByClass(Rabbit.class, new RabbitAbility<>());
+        // get item ability
+        registerByClass(Skeleton.class, new GetItemAbility<>(new ItemStack(Items.ARROW, 4)));
+        ItemStack slownessArrows = new ItemStack(Items.TIPPED_ARROW, 4);
+        slownessArrows.set(DataComponents.POTION_CONTENTS, new PotionContents(Potions.SLOWNESS));
+        registerByClass(Stray.class, new GetItemAbility<>(slownessArrows));
+        ItemStack poisonedArrows = new ItemStack(Items.TIPPED_ARROW, 4);
+        poisonedArrows.set(DataComponents.POTION_CONTENTS, new PotionContents(Potions.POISON));
+        registerByClass(Bogged.class, new GetItemAbility<>(poisonedArrows));
 
         // handle Integrations
         Integrations.registerAbilities();
