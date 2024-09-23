@@ -402,4 +402,11 @@ public abstract class PlayerEntityMixin extends LivingEntityMixin {
             }
         }
     }
+
+    @Inject(method = "causeFoodExhaustion", at = @At("HEAD"), cancellable = true)
+    private void onExhaustion(float exhaustion, CallbackInfo ci) {
+        if (TraitRegistry.has(PlayerShape.getCurrentShape((Player) (Object) this), AttackForHealthTrait.ID)) {
+            ci.cancel();
+        }
+    }
 }
