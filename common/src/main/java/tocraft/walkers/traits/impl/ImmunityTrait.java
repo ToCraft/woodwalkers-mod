@@ -19,7 +19,7 @@ public class ImmunityTrait<E extends LivingEntity> extends ShapeTrait<E> {
     public static final ResourceLocation ID = Walkers.id("immunity");
     @SuppressWarnings("unchecked")
     public static final MapCodec<ImmunityTrait<?>> CODEC = RecordCodecBuilder.mapCodec((instance) -> instance.group(
-            ResourceLocation.CODEC.fieldOf("id").forGetter(o -> ((Registry<MobEffect>) CRegistries.getRegistry(Identifier.parse("mob_effect"))).getKey(o.effect))
+            ResourceLocation.CODEC.fieldOf("effect").forGetter(o -> ((Registry<MobEffect>) CRegistries.getRegistry(Identifier.parse("mob_effect"))).getKey(o.effect))
     ).apply(instance, instance.stable((effect) -> new ImmunityTrait<>(((Registry<MobEffect>) CRegistries.getRegistry(Identifier.parse("mob_effect"))).get(effect)))));
 
     public final MobEffect effect;

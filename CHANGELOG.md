@@ -2,6 +2,11 @@ walkers 5.3
 ================
 
 - fix Generic Abilities overwrite Specific Abilities
+- add Regeneration 2 & AttackForHealthTrait for Abilities
+- fix exhaustion for AttackForHealth Trait
+- add GetItemAbility
+- fix Block Breaking speed when flying & swimming
+- add ImmunityTrait
 
 walkers 5.2
 ================
