@@ -1,11 +1,14 @@
 package tocraft.walkers.mixin.player;
 
+import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
+import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.protocol.game.ClientboundGameEventPacket;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
@@ -30,9 +33,11 @@ import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -54,6 +59,8 @@ import java.util.Iterator;
 @SuppressWarnings({"ConstantConditions", "RedundantCast"})
 @Mixin(Player.class)
 public abstract class PlayerEntityMixin extends LivingEntityMixin {
+    @Shadow public abstract void remove(RemovalReason reason);
+
     private PlayerEntityMixin(EntityType<? extends LivingEntity> type, Level world) {
         super(type, world);
     }
@@ -408,5 +415,24 @@ public abstract class PlayerEntityMixin extends LivingEntityMixin {
         if (TraitRegistry.has(PlayerShape.getCurrentShape((Player) (Object) this), AttackForHealthTrait.ID)) {
             ci.cancel();
         }
+    }
+
+    @ModifyExpressionValue(method = "getDestroySpeed", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/player/Player;onGround()Z"))
+    private boolean onModifyBreakingSpeedOnFlight(boolean original) {
+        if (TraitRegistry.has(PlayerShape.getCurrentShape((Player) (Object) this), FlyingTrait.ID)) {
+            return true;
+        } else {
+            return original;
+        }
+    }
+
+    @ModifyExpressionValue(method = "getDestroySpeed", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/player/Player;isEyeInFluid(Lnet/minecraft/tags/TagKey;)Z"))
+    private boolean onModifyBreakingSpeedWhenSwimming(boolean original) {
+        for (ShapeTrait<LivingEntity> aquaticTrait : TraitRegistry.get(PlayerShape.getCurrentShape((Player) (Object) this), AquaticTrait.ID)) {
+            if (((AquaticTrait<LivingEntity>) aquaticTrait).isAquatic) {
+                return false;
+            }
+        }
+        return true;
     }
 }

@@ -3,7 +3,6 @@ package tocraft.walkers.ability;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.MapCodec;
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.tags.EntityTypeTags;
@@ -27,10 +26,13 @@ import net.minecraft.world.entity.monster.warden.Warden;
 //#endif
 //#if MC>=1205
 import java.util.function.Function;
+import net.minecraft.world.item.alchemy.PotionContents;
+import net.minecraft.core.component.DataComponents;
+//#else
+import net.minecraft.world.item.alchemy.PotionUtils;
 //#endif
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.item.alchemy.Potions;
 import org.jetbrains.annotations.Nullable;
 import tocraft.walkers.Walkers;
@@ -104,11 +106,16 @@ public class AbilityRegistry {
         // get item ability
         registerByClass(Skeleton.class, new GetItemAbility<>(new ItemStack(Items.ARROW, 4)));
         ItemStack slownessArrows = new ItemStack(Items.TIPPED_ARROW, 4);
-        slownessArrows.set(DataComponents.POTION_CONTENTS, new PotionContents(Potions.SLOWNESS));
-        registerByClass(Stray.class, new GetItemAbility<>(slownessArrows));
         ItemStack poisonedArrows = new ItemStack(Items.TIPPED_ARROW, 4);
+        //#if MC>=1205
+        slownessArrows.set(DataComponents.POTION_CONTENTS, new PotionContents(Potions.SLOWNESS));
         poisonedArrows.set(DataComponents.POTION_CONTENTS, new PotionContents(Potions.POISON));
         registerByClass(Bogged.class, new GetItemAbility<>(poisonedArrows));
+        //#else
+        PotionUtils.setPotion(slownessArrows, Potions.SLOWNESS);
+        PotionUtils.setPotion(poisonedArrows, Potions.POISON);
+        //#endif
+        registerByClass(Stray.class, new GetItemAbility<>(slownessArrows));
 
         // handle Integrations
         Integrations.registerAbilities();
