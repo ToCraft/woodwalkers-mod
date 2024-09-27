@@ -50,8 +50,6 @@ public abstract class LivingEntityMixin extends Entity implements NearbySongAcce
     @Shadow
     public abstract boolean hurt(DamageSource source, float amount);
 
-    @Shadow public abstract void remove(RemovalReason reason);
-
     protected LivingEntityMixin(EntityType<?> type, Level world) {
         super(type, world);
     }

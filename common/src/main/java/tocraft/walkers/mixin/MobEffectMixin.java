@@ -21,11 +21,7 @@ public class MobEffectMixin {
         if (livingEntity instanceof Player player) {
             LivingEntity shape = PlayerShape.getCurrentShape(player);
             for (ShapeTrait<LivingEntity> immunityTrait : TraitRegistry.get(shape, ImmunityTrait.ID)) {
-                //#if MC>=1205
                 if (((ImmunityTrait<LivingEntity>) immunityTrait).effect.equals((MobEffect) (Object) this)) {
-                //#else
-                //$$ if (((ImmunityTrait<LivingEntity>) immunityTrait).effect.equals(effect)) {
-                //#endif
                     ci.cancel();
                     return;
                 }

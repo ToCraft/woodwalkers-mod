@@ -7,6 +7,7 @@ walkers 5.3
 - add GetItemAbility
 - fix Block Breaking speed when flying & swimming
 - add ImmunityTrait
+- support for Exotic Birds Mod
 
 walkers 5.2
 ================

@@ -59,8 +59,6 @@ import java.util.Iterator;
 @SuppressWarnings({"ConstantConditions", "RedundantCast"})
 @Mixin(Player.class)
 public abstract class PlayerEntityMixin extends LivingEntityMixin {
-    @Shadow public abstract void remove(RemovalReason reason);
-
     private PlayerEntityMixin(EntityType<? extends LivingEntity> type, Level world) {
         super(type, world);
     }
