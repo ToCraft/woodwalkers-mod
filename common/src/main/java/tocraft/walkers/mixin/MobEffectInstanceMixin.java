@@ -15,6 +15,7 @@ import tocraft.walkers.traits.impl.ImmunityTrait;
 
 @Mixin(MobEffectInstance.class)
 public class MobEffectInstanceMixin {
+    //#if MC>1204
     @WrapOperation(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/effect/MobEffect;applyEffectTick(Lnet/minecraft/world/entity/LivingEntity;I)Z"))
     private boolean onApplyEffect(MobEffect effect, LivingEntity livingEntity, int amplifier, Operation<Boolean> original) {
         if (livingEntity instanceof Player player) {
@@ -27,4 +28,31 @@ public class MobEffectInstanceMixin {
         }
         return original.call(effect, livingEntity, amplifier);
     }
+    //#elseif MC>=1202
+    //$$ @WrapOperation(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/effect/MobEffect;applyEffectTick(Lnet/minecraft/world/entity/LivingEntity;I)V"))
+    //$$ private void onApplyEffect(MobEffect effect, LivingEntity livingEntity, int amplifier, Operation<Void> original) {
+    //$$     if (livingEntity instanceof Player player) {
+    //$$         LivingEntity shape = PlayerShape.getCurrentShape(player);
+    //$$         for (ShapeTrait<LivingEntity> immunityTrait : TraitRegistry.get(shape, ImmunityTrait.ID)) {
+    //$$             if (((ImmunityTrait<LivingEntity>) immunityTrait).effect.equals(effect)) {
+    //$$                 return;
+    //$$             }
+    //$$         }
+    //$$     }
+    //$$     original.call(effect, livingEntity, amplifier);
+    //$$ }
+    //#else
+    //$$ @WrapOperation(method = "applyEffect", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/effect/MobEffect;applyEffectTick(Lnet/minecraft/world/entity/LivingEntity;I)V"))
+    //$$ private void onApplyEffect(MobEffect effect, LivingEntity livingEntity, int amplifier, Operation<Boolean> original) {
+    //$$     if (livingEntity instanceof Player player) {
+    //$$         LivingEntity shape = PlayerShape.getCurrentShape(player);
+    //$$         for (ShapeTrait<LivingEntity> immunityTrait : TraitRegistry.get(shape, ImmunityTrait.ID)) {
+    //$$             if (((ImmunityTrait<LivingEntity>) immunityTrait).effect.equals(effect)) {
+    //$$                 return;
+    //$$             }
+    //$$         }
+    //$$     }
+    //$$     original.call(effect, livingEntity);
+    //$$ }
+    //#endif
 }

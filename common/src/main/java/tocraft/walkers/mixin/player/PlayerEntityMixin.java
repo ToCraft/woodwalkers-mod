@@ -8,6 +8,7 @@ import net.minecraft.network.protocol.game.ClientboundGameEventPacket;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.tags.FluidTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -34,8 +35,10 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -415,13 +418,23 @@ public abstract class PlayerEntityMixin extends LivingEntityMixin {
         }
     }
 
+    //#if MC>1194
     @ModifyExpressionValue(method = "getDestroySpeed", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/player/Player;onGround()Z"))
+    //#else
+    //$$ @ModifyExpressionValue(method = "getDestroySpeed", at = @At(value = "FIELD", target = "Lnet/minecraft/world/entity/player/Player;onGround:Z", opcode = Opcodes.GETFIELD))
+    //#endif
     private boolean onModifyBreakingSpeedOnFlight(boolean original) {
         if (TraitRegistry.has(PlayerShape.getCurrentShape((Player) (Object) this), FlyingTrait.ID)) {
             return true;
-        } else {
-            return original;
         }
+        if (((Player) (Object) this).isEyeInFluid(FluidTags.WATER)) {
+            for (ShapeTrait<LivingEntity> aquaticTrait : TraitRegistry.get(PlayerShape.getCurrentShape((Player) (Object) this), AquaticTrait.ID)) {
+                if (((AquaticTrait<LivingEntity>) aquaticTrait).isAquatic) {
+                    return true;
+                }
+            }
+        }
+        return original;
     }
 
     @ModifyExpressionValue(method = "getDestroySpeed", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/player/Player;isEyeInFluid(Lnet/minecraft/tags/TagKey;)Z"))
@@ -431,6 +444,6 @@ public abstract class PlayerEntityMixin extends LivingEntityMixin {
                 return false;
             }
         }
-        return true;
+        return original;
     }
 }

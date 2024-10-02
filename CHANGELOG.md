@@ -1,3 +1,8 @@
+walkers 5.3.1
+================
+- fix invalid mixin config
+- support for Craziness Awakened
+
 walkers 5.3
 ================
 
