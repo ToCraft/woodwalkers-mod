@@ -52,7 +52,7 @@ public class MobEffectInstanceMixin {
     //$$             }
     //$$         }
     //$$     }
-    //$$     original.call(effect, livingEntity);
+    //$$     original.call(effect, livingEntity, amplifier);
     //$$ }
     //#endif
 }
