@@ -1,3 +1,7 @@
+walkers 5.3.3
+================
+- fix crash on startup for Forge/NeoForge
+
 walkers 5.3.2
 ================
 - UNTESTED fix for crash with ImmunityTrait on <1.20.1
