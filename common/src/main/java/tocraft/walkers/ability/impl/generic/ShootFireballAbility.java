@@ -7,7 +7,7 @@ import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.monster.Blaze;
 import net.minecraft.world.entity.monster.Ghast;
 import net.minecraft.world.entity.player.Player;
@@ -29,7 +29,7 @@ import java.util.Optional;
 import net.minecraft.world.phys.Vec3;
 //#endif
 
-public class ShootFireballAbility<T extends Mob> extends GenericShapeAbility<T> {
+public class ShootFireballAbility<T extends LivingEntity> extends GenericShapeAbility<T> {
     public static final ResourceLocation ID = Walkers.id("shoot_fireball");
     @SuppressWarnings("unchecked")
     public static final MapCodec<ShootFireballAbility<?>> CODEC = RecordCodecBuilder.mapCodec((instance) -> instance.group(
@@ -55,7 +55,7 @@ public class ShootFireballAbility<T extends Mob> extends GenericShapeAbility<T> 
 
 
     @Override
-    public void onUse(Player player, Mob shape, Level world) {
+    public void onUse(Player player, T shape, Level world) {
         Fireball fireball = getFireball(player, world);
         world.addFreshEntity(fireball);
         if (shape instanceof Blaze) {

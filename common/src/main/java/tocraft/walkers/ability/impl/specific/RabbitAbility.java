@@ -3,7 +3,7 @@ package tocraft.walkers.ability.impl.specific;
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
@@ -15,7 +15,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.gameevent.GameEvent;
 import tocraft.walkers.ability.ShapeAbility;
 
-public class RabbitAbility<T extends Mob> extends ShapeAbility<T> {
+public class RabbitAbility<T extends LivingEntity> extends ShapeAbility<T> {
     @Override
     public void onUse(Player player, T shape, Level world) {
         if (!world.isClientSide()) {

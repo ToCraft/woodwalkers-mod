@@ -6,7 +6,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
-import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.ThrownPotion;
 import net.minecraft.world.item.Item;
@@ -31,7 +31,7 @@ import tocraft.walkers.ability.GenericShapeAbility;
 import java.util.Arrays;
 import java.util.List;
 
-public class ThrowPotionsAbility<T extends Mob> extends GenericShapeAbility<T> {
+public class ThrowPotionsAbility<T extends LivingEntity> extends GenericShapeAbility<T> {
     //#if MC>=1205
     public static final List<Holder<Potion>> VALID_POTIONS = Arrays.asList(Potions.HARMING, Potions.POISON, Potions.SLOWNESS, Potions.WEAKNESS);
     private final List<Holder<Potion>> validPotions;

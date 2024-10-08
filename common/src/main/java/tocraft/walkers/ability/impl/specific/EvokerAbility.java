@@ -5,7 +5,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.monster.Vex;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.EvokerFangs;
@@ -17,7 +17,7 @@ import net.minecraft.world.phys.Vec3;
 import tocraft.craftedcore.patched.CBlockPos;
 import tocraft.walkers.ability.ShapeAbility;
 
-public class EvokerAbility<T extends Mob> extends ShapeAbility<T> {
+public class EvokerAbility<T extends LivingEntity> extends ShapeAbility<T> {
     @Override
     public void onUse(Player player, T shape, Level world) {
         // spawn vexes while sneaking

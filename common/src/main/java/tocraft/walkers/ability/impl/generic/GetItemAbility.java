@@ -5,7 +5,7 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -17,7 +17,7 @@ import tocraft.walkers.ability.GenericShapeAbility;
 
 import java.util.Objects;
 
-public class GetItemAbility<T extends Mob> extends GenericShapeAbility<T> {
+public class GetItemAbility<T extends LivingEntity> extends GenericShapeAbility<T> {
     private final ItemStack itemStack;
 
     public GetItemAbility(ItemStack itemStack) {
