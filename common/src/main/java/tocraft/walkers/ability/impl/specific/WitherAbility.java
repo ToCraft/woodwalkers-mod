@@ -2,7 +2,7 @@ package tocraft.walkers.ability.impl.specific;
 
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.WitherSkull;
 import net.minecraft.world.item.Item;
@@ -11,7 +11,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import tocraft.walkers.ability.ShapeAbility;
 
-public class WitherAbility<T extends Mob> extends ShapeAbility<T> {
+public class WitherAbility<T extends LivingEntity> extends ShapeAbility<T> {
 
     @Override
     public void onUse(Player player, T shape, Level world) {
