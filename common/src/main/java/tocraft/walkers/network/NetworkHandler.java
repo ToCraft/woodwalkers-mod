@@ -10,7 +10,6 @@ public interface NetworkHandler {
     ResourceLocation SHAPE_SYNC = Walkers.id("shape_sync");
     ResourceLocation ABILITY_SYNC = Walkers.id("ability_sync");
     ResourceLocation UNLOCK_SYNC = Walkers.id("unlock_sync");
-    ResourceLocation CHANGE_VEHICLE_STATE = Walkers.id("set_player_vehicle");
     ResourceLocation VARIANT_REQUEST = Walkers.id("variant");
     ResourceLocation SYNC_API_LEVEL = Walkers.id("sync_api_level");
 }

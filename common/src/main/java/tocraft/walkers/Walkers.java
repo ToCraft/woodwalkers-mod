@@ -37,7 +37,7 @@ import tocraft.walkers.eventhandler.RespawnHandler;
 import tocraft.walkers.integrations.Integrations;
 import tocraft.walkers.mixin.ThreadedAnvilChunkStorageAccessor;
 import tocraft.walkers.network.ServerNetworking;
-import tocraft.walkers.registry.WalkersEventHandlers;
+import tocraft.walkers.eventhandler.WalkersEventHandlers;
 import tocraft.walkers.traits.TraitRegistry;
 import tocraft.walkers.traits.impl.FlyingTrait;
 

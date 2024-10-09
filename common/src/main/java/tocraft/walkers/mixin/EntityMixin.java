@@ -1,5 +1,7 @@
 package tocraft.walkers.mixin;
 
+import net.minecraft.network.protocol.game.ClientboundSetPassengersPacket;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.AABB;
@@ -10,6 +12,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+import tocraft.craftedcore.patched.CEntity;
 import tocraft.walkers.api.PlayerShape;
 import tocraft.walkers.impl.DimensionsRefresher;
 import tocraft.walkers.traits.TraitRegistry;
@@ -115,4 +118,17 @@ public abstract class EntityMixin implements DimensionsRefresher {
             }
         }
     }
-}
+
+    @Inject(method = "removePassenger", at = @At("TAIL"))
+    private void removePlayerVehicle(Entity passenger, CallbackInfo ci) {
+        if((Object) this instanceof ServerPlayer vehicle && !CEntity.level(vehicle).isClientSide) {
+            vehicle.connection.send(new ClientboundSetPassengersPacket(vehicle));
+        }
+    }
+
+    @Inject(method = "addPassenger", at = @At("TAIL"))
+    private void addPlayerVehicle(Entity passenger, CallbackInfo ci) {
+        if((Object) this instanceof ServerPlayer vehicle && !CEntity.level(vehicle).isClientSide) {
+            vehicle.connection.send(new ClientboundSetPassengersPacket(vehicle));
+        }
+    }}

@@ -45,7 +45,6 @@ import tocraft.walkers.impl.ShapeDataProvider;
 import tocraft.walkers.mixin.accessor.DolphinAccessor;
 import tocraft.walkers.mixin.accessor.PufferfishAccessor;
 import tocraft.walkers.mixin.accessor.SheepAccessor;
-import tocraft.walkers.network.impl.VehiclePackets;
 import tocraft.walkers.traits.TraitRegistry;
 import tocraft.walkers.traits.impl.MobEffectTrait;
 
@@ -82,8 +81,6 @@ public abstract class PlayerEntityTickMixin extends LivingEntity {
             ServerPlayer player = (ServerPlayer) (Object) this;
             PlayerAbilities.setCooldown(player, Math.max(0, data.walkers$getAbilityCooldown() - 1));
             PlayerAbilities.sync(player);
-
-            VehiclePackets.sync((ServerPlayer) (Object) this);
         }
     }
 

@@ -1,4 +1,4 @@
-package tocraft.walkers.registry;
+package tocraft.walkers.eventhandler;
 
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.world.Difficulty;

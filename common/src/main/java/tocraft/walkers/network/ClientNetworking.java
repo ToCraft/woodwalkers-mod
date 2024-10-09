@@ -13,7 +13,6 @@ import tocraft.walkers.impl.DimensionsRefresher;
 import tocraft.walkers.impl.PlayerDataProvider;
 import tocraft.walkers.network.impl.SyncApiLevelPackets;
 import tocraft.walkers.network.impl.UnlockPackets;
-import tocraft.walkers.network.impl.VehiclePackets;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -27,8 +26,6 @@ public class ClientNetworking implements NetworkHandler {
                 ClientNetworking::handleAbilitySyncPacket);
         ModernNetworking.registerReceiver(ModernNetworking.Side.S2C, NetworkHandler.UNLOCK_SYNC,
                 UnlockPackets::handleUnlockSyncPacket);
-        ModernNetworking.registerReceiver(ModernNetworking.Side.S2C, NetworkHandler.CHANGE_VEHICLE_STATE,
-                VehiclePackets::handleSyncPacket);
         ModernNetworking.registerReceiver(ModernNetworking.Side.S2C, NetworkHandler.SYNC_API_LEVEL,
                 (context, nbt) -> SyncApiLevelPackets.handleSyncPacket(nbt));
     }

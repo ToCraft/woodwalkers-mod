@@ -42,16 +42,12 @@ import tocraft.walkers.api.model.ArmRenderingManipulator;
 import tocraft.walkers.api.model.EntityArms;
 import tocraft.walkers.api.model.EntityUpdater;
 import tocraft.walkers.api.model.EntityUpdaters;
-import tocraft.walkers.impl.PlayerDataProvider;
 import tocraft.walkers.mixin.accessor.EntityAccessor;
 import tocraft.walkers.mixin.accessor.LivingEntityAccessor;
 //#if MC>1182
 import tocraft.walkers.mixin.client.accessor.LimbAnimatorAccessor;
 //#endif
 import tocraft.walkers.mixin.client.accessor.LivingEntityRendererAccessor;
-
-import java.util.Optional;
-import java.util.UUID;
 
 @SuppressWarnings({"ALL", "unchecked"})
 @Environment(EnvType.CLIENT)
@@ -72,14 +68,13 @@ public abstract class PlayerEntityRendererMixin extends LivingEntityRenderer<Abs
     private boolean redirectRender(LivingEntityRenderer<AbstractClientPlayer, EntityModel<AbstractClientPlayer>> renderer, LivingEntity player, float f, float g, PoseStack matrixStack, MultiBufferSource buffer, int packedLight) {
         LivingEntity shape = PlayerShape.getCurrentShape((Player) player);
 
-        Optional<UUID> vehiclePlayerId = ((PlayerDataProvider) player).walkers$getVehiclePlayerUUID();
-        if (vehiclePlayerId.isPresent()) {
-            Vec3 vehiclePos = player.getCommandSenderWorld().getPlayerByUUID(vehiclePlayerId.get()).position();
-            player.moveTo(new Vec3(vehiclePos.x, vehiclePos.y + 1, vehiclePos.z));
-        }
-
         // sync player data to shape
         if (shape != null) {
+            // don't render passenger in first person to prevent a glichted view
+            if (Minecraft.getInstance().options.getCameraType().isFirstPerson() && player.getVehicle() == Minecraft.getInstance().cameraEntity) {
+                return false;
+            }
+
             //#if MC>1182
             ((LimbAnimatorAccessor) shape.walkAnimation).setPrevSpeed(((LimbAnimatorAccessor) player.walkAnimation).getPrevSpeed());
             shape.walkAnimation.setSpeed(player.walkAnimation.speed());

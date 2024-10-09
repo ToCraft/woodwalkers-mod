@@ -72,9 +72,6 @@ public class KeyPressHandler implements ClientTickEvents.Client {
     }
 
     private void handleAbilityKey(Minecraft client) {
-        // TODO: maybe the check should be on the server to allow for ability extension
-        // mods?
-        // Only send the ability packet if the shape equipped by the player has one
         LivingEntity shape = PlayerShape.getCurrentShape(client.player);
 
         if (shape != null) {
@@ -84,6 +81,7 @@ public class KeyPressHandler implements ClientTickEvents.Client {
         }
     }
 
+    //TODO: Merge this into something similar to the OnInteractEvent
     @SuppressWarnings("ConstantConditions")
     private void handleUnlockKey(Minecraft client) {
         // check if player is blacklisted

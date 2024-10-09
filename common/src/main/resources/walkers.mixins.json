@@ -72,7 +72,6 @@
     "player.ServerPlayerEntityMixin"
   ],
   "client": [
-    "client.ClientEntityMixin",
     "client.MouseHandlerMixin",
     "client.PlayerEntityRendererMixin",
     "client.RenderLayerMixin",
@@ -91,7 +90,6 @@
     "client.accessor.RavagerEntityModelAccessor",
     "client.accessor.SpiderEntityModelAccessor",
     "client.accessor.SquidEntityModelAccessor",
-    "client.player.AbstractClientPlayerMixin",
     "integrations.client.BetterCombatMixin"
   ],
   "injectors": {

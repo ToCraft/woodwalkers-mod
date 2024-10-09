@@ -26,7 +26,6 @@ public class ServerNetworking implements NetworkHandler {
         ModernNetworking.registerType(SHAPE_SYNC);
         ModernNetworking.registerType(ABILITY_SYNC);
         ModernNetworking.registerType(UNLOCK_SYNC);
-        ModernNetworking.registerType(CHANGE_VEHICLE_STATE);
         ModernNetworking.registerType(SYNC_API_LEVEL);
         //#endif
 

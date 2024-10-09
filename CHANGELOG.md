@@ -1,3 +1,8 @@
+walkers 5.4
+================
+- fix Incompatibility with CarryOn mod
+- fix rendering for the RiderTrait
+
 walkers 5.3.3
 ================
 - fix crash on startup for Forge/NeoForge
