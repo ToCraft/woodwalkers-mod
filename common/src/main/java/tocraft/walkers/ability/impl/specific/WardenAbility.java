@@ -21,6 +21,7 @@ public class WardenAbility<T extends LivingEntity> extends ShapeAbility<T> {
 
     @Override
     public void onUse(Player player, T shape, Level world) {
+        super.onUse(player, shape, world);
         ((SonicBoomUser) player).shape$ability_startSonicBoom();
     }
 

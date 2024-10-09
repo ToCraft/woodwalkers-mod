@@ -66,6 +66,7 @@ public class ThrowPotionsAbility<T extends LivingEntity> extends GenericShapeAbi
 
     @Override
     public void onUse(Player player, T shape, Level world) {
+        super.onUse(player, shape, world);
         ThrownPotion potionEntity = new ThrownPotion(world, player);
         //#if MC>=1205
          potionEntity.setItem(PotionContents.createItemStack(Items.SPLASH_POTION, validPotions.get(world.random.nextInt(validPotions.size()))));

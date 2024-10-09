@@ -21,6 +21,7 @@ public class ShootSnowballAbility<T extends LivingEntity> extends GenericShapeAb
 
     @Override
     public void onUse(Player player, T shape, Level world) {
+        super.onUse(player, shape, world);
         world.playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.SNOWBALL_THROW, SoundSource.NEUTRAL, 0.5F, 0.4F / (world.random.nextFloat() * 0.4F + 0.8F));
 
         if (!world.isClientSide) {

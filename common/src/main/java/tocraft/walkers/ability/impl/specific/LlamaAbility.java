@@ -23,6 +23,7 @@ public class LlamaAbility<T extends LivingEntity> extends ShapeAbility<T> {
 
     @Override
     public void onUse(Player player, T shape, Level world) {
+        super.onUse(player, shape, world);
         LlamaSpit spit = new LlamaSpit(EntityType.LLAMA_SPIT, world);
         spit.setOwner(player);
         Vec3 rotation = player.getLookAngle();

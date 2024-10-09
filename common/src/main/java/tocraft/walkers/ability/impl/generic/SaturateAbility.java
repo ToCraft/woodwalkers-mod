@@ -35,6 +35,7 @@ public class SaturateAbility<T extends LivingEntity> extends GenericShapeAbility
 
     @Override
     public void onUse(Player player, T shape, Level world) {
+        super.onUse(player, shape, world);
         player.getFoodData().eat(foodLevel, saturationLevel);
 
         world.playSound(null, player, SoundEvents.SHEEP_STEP, SoundSource.PLAYERS, 1.0F, (world.random.nextFloat() - world.random.nextFloat()) * 0.2F + 1.0F);
