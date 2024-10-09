@@ -27,7 +27,6 @@ public class RabbitAbility<T extends LivingEntity> extends ShapeAbility<T> {
 
     @Override
     public void onUse(Player player, T shape, Level world) {
-        super.onUse(player, shape, world);
         if (!world.isClientSide()) {
             BlockPos blockPos = player.blockPosition().above();
             BlockState blockState = world.getBlockState(blockPos);

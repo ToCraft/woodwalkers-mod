@@ -29,7 +29,6 @@ public class ClearEffectsAbility<T extends LivingEntity> extends GenericShapeAbi
 
     @Override
     public void onUse(Player player, T shape, Level world) {
-        super.onUse(player, shape, world);
         player.removeAllEffects();
         world.playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.GENERIC_DRINK, SoundSource.PLAYERS, 1.0F, 1.0F);
     }

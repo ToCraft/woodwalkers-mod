@@ -31,7 +31,6 @@ public class RandomTeleportationAbility<T extends LivingEntity> extends GenericS
 
     @Override
     public void onUse(Player player, T shape, Level world) {
-        super.onUse(player, shape, world);
         double x = player.getX();
         double y = player.getY();
         double z = player.getZ();

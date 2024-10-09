@@ -26,7 +26,6 @@ public class ShulkerAbility<T extends Shulker> extends ShapeAbility<T> {
 
     @Override
     public void onUse(Player player, T shape, Level world) {
-        super.onUse(player, shape, world);
         LivingEntity target = CEntity.level(player).getNearestEntity(CEntity.level(player).getEntitiesOfClass(LivingEntity.class, player.getBoundingBox().inflate(20, 4.0, 20), livingEntity -> true), TargetingConditions.forCombat().range(20).selector((livingEntity) -> !livingEntity.is(player)), player, player.getX(), player.getEyeY(), player.getZ());
 
         if (target != null) {
