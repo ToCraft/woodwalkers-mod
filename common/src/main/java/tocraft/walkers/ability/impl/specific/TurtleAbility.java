@@ -24,8 +24,7 @@ public class TurtleAbility<T extends LivingEntity> extends ShapeAbility<T> {
     }
 
     @Override
-    public void onUse(Player player, T shape, Level world) {
-        super.onUse(player, shape, world);
+    public void onUse(Player player, LivingEntity shape, Level world) {
         if (!player.isInWater() && CEntity.isOnGround(player) && world.getBlockState(player.blockPosition()).isAir()) {
             BlockState turtlEggBlockstate = Blocks.TURTLE_EGG.defaultBlockState().setValue(TurtleEggBlock.EGGS, player.getRandom().nextInt(4) + 1);
             world.setBlock(player.blockPosition(), turtlEggBlockstate, 3);

@@ -33,7 +33,6 @@ public class GetItemAbility<T extends LivingEntity> extends GenericShapeAbility<
 
     @Override
     public void onUse(Player player, T shape, Level world) {
-        super.onUse(player, shape, world);
         player.getInventory().add(itemStack);
     }
 

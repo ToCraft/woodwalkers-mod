@@ -20,8 +20,7 @@ public abstract class ShapeAbility<E extends LivingEntity> {
      * @param shape  current shape of the player
      * @param world  world the player is residing in
      */
-    public void onUse(Player player, E shape, Level world) {
-    }
+    abstract public void onUse(Player player, E shape, Level world);
 
     /**
      * @return cooldown of this ability, in ticks, after it is used.

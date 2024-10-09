@@ -20,7 +20,6 @@ public class PufferfishAbility<T extends Pufferfish> extends ShapeAbility<T> {
 
     @Override
     public void onUse(Player player, T shape, Level world) {
-        super.onUse(player, shape, world);
         if (!world.isClientSide()) {
             if (shape.getPuffState() == 0) {
                 ((PufferfishAccessor) shape).setInflateCounter(1);

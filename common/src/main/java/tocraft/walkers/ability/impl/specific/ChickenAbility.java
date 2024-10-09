@@ -20,7 +20,6 @@ public class ChickenAbility<T extends LivingEntity> extends ShapeAbility<T> {
 
     @Override
     public void onUse(Player player, T shape, Level world) {
-        super.onUse(player, shape, world);
         player.spawnAtLocation(Items.EGG);
 
         // Play SFX

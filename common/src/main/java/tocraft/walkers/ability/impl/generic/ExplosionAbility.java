@@ -45,7 +45,6 @@ public class ExplosionAbility<T extends LivingEntity> extends GenericShapeAbilit
 
     @Override
     public void onUse(Player player, T shape, Level world) {
-        super.onUse(player, shape, world);
         //#if MC>1182
         world.explode(player, player.getX(), player.getY(), player.getZ(), 3.0f, ExplosionInteraction.NONE);
         //#else

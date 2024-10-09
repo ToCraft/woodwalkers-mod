@@ -29,7 +29,6 @@ public class ShootDragonFireball<T extends LivingEntity> extends GenericShapeAbi
 
     @Override
     public void onUse(Player player, T shape, Level world) {
-        super.onUse(player, shape, world);
         //#if MC>1206
         DragonFireball dragonFireball = new DragonFireball(
                 world,

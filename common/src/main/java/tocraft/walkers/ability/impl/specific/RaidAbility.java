@@ -22,7 +22,6 @@ public class RaidAbility<T extends LivingEntity> extends ShapeAbility<T> {
 
     @Override
     public void onUse(Player player, T shape, Level world) {
-        super.onUse(player, shape, world);
         if (world instanceof ServerLevel serverLevel) {
             //#if MC>=1205
             serverLevel.getRaids().createOrExtendRaid((ServerPlayer) player, player.getOnPos());
