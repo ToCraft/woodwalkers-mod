@@ -2,8 +2,11 @@ package tocraft.walkers.api;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import tocraft.craftedcore.network.ModernNetworking;
+import tocraft.craftedcore.patched.CEntity;
+import tocraft.walkers.ability.AbilityRegistry;
 import tocraft.walkers.impl.PlayerDataProvider;
 import tocraft.walkers.network.NetworkHandler;
 
@@ -34,5 +37,21 @@ public class PlayerAbilities {
         CompoundTag packet = new CompoundTag();
         packet.putInt("cooldown", ((PlayerDataProvider) player).walkers$getAbilityCooldown());
         ModernNetworking.sendToPlayer(player, NetworkHandler.ABILITY_SYNC, packet);
+    }
+
+    public static void useAbility(Player player) {
+        LivingEntity shape = PlayerShape.getCurrentShape(player);
+
+        // Verify we should use ability for the player's current shape
+        if (shape != null) {
+            if (AbilityRegistry.has(shape)) {
+                // Check cooldown
+                if (PlayerAbilities.canUseAbility(player)) {
+                    AbilityRegistry.get(shape).onUse(player, shape, CEntity.level(player));
+                    PlayerAbilities.setCooldown(player, AbilityRegistry.get(shape).getCooldown(shape));
+                    PlayerAbilities.sync((ServerPlayer) player);
+                }
+            }
+        }
     }
 }
