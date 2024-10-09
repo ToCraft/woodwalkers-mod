@@ -30,6 +30,7 @@ public class SnifferAbility<T extends LivingEntity> extends ShapeAbility<T> {
 
     @Override
     public void onUse(Player player, T shape, Level world) {
+        super.onUse(player, shape, world);
         // Ensures, the player isn't in Water/Lava and touches the ground
         if (player.isInLava() || player.isInWater() || !CEntity.isOnGround(player))
             return;

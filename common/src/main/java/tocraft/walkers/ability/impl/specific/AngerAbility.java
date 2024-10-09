@@ -48,6 +48,7 @@ public class AngerAbility<T extends Mob> extends ShapeAbility<T> {
 
     @Override
     public void onUse(Player player, T oShape, Level world) {
+        super.onUse(player, oShape, world);
         if (oShape instanceof NeutralMob shape) {
             if (shape.isAngry()) {
                 shape.stopBeingAngry();

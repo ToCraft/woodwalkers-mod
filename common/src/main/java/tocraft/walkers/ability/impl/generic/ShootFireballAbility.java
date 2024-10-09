@@ -56,6 +56,7 @@ public class ShootFireballAbility<T extends LivingEntity> extends GenericShapeAb
 
     @Override
     public void onUse(Player player, T shape, Level world) {
+        super.onUse(player, shape, world);
         Fireball fireball = getFireball(player, world);
         world.addFreshEntity(fireball);
         if (shape instanceof Blaze) {
