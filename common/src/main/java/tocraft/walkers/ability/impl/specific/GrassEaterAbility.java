@@ -24,6 +24,11 @@ public class GrassEaterAbility<T extends LivingEntity> extends ShapeAbility<T> {
     public final Map<UUID, Integer> eatTick = new HashMap<>();
 
     @Override
+    public ResourceLocation getId() {
+        return ID;
+    }
+
+    @Override
     public void onUse(Player player, T shape, Level world) {
         eatGrass(player);
     }

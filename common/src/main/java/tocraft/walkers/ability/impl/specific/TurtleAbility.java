@@ -1,5 +1,6 @@
 package tocraft.walkers.ability.impl.specific;
 
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.LivingEntity;
@@ -11,9 +12,16 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.TurtleEggBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import tocraft.craftedcore.patched.CEntity;
+import tocraft.walkers.Walkers;
 import tocraft.walkers.ability.ShapeAbility;
 
 public class TurtleAbility<T extends LivingEntity> extends ShapeAbility<T> {
+    public static final ResourceLocation ID = Walkers.id("turtle");
+
+    @Override
+    public ResourceLocation getId() {
+        return ID;
+    }
 
     @Override
     public void onUse(Player player, LivingEntity shape, Level world) {

@@ -1,6 +1,7 @@
 package tocraft.walkers.ability.impl.specific;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.LivingEntity;
@@ -13,9 +14,17 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.CarrotBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.gameevent.GameEvent;
+import tocraft.walkers.Walkers;
 import tocraft.walkers.ability.ShapeAbility;
 
 public class RabbitAbility<T extends LivingEntity> extends ShapeAbility<T> {
+    public static final ResourceLocation ID = Walkers.id("rabbit");
+
+    @Override
+    public ResourceLocation getId() {
+        return ID;
+    }
+
     @Override
     public void onUse(Player player, T shape, Level world) {
         if (!world.isClientSide()) {
