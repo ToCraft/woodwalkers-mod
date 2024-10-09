@@ -14,12 +14,19 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import tocraft.craftedcore.patched.CEntity;
 import tocraft.craftedcore.patched.Identifier;
+import tocraft.walkers.Walkers;
 import tocraft.walkers.ability.ShapeAbility;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class SnifferAbility<T extends LivingEntity> extends ShapeAbility<T> {
+    public static final ResourceLocation ID = Walkers.id("sniffer");
+
+    @Override
+    public ResourceLocation getId() {
+        return ID;
+    }
 
     @Override
     public void onUse(Player player, T shape, Level world) {

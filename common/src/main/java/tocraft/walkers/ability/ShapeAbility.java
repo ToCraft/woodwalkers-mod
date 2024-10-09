@@ -1,5 +1,6 @@
 package tocraft.walkers.ability;
 
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -10,6 +11,8 @@ import tocraft.walkers.Walkers;
 
 @SuppressWarnings("resource")
 public abstract class ShapeAbility<E extends LivingEntity> {
+    abstract public ResourceLocation getId();
+
     /**
      * Defines the use action of this ability. Implementers can assume the ability checks, such as cool-downs, have successfully passed.
      *
