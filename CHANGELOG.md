@@ -2,6 +2,7 @@ walkers 5.4
 ================
 - fix Incompatibility with CarryOn mod
 - fix rendering for the RiderTrait
+- improve Ability API for usage in other mods (by shap-po)
 
 walkers 5.3.3
 ================
