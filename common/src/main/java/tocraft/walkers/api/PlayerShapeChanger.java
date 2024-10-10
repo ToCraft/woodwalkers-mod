@@ -2,6 +2,7 @@ package tocraft.walkers.api;
 
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionResult;
+import org.jetbrains.annotations.ApiStatus;
 import tocraft.walkers.api.events.ShapeEvents;
 import tocraft.walkers.api.variant.ShapeType;
 import tocraft.walkers.impl.PlayerDataProvider;
@@ -23,6 +24,7 @@ public class PlayerShapeChanger {
         }
     }
 
+    @ApiStatus.Internal
     public static void sync(ServerPlayer player) {
         UnlockPackets.sendSyncPacket(player);
     }

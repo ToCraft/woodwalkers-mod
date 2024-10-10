@@ -6,7 +6,26 @@ import tocraft.craftedcore.event.EventFactory;
 
 @SuppressWarnings("unused")
 public enum ApiLevel {
-    API_ONLY(false, false, false), UNLOCK_ONLY(false, false, true), MORPHING_ONLY(true, false, false), MORPHING_AND_VARIANTS_MENU_ONLY(true, true, false), DEFAULT(true, true, true);
+    /**
+     * The players can't use Woodwalkers unlock method, can't open the variants menu and can't morph themselves but only via commands or code
+     */
+    API_ONLY(false, false, false),
+    /**
+     * The players can't open the variants menu and can't morph themselves but only via commands or code and can still use Woodwalkers unlock method to set their 2nd Shape
+     */
+ UNLOCK_ONLY(false, false, true),
+    /**
+     * The players can't use Woodwalkers unlock method, can't open the variants menu but can still morph freely
+     */
+ MORPHING_ONLY(true, false, false),
+    /**
+     * The players can't use Woodwalkers unlock method, but can open the variants menu and can morph freely
+     */
+ MORPHING_AND_VARIANTS_MENU_ONLY(true, true, false),
+    /**
+     * The players can use Woodwalkers without limitations
+     */
+ DEFAULT(true, true, true);
 
     public final boolean canMorph;
     public final boolean allowVariantsMenu;
@@ -21,7 +40,6 @@ public enum ApiLevel {
     /**
      * Called in order to set the API Level of the mod
      *
-     * @param apiLevel
      */
     public static void setApiLevel(ApiLevel apiLevel) {
         if (ApiLevel.getCurrentLevel().compareTo(apiLevel) > 0) {

@@ -5,6 +5,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import org.jetbrains.annotations.ApiStatus;
 import tocraft.craftedcore.network.ModernNetworking;
 import tocraft.craftedcore.patched.CEntity;
 import tocraft.walkers.ability.AbilityRegistry;
@@ -36,6 +37,7 @@ public class PlayerAbilities {
         ((PlayerDataProvider) player).walkers$setAbilityCooldown(cooldown);
     }
 
+    @ApiStatus.Internal
     public static void sync(ServerPlayer player) {
         CompoundTag packet = new CompoundTag();
         packet.putInt("cooldown", ((PlayerDataProvider) player).walkers$getAbilityCooldown());

@@ -33,10 +33,10 @@ public abstract class ActiveTargetGoalMixin extends TrackTargetGoalMixin {
     @Inject(method = "start", at = @At("HEAD"), cancellable = true)
     private void ignoreShapedPlayers(CallbackInfo ci) {
         if (Walkers.CONFIG.hostilesIgnoreHostileShapedPlayer && this.mob instanceof Enemy
-                && this.target instanceof Player player && Integrations.mightAttackInnocent(this.mob, player)) {
+                && this.target instanceof Player player) {
             LivingEntity shape = PlayerShape.getCurrentShape(player);
 
-            if (shape != null) {
+            if (shape != null && Integrations.mightAttackInnocent(this.mob, player)) {
                 boolean hasHostility = PlayerHostility.hasHostility(player);
 
                 // only cancel if the player does not have hostility
@@ -86,10 +86,10 @@ public abstract class ActiveTargetGoalMixin extends TrackTargetGoalMixin {
     protected void shape_shouldContinue(CallbackInfoReturnable<Boolean> cir) {
         // check cancelling for hostiles
         if (Walkers.CONFIG.hostilesIgnoreHostileShapedPlayer && Walkers.CONFIG.hostilesForgetNewHostileShapedPlayer
-                && this.mob instanceof Enemy && this.target instanceof Player player && Integrations.mightAttackInnocent(this.mob, player)) {
+                && this.mob instanceof Enemy && this.target instanceof Player player) {
             LivingEntity shape = PlayerShape.getCurrentShape(player);
 
-            if (shape != null) {
+            if (shape != null && Integrations.mightAttackInnocent(this.mob, player)) {
                 boolean hasHostility = PlayerHostility.hasHostility(player);
 
                 // only cancel if the player does not have hostility

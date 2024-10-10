@@ -11,10 +11,19 @@ import tocraft.walkers.ability.ShapeAbility;
 import tocraft.walkers.api.variant.ShapeType;
 
 public final class ShapeEvents {
+    /**
+     * Called when using the default unlocking mechanic
+     */
     public static final Event<UnlockShapeCallback> UNLOCK_SHAPE = EventFactory.createWithInteractionResult();
 
+    /**
+     * Called when morphing
+     */
     public static final Event<ShapeSwapCallback> SWAP_SHAPE = EventFactory.createWithInteractionResult();
 
+    /**
+     * Called when a {@link ShapeAbility ShapeAbility} is used
+     */
     public static final Event<UseShapeAbilityCallback> USE_SHAPE_ABILITY = EventFactory.createWithInteractionResult();
 
     @FunctionalInterface

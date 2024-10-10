@@ -2,7 +2,9 @@ package tocraft.walkers.api.blacklist;
 
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.EntityType;
+import org.jetbrains.annotations.ApiStatus;
 import tocraft.walkers.Walkers;
+import tocraft.walkers.integrations.AbstractIntegration;
 import tocraft.walkers.integrations.Integrations;
 
 import java.util.ArrayList;
@@ -12,6 +14,7 @@ public class EntityBlacklist {
     private static final List<EntityType<?>> typeBlacklist = new ArrayList<>();
     private static final List<TagKey<EntityType<?>>> tagBlacklist = new ArrayList<>();
 
+    @ApiStatus.Internal
     public static void registerDefault() {
         // support deprecated entity tags
         registerByTag(TagKey.create(Walkers.getEntityTypeRegistry().key(), Walkers.id("blacklisted")));
@@ -29,14 +32,21 @@ public class EntityBlacklist {
         return Walkers.CONFIG.entityBlacklistIsWhitelist != Walkers.CONFIG.entityBlacklist.contains(EntityType.getKey(entityType).toString());
     }
 
+    /**
+     * must be called within {@link #registerDefault()} or {@link AbstractIntegration#registerEntityBlacklist()} Integration.registerEntityBlacklist()}}
+     */
     public static void registerByType(EntityType<?> entityType) {
         if (!typeBlacklist.contains(entityType)) typeBlacklist.add(entityType);
     }
 
+    /**
+     * must be called within {@link #registerDefault()} or {@link AbstractIntegration#registerEntityBlacklist()} Integration.registerEntityBlacklist()}}
+     */
     public static void registerByTag(TagKey<EntityType<?>> entityTypeTag) {
         if (!tagBlacklist.contains(entityTypeTag)) tagBlacklist.add(entityTypeTag);
     }
 
+    @ApiStatus.Internal
     public static void clearAll() {
         typeBlacklist.clear();
         tagBlacklist.clear();

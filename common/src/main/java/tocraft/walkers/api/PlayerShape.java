@@ -6,6 +6,7 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 import tocraft.craftedcore.network.ModernNetworking;
 import tocraft.walkers.api.blacklist.EntityBlacklist;
@@ -35,7 +36,7 @@ public class PlayerShape {
      *
      * @param entity {@link LivingEntity} new shape for this component, or null to clear
      */
-    public static boolean updateShapes(ServerPlayer player, LivingEntity entity) {
+    public static boolean updateShapes(ServerPlayer player, @Nullable LivingEntity entity) {
         if (entity != null && EntityBlacklist.isBlacklisted(entity.getType())) {
             return false;
         }
@@ -50,10 +51,12 @@ public class PlayerShape {
         return true;
     }
 
+    @ApiStatus.Internal
     public static void sync(ServerPlayer player) {
         sync(player, player);
     }
 
+    @ApiStatus.Internal
     public static void sync(ServerPlayer changed, ServerPlayer packetTarget) {
         CompoundTag data = new CompoundTag();
         CompoundTag entityTag = new CompoundTag();

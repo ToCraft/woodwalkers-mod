@@ -3,6 +3,7 @@ package tocraft.walkers.api;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 //#if MC>1182
+import org.jetbrains.annotations.ApiStatus;
 import tocraft.walkers.impl.tick.shapes.FrogTickHandler;
 import tocraft.walkers.impl.tick.shapes.WardenTickHandler;
 //#endif
@@ -16,6 +17,7 @@ public class WalkersTickHandlers {
 
     private static final Map<EntityType<?>, WalkersTickHandler<?>> HANDLERS = new LinkedHashMap<>();
 
+    @ApiStatus.Internal
     public static void initialize() {
         //#if MC>1182
         register(EntityType.WARDEN, new WardenTickHandler());
@@ -33,6 +35,7 @@ public class WalkersTickHandlers {
         HANDLERS.put(type, handler);
     }
 
+    @ApiStatus.Internal
     public static Map<EntityType<?>, WalkersTickHandler<?>> getHandlers() {
         return HANDLERS;
     }

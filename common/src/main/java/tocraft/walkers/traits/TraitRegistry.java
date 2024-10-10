@@ -46,6 +46,7 @@ public class TraitRegistry {
     private static final Map<ResourceLocation, MapCodec<? extends ShapeTrait<?>>> traitCodecById = new HashMap<>();
     private static final Map<MapCodec<? extends ShapeTrait<?>>, ResourceLocation> traitIdByCodec = new IdentityHashMap<>();
 
+    @ApiStatus.Internal
     public static void initialize() {
         // register trait codecs
         registerCodec(MobEffectTrait.ID, MobEffectTrait.CODEC);
@@ -73,6 +74,7 @@ public class TraitRegistry {
     }
 
     @SuppressWarnings("unchecked")
+    @ApiStatus.Internal
     public static void registerDefault() {
         // register traits
         // mob effects
@@ -257,10 +259,16 @@ public class TraitRegistry {
         return traits;
     }
 
+    /**
+     * must be called within {@link #registerDefault()} or {@link tocraft.walkers.integrations.AbstractIntegration#registerTraits() Integration.registerTraits()}
+     */
     public static <A extends LivingEntity> void registerByType(EntityType<A> type, ShapeTrait<A> trait) {
         registerByType(type, List.of(trait));
     }
 
+    /**
+     * must be called within {@link #registerDefault()} or {@link tocraft.walkers.integrations.AbstractIntegration#registerTraits() Integration.registerTraits()}
+     */
     public static <A extends LivingEntity> void registerByType(EntityType<A> type, List<ShapeTrait<A>> newtraits) {
         List<ShapeTrait<?>> traits = traitsByEntityTypes.containsKey(type) ? traitsByEntityTypes.get(type) : new ArrayList<>();
         for (ShapeTrait<A> trait : newtraits) {
@@ -271,10 +279,16 @@ public class TraitRegistry {
         traitsByEntityTypes.put(type, traits);
     }
 
+    /**
+     * must be called within {@link #registerDefault()} or {@link tocraft.walkers.integrations.AbstractIntegration#registerTraits() Integration.registerTraits()}
+     */
     public static <A extends LivingEntity> void registerByTag(TagKey<EntityType<?>> tag, ShapeTrait<A> trait) {
         registerByTag(tag, List.of(trait));
     }
 
+    /**
+     * must be called within {@link #registerDefault()} or {@link tocraft.walkers.integrations.AbstractIntegration#registerTraits() Integration.registerTraits()}
+     */
     public static <A extends LivingEntity> void registerByTag(TagKey<EntityType<?>> tag, List<ShapeTrait<A>> newtraits) {
         List<ShapeTrait<?>> traits = traitsByEntityTags.containsKey(tag) ? traitsByEntityTags.get(tag) : new ArrayList<>();
         for (ShapeTrait<A> trait : newtraits) {
@@ -285,10 +299,16 @@ public class TraitRegistry {
         traitsByEntityTags.put(tag, traits);
     }
 
+    /**
+     * must be called within {@link #registerDefault()} or {@link tocraft.walkers.integrations.AbstractIntegration#registerTraits() Integration.registerTraits()}
+     */
     public static <A extends LivingEntity> void registerByClass(Class<A> entityClass, ShapeTrait<A> trait) {
         registerByClass(entityClass, List.of(trait));
     }
 
+    /**
+     * must be called within {@link #registerDefault()} or {@link tocraft.walkers.integrations.AbstractIntegration#registerTraits() Integration.registerTraits()}
+     */
     public static <A extends LivingEntity> void registerByClass(Class<A> entityClass, List<ShapeTrait<A>> newtraits) {
         List<ShapeTrait<?>> traits = traitsByEntityClasses.containsKey(entityClass) ? traitsByEntityClasses.get(entityClass) : new ArrayList<>();
         for (ShapeTrait<A> trait : newtraits) {
@@ -301,6 +321,7 @@ public class TraitRegistry {
 
     /**
      * Register a trait for a predicate
+     * must be called within {@link #registerDefault()} or {@link tocraft.walkers.integrations.AbstractIntegration#registerTraits() Integration.registerTraits()}
      *
      * @param entityPredicate this should only be true, if the entity is the correct class for the ability!
      * @param trait           your {@link ShapeAbility}
@@ -309,6 +330,10 @@ public class TraitRegistry {
         registerByPredicate(entityPredicate, List.of(trait));
     }
 
+    /**
+     * Register a list of traits for a predicate
+     * must be called within {@link #registerDefault()} or {@link tocraft.walkers.integrations.AbstractIntegration#registerTraits() Integration.registerTraits()}
+     */
     public static void registerByPredicate(Predicate<LivingEntity> entityPredicate, List<ShapeTrait<?>> newTraits) {
         List<ShapeTrait<?>> traits = traitsByPredicates.containsKey(entityPredicate) ? traitsByPredicates.get(entityPredicate) : new ArrayList<>();
         for (ShapeTrait<?> trait : newTraits) {
@@ -325,11 +350,13 @@ public class TraitRegistry {
     }
 
     @Nullable
+    @ApiStatus.Internal
     public static MapCodec<? extends ShapeTrait<?>> getTraitCodec(ResourceLocation traitId) {
         return traitCodecById.get(traitId);
     }
 
     @Nullable
+    @ApiStatus.Internal
     public static ResourceLocation getTraitId(MapCodec<? extends ShapeTrait<?>> traitCodec) {
         return traitIdByCodec.get(traitCodec);
     }
@@ -358,6 +385,7 @@ public class TraitRegistry {
         return false;
     }
 
+    @ApiStatus.Internal
     public static void clearAll() {
         traitsByEntityTypes.clear();
         traitsByEntityClasses.clear();
@@ -365,6 +393,7 @@ public class TraitRegistry {
         traitsByPredicates.clear();
     }
 
+    @ApiStatus.Internal
     public static Codec<ShapeTrait<?>> getTraitCodec() {
         Codec<MapCodec<? extends ShapeTrait<?>>> codec = ResourceLocation.CODEC.flatXmap(
                 resourceLocation -> Optional.ofNullable(TraitRegistry.getTraitCodec(resourceLocation))

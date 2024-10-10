@@ -34,6 +34,7 @@ import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.Potions;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 import tocraft.walkers.Walkers;
 import tocraft.walkers.ability.impl.generic.*;
@@ -51,6 +52,7 @@ public class AbilityRegistry {
     private static final Map<ResourceLocation, MapCodec<? extends GenericShapeAbility<?>>> abilityCodecById = new HashMap<>();
     private static final Map<MapCodec<? extends GenericShapeAbility<?>>, ResourceLocation> abilityIdByCodec = new IdentityHashMap<>();
 
+    @ApiStatus.Internal
     public static void initialize() {
         // register codecs
         registerCodec(ShootFireballAbility.ID, ShootFireballAbility.CODEC);
@@ -66,10 +68,11 @@ public class AbilityRegistry {
         registerCodec(GetItemAbility.ID, GetItemAbility.CODEC);
     }
 
+    @ApiStatus.Internal
     public static void registerDefault() {
         // Register generic Abilities first (since the last registered ability will be the used one
         registerByPredicate(livingEntity -> livingEntity instanceof NeutralMob, new AngerAbility<>());
-        registerByPredicate(entity -> entity.getType().is(EntityTypeTags.RAIDERS), new RaidAbility<>());
+        registerByTag(EntityTypeTags.RAIDERS, new RaidAbility<>());
 
         // Register 'normal' Abilities
         registerByClass(AbstractHorse.class, new JumpAbility<>());
@@ -157,20 +160,30 @@ public class AbilityRegistry {
         return ability;
     }
 
+    /**
+     * must be called within {@link #registerDefault()} or {@link tocraft.walkers.integrations.AbstractIntegration#registerAbilities() Integration.registerAbilities()}
+     */
     public static <A extends LivingEntity> void registerByType(EntityType<A> type, ShapeAbility<A> ability) {
         registerByPredicate(livingEntity -> type.equals(livingEntity.getType()), ability);
     }
 
+    /**
+     * must be called within {@link #registerDefault()} or {@link tocraft.walkers.integrations.AbstractIntegration#registerAbilities() Integration.registerAbilities()}
+     */
     public static void registerByTag(TagKey<EntityType<?>> entityTag, ShapeAbility<LivingEntity> ability) {
         registerByPredicate(livingEntity -> livingEntity.getType().is(entityTag), ability);
     }
 
+    /**
+     * must be called within {@link #registerDefault()} or {@link tocraft.walkers.integrations.AbstractIntegration#registerAbilities() Integration.registerAbilities()}
+     */
     public static <A extends LivingEntity> void registerByClass(Class<A> entityClass, ShapeAbility<A> ability) {
         registerByPredicate(entityClass::isInstance, ability);
     }
 
     /**
      * Register an ability for a predicate
+     * must be called within {@link #registerDefault()} or {@link tocraft.walkers.integrations.AbstractIntegration#registerAbilities() Integration.registerAbilities()}
      *
      * @param entityPredicate this should only be true, if the entity is the correct class for the ability!
      * @param ability         your {@link ShapeAbility}
@@ -191,6 +204,7 @@ public class AbilityRegistry {
         return specificAbilities.keySet().stream().anyMatch(predicate -> predicate.test(shape)) || genericAbilities.keySet().stream().anyMatch(predicate -> predicate.test(shape));
     }
 
+    @ApiStatus.Internal
     public static void clearAll() {
         specificAbilities.clear();
         genericAbilities.clear();
@@ -201,16 +215,19 @@ public class AbilityRegistry {
         abilityIdByCodec.put(abilityCodec, abilityId);
     }
 
+    @ApiStatus.Internal
     @Nullable
     public static MapCodec<? extends GenericShapeAbility<?>> getAbilityCodec(ResourceLocation abilityId) {
         return abilityCodecById.get(abilityId);
     }
 
+    @ApiStatus.Internal
     @Nullable
     public static ResourceLocation getAbilityId(MapCodec<? extends GenericShapeAbility<?>> traitCodec) {
         return abilityIdByCodec.get(traitCodec);
     }
 
+    @ApiStatus.Internal
     public static Codec<GenericShapeAbility<?>> getAbilityCodec() {
         Codec<MapCodec<? extends GenericShapeAbility<?>>> codec = ResourceLocation.CODEC.flatXmap(
                 resourceLocation -> Optional.ofNullable(AbilityRegistry.getAbilityCodec(resourceLocation))

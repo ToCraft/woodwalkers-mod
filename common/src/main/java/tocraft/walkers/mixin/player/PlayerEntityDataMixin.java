@@ -31,7 +31,6 @@ import tocraft.walkers.traits.TraitRegistry;
 import tocraft.walkers.traits.impl.RiderTrait;
 
 import java.util.Optional;
-import java.util.UUID;
 
 @SuppressWarnings("UnreachableCode")
 @Mixin(Player.class)
@@ -49,9 +48,6 @@ public abstract class PlayerEntityDataMixin extends LivingEntity implements Play
     @Unique
     @Nullable
     private LivingEntity walkers$shape = null;
-    @Unique
-    @Nullable
-    private UUID walkers$vehiclePlayerUUID = null;
 
     private PlayerEntityDataMixin(EntityType<? extends LivingEntity> type, Level world) {
         super(type, world);
@@ -302,17 +298,5 @@ public abstract class PlayerEntityDataMixin extends LivingEntity implements Play
                     listener -> PlayerShape.sync((ServerPlayer) player, listener.getPlayer())
             );
         }
-    }
-
-    @Unique
-    @Override
-    public Optional<UUID> walkers$getVehiclePlayerUUID() {
-        return Optional.ofNullable(walkers$vehiclePlayerUUID);
-    }
-
-    @Unique
-    @Override
-    public void walkers$setVehiclePlayerUUID(UUID riddenPlayerUUID) {
-        walkers$vehiclePlayerUUID = riddenPlayerUUID;
     }
 }
