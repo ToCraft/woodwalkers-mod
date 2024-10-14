@@ -2,13 +2,14 @@ package tocraft.walkers.api;
 
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
-//#if MC>1182
 import org.jetbrains.annotations.ApiStatus;
+import tocraft.walkers.impl.tick.shapes.JumpBoostTickHandler;
+import tocraft.walkers.impl.tick.shapes.SnowGolemTickHandler;
+
+//#if MC>1182
 import tocraft.walkers.impl.tick.shapes.FrogTickHandler;
 import tocraft.walkers.impl.tick.shapes.WardenTickHandler;
 //#endif
-import tocraft.walkers.impl.tick.shapes.JumpBoostTickHandler;
-import tocraft.walkers.impl.tick.shapes.SnowGolemTickHandler;
 
 import java.util.LinkedHashMap;
 import java.util.Map;

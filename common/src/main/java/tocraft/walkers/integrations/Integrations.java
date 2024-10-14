@@ -21,6 +21,7 @@ public class Integrations {
         register(MutantMonstersIntegration.MODID, MutantMonstersIntegration::new);
         register(AlexMobsIntegration.MODID, AlexMobsIntegration::new);
         register(PlayerAbilityLibIntegration.MODID, PlayerAbilityLibIntegration::new);
+        register(BackportedWolvesIntegration.MODID, BackportedWolvesIntegration::new);
     }
 
     @ApiStatus.Internal

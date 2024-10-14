@@ -5,6 +5,7 @@ walkers 5.4
 - improve Ability API for usage in other mods (by Shap_po)
 - add Ukrainian translation (by Shap_po)
 - blacklist irons_spellbooks:summoned_vex
+- add support for Backported Wolves
 
 walkers 5.3.3
 ================
