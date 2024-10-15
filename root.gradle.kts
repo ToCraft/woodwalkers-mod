@@ -1,3 +1,7 @@
 plugins {
-    id("dev.tocraft.modmaster.root") version "0.3.4"
+    id("dev.tocraft.modmaster.root")
+}
+
+modmaster {
+    useArchPlugin = true
 }
