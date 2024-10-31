@@ -11,6 +11,7 @@ import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import org.jetbrains.annotations.Nullable;
 import tocraft.walkers.Walkers;
@@ -71,7 +72,7 @@ public class AquaticTrait<E extends LivingEntity> extends ShapeTrait<E> {
     @Environment(EnvType.CLIENT)
     public @Nullable TextureAtlasSprite getIcon() {
         if (isAquatic && !isLand) {
-            BakedModel itemIcon = Minecraft.getInstance().getItemRenderer().getItemModelShaper().getItemModel(Items.HEART_OF_THE_SEA);
+            BakedModel itemIcon = Minecraft.getInstance().getItemRenderer().getModel(new ItemStack(Items.HEART_OF_THE_SEA), null, null, 15);
             if (itemIcon != null) {
                 return itemIcon.getParticleIcon();
             }

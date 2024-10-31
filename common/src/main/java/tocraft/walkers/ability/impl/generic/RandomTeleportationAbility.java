@@ -3,15 +3,15 @@ package tocraft.walkers.ability.impl.generic;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.level.Level;
 import tocraft.walkers.Walkers;
 import tocraft.walkers.ability.GenericShapeAbility;
 
@@ -30,7 +30,7 @@ public class RandomTeleportationAbility<T extends LivingEntity> extends GenericS
     }
 
     @Override
-    public void onUse(Player player, T shape, Level world) {
+    public void onUse(ServerPlayer player, T shape, ServerLevel world) {
         double x = player.getX();
         double y = player.getY();
         double z = player.getZ();

@@ -16,7 +16,7 @@ import tocraft.walkers.api.PlayerShape;
 @Mixin(PiglinAi.class)
 public class PiglinBrainMixin {
 
-    @Inject(method = "isWearingGold", at = @At("RETURN"), cancellable = true)
+    @Inject(method = "isWearingSafeArmor", at = @At("RETURN"), cancellable = true)
     private static void shapeIsWearingGold(LivingEntity livingEntity, CallbackInfoReturnable<Boolean> cir) {
         boolean wearingGold = cir.getReturnValue();
 

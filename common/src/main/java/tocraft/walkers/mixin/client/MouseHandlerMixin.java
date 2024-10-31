@@ -1,11 +1,11 @@
 package tocraft.walkers.mixin.client;
 
-import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.MouseHandler;
-import net.minecraft.world.entity.player.Inventory;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -20,13 +20,13 @@ public class MouseHandlerMixin {
     @Final
     private Minecraft minecraft;
 
-    @WrapWithCondition(method = "onScroll", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/player/Inventory;swapPaint(D)V"))
-    private boolean handleScrollInVariantsMenu(Inventory instance, double direction) {
+    @WrapOperation(method = "onScroll", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/ScrollWheelHandler;getNextScrollWheelSelection(DII)I"))
+    private int handleScrollInVariantsMenu(double direction, int current, int size, Operation<Integer> original) {
         if (!minecraft.options.hideGui && WalkersClient.isRenderingVariantsMenu && Walkers.CONFIG.unlockEveryVariant && minecraft.screen == null) {
             WalkersClient.variantOffset -= (int) direction;
-            return false;
+            return current;
         } else {
-            return true;
+            return original.call(direction, current, size);
         }
     }
 }

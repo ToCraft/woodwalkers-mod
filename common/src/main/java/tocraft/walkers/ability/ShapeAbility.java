@@ -1,11 +1,11 @@
 package tocraft.walkers.ability;
 
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.level.Level;
 import tocraft.walkers.Walkers;
 
 @SuppressWarnings("resource")
@@ -19,7 +19,7 @@ public abstract class ShapeAbility<E extends LivingEntity> {
      * @param shape  current shape of the player
      * @param world  world the player is residing in
      */
-    abstract public void onUse(Player player, E shape, Level world);
+    abstract public void onUse(ServerPlayer player, E shape, ServerLevel world);
 
     /**
      * @return cooldown of this ability, in ticks, after it is used.

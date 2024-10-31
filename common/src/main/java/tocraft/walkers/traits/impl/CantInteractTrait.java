@@ -15,6 +15,7 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -36,7 +37,7 @@ public class CantInteractTrait<E extends LivingEntity> extends ShapeTrait<E> {
         List<TagKey<EntityType<?>>> reinforcementTags = new ArrayList<>();
         for (ResourceLocation resourceLocation : typeIds) {
             if (BuiltInRegistries.ENTITY_TYPE.containsKey(resourceLocation)) {
-                reinforcements.add(BuiltInRegistries.ENTITY_TYPE.get(resourceLocation));
+                reinforcements.add(BuiltInRegistries.ENTITY_TYPE.get(resourceLocation).orElseThrow().value());
             }
         }
         for (ResourceLocation resourceLocation : tagIds) {
@@ -112,7 +113,7 @@ public class CantInteractTrait<E extends LivingEntity> extends ShapeTrait<E> {
     @Override
     @Environment(EnvType.CLIENT)
     public @Nullable TextureAtlasSprite getIcon() {
-        BakedModel itemModel = Minecraft.getInstance().getItemRenderer().getItemModelShaper().getItemModel(Items.IRON_SWORD);
+        BakedModel itemModel = Minecraft.getInstance().getItemRenderer().getModel(new ItemStack(Items.IRON_SWORD), null, null, 15);
         if (itemModel != null) {
             return itemModel.getParticleIcon();
         } else {

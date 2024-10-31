@@ -4,10 +4,10 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.entity.state.EntityRenderState;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.util.Mth;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.animal.Parrot;
@@ -35,7 +35,7 @@ import java.util.Map;
  * {@link EntityUpdater} can be used to tell a shape bat to "stop roosting,"
  * which triggers the flight animation. {@link EntityUpdater}s are called once
  * every render tick
- * {@link net.minecraft.client.renderer.entity.EntityRenderer#render(Entity, float, float, PoseStack, MultiBufferSource, int)}.
+ * {@link net.minecraft.client.renderer.entity.EntityRenderer#render(EntityRenderState, PoseStack, MultiBufferSource, int)}
  */
 @Environment(EnvType.CLIENT)
 public class EntityUpdaters {
@@ -101,26 +101,6 @@ public class EntityUpdaters {
             if (player.getRandom().nextInt(400) == 0) {
                 Parrot.imitateNearbyMobs(player.level(), player);
             }
-        });
-
-        EntityUpdaters.register(EntityType.ENDER_DRAGON, (player, dragon) -> {
-            dragon.flapTime += 0.01F;
-            dragon.oFlapTime = dragon.flapTime;
-
-            // setting yaw without +180 making tail faces front, for some reason
-            if (dragon.posPointer < 0) {
-                for (int l = 0; l < dragon.positions.length; ++l) {
-                    dragon.positions[l][0] = (double) player.getYRot() + 180;
-                    dragon.positions[l][1] = player.getY();
-                }
-            }
-
-            if (++(dragon).posPointer == (dragon).positions.length) {
-                (dragon).posPointer = 0;
-            }
-
-            dragon.positions[dragon.posPointer][0] = (double) player.getYRot() + 180;
-            dragon.positions[dragon.posPointer][1] = player.getY();
         });
 
         EntityUpdaters.register(EntityType.ENDERMAN, (player, enderman) -> {

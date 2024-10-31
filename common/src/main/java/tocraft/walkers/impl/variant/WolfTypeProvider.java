@@ -7,6 +7,7 @@ import net.minecraft.core.Registry;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.animal.Wolf;
 import net.minecraft.world.entity.animal.WolfVariant;
@@ -38,17 +39,17 @@ public class WolfTypeProvider extends TypeProvider<Wolf> {
     @Override
     public int getVariantData(Wolf entity) {
         setRange(entity.level());
-        return entity.level().registryAccess().registryOrThrow(Registries.WOLF_VARIANT).getId(entity.getVariant().value());
+        return entity.level().registryAccess().lookupOrThrow(Registries.WOLF_VARIANT).getId(entity.getVariant().value());
     }
 
     @Override
     public Wolf create(EntityType<Wolf> type, Level level, int data) {
         setRange(level);
 
-        Wolf wolf = type.create(level);
+        Wolf wolf = type.create(level, EntitySpawnReason.LOAD);
         if (wolf != null) {
-            Registry<WolfVariant> wolfVariantRegistry = level.registryAccess().registryOrThrow(Registries.WOLF_VARIANT);
-            wolf.setVariant(wolfVariantRegistry.getHolder(data).orElse(wolfVariantRegistry.getHolderOrThrow(WolfVariants.PALE)));
+            Registry<WolfVariant> wolfVariantRegistry = level.registryAccess().lookupOrThrow(Registries.WOLF_VARIANT);
+            wolf.setVariant(wolfVariantRegistry.get(data).orElse(wolfVariantRegistry.get(WolfVariants.PALE).orElseThrow()));
         }
         return wolf;
     }
@@ -64,12 +65,12 @@ public class WolfTypeProvider extends TypeProvider<Wolf> {
     }
 
     public static void setRange(Level level) {
-        range = level.registryAccess().registryOrThrow(Registries.WOLF_VARIANT).size() - 1;
+        range = level.registryAccess().lookupOrThrow(Registries.WOLF_VARIANT).size() - 1;
     }
 
     @Override
     public Component modifyText(Wolf entity, MutableComponent text) {
         setRange(entity.level());
-        return Component.literal(formatTypePrefix(Objects.requireNonNull(entity.level().registryAccess().registryOrThrow(Registries.WOLF_VARIANT).getKey(entity.getVariant().value())).getPath()) + " ").append(text);
+        return Component.literal(formatTypePrefix(Objects.requireNonNull(entity.level().registryAccess().lookupOrThrow(Registries.WOLF_VARIANT).getKey(entity.getVariant().value())).getPath()) + " ").append(text);
     }
 }

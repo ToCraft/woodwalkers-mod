@@ -6,6 +6,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
@@ -134,7 +135,7 @@ public class NBTTypeProvider<T extends LivingEntity> extends TypeProvider<T> {
 
         CompoundTag compoundTag = tag.copy();
         compoundTag.putString("id", Objects.requireNonNull(EntityType.getKey(type)).toString());
-        return (T) EntityType.loadEntityRecursive(compoundTag, world, entity -> entity);
+        return (T) EntityType.loadEntityRecursive(compoundTag, world, EntitySpawnReason.LOAD, entity -> entity);
     }
 
     @Override

@@ -10,10 +10,8 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.NeutralMob;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.level.Level;
 import tocraft.walkers.Walkers;
 import tocraft.walkers.ability.ShapeAbility;
 import tocraft.walkers.api.PlayerShape;
@@ -47,7 +45,7 @@ public class AngerAbility<T extends Mob> extends ShapeAbility<T> {
     }
 
     @Override
-    public void onUse(Player player, T oShape, Level world) {
+    public void onUse(ServerPlayer player, T oShape, ServerLevel world) {
         if (oShape instanceof NeutralMob shape) {
             if (shape.isAngry()) {
                 shape.stopBeingAngry();
@@ -61,11 +59,11 @@ public class AngerAbility<T extends Mob> extends ShapeAbility<T> {
             }
 
             if (!world.isClientSide()) {
-                Int2ObjectMap<Object> trackers = ((ThreadedAnvilChunkStorageAccessor) ((ServerLevel) world)
+                Int2ObjectMap<Object> trackers = ((ThreadedAnvilChunkStorageAccessor) world
                         .getChunkSource().chunkMap).getEntityMap();
                 Object tracking = trackers.get(player.getId());
                 ((EntityTrackerAccessor) tracking).getSeenBy().forEach(
-                        listener -> PlayerShape.sync((ServerPlayer) player, listener.getPlayer())
+                        listener -> PlayerShape.sync(player, listener.getPlayer())
                 );
             }
         } else {

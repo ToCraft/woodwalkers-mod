@@ -2,6 +2,7 @@ package tocraft.walkers.impl.variant;
 
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.animal.horse.Llama;
 import net.minecraft.world.level.Level;
@@ -16,7 +17,7 @@ public class LlamaTypeProvider<L extends Llama> extends TypeProvider<L> {
 
     @Override
     public L create(EntityType<L> type, Level world, int data) {
-        L llama = type.create(world);
+        L llama = type.create(world, EntitySpawnReason.LOAD);
         if (llama != null) {
             llama.setVariant(L.Variant.byId(data));
         }

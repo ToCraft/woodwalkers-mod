@@ -26,7 +26,7 @@ public class MobEffectTrait<E extends LivingEntity> extends ShapeTrait<E> {
             Codec.BOOL.optionalFieldOf("ambient", false).forGetter(MobEffectInstance::isAmbient),
             Codec.BOOL.optionalFieldOf("show_particles", true).forGetter(MobEffectInstance::isVisible),
             Codec.BOOL.optionalFieldOf("show_icon").forGetter(o -> Optional.of(o.showIcon()))
-    ).apply(instance, instance.stable((id, duration, amplifier, ambient, show_particles, show_icon) -> new MobEffectInstance(BuiltInRegistries.MOB_EFFECT.getHolder(id).orElseThrow(), duration, amplifier, ambient, show_particles, show_icon.orElse(show_particles)))));
+    ).apply(instance, instance.stable((id, duration, amplifier, ambient, show_particles, show_icon) -> new MobEffectInstance(BuiltInRegistries.MOB_EFFECT.get(id).orElseThrow(), duration, amplifier, ambient, show_particles, show_icon.orElse(show_particles)))));
     public static final MapCodec<MobEffectTrait<?>> CODEC = RecordCodecBuilder.mapCodec((instance) -> instance.group(
             MOB_EFFECT_INSTANCE_CODEC.fieldOf("mob_effect").forGetter(o -> o.mobEffectInstance),
             Codec.BOOL.optionalFieldOf("show_in_inventory", true).forGetter(o -> o.showInInventory),

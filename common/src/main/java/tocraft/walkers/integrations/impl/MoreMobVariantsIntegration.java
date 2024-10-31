@@ -4,6 +4,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
@@ -78,7 +79,7 @@ public class MoreMobVariantsIntegration extends AbstractIntegration {
             nbt.putString("id", EntityType.getKey(type).toString());
             ResourceLocation variantId = getVariants(type).get(data);
             nbt.putString("VariantID", variantId.toString());
-            return (L) EntityType.loadEntityRecursive(nbt, world, entity -> entity);
+            return (L) EntityType.loadEntityRecursive(nbt, world, EntitySpawnReason.LOAD, entity -> entity);
         }
 
         @Override

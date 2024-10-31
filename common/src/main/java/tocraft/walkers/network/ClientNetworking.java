@@ -1,6 +1,7 @@
 package tocraft.walkers.network;
 
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -68,7 +69,7 @@ public class ClientNetworking implements NetworkHandler {
 
                     // ensure entity data exists
                     if (shape == null || !type.get().equals(shape.getType())) {
-                        shape = (LivingEntity) type.get().create(syncTarget.level());
+                        shape = (LivingEntity) type.get().create(syncTarget.level(), EntitySpawnReason.LOAD);
                         data.walkers$setCurrentShape(shape);
 
                         // refresh player dimensions/hitbox on client

@@ -7,9 +7,9 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.client.renderer.entity.EntityRenderer;
-import net.minecraft.world.entity.Entity;
+import net.minecraft.client.renderer.entity.state.EntityRenderState;
+import net.minecraft.client.renderer.entity.state.PlayerRenderState;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.LevelReader;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
@@ -17,38 +17,37 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import tocraft.walkers.api.PlayerShape;
+import tocraft.walkers.impl.ShapeRenderStateProvider;
 import tocraft.walkers.mixin.client.accessor.EntityShadowAccessor;
 
 @Environment(EnvType.CLIENT)
 @Mixin(value = EntityRenderDispatcher.class, priority = 999)
 public abstract class ShadowMixin {
-
     @Unique
-    private static Entity shape_shadowEntity;
+    private static EntityRenderState shape_shadowState;
 
     @Inject(
             method = "renderShadow",
             at = @At("HEAD"))
-    private static void storeContext(PoseStack matrices, MultiBufferSource vertexConsumers, Entity entity, float opacity, float tickDelta, LevelReader world, float radius, CallbackInfo ci) {
-        shape_shadowEntity = entity;
+    private static void storeContext(PoseStack poseStack, MultiBufferSource multiBufferSource, EntityRenderState state, float f, float g, LevelReader levelReader, float h, CallbackInfo ci) {
+        shape_shadowState = state;
     }
 
     @ModifyVariable(
             method = "renderShadow",
-            at = @At(value = "INVOKE", target = "Lnet/minecraft/util/Mth;lerp(DDD)D", ordinal = 0), index = 6, argsOnly = true)
-    private static float adjustShadowSize(float originalSize) {
-        if (shape_shadowEntity instanceof Player player) {
-            LivingEntity shape = PlayerShape.getCurrentShape(player);
+            at = @At(value = "INVOKE", target = "Lnet/minecraft/util/Mth;floor(D)I", ordinal = 0), index = 6, argsOnly = true)
+    private static float adjustShadowSize(float value) {
+        if (shape_shadowState instanceof PlayerRenderState playerState) {
+            LivingEntity shape = ((ShapeRenderStateProvider) playerState).walkers$getShape();
 
             if (shape != null) {
-                EntityRenderer<?> r = Minecraft.getInstance().getEntityRenderDispatcher().getRenderer(shape);
+                EntityRenderer<?, ?> r = Minecraft.getInstance().getEntityRenderDispatcher().getRenderer(shape);
                 float shadowRadius = ((EntityShadowAccessor) r).getShadowRadius();
                 float mod = shape.isBaby() ? .5f : 1;
                 return shadowRadius * mod;
             }
         }
 
-        return originalSize;
+        return value;
     }
 }

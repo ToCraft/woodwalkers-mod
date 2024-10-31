@@ -36,7 +36,7 @@ public class EntityBlacklistDataManager extends SynchronizedJsonReloadListener {
                 Pair<List<ResourceLocation>, List<ResourceLocation>> someBlacklist = blacklistFromJson(mapEntry.getValue().getAsJsonObject());
                 for (ResourceLocation resourceLocation : someBlacklist.getFirst()) {
                     if (BuiltInRegistries.ENTITY_TYPE.containsKey(resourceLocation)) {
-                        EntityBlacklist.registerByType(BuiltInRegistries.ENTITY_TYPE.get(resourceLocation));
+                        EntityBlacklist.registerByType(BuiltInRegistries.ENTITY_TYPE.get(resourceLocation).orElseThrow().value());
                     }
                 }
                 for (ResourceLocation resourceLocation : someBlacklist.getSecond()) {

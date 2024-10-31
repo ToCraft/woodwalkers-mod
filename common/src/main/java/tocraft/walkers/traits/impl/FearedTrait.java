@@ -28,7 +28,7 @@ public class FearedTrait<E extends LivingEntity> extends ShapeTrait<E> {
         List<TagKey<EntityType<?>>> fearfulTags = new ArrayList<>();
         for (ResourceLocation resourceLocation : preyLocations) {
             if (BuiltInRegistries.ENTITY_TYPE.containsKey(resourceLocation)) {
-                fearfulTypes.add(BuiltInRegistries.ENTITY_TYPE.get(resourceLocation));
+                fearfulTypes.add(BuiltInRegistries.ENTITY_TYPE.get(resourceLocation).orElseThrow().value());
             }
         }
         for (ResourceLocation preyTagLocation : preyTagLocations) {

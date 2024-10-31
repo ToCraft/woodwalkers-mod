@@ -5,6 +5,8 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.LivingEntity;
@@ -33,7 +35,7 @@ public class ShootFireballAbility<T extends LivingEntity> extends GenericShapeAb
                     return Optional.of(BuiltInRegistries.ITEM.getKey(o.icon));
             }),
             Codec.BOOL.fieldOf("is_large").forGetter(o -> o.isLarge)
-    ).apply(instance, instance.stable((icon, isLarge) -> icon.<ShootFireballAbility<?>>map(resourceLocation -> new ShootFireballAbility<>(BuiltInRegistries.ITEM.get(resourceLocation), isLarge)).orElseGet(() -> new ShootFireballAbility<>(isLarge)))));
+    ).apply(instance, instance.stable((icon, isLarge) -> icon.<ShootFireballAbility<?>>map(resourceLocation -> new ShootFireballAbility<>(BuiltInRegistries.ITEM.get(resourceLocation).orElseThrow().value(), isLarge)).orElseGet(() -> new ShootFireballAbility<>(isLarge)))));
 
     private final boolean isLarge;
     private final Item icon;
@@ -49,7 +51,7 @@ public class ShootFireballAbility<T extends LivingEntity> extends GenericShapeAb
 
 
     @Override
-    public void onUse(Player player, T shape, Level world) {
+    public void onUse(ServerPlayer player, T shape, ServerLevel world) {
         Fireball fireball = getFireball(player, world);
         world.addFreshEntity(fireball);
         if (shape instanceof Blaze) {

@@ -3,12 +3,12 @@ package tocraft.walkers.ability.impl.generic;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.DragonFireball;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import tocraft.walkers.Walkers;
 import tocraft.walkers.ability.GenericShapeAbility;
@@ -28,7 +28,7 @@ public class ShootDragonFireball<T extends LivingEntity> extends GenericShapeAbi
     }
 
     @Override
-    public void onUse(Player player, T shape, Level world) {
+    public void onUse(ServerPlayer player, T shape, ServerLevel world) {
         DragonFireball dragonFireball = new DragonFireball(
                 world,
                 player,

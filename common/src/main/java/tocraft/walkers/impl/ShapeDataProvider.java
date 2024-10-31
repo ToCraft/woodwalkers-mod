@@ -7,6 +7,7 @@ import org.jetbrains.annotations.Nullable;
 /**
  * Pass player data to the shape
  */
+// TODO: Instead, just save the id of the owner
 @ApiStatus.Internal
 public interface ShapeDataProvider {
 

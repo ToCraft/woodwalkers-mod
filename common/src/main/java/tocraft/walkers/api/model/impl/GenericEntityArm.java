@@ -6,6 +6,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelPart;
+import net.minecraft.client.renderer.entity.state.LivingEntityRenderState;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import org.jetbrains.annotations.NotNull;
@@ -14,7 +15,7 @@ import tocraft.walkers.api.model.ClassArmProvider;
 
 @SuppressWarnings("unused")
 @Environment(EnvType.CLIENT)
-public class GenericEntityArm<L extends LivingEntity, T extends EntityModel<L>> implements ClassArmProvider<T> {
+public class GenericEntityArm<L extends LivingEntity, R extends LivingEntityRenderState, T extends EntityModel<R>> implements ClassArmProvider<T> {
 
     public GenericEntityArm() {
         this((ModelLayerLocation) null, "right_front_leg");

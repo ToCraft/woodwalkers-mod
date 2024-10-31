@@ -5,8 +5,6 @@ displayURL = "https://github.com/ToCraft/woodwalkers-mod"
 license = "MIT"
 
 [[mixins]]
-config = "walkers-neoforge.mixins.json"
-[[mixins]]
 config = "walkers.mixins.json"
 
 [[mods]]

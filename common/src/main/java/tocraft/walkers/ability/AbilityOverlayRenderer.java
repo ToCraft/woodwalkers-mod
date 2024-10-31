@@ -23,7 +23,10 @@ public class AbilityOverlayRenderer {
             ShapeAbility<LivingEntity> shapeAbility = AbilityRegistry.get(shape);
 
             if (shapeAbility != null) {
+                // FIXME: Inventory cut
+                matrices.pose().pushPose();
                 TimerOverlayRenderer.register(matrices, PlayerAbilities.getCooldown(player), shapeAbility.getCooldown(shape), shapeAbility.getIcon());
+                matrices.pose().popPose();
             }
         });
     }

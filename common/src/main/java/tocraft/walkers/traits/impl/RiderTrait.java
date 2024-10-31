@@ -30,7 +30,7 @@ public class RiderTrait<E extends LivingEntity> extends ShapeTrait<E> {
         List<TagKey<EntityType<?>>> rideableTags = new ArrayList<>();
         for (ResourceLocation rideableTypeId : rideableTypeIds) {
             if (BuiltInRegistries.ENTITY_TYPE.containsKey(rideableTypeId)) {
-                rideableTypes.add(BuiltInRegistries.ENTITY_TYPE.get(rideableTypeId));
+                rideableTypes.add(BuiltInRegistries.ENTITY_TYPE.get(rideableTypeId).orElseThrow().value());
             }
         }
         for (ResourceLocation rideableTagId : rideableTagIds) {

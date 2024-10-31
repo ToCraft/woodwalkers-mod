@@ -29,7 +29,7 @@ public class FrogTypeProvider extends TypeProvider<Frog> {
     @Override
     public Frog create(EntityType<Frog> type, Level world, int data) {
         Frog frog = new Frog(type, world);
-        frog.setVariant(BuiltInRegistries.FROG_VARIANT.getHolder(data).orElse(BuiltInRegistries.FROG_VARIANT.getHolderOrThrow(FrogVariant.TEMPERATE)));
+        frog.setVariant(BuiltInRegistries.FROG_VARIANT.get(data).orElse(BuiltInRegistries.FROG_VARIANT.get(FrogVariant.TEMPERATE).orElseThrow()));
         return frog;
     }
 

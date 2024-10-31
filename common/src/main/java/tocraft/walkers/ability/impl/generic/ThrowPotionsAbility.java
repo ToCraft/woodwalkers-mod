@@ -6,16 +6,16 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.ThrownPotion;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.item.alchemy.Potions;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import tocraft.walkers.Walkers;
 import tocraft.walkers.ability.GenericShapeAbility;
@@ -34,16 +34,15 @@ public class ThrowPotionsAbility<T extends LivingEntity> extends GenericShapeAbi
     public static final ResourceLocation ID = Walkers.id("throw_potion");
     public static final MapCodec<ThrowPotionsAbility<?>> CODEC = RecordCodecBuilder.mapCodec((instance) -> instance.group(
             Codec.list(ResourceLocation.CODEC).optionalFieldOf("potions", VALID_POTIONS.stream().map(potion -> BuiltInRegistries.POTION.getKey(potion.value())).toList()).forGetter(o -> o.validPotions.stream().map(potion -> BuiltInRegistries.POTION.getKey(potion.value())).toList())
-    ).apply(instance, instance.stable(validPotions -> new ThrowPotionsAbility<>(validPotions.stream().map(potionId -> (Holder<Potion>) BuiltInRegistries.POTION.getHolder(potionId).orElseThrow()).toList()))));
+    ).apply(instance, instance.stable(validPotions -> new ThrowPotionsAbility<>(validPotions.stream().map(potionId -> (Holder<Potion>) BuiltInRegistries.POTION.get(potionId).orElseThrow()).toList()))));
 
     public ThrowPotionsAbility() {
         this(VALID_POTIONS);
     }
 
     @Override
-    public void onUse(Player player, T shape, Level world) {
-        ThrownPotion potionEntity = new ThrownPotion(world, player);
-        potionEntity.setItem(PotionContents.createItemStack(Items.SPLASH_POTION, validPotions.get(world.random.nextInt(validPotions.size()))));
+    public void onUse(ServerPlayer player, T shape, ServerLevel world) {
+        ThrownPotion potionEntity = new ThrownPotion(world, player, PotionContents.createItemStack(Items.SPLASH_POTION, validPotions.get(world.random.nextInt(validPotions.size()))));
         potionEntity.setXRot(-20.0F);
         Vec3 rotation = player.getLookAngle();
         potionEntity.shoot(rotation.x(), rotation.y(), rotation.z(), 0.75F, 8.0F);

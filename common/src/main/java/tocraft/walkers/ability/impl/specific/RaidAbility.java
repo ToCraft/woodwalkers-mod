@@ -5,10 +5,8 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.level.Level;
 import tocraft.walkers.Walkers;
 import tocraft.walkers.ability.ShapeAbility;
 
@@ -21,9 +19,9 @@ public class RaidAbility<T extends LivingEntity> extends ShapeAbility<T> {
     }
 
     @Override
-    public void onUse(Player player, T shape, Level world) {
+    public void onUse(ServerPlayer player, T shape, ServerLevel world) {
         if (world instanceof ServerLevel serverLevel) {
-            serverLevel.getRaids().createOrExtendRaid((ServerPlayer) player, player.getOnPos());
+            serverLevel.getRaids().createOrExtendRaid(player, player.getOnPos());
             player.playSound(SoundEvents.RAID_HORN.value());
         }
     }

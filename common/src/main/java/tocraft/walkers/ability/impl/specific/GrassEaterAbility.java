@@ -2,13 +2,13 @@ package tocraft.walkers.ability.impl.specific;
 
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.level.Level;
+import net.minecraft.world.item.Items;
 import tocraft.walkers.Walkers;
 import tocraft.walkers.ability.ShapeAbility;
 
@@ -28,16 +28,16 @@ public class GrassEaterAbility<T extends LivingEntity> extends ShapeAbility<T> {
     }
 
     @Override
-    public void onUse(Player player, T shape, Level world) {
+    public void onUse(ServerPlayer player, T shape, ServerLevel world) {
         eatGrass(player);
     }
 
-    public void eatGrass(Player player) {
+    public void eatGrass(ServerPlayer player) {
         eatTick.put(player.getUUID(), Mth.positiveCeilDiv(40, 2));
     }
 
     @Override
     public Item getIcon() {
-        return BuiltInRegistries.ITEM.get(ResourceLocation.parse("short_grass"));
+        return Items.SHORT_GRASS;
     }
 }

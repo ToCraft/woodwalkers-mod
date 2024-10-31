@@ -1,6 +1,7 @@
 package tocraft.walkers.mixin.player;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
@@ -125,7 +126,7 @@ public abstract class PlayerEntityTickMixin extends LivingEntity {
             Player player = (Player) (Object) this;
             LivingEntity shape = PlayerShape.getCurrentShape(player);
             if (shape instanceof Dolphin) {
-                Player nearestPlayer = player.level().getNearestPlayer(DolphinAccessor.getSWIM_WITH_PLAYER_TARGETING(), player);
+                Player nearestPlayer = ((ServerLevel) player.level()).getNearestPlayer(DolphinAccessor.getSWIM_WITH_PLAYER_TARGETING(), player);
                 if (nearestPlayer != null && nearestPlayer.isSwimming()) {
                     nearestPlayer.addEffect(new MobEffectInstance(MobEffects.DOLPHINS_GRACE, 100), player);
                 }
@@ -149,7 +150,7 @@ public abstract class PlayerEntityTickMixin extends LivingEntity {
                     // apply to nearby
                     switch (mobEffectTrait.applyToNearby) {
                         case 0 -> {
-                            List<Player> nearbyPlayers = player.level().getNearbyPlayers(TargetingConditions.forNonCombat().range(mobEffectTrait.maxDistanceForEntities).ignoreLineOfSight(), player, player.getBoundingBox().inflate(mobEffectTrait.maxDistanceForEntities, mobEffectTrait.maxDistanceForEntities, mobEffectTrait.maxDistanceForEntities));
+                            List<Player> nearbyPlayers = ((ServerLevel) player.level()).getNearbyPlayers(TargetingConditions.forNonCombat().range(mobEffectTrait.maxDistanceForEntities).ignoreLineOfSight(), player, player.getBoundingBox().inflate(mobEffectTrait.maxDistanceForEntities, mobEffectTrait.maxDistanceForEntities, mobEffectTrait.maxDistanceForEntities));
                             if (!nearbyPlayers.isEmpty()) {
                                 for (int i = 0; i < nearbyPlayers.size() && (mobEffectTrait.amountOfEntitiesToApplyTo < 0 || i < mobEffectTrait.amountOfEntitiesToApplyTo); i++) {
                                     nearbyPlayers.get(i).addEffect(new MobEffectInstance(mobEffectInstance.getEffect(), mobEffectInstance.getDuration(), mobEffectInstance.getAmplifier(), mobEffectInstance.isAmbient(), mobEffectInstance.isVisible(), mobEffectInstance.showIcon()), player);
@@ -157,7 +158,7 @@ public abstract class PlayerEntityTickMixin extends LivingEntity {
                             }
                         }
                         case 1 -> {
-                            List<Mob> nearbyMobs = player.level().getNearbyEntities(Mob.class, TargetingConditions.forNonCombat().range(mobEffectTrait.maxDistanceForEntities).ignoreLineOfSight(), player, player.getBoundingBox().inflate(mobEffectTrait.maxDistanceForEntities, mobEffectTrait.maxDistanceForEntities, mobEffectTrait.maxDistanceForEntities));
+                            List<Mob> nearbyMobs = ((ServerLevel) player.level()).getNearbyEntities(Mob.class, TargetingConditions.forNonCombat().range(mobEffectTrait.maxDistanceForEntities).ignoreLineOfSight(), player, player.getBoundingBox().inflate(mobEffectTrait.maxDistanceForEntities, mobEffectTrait.maxDistanceForEntities, mobEffectTrait.maxDistanceForEntities));
                             if (!nearbyMobs.isEmpty()) {
                                 for (int i = 0; i < nearbyMobs.size() && (mobEffectTrait.amountOfEntitiesToApplyTo < 0 || i < mobEffectTrait.amountOfEntitiesToApplyTo); i++) {
                                     nearbyMobs.get(i).addEffect(new MobEffectInstance(mobEffectInstance.getEffect(), mobEffectInstance.getDuration(), mobEffectInstance.getAmplifier(), mobEffectInstance.isAmbient(), mobEffectInstance.isVisible(), mobEffectInstance.showIcon()), player);
@@ -165,8 +166,8 @@ public abstract class PlayerEntityTickMixin extends LivingEntity {
                             }
                         }
                         case 2 -> {
-                            List<Mob> nearbyMobs = player.level().getNearbyEntities(Mob.class, TargetingConditions.forNonCombat().range(mobEffectTrait.maxDistanceForEntities).ignoreLineOfSight(), player, player.getBoundingBox().inflate(mobEffectTrait.maxDistanceForEntities, mobEffectTrait.maxDistanceForEntities, mobEffectTrait.maxDistanceForEntities));
-                            List<Player> nearbyPlayers = player.level().getNearbyPlayers(TargetingConditions.forNonCombat().range(mobEffectTrait.maxDistanceForEntities).ignoreLineOfSight(), player, player.getBoundingBox().inflate(mobEffectTrait.maxDistanceForEntities, mobEffectTrait.maxDistanceForEntities, mobEffectTrait.maxDistanceForEntities));
+                            List<Mob> nearbyMobs = ((ServerLevel) player.level()).getNearbyEntities(Mob.class, TargetingConditions.forNonCombat().range(mobEffectTrait.maxDistanceForEntities).ignoreLineOfSight(), player, player.getBoundingBox().inflate(mobEffectTrait.maxDistanceForEntities, mobEffectTrait.maxDistanceForEntities, mobEffectTrait.maxDistanceForEntities));
+                            List<Player> nearbyPlayers = ((ServerLevel) player.level()).getNearbyPlayers(TargetingConditions.forNonCombat().range(mobEffectTrait.maxDistanceForEntities).ignoreLineOfSight(), player, player.getBoundingBox().inflate(mobEffectTrait.maxDistanceForEntities, mobEffectTrait.maxDistanceForEntities, mobEffectTrait.maxDistanceForEntities));
                             List<LivingEntity> nearbyEntites = new ArrayList<>();
                             nearbyEntites.addAll(nearbyMobs);
                             nearbyEntites.addAll(nearbyPlayers);

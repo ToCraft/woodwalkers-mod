@@ -5,6 +5,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -76,7 +77,7 @@ public class ShapeType<T extends LivingEntity> {
             return null;
         }
 
-        return from((EntityType<? extends LivingEntity>) BuiltInRegistries.ENTITY_TYPE.get(id),
+        return from((EntityType<? extends LivingEntity>) BuiltInRegistries.ENTITY_TYPE.get(id).orElseThrow().value(),
                 compound.contains("Variant") ? compound.getInt("Variant") : -1);
     }
 
@@ -113,7 +114,7 @@ public class ShapeType<T extends LivingEntity> {
         if (LIVING_TYPE_CASH.isEmpty()) {
             for (EntityType<?> type : BuiltInRegistries.ENTITY_TYPE) {
                 try {
-                    Entity instance = type.create(world);
+                    Entity instance = type.create(world, EntitySpawnReason.LOAD);
                     if (instance instanceof LivingEntity) {
                         LIVING_TYPE_CASH.add((EntityType<? extends LivingEntity>) type);
                     }
@@ -148,7 +149,7 @@ public class ShapeType<T extends LivingEntity> {
             return typeProvider.create(type, world, variantData);
         }
 
-        return type.create(world);
+        return type.create(world, EntitySpawnReason.LOAD);
     }
 
     /**
@@ -160,7 +161,7 @@ public class ShapeType<T extends LivingEntity> {
             return typeProvider.create(type, world, variantData, player);
         }
 
-        return type.create(world);
+        return type.create(world, EntitySpawnReason.LOAD);
     }
 
     public int getVariantData() {

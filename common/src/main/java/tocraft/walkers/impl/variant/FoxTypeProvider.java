@@ -19,22 +19,22 @@ public class FoxTypeProvider extends TypeProvider<Fox> {
     @Override
     public Fox create(EntityType<Fox> type, Level world, int data) {
         Fox fox = new Fox(type, world);
-        ((FoxEntityAccessor) fox).callSetVariant(Fox.Type.byId(data));
+        ((FoxEntityAccessor) fox).callSetVariant(Fox.Variant.byId(data));
         return fox;
     }
 
     @Override
     public int getFallbackData() {
-        return Fox.Type.RED.getId();
+        return Fox.Variant.RED.getId();
     }
 
     @Override
     public int getRange() {
-        return Fox.Type.values().length - 1;
+        return Fox.Variant.values().length - 1;
     }
 
     @Override
     public Component modifyText(Fox entity, MutableComponent text) {
-        return Component.literal(formatTypePrefix(Fox.Type.byId(getVariantData(entity)).name()) + " ").append(text);
+        return Component.literal(formatTypePrefix(Fox.Variant.byId(getVariantData(entity)).name()) + " ").append(text);
     }
 }

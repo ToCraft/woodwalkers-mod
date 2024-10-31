@@ -1,15 +1,16 @@
 package tocraft.walkers.eventhandler;
 
 import net.minecraft.nbt.NbtOps;
+import net.minecraft.tags.FluidTags;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.ConversionParams;
+import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.animal.horse.AbstractHorse;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.monster.Zombie;
-import net.minecraft.world.entity.monster.ZombieVillager;
 import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.ServerLevelAccessor;
@@ -23,9 +24,7 @@ import tocraft.walkers.api.PlayerShape;
 import tocraft.walkers.impl.variant.WolfTypeProvider;
 import tocraft.walkers.traits.ShapeTrait;
 import tocraft.walkers.traits.TraitRegistry;
-import tocraft.walkers.traits.impl.CantInteractTrait;
-import tocraft.walkers.traits.impl.NocturnalTrait;
-import tocraft.walkers.traits.impl.RiderTrait;
+import tocraft.walkers.traits.impl.*;
 
 @SuppressWarnings("resource")
 public class WalkersEventHandlers {
@@ -73,6 +72,33 @@ public class WalkersEventHandlers {
                 FlightHelper.updateFlyingSpeed(player);
                 player.onUpdateAbilities();
             }
+        });
+
+        PlayerEvents.DESTROY_SPEED.register((player, speed) -> {
+            float newSpeed = speed;
+
+            if (!player.onGround()) {
+                if (TraitRegistry.has(PlayerShape.getCurrentShape(player), FlyingTrait.ID)) {
+                    newSpeed *= 5;
+                } else if (player.isEyeInFluid(FluidTags.WATER)) {
+                    for (ShapeTrait<LivingEntity> aquaticTrait : TraitRegistry.get(PlayerShape.getCurrentShape(player), AquaticTrait.ID)) {
+                        if (((AquaticTrait<LivingEntity>) aquaticTrait).isAquatic) {
+                            newSpeed *= 5;
+                            break;
+                        }
+                    }
+                }
+            }
+
+            if (player.isEyeInFluid(FluidTags.WATER)) {
+                for (ShapeTrait<LivingEntity> aquaticTrait : TraitRegistry.get(PlayerShape.getCurrentShape(player), AquaticTrait.ID)) {
+                    if (((AquaticTrait<LivingEntity>) aquaticTrait).isAquatic) {
+                        newSpeed *= 5;
+                        break;
+                    }
+                }
+            }
+            return newSpeed;
         });
     }
 
@@ -122,14 +148,13 @@ public class WalkersEventHandlers {
             if (!entity.level().isClientSide()) {
                 if (entity instanceof Villager villager && damageSource.getEntity() instanceof Player player && PlayerShape.getCurrentShape(player) instanceof Zombie) {
                     if (!(player.level().getDifficulty() != Difficulty.HARD && player.getRandom().nextBoolean())) {
-                        ZombieVillager zombievillager = villager.convertTo(EntityType.ZOMBIE_VILLAGER, false);
-                        if (zombievillager != null) {
-                            zombievillager.finalizeSpawn((ServerLevelAccessor) player.level(), player.level().getCurrentDifficultyAt(zombievillager.blockPosition()), MobSpawnType.CONVERSION, new Zombie.ZombieGroupData(false, true));
-                            zombievillager.setTradeOffers(villager.getOffers());
-                            zombievillager.setVillagerData(villager.getVillagerData());
-                            zombievillager.setGossips(villager.getGossips().store(NbtOps.INSTANCE));
-                            zombievillager.setVillagerXp(villager.getVillagerXp());
-                        }
+                        villager.convertTo(EntityType.ZOMBIE_VILLAGER, ConversionParams.single(villager, false, false), zombieVillager -> {
+                            zombieVillager.finalizeSpawn((ServerLevelAccessor) player.level(), player.level().getCurrentDifficultyAt(zombieVillager.blockPosition()), EntitySpawnReason.CONVERSION, new Zombie.ZombieGroupData(false, true));
+                            zombieVillager.setTradeOffers(villager.getOffers());
+                            zombieVillager.setVillagerData(villager.getVillagerData());
+                            zombieVillager.setGossips(villager.getGossips().store(NbtOps.INSTANCE));
+                            zombieVillager.setVillagerXp(villager.getVillagerXp());
+                        });
                     }
                 }
             }

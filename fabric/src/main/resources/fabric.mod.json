@@ -26,8 +26,7 @@
     ]
   },
   "mixins": [
-    "walkers.mixins.json",
-    "walkers-fabric.mixins.json"
+    "walkers.mixins.json"
   ],
   "depends": {
     "minecraft": ">=${minecraft_version}",

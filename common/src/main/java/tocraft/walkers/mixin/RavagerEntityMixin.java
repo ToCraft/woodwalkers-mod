@@ -1,5 +1,6 @@
 package tocraft.walkers.mixin;
 
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -7,6 +8,7 @@ import net.minecraft.world.entity.monster.Ravager;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 
 @Mixin(Ravager.class)
@@ -16,11 +18,9 @@ public abstract class RavagerEntityMixin extends LivingEntity {
         super(entityType, world);
     }
 
-    // todo: move to inject
     @Override
     public void travel(Vec3 movementInput) {
         if (isAlive()) {
-
             // Ensure Ravager has a passenger
             if (isVehicle()) {
                 LivingEntity rider = (LivingEntity) getFirstPassenger();
@@ -59,5 +59,12 @@ public abstract class RavagerEntityMixin extends LivingEntity {
             // but still alive, fall back to default travel logic
             super.travel(movementInput);
         }
+    }
+
+    @Nullable
+    @Override
+    public LivingEntity getControllingPassenger() {
+        Entity rider = getFirstPassenger();
+        return rider instanceof Player ? (LivingEntity) rider : super.getControllingPassenger();
     }
 }

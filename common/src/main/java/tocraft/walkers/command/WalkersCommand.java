@@ -17,6 +17,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import org.jetbrains.annotations.Nullable;
@@ -172,7 +173,7 @@ public class WalkersCommand {
     @SuppressWarnings("unchecked")
     private static void change2ndShape(CommandSourceStack source, ServerPlayer player, ResourceLocation id,
                                        @Nullable CompoundTag nbt) {
-        ShapeType<LivingEntity> type = ShapeType.from((EntityType<LivingEntity>) BuiltInRegistries.ENTITY_TYPE.get(id));
+        ShapeType<LivingEntity> type = ShapeType.from((EntityType<LivingEntity>) BuiltInRegistries.ENTITY_TYPE.get(id).orElseThrow().value());
         Component name = Component.translatable(type.getEntityType().getDescriptionId());
 
         // If the specified granting NBT is not null, change the ShapeType to reflect
@@ -181,7 +182,7 @@ public class WalkersCommand {
             CompoundTag copy = nbt.copy();
             copy.putString("id", id.toString());
             ServerLevel serverWorld = source.getLevel();
-            Entity loaded = EntityType.loadEntityRecursive(copy, serverWorld, it -> it);
+            Entity loaded = EntityType.loadEntityRecursive(copy, serverWorld, EntitySpawnReason.LOAD, it -> it);
             if (loaded instanceof LivingEntity living) {
                 type = ShapeType.from(living);
                 name = ShapeType.createTooltipText(living);
@@ -208,10 +209,10 @@ public class WalkersCommand {
             CompoundTag copy = nbt.copy();
             copy.putString("id", shape.toString());
             ServerLevel serverWorld = source.getLevel();
-            created = EntityType.loadEntityRecursive(copy, serverWorld, it -> it);
+            created = EntityType.loadEntityRecursive(copy, serverWorld, EntitySpawnReason.LOAD, it -> it);
         } else {
-            EntityType<?> entity = BuiltInRegistries.ENTITY_TYPE.get(shape);
-            created = entity.create(player.level());
+            EntityType<?> entity = BuiltInRegistries.ENTITY_TYPE.get(shape).orElseThrow().value();
+            created = entity.create(player.level(), EntitySpawnReason.LOAD);
         }
 
         if (created instanceof LivingEntity) {

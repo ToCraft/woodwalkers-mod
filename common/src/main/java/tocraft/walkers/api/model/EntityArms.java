@@ -4,6 +4,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.model.*;
 import net.minecraft.client.model.geom.ModelPart;
+import net.minecraft.client.renderer.entity.state.LivingEntityRenderState;
 import net.minecraft.util.Tuple;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -19,13 +20,13 @@ import java.util.Optional;
 @Environment(EnvType.CLIENT)
 public class EntityArms {
 
-    private static final Map<EntityType<? extends LivingEntity>, Tuple<EntityArmProvider<? extends LivingEntity>, ArmRenderingManipulator<?>>> DIRECT_PROVIDERS = new LinkedHashMap<>();
+    private static final Map<EntityType<? extends LivingEntity>, Tuple<EntityArmProvider<? extends LivingEntity, ? extends LivingEntityRenderState>, ArmRenderingManipulator<?>>> DIRECT_PROVIDERS = new LinkedHashMap<>();
     private static final Map<Class<?>, Tuple<ClassArmProvider<?>, ArmRenderingManipulator<?>>> CLASS_PROVIDERS = new LinkedHashMap<>();
 
     /**
      * non-specific, for easy use
      */
-    public static <T extends LivingEntity> void register(EntityType<T> type, EntityArmProvider<T> provider) {
+    public static <T extends LivingEntity, R extends LivingEntityRenderState> void register(EntityType<T> type, EntityArmProvider<T, R> provider) {
         register(type, provider, (stack, model) -> {
         });
     }
@@ -33,8 +34,8 @@ public class EntityArms {
     /**
      * type-based, with optional manipulator
      */
-    public static <T extends LivingEntity> void register(EntityType<T> type, EntityArmProvider<T> provider,
-                                                         ArmRenderingManipulator<EntityModel<T>> manipulator) {
+    public static <T extends LivingEntity, R extends LivingEntityRenderState> void register(EntityType<T> type, EntityArmProvider<T, R> provider,
+                                                                                            ArmRenderingManipulator<EntityModel<R>> manipulator) {
         DIRECT_PROVIDERS.put(type, new Tuple<>(provider, manipulator));
     }
 
@@ -56,16 +57,16 @@ public class EntityArms {
 
     @Nullable
     @SuppressWarnings("unchecked")
-    public static <T extends LivingEntity> Tuple<ModelPart, ArmRenderingManipulator<?>> get(T entity,
-                                                                                            EntityModel<T> model) {
+    public static <T extends LivingEntity, R extends LivingEntityRenderState> Tuple<ModelPart, ArmRenderingManipulator<?>> get(T entity,
+                                                                                                                               EntityModel<R> model) {
         // done to bypass type issues
-        Tuple<EntityArmProvider<? extends LivingEntity>, ArmRenderingManipulator<?>> before = DIRECT_PROVIDERS
+        Tuple<EntityArmProvider<? extends LivingEntity, ? extends LivingEntityRenderState>, ArmRenderingManipulator<?>> before = DIRECT_PROVIDERS
                 .get(entity.getType());
 
         // Direct entity type provider was found, return it now
         if (before != null) {
-            Tuple<EntityArmProvider<T>, ArmRenderingManipulator<?>> provider = new Tuple<>(
-                    (EntityArmProvider<T>) before.getA(), before.getB());
+            Tuple<EntityArmProvider<T, R>, ArmRenderingManipulator<?>> provider = new Tuple<>(
+                    (EntityArmProvider<T, R>) before.getA(), before.getB());
             return new Tuple<>(provider.getA().getArm(entity, model), provider.getB());
         } else {
             Optional<Tuple<ClassArmProvider<?>, ArmRenderingManipulator<?>>> beforeClassProvider = CLASS_PROVIDERS
@@ -77,9 +78,9 @@ public class EntityArms {
 
             // fall back to class providers
             if (beforeClassProvider.isPresent()) {
-                Tuple<ClassArmProvider<EntityModel<?>>, ArmRenderingManipulator<EntityModel<LivingEntity>>> classProvider = new Tuple<>(
+                Tuple<ClassArmProvider<EntityModel<?>>, ArmRenderingManipulator<EntityModel<LivingEntityRenderState>>> classProvider = new Tuple<>(
                         (ClassArmProvider<EntityModel<?>>) beforeClassProvider.get().getA(),
-                        (ArmRenderingManipulator<EntityModel<LivingEntity>>) beforeClassProvider.get().getB());
+                        (ArmRenderingManipulator<EntityModel<LivingEntityRenderState>>) beforeClassProvider.get().getB());
                 return new Tuple<>(classProvider.getA().getArm(entity, model), classProvider.getB());
             } else {
                 return null;
@@ -89,15 +90,15 @@ public class EntityArms {
 
     @Nullable
     @SuppressWarnings("unchecked")
-    public static <T extends LivingEntity> EntityArmProvider<T> get(EntityType<LivingEntity> type) {
-        return (EntityArmProvider<T>) DIRECT_PROVIDERS.get(type);
+    public static <T extends LivingEntity> EntityArmProvider<T, ? extends LivingEntityRenderState> get(EntityType<LivingEntity> type) {
+        return (EntityArmProvider<T, ? extends LivingEntityRenderState>) DIRECT_PROVIDERS.get(type);
     }
 
     @Nullable
     @SuppressWarnings("unchecked")
-    public static <T extends LivingEntity> EntityArmProvider<T> get(
-            Class<EntityModel<? extends LivingEntity>> modelClass) {
-        return (EntityArmProvider<T>) CLASS_PROVIDERS.get(modelClass);
+    public static <T extends LivingEntity, R extends LivingEntityRenderState> EntityArmProvider<T, R> get(
+            Class<EntityModel<? extends LivingEntityRenderState>> modelClass) {
+        return (EntityArmProvider<T, R>) CLASS_PROVIDERS.get(modelClass);
     }
 
     public static void init() {

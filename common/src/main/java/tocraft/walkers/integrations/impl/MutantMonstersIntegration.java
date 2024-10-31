@@ -30,7 +30,7 @@ public class MutantMonstersIntegration extends AbstractIntegration {
 
     @Override
     public void registerTraits() {
-        TraitRegistry.registerByType((EntityType<? extends LivingEntity>) BuiltInRegistries.ENTITY_TYPE.get(MUTANT_SKELETON), new BurnInDaylightTrait<>());
+        TraitRegistry.registerByType((EntityType<? extends LivingEntity>) BuiltInRegistries.ENTITY_TYPE.get(MUTANT_SKELETON).orElseThrow().value(), new BurnInDaylightTrait<>());
         TraitRegistry.registerByType(getType(MUTANT_SNOW_GOLEM), new TemperatureTrait<>());
         TraitRegistry.registerByType(getType(MUTANT_ZOMBIE), new BurnInDaylightTrait<>());
         TraitRegistry.registerByType(getType(SPIDER_PIG), new ClimbBlocksTrait<>());
@@ -46,6 +46,6 @@ public class MutantMonstersIntegration extends AbstractIntegration {
     }
 
     private static EntityType<? extends Mob> getType(ResourceLocation id) {
-        return (EntityType<? extends Mob>) BuiltInRegistries.ENTITY_TYPE.get(id);
+        return (EntityType<? extends Mob>) BuiltInRegistries.ENTITY_TYPE.get(id).orElseThrow().value();
     }
 }

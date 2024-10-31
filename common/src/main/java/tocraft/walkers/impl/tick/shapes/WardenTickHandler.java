@@ -1,5 +1,6 @@
 package tocraft.walkers.impl.tick.shapes;
 
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.ai.targeting.TargetingConditions;
@@ -23,7 +24,7 @@ public class WardenTickHandler implements WalkersTickHandler<Warden> {
 
                 // Blind other players near a player with the Warden Walkers.
                 if (Walkers.CONFIG.wardenBlindsNearby) {
-                    for (Player target : player.level().getNearbyPlayers(TargetingConditions.DEFAULT, player,
+                    for (Player target : ((ServerLevel) player.level()).getNearbyPlayers(TargetingConditions.DEFAULT, player,
                             new AABB(player.blockPosition()).inflate(16))) {
                         target.addEffect(new MobEffectInstance(MobEffects.DARKNESS, 20 * 3, 0, true, false));
                     }

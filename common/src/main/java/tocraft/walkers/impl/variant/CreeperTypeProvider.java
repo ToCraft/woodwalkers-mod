@@ -3,6 +3,7 @@ package tocraft.walkers.impl.variant;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.monster.Creeper;
 import net.minecraft.world.level.Level;
@@ -20,7 +21,7 @@ public class CreeperTypeProvider extends TypeProvider<Creeper> {
         tag.putBoolean("powered", data == 1);
         CompoundTag compoundTag = tag.copy();
         compoundTag.putString("id", EntityType.getKey(type).toString());
-        return (Creeper) EntityType.loadEntityRecursive(compoundTag, world, entity -> entity);
+        return (Creeper) EntityType.loadEntityRecursive(compoundTag, world, EntitySpawnReason.LOAD, entity -> entity);
     }
 
     @Override

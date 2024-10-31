@@ -4,6 +4,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.TamableAnimal;
@@ -14,10 +15,19 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+import tocraft.walkers.Walkers;
 
 @SuppressWarnings({"RedundantCast"})
 @Mixin(Wolf.class)
 public abstract class WolfEntityMixin extends TamableAnimal {
+    @Unique
+    private static final ResourceLocation walkers$SPECIAL_WILD = Walkers.id("textures/entity/wolf/special_wild.png");
+    @Unique
+    private static final ResourceLocation walkers$SPECIAL_TAMED = Walkers.id("textures/entity/wolf/special_tame.png");
+    @Unique
+    private static final ResourceLocation walkers$SPECIAL_ANGRY = Walkers.id("textures/entity/wolf/special_angry.png");
+
 
     private WolfEntityMixin(EntityType<? extends TamableAnimal> entityType, Level world) {
         super(entityType, world);
@@ -49,5 +59,21 @@ public abstract class WolfEntityMixin extends TamableAnimal {
     @Inject(method = "readAdditionalSaveData", at = @At("RETURN"))
     protected void onReadCustomDataFromNbt(CompoundTag nbt, CallbackInfo ci) {
         ((Entity) (Object) this).getEntityData().set(walkers$isSpecial, nbt.getBoolean("isSpecial"));
+    }
+
+    @Inject(method = "getTexture", at = @At("HEAD"), cancellable = true)
+    private void setSpecialTexture(CallbackInfoReturnable<ResourceLocation> cir) {
+        CompoundTag nbt = new CompoundTag();
+        this.saveWithoutId(nbt);
+
+        if (nbt.contains("isSpecial")) {
+            if (nbt.getBoolean("isSpecial")) {
+                if (this.isTame()) {
+                    cir.setReturnValue(walkers$SPECIAL_TAMED);
+                } else {
+                    cir.setReturnValue(((Wolf) (Object) this).isAngry() ? walkers$SPECIAL_ANGRY : walkers$SPECIAL_WILD);
+                }
+            }
+        }
     }
 }

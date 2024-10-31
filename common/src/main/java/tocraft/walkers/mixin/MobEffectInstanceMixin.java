@@ -2,6 +2,7 @@ package tocraft.walkers.mixin;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
@@ -15,8 +16,8 @@ import tocraft.walkers.traits.impl.ImmunityTrait;
 
 @Mixin(MobEffectInstance.class)
 public class MobEffectInstanceMixin {
-    @WrapOperation(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/effect/MobEffect;applyEffectTick(Lnet/minecraft/world/entity/LivingEntity;I)Z"))
-    private boolean onApplyEffect(MobEffect effect, LivingEntity livingEntity, int amplifier, Operation<Boolean> original) {
+    @WrapOperation(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/effect/MobEffect;applyEffectTick(Lnet/minecraft/server/level/ServerLevel;Lnet/minecraft/world/entity/LivingEntity;I)Z"))
+    private boolean onApplyEffect(MobEffect effect, ServerLevel level, LivingEntity livingEntity, int amplifier, Operation<Boolean> original) {
         if (livingEntity instanceof Player player) {
             LivingEntity shape = PlayerShape.getCurrentShape(player);
             for (ShapeTrait<LivingEntity> immunityTrait : TraitRegistry.get(shape, ImmunityTrait.ID)) {
@@ -25,6 +26,6 @@ public class MobEffectInstanceMixin {
                 }
             }
         }
-        return original.call(effect, livingEntity, amplifier);
+        return original.call(effect, level, livingEntity, amplifier);
     }
 }

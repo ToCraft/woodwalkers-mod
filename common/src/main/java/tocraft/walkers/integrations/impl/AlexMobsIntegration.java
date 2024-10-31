@@ -52,7 +52,7 @@ public class AlexMobsIntegration extends AbstractIntegration {
     }
 
     private static EntityType<Mob> getType(String entityId) {
-        return (EntityType<Mob>) BuiltInRegistries.ENTITY_TYPE.get(ResourceLocation.fromNamespaceAndPath(MODID, entityId));
+        return (EntityType<Mob>) BuiltInRegistries.ENTITY_TYPE.get(ResourceLocation.fromNamespaceAndPath(MODID, entityId)).orElseThrow().value();
     }
 
     private static TagKey<EntityType<?>> getTag(String tagId) {

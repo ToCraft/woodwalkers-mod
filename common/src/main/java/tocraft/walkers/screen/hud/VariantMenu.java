@@ -3,9 +3,11 @@ package tocraft.walkers.screen.hud;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
+import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
@@ -70,7 +72,7 @@ public class VariantMenu {
 
                                     nbt.putBoolean("isSpecial", true);
                                     nbt.putString("id", EntityType.getKey(type.getEntityType()).toString());
-                                    return (LivingEntity) EntityType.loadEntityRecursive(nbt, level, it -> it);
+                                    return (LivingEntity) EntityType.loadEntityRecursive(nbt, level, EntitySpawnReason.LOAD, it -> it);
                                 });
                             } else if ((thisVariantId > -1 || (hasSpecialVariant && thisVariantId == -1)) && (thisVariantId <= range || thisVariantId == currentVariantId)) {
                                 ShapeType<?> thisShapeType = ShapeType.from(currentShapeType.getEntityType(), thisVariantId);
@@ -89,7 +91,7 @@ public class VariantMenu {
                         }
                     }
                     // render focus
-                    guiGraphics.blit(Walkers.id("textures/gui/focused.png"), x * 3, 5, x, y, 0, 0, 48, 32, 48, 32);
+                    guiGraphics.blit(RenderType::guiTextured, Walkers.id("textures/gui/focused.png"), x * 3, 5, 0, 0, x, y, x, y);
                 }
             }
         }

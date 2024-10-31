@@ -83,11 +83,11 @@ public abstract class PlayerEntityMixin extends LivingEntityMixin {
             livingTarget.addEffect(new MobEffectInstance(MobEffects.WITHER, 200), this);
         } else if (shape instanceof Bee bee && bee.isAngry() && target instanceof LivingEntity livingTarget) {
             livingTarget.addEffect(new MobEffectInstance(MobEffects.POISON, 200), this);
-        } else if (shape instanceof Pufferfish pufferfish) {
+        } else if (shape instanceof Pufferfish pufferfish && !level().isClientSide) {
             int i = pufferfish.getPuffState();
 
             if (target instanceof LivingEntity livingTarget) {
-                if (livingTarget.hurt(this.damageSources().mobAttack((Player) (Object) this), (float) (1 + i))) {
+                if (livingTarget.hurtServer((ServerLevel) level(), this.damageSources().mobAttack((Player) (Object) this), (float) (1 + i))) {
                     livingTarget.addEffect(new MobEffectInstance(MobEffects.POISON, 60 * i, 0), (Player) (Object) this);
                     this.playSound(SoundEvents.PUFFER_FISH_STING, 1.0F, 1.0F);
 
@@ -214,7 +214,7 @@ public abstract class PlayerEntityMixin extends LivingEntityMixin {
             // check if the player is morphed
             if (shape != null) {
                 // damage player if they are a shape that gets hurt by low or high temperatures
-                final boolean couldEnoughToSnow = this.level().getBiome(blockPosition()).value().coldEnoughToSnow(blockPosition());
+                final boolean couldEnoughToSnow = this.level().getBiome(blockPosition()).value().coldEnoughToSnow(blockPosition(), this.level().getSeaLevel());
                 for (TemperatureTrait<?> temperaturetrait : TraitRegistry.get(shape, TemperatureTrait.ID).stream().map(entry -> (TemperatureTrait<?>) entry).toList()) {
                     if (!temperaturetrait.coldEnoughToSnow == couldEnoughToSnow) {
                         player.hurt(this.level().damageSources().onFire(), 1.0f);
@@ -274,9 +274,9 @@ public abstract class PlayerEntityMixin extends LivingEntityMixin {
     @Inject(method = "touch", at = @At("HEAD"))
     private void onTouch(Entity entity, CallbackInfo ci) {
         Player ownPlayer = (Player) (Object) this;
-        if (ownPlayer.isAlive() && PlayerShape.getCurrentShape(ownPlayer) instanceof Slime slimeShape && (entity instanceof Player targetPlayer && !(PlayerShape.getCurrentShape(targetPlayer) instanceof Slime))) {
+        if (!this.level().isClientSide && ownPlayer.isAlive() && PlayerShape.getCurrentShape(ownPlayer) instanceof Slime slimeShape && (entity instanceof Player targetPlayer && !(PlayerShape.getCurrentShape(targetPlayer) instanceof Slime))) {
             int i = slimeShape.getSize();
-            boolean wasHurt = targetPlayer.hurt(ownPlayer.damageSources().mobAttack(ownPlayer), (float) ownPlayer.getAttributeValue(Attributes.ATTACK_DAMAGE));
+            boolean wasHurt = targetPlayer.hurtServer((ServerLevel) level(), ownPlayer.damageSources().mobAttack(ownPlayer), (float) ownPlayer.getAttributeValue(Attributes.ATTACK_DAMAGE));
             if (this.distanceToSqr(targetPlayer) < 0.6 * (double) i * 0.6 * (double) i && ownPlayer.hasLineOfSight(targetPlayer) && wasHurt) {
                 this.playSound(SoundEvents.SLIME_ATTACK, 1.0F, (this.random.nextFloat() - this.random.nextFloat()) * 0.2F + 1.0F);
                 EnchantmentHelper.doPostAttackEffects((ServerLevel) ownPlayer.level(), targetPlayer, ownPlayer.damageSources().mobAttack(ownPlayer));
@@ -284,15 +284,15 @@ public abstract class PlayerEntityMixin extends LivingEntityMixin {
         }
     }
 
-    @Inject(method = "hurt", at = @At("HEAD"))
-    private void handeReinforcementsTrait(DamageSource source, float amount, CallbackInfoReturnable<Boolean> cir) {
+    @Inject(method = "hurtServer", at = @At("HEAD"))
+    private void handeReinforcementsTrait(ServerLevel level, DamageSource source, float amount, CallbackInfoReturnable<Boolean> cir) {
         Player player = (Player) (Object) this;
         LivingEntity shape = PlayerShape.getCurrentShape(player);
         if (source.getEntity() instanceof LivingEntity livingAttacker && shape != null) {
             for (ReinforcementsTrait<LivingEntity> reinforcementTrait : TraitRegistry.get(shape, ReinforcementsTrait.ID).stream().map(trait -> (ReinforcementsTrait<LivingEntity>) trait).toList()) {
                 double d = reinforcementTrait.getRange();
                 AABB aABB = AABB.unitCubeFromLowerCorner(this.position()).inflate(d, 10.0, d);
-                Iterator<? extends LivingEntity> var5 = this.level().getEntitiesOfClass(Mob.class, aABB, EntitySelector.NO_SPECTATORS.and(entity -> {
+                Iterator<? extends LivingEntity> var5 = level.getEntitiesOfClass(Mob.class, aABB, EntitySelector.NO_SPECTATORS.and(entity -> {
                     if (reinforcementTrait.hasReinforcements()) {
                         return reinforcementTrait.isReinforcement(entity);
                     } else {
@@ -324,20 +324,20 @@ public abstract class PlayerEntityMixin extends LivingEntityMixin {
         }
     }
 
-    @Inject(method = "hurt", at = @At("HEAD"))
-    private void instantDieOnDamageTypeTrait(DamageSource source, float amount, CallbackInfoReturnable<Boolean> cir) {
+    @Inject(method = "hurtServer", at = @At("HEAD"))
+    private void instantDieOnDamageTypeTrait(ServerLevel level, DamageSource source, float amount, CallbackInfoReturnable<Boolean> cir) {
         LivingEntity shape = PlayerShape.getCurrentShape((Player) (Object) this);
         if (shape != null) {
             for (ShapeTrait<LivingEntity> instantDieOnDamageTypetrait : TraitRegistry.get(shape, InstantDieOnDamageMsgTrait.ID)) {
                 if (source.getMsgId().equals(((InstantDieOnDamageMsgTrait<LivingEntity>) instantDieOnDamageTypetrait).msgId)) {
-                    this.kill();
+                    this.kill(level);
                 }
             }
         }
     }
 
-    @WrapWithCondition(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/food/FoodData;tick(Lnet/minecraft/world/entity/player/Player;)V"))
-    private boolean preventFoodDataTick(FoodData instance, Player player) {
+    @WrapWithCondition(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/food/FoodData;tick(Lnet/minecraft/server/level/ServerPlayer;)V"))
+    private boolean preventFoodDataTick(FoodData instance, ServerPlayer player) {
         LivingEntity shape = PlayerShape.getCurrentShape(player);
         return player.hasEffect(MobEffects.SATURATION) || !TraitRegistry.has(shape, AttackForHealthTrait.ID);
     }

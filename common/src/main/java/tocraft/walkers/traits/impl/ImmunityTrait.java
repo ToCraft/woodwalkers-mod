@@ -17,7 +17,7 @@ public class ImmunityTrait<E extends LivingEntity> extends ShapeTrait<E> {
     public static final ResourceLocation ID = Walkers.id("immunity");
     public static final MapCodec<ImmunityTrait<?>> CODEC = RecordCodecBuilder.mapCodec((instance) -> instance.group(
             ResourceLocation.CODEC.fieldOf("effect").forGetter(o -> BuiltInRegistries.MOB_EFFECT.getKey(o.effect))
-    ).apply(instance, instance.stable((effect) -> new ImmunityTrait<>(BuiltInRegistries.MOB_EFFECT.get(effect)))));
+    ).apply(instance, instance.stable((effect) -> new ImmunityTrait<>(BuiltInRegistries.MOB_EFFECT.get(effect).orElseThrow().value()))));
 
     public final MobEffect effect;
 

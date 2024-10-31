@@ -43,7 +43,7 @@ public class MobHunterPreyMixin {
                 PreyTrait<?> preyTrait = (PreyTrait<?>) trait.getKey();
 
                 if (preyTrait.isHunter((Mob) (Object) this)) {
-                    targetSelector.addGoal(preyTrait.getPriority(), new NearestAttackableTargetGoal<>((Mob) (Object) this, Player.class, preyTrait.getRandInt(), false, false, player -> {
+                    targetSelector.addGoal(preyTrait.getPriority(), new NearestAttackableTargetGoal<>((Mob) (Object) this, Player.class, preyTrait.getRandInt(), false, false, (player, level) -> {
                         LivingEntity shape = PlayerShape.getCurrentShape((Player) player);
                         return shape != null && trait.getValue().test(shape);
                     }));

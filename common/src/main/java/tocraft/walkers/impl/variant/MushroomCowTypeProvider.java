@@ -17,18 +17,18 @@ public class MushroomCowTypeProvider extends TypeProvider<MushroomCow> {
     @Override
     public MushroomCow create(EntityType<MushroomCow> type, Level level, int data) {
         MushroomCow mooshroom = new MushroomCow(type, level);
-        mooshroom.setVariant(MushroomCow.MushroomType.values()[data]);
+        mooshroom.setVariant(MushroomCow.Variant.values()[data]);
         return mooshroom;
     }
 
     @Override
     public int getFallbackData() {
-        return MushroomCow.MushroomType.RED.ordinal();
+        return MushroomCow.Variant.RED.ordinal();
     }
 
     @Override
     public int getRange() {
-        return MushroomCow.MushroomType.values().length - 1;
+        return MushroomCow.Variant.values().length - 1;
     }
 
     @Override

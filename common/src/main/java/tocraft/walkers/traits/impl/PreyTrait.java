@@ -28,7 +28,7 @@ public class PreyTrait<E extends LivingEntity> extends ShapeTrait<E> {
                 List<TagKey<EntityType<?>>> hunterTags = new ArrayList<>();
                 for (ResourceLocation resourceLocation : hunterLocations) {
                     if (BuiltInRegistries.ENTITY_TYPE.containsKey(resourceLocation)) {
-                        hunterTypes.add(BuiltInRegistries.ENTITY_TYPE.get(resourceLocation));
+                        hunterTypes.add(BuiltInRegistries.ENTITY_TYPE.get(resourceLocation).orElseThrow().value());
                     }
                 }
                 for (ResourceLocation hunterTagLocation : hunterTagLocations) {

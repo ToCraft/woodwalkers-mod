@@ -43,7 +43,7 @@ public class PlayerAbilities {
         ModernNetworking.sendToPlayer(player, NetworkHandler.ABILITY_SYNC, packet);
     }
 
-    public static void useAbility(Player player) {
+    public static void useAbility(ServerPlayer player) {
         LivingEntity shape = PlayerShape.getCurrentShape(player);
 
         // Verify we should use ability for the player's current shape
@@ -61,9 +61,9 @@ public class PlayerAbilities {
                         return;
                     }
 
-                    ability.onUse(player, shape, player.level());
+                    ability.onUse(player, shape, player.serverLevel());
                     PlayerAbilities.setCooldown(player, ability.getCooldown(shape));
-                    PlayerAbilities.sync((ServerPlayer) player);
+                    PlayerAbilities.sync(player);
                 }
             }
         }

@@ -90,7 +90,7 @@ public class TypeProviderDataManager extends SynchronizedJsonReloadListener {
         if (typeProviderOptional.isPresent()) {
             typeProvider = typeProviderOptional.get();
         } else if (parent.isPresent()) {
-            typeProvider = TypeProviderRegistry.getProvider((EntityType<? extends LivingEntity>) BuiltInRegistries.ENTITY_TYPE.get(parent.get()));
+            typeProvider = TypeProviderRegistry.getProvider((EntityType<? extends LivingEntity>) BuiltInRegistries.ENTITY_TYPE.get(parent.get()).orElseThrow().value());
         } else if (typeProviderClassOptional.isPresent()) {
             try {
                 typeProvider = Class.forName(typeProviderClassOptional.get()).asSubclass(TypeProvider.class).getDeclaredConstructor().newInstance();
@@ -124,7 +124,7 @@ public class TypeProviderDataManager extends SynchronizedJsonReloadListener {
         @Nullable
         public EntityType<L> entityType() {
             if ((requiredMod() == null || requiredMod().isBlank() || PlatformData.isModLoaded(requiredMod())) && BuiltInRegistries.ENTITY_TYPE.containsKey(entityTypeKey()))
-                return (EntityType<L>) BuiltInRegistries.ENTITY_TYPE.get(entityTypeKey());
+                return (EntityType<L>) BuiltInRegistries.ENTITY_TYPE.get(entityTypeKey()).orElseThrow().value();
             else
                 return null;
         }

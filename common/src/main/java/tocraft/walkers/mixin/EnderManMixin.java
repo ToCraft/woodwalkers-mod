@@ -22,7 +22,7 @@ public class EnderManMixin extends Monster {
 
     @Inject(method = "registerGoals", at = @At("RETURN"))
     private void addCustomGoals(CallbackInfo ci) {
-        this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, Player.class, true, entity -> {
+        this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, Player.class, true, (entity, level) -> {
             if (entity instanceof Player player) {
                 LivingEntity shape = PlayerShape.getCurrentShape(player);
                 return shape instanceof Endermite;

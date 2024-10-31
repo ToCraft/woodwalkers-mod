@@ -29,13 +29,13 @@ public class ClimbBlocksTrait<E extends LivingEntity> extends ShapeTrait<E> {
         List<Block> validBlocks = new ArrayList<>();
         for (ResourceLocation resourceLocation : validBlocksLocation) {
             if (BuiltInRegistries.BLOCK.containsKey(resourceLocation)) {
-                validBlocks.add(BuiltInRegistries.BLOCK.get(resourceLocation));
+                validBlocks.add(BuiltInRegistries.BLOCK.get(resourceLocation).orElseThrow().value());
             }
         }
         List<Block> invalidBlocks = new ArrayList<>();
         for (ResourceLocation resourceLocation : invalidBlocksLocation) {
             if (BuiltInRegistries.BLOCK.containsKey(resourceLocation)) {
-                validBlocks.add(BuiltInRegistries.BLOCK.get(resourceLocation));
+                validBlocks.add(BuiltInRegistries.BLOCK.get(resourceLocation).orElseThrow().value());
             }
         }
         return new ClimbBlocksTrait<>(horizontalCollision, validBlocks, invalidBlocks);
