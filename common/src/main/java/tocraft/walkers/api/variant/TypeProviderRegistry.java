@@ -26,9 +26,7 @@ public class TypeProviderRegistry {
         register(EntityType.FOX, new FoxTypeProvider());
         register(EntityType.CAT, new CatTypeProvider());
         register(EntityType.SLIME, new SlimeTypeProvider());
-        //#if MC>1182
         register(EntityType.FROG, new FrogTypeProvider());
-        //#endif
         register(EntityType.HORSE, new HorseTypeProvider());
         register(EntityType.LLAMA, new LlamaTypeProvider<>());
         register(EntityType.TRADER_LLAMA, new LlamaTypeProvider<>());
@@ -40,9 +38,7 @@ public class TypeProviderRegistry {
         register(EntityType.ZOMBIE_VILLAGER, new ZombieVillagerTypeProvider());
         register(EntityType.TROPICAL_FISH, new TropicalFishTypeProvider());
         register(EntityType.SHULKER, new ShulkerTypeProvider());
-        //#if MC>=1205
         register(EntityType.WOLF, new WolfTypeProvider());
-        //#endif
 
         // handle Integrations
         Integrations.registerTypeProvider();

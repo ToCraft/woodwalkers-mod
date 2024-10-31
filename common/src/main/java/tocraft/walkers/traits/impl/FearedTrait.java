@@ -3,6 +3,8 @@ package tocraft.walkers.traits.impl;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.EntityType;
@@ -25,12 +27,12 @@ public class FearedTrait<E extends LivingEntity> extends ShapeTrait<E> {
         List<EntityType<?>> fearfulTypes = new ArrayList<>();
         List<TagKey<EntityType<?>>> fearfulTags = new ArrayList<>();
         for (ResourceLocation resourceLocation : preyLocations) {
-            if (Walkers.getEntityTypeRegistry().containsKey(resourceLocation)) {
-                fearfulTypes.add(Walkers.getEntityTypeRegistry().get(resourceLocation));
+            if (BuiltInRegistries.ENTITY_TYPE.containsKey(resourceLocation)) {
+                fearfulTypes.add(BuiltInRegistries.ENTITY_TYPE.get(resourceLocation));
             }
         }
         for (ResourceLocation preyTagLocation : preyTagLocations) {
-            fearfulTags.add(TagKey.create(Walkers.getEntityTypeRegistry().key(), preyTagLocation));
+            fearfulTags.add(TagKey.create(Registries.ENTITY_TYPE, preyTagLocation));
         }
         return new FearedTrait<>(new ArrayList<>(), fearfulTypes, new ArrayList<>(), fearfulTags);
     })));

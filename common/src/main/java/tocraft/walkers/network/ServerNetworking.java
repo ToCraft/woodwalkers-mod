@@ -17,12 +17,10 @@ public class ServerNetworking implements NetworkHandler {
         SwapVariantPackets.registerSwapVariantPacketHandler();
         registerUseAbilityPacketHandler();
 
-        //#if MC>=1205
         ModernNetworking.registerType(SHAPE_SYNC);
         ModernNetworking.registerType(ABILITY_SYNC);
         ModernNetworking.registerType(UNLOCK_SYNC);
         ModernNetworking.registerType(SYNC_API_LEVEL);
-        //#endif
 
         PlayerEvents.PLAYER_JOIN.register(SyncApiLevelPackets::sendSyncPacket);
     }
@@ -32,9 +30,7 @@ public class ServerNetworking implements NetworkHandler {
         ModernNetworking.registerReceiver(ModernNetworking.Side.C2S, USE_ABILITY, (context, packet) -> {
             Player player = context.getPlayer();
 
-            context.getPlayer().getServer().execute(() -> {
-                PlayerAbilities.useAbility(player);
-            });
+            context.getPlayer().getServer().execute(() -> PlayerAbilities.useAbility(player));
         });
     }
 }

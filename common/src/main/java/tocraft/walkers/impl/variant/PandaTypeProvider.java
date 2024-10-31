@@ -5,7 +5,6 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.animal.Panda;
 import net.minecraft.world.level.Level;
-import tocraft.craftedcore.patched.TComponent;
 import tocraft.walkers.api.variant.TypeProvider;
 
 public class PandaTypeProvider extends TypeProvider<Panda> {
@@ -38,12 +37,8 @@ public class PandaTypeProvider extends TypeProvider<Panda> {
         if (gene.equals(Panda.Gene.NORMAL)) {
             return text;
         } else {
-            //#if MC>1182
             String variantName = gene.getSerializedName();
-            //#else
-            //$$ String variantName = gene.getName();
-            //#endif
-            return TComponent.literal(formatTypePrefix(variantName) + " ").append(text);
+            return Component.literal(formatTypePrefix(variantName) + " ").append(text);
         }
     }
 }

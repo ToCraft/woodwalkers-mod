@@ -7,41 +7,26 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
 import org.jetbrains.annotations.Nullable;
-import tocraft.craftedcore.patched.CRegistries;
-import tocraft.craftedcore.patched.Identifier;
 import tocraft.walkers.Walkers;
 import tocraft.walkers.traits.ShapeTrait;
 
-import java.util.Objects;
 import java.util.Optional;
 
 public class MobEffectTrait<E extends LivingEntity> extends ShapeTrait<E> {
     public static final ResourceLocation ID = Walkers.id("mob_effect");
-    //#if MC>=1205
     public static final MapCodec<MobEffectInstance> MOB_EFFECT_INSTANCE_CODEC = RecordCodecBuilder.mapCodec((instance) -> instance.group(
-            ResourceLocation.CODEC.fieldOf("id").forGetter(o -> ((Registry<MobEffect>) CRegistries.getRegistry(Identifier.parse("mob_effect"))).getKey(o.getEffect().value())),
+            ResourceLocation.CODEC.fieldOf("id").forGetter(o -> BuiltInRegistries.MOB_EFFECT.getKey(o.getEffect().value())),
             Codec.INT.fieldOf("duration").forGetter(MobEffectInstance::getDuration),
             Codec.INT.fieldOf("amplifier").forGetter(MobEffectInstance::getAmplifier),
             Codec.BOOL.optionalFieldOf("ambient", false).forGetter(MobEffectInstance::isAmbient),
             Codec.BOOL.optionalFieldOf("show_particles", true).forGetter(MobEffectInstance::isVisible),
             Codec.BOOL.optionalFieldOf("show_icon").forGetter(o -> Optional.of(o.showIcon()))
-    ).apply(instance, instance.stable((id, duration, amplifier, ambient, show_particles, show_icon) -> new MobEffectInstance(((Registry<MobEffect>) CRegistries.getRegistry(Identifier.parse("mob_effect"))).getHolder(id).orElseThrow(), duration, amplifier, ambient, show_particles, show_icon.orElse(show_particles)))));
-    //#else
-    //$$ public static final Codec<MobEffectInstance> MOB_EFFECT_INSTANCE_CODEC = RecordCodecBuilder.create((instance) -> instance.group(
-    //$$         ResourceLocation.CODEC.fieldOf("id").forGetter(o -> ((Registry<MobEffect>) CRegistries.getRegistry(Identifier.parse("mob_effect"))).getKey(o.getEffect())),
-    //$$         Codec.INT.fieldOf("duration").forGetter(MobEffectInstance::getDuration),
-    //$$         Codec.INT.fieldOf("amplifier").forGetter(MobEffectInstance::getAmplifier),
-    //$$         Codec.BOOL.optionalFieldOf("ambient", false).forGetter(MobEffectInstance::isAmbient),
-    //$$         Codec.BOOL.optionalFieldOf("show_particles", true).forGetter(MobEffectInstance::isVisible),
-    //$$         Codec.BOOL.optionalFieldOf("show_icon").forGetter(o -> Optional.of(o.showIcon()))
-    //$$ ).apply(instance, instance.stable((id, duration, amplifier, ambient, show_particles, show_icon) -> new MobEffectInstance(Objects.requireNonNull(((Registry<MobEffect>) CRegistries.getRegistry(Identifier.parse("mob_effect"))).get(id)), duration, amplifier, ambient, show_particles, show_icon.orElse(show_particles)))));
-    //#endif
+    ).apply(instance, instance.stable((id, duration, amplifier, ambient, show_particles, show_icon) -> new MobEffectInstance(BuiltInRegistries.MOB_EFFECT.getHolder(id).orElseThrow(), duration, amplifier, ambient, show_particles, show_icon.orElse(show_particles)))));
     public static final MapCodec<MobEffectTrait<?>> CODEC = RecordCodecBuilder.mapCodec((instance) -> instance.group(
             MOB_EFFECT_INSTANCE_CODEC.fieldOf("mob_effect").forGetter(o -> o.mobEffectInstance),
             Codec.BOOL.optionalFieldOf("show_in_inventory", true).forGetter(o -> o.showInInventory),

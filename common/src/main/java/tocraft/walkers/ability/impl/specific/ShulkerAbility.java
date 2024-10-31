@@ -10,7 +10,6 @@ import net.minecraft.world.entity.projectile.ShulkerBullet;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
-import tocraft.craftedcore.patched.CEntity;
 import tocraft.walkers.Walkers;
 import tocraft.walkers.ability.ShapeAbility;
 import tocraft.walkers.mixin.accessor.ShulkerAccessor;
@@ -26,10 +25,10 @@ public class ShulkerAbility<T extends Shulker> extends ShapeAbility<T> {
 
     @Override
     public void onUse(Player player, T shape, Level world) {
-        LivingEntity target = CEntity.level(player).getNearestEntity(CEntity.level(player).getEntitiesOfClass(LivingEntity.class, player.getBoundingBox().inflate(20, 4.0, 20), livingEntity -> true), TargetingConditions.forCombat().range(20).selector((livingEntity) -> !livingEntity.is(player)), player, player.getX(), player.getEyeY(), player.getZ());
+        LivingEntity target = player.level().getNearestEntity(player.level().getEntitiesOfClass(LivingEntity.class, player.getBoundingBox().inflate(20, 4.0, 20), livingEntity -> true), TargetingConditions.forCombat().range(20).selector((livingEntity) -> !livingEntity.is(player)), player, player.getX(), player.getEyeY(), player.getZ());
 
         if (target != null) {
-            CEntity.level(player).addFreshEntity(new ShulkerBullet(CEntity.level(player), player, target, player.getDirection().getAxis()));
+            player.level().addFreshEntity(new ShulkerBullet(player.level(), player, target, player.getDirection().getAxis()));
         }
         player.playSound(SoundEvents.SHULKER_SHOOT, 2.0F, (player.getRandom().nextFloat() - player.getRandom().nextFloat()) * 0.2F + 1.0F);
 

@@ -27,11 +27,7 @@ public class LlamaAbility<T extends LivingEntity> extends ShapeAbility<T> {
         spit.setOwner(player);
         Vec3 rotation = player.getLookAngle();
         spit.shoot(rotation.x, rotation.y, rotation.z, 1.5F, 10.0F);
-        //#if MC>1182
         spit.syncPacketPositionCodec(player.getX(), player.getEyeY(), player.getZ());
-        //#else
-        //$$ spit.lerpMotion(player.getX(), player.getEyeY(), player.getZ());
-        //#endif
         spit.absMoveTo(player.getX(), player.getEyeY(), player.getZ());
 
         // Play SFX

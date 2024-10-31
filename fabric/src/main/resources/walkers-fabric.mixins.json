@@ -4,8 +4,8 @@
   "package": "tocraft.walkers.fabric.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
-    "WitherEntityMixin",
-    "PlayerMixin"
+    "PlayerMixin",
+    "WitherEntityMixin"
   ],
   "client": [
   ],

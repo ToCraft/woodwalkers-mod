@@ -38,11 +38,7 @@ public class RabbitAbility<T extends LivingEntity> extends ShapeAbility<T> {
                     world.destroyBlock(blockPos, true, player);
                 } else {
                     world.setBlock(blockPos, blockState.setValue(CarrotBlock.AGE, i - 1), 2);
-                    //#if MC<1182
-                    //$$ world.gameEvent(GameEvent.BLOCK_CHANGE, blockPos, GameEvent.Context.of(player));
-                    //#else
                     world.gameEvent(player, GameEvent.BLOCK_CHANGE, blockPos);
-                    //#endif
                     world.levelEvent(player, 2001, blockPos, Block.getId(blockState));
                     player.gameEvent(GameEvent.EAT);
                     player.getFoodData().eat(1, 0.1F);

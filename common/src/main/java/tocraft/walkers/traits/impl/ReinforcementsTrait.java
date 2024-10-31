@@ -8,6 +8,8 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.Entity;
@@ -27,18 +29,18 @@ public class ReinforcementsTrait<E extends LivingEntity> extends ShapeTrait<E> {
     public static final ResourceLocation ID = Walkers.id("reinforcements");
     public static final MapCodec<ReinforcementsTrait<?>> CODEC = RecordCodecBuilder.mapCodec((instance) -> instance.group(
             Codec.INT.optionalFieldOf("range", 32).forGetter(o -> o.range),
-            Codec.list(ResourceLocation.CODEC).optionalFieldOf("reinforcements", new ArrayList<>()).forGetter(o -> o.reinforcementTypes.stream().map(Walkers.getEntityTypeRegistry()::getKey).toList()),
+            Codec.list(ResourceLocation.CODEC).optionalFieldOf("reinforcements", new ArrayList<>()).forGetter(o -> o.reinforcementTypes.stream().map(BuiltInRegistries.ENTITY_TYPE::getKey).toList()),
             Codec.list(ResourceLocation.CODEC).optionalFieldOf("reinforcement_tags", new ArrayList<>()).forGetter(o -> o.reinforcementTags.stream().map(TagKey::location).toList())
     ).apply(instance, instance.stable((range, reinforcementsLocations, reinforcementTagsLocations) -> {
         List<EntityType<?>> reinforcements = new ArrayList<>();
         List<TagKey<EntityType<?>>> reinforcementTags = new ArrayList<>();
         for (ResourceLocation resourceLocation : reinforcementsLocations) {
-            if (Walkers.getEntityTypeRegistry().containsKey(resourceLocation)) {
-                reinforcements.add(Walkers.getEntityTypeRegistry().get(resourceLocation));
+            if (BuiltInRegistries.ENTITY_TYPE.containsKey(resourceLocation)) {
+                reinforcements.add(BuiltInRegistries.ENTITY_TYPE.get(resourceLocation));
             }
         }
         for (ResourceLocation resourceLocation : reinforcementTagsLocations) {
-            reinforcementTags.add(TagKey.create(Walkers.getEntityTypeRegistry().key(), resourceLocation));
+            reinforcementTags.add(TagKey.create(Registries.ENTITY_TYPE, resourceLocation));
         }
         return new ReinforcementsTrait<>(range, reinforcements, reinforcementTags);
     })));

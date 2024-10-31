@@ -29,7 +29,6 @@ public class ShootDragonFireball<T extends LivingEntity> extends GenericShapeAbi
 
     @Override
     public void onUse(Player player, T shape, Level world) {
-        //#if MC>1206
         DragonFireball dragonFireball = new DragonFireball(
                 world,
                 player,
@@ -37,15 +36,6 @@ public class ShootDragonFireball<T extends LivingEntity> extends GenericShapeAbi
                         player.getLookAngle().y,
                         player.getLookAngle().z)
         );
-        //#else
-        //$$ DragonFireball dragonFireball = new DragonFireball(
-        //$$         world,
-        //$$         player,
-        //$$         player.getLookAngle().x,
-        //$$         player.getLookAngle().y,
-        //$$         player.getLookAngle().z
-        //$$ );
-        //#endif
 
         dragonFireball.setOwner(player);
         world.addFreshEntity(dragonFireball);

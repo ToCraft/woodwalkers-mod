@@ -14,23 +14,17 @@ import net.minecraft.world.entity.animal.Parrot;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
-import tocraft.craftedcore.patched.CEntity;
 import tocraft.walkers.api.model.impl.AbstractHorseEntityUpdater;
 import tocraft.walkers.api.model.impl.ShulkerEntityUpdater;
 import tocraft.walkers.api.model.impl.SquidEntityUpdater;
 import tocraft.walkers.impl.NearbySongAccessor;
+import tocraft.walkers.mixin.accessor.AllayAccessor;
+import tocraft.walkers.mixin.accessor.BatAccessor;
 import tocraft.walkers.mixin.accessor.CreeperEntityAccessor;
 import tocraft.walkers.mixin.accessor.ParrotEntityAccessor;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
-
-//#if MC>=1203
-import tocraft.walkers.mixin.accessor.BatAccessor;
-//#endif
-//#if MC>1182
-import tocraft.walkers.mixin.accessor.AllayAccessor;
-//#endif
 
 /**
  * Registry class for {@link EntityUpdater} instances.
@@ -85,7 +79,6 @@ public class EntityUpdaters {
         EntityUpdaters.register(EntityType.DONKEY, new AbstractHorseEntityUpdater<>());
         EntityUpdaters.register(EntityType.MULE, new AbstractHorseEntityUpdater<>());
 
-        //#if MC>1182
         EntityUpdaters.register(EntityType.ALLAY, (player, allay) -> {
             ((AllayAccessor) allay).setHoldingItemAnimationTicks0(((AllayAccessor) allay).getHoldingItemAnimationTicks());
             if (allay.hasItemInHand()) {
@@ -94,14 +87,11 @@ public class EntityUpdaters {
                 ((AllayAccessor) allay).setHoldingItemAnimationTicks(Mth.clamp(((AllayAccessor) allay).getHoldingItemAnimationTicks() - 1.0F, 0.0F, 5.0F));
             }
         });
-        //#endif
 
         // register specific entity animation handling
         EntityUpdaters.register(EntityType.BAT, (player, bat) -> {
-            bat.setResting(!CEntity.level(player).getBlockState(player.blockPosition().above()).isAir());
-            //#if MC>=1203
+            bat.setResting(!player.level().getBlockState(player.blockPosition().above()).isAir());
             ((BatAccessor) bat).callSetupAnimationStates();
-            //#endif
         });
 
         EntityUpdaters.register(EntityType.PARROT, (player, parrot) -> {
@@ -109,7 +99,7 @@ public class EntityUpdaters {
             ((ParrotEntityAccessor) parrot).callCalculateFlapping();
             // imitate sounds
             if (player.getRandom().nextInt(400) == 0) {
-                Parrot.imitateNearbyMobs(CEntity.level(player), player);
+                Parrot.imitateNearbyMobs(player.level(), player);
             }
         });
 
@@ -156,9 +146,9 @@ public class EntityUpdaters {
         EntityUpdaters.register(EntityType.CHICKEN, (player, chicken) -> {
             chicken.oFlap = chicken.flap;
             chicken.oFlapSpeed = chicken.flapSpeed;
-            chicken.flapSpeed += (CEntity.isOnGround(player) ? -1.0F : 4.0F) * 0.3F;
+            chicken.flapSpeed += (player.onGround() ? -1.0F : 4.0F) * 0.3F;
             chicken.flapSpeed = Mth.clamp(chicken.flapSpeed, 0.0F, 1.0F);
-            if (!CEntity.isOnGround(player) && chicken.flapping < 1.0F) {
+            if (!player.onGround() && chicken.flapping < 1.0F) {
                 chicken.flapping = 1.0F;
             }
             chicken.flapping *= 0.9F;
@@ -167,7 +157,7 @@ public class EntityUpdaters {
 
         // make strider shaking and purple when out of lava
         EntityUpdaters.register(EntityType.STRIDER, (player, strider) -> {
-            BlockState blockState = CEntity.level(player).getBlockState(player.blockPosition());
+            BlockState blockState = player.level().getBlockState(player.blockPosition());
             boolean bl = blockState.is(BlockTags.STRIDER_WARM_BLOCKS) || player.getFluidHeight(FluidTags.LAVA) > 0.0;
             strider.setSuffocating(!bl);
         });

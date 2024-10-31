@@ -1,5 +1,6 @@
 walkers 5.4
 ================
+
 - fix Incompatibility with CarryOn mod
 - fix rendering for the RiderTrait
 - improve Ability API for usage in other mods (by Shap_po)
@@ -9,14 +10,17 @@ walkers 5.4
 
 walkers 5.3.3
 ================
+
 - fix crash on startup for Forge/NeoForge
 
 walkers 5.3.2
 ================
+
 - UNTESTED fix for crash with ImmunityTrait on <1.20.1
 
 walkers 5.3.1
 ================
+
 - fix invalid mixin config
 - support for Craziness Awakened
 

@@ -1,5 +1,6 @@
 package tocraft.walkers.network.impl;
 
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
@@ -7,8 +8,6 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import org.jetbrains.annotations.Nullable;
 import tocraft.craftedcore.network.ModernNetworking;
-import tocraft.craftedcore.patched.CEntity;
-import tocraft.craftedcore.patched.Identifier;
 import tocraft.walkers.Walkers;
 import tocraft.walkers.api.PlayerShape;
 import tocraft.walkers.api.PlayerShapeChanger;
@@ -51,8 +50,8 @@ public class UnlockPackets {
 
             boolean validType = nbt.getBoolean("valid_type");
             if (validType) {
-                ResourceLocation typeId = Identifier.parse(nbt.getString("type_id"));
-                EntityType<? extends LivingEntity> entityType = (EntityType<? extends LivingEntity>) Walkers.getEntityTypeRegistry().get(typeId);
+                ResourceLocation typeId = ResourceLocation.parse(nbt.getString("type_id"));
+                EntityType<? extends LivingEntity> entityType = (EntityType<? extends LivingEntity>) BuiltInRegistries.ENTITY_TYPE.get(typeId);
 
                 int variant = nbt.getInt("variant");
 
@@ -65,7 +64,7 @@ public class UnlockPackets {
                         // update Player
                         if (result)
                             PlayerShape.updateShapes((ServerPlayer) context.getPlayer(),
-                                    type.create(CEntity.level(context.getPlayer()), context.getPlayer()));
+                                    type.create(context.getPlayer().level(), context.getPlayer()));
                     }
                 });
             } else {

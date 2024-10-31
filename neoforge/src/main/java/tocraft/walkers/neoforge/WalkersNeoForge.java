@@ -1,12 +1,11 @@
 package tocraft.walkers.neoforge;
 
-import net.minecraft.tags.FluidTags;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.common.NeoForgeMod;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import tocraft.walkers.Walkers;
 import tocraft.walkers.WalkersClient;
@@ -32,15 +31,10 @@ public class WalkersNeoForge {
     private void event(PlayerEvent.BreakSpeed event) {
         @SuppressWarnings("RedundantCast") Player player = (Player) event.getEntity();
 
-        //#if MC>1194
         if (!player.onGround()) {
-            //#else
-            //$$ if (!player.isOnGround()) {
-            //#endif
             if (TraitRegistry.has(PlayerShape.getCurrentShape(player), FlyingTrait.ID)) {
                 event.setNewSpeed(event.getNewSpeed() * 5);
-            }
-            else if (player.isEyeInFluid(FluidTags.WATER)) {
+            } else if (player.isEyeInFluidType(NeoForgeMod.WATER_TYPE.value())) {
                 for (ShapeTrait<LivingEntity> aquaticTrait : TraitRegistry.get(PlayerShape.getCurrentShape(player), AquaticTrait.ID)) {
                     if (((AquaticTrait<LivingEntity>) aquaticTrait).isAquatic) {
                         event.setNewSpeed(event.getNewSpeed() * 5);
@@ -50,11 +44,7 @@ public class WalkersNeoForge {
             }
         }
 
-        //noinspection deprecation
-        if (player.isEyeInFluid(FluidTags.WATER)) {
-            //#if MC<1210
-            //$$ if (!EnchantmentHelper.hasAquaAffinity(player))
-            //#endif
+        if (player.isEyeInFluidType(NeoForgeMod.WATER_TYPE.value())) {
             for (ShapeTrait<LivingEntity> aquaticTrait : TraitRegistry.get(PlayerShape.getCurrentShape(player), AquaticTrait.ID)) {
                 if (((AquaticTrait<LivingEntity>) aquaticTrait).isAquatic) {
                     event.setNewSpeed(event.getNewSpeed() * 5);

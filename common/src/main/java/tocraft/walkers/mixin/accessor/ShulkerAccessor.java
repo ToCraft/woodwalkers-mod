@@ -1,7 +1,6 @@
 package tocraft.walkers.mixin.accessor;
 
 import net.minecraft.world.entity.monster.Shulker;
-import net.minecraft.world.item.DyeColor;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Invoker;
 
@@ -20,8 +19,4 @@ public interface ShulkerAccessor {
     @Invoker
     void callSetRawPeekAmount(int peekAmount);
 
-    //#if MC<=1182
-    //$$ @Invoker
-    //$$ void callSetColor(DyeColor color);
-    //#endif
 }

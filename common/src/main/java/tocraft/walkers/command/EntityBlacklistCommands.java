@@ -2,41 +2,32 @@ package tocraft.walkers.command;
 
 import com.mojang.brigadier.arguments.BoolArgumentType;
 import com.mojang.brigadier.tree.LiteralCommandNode;
+import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
-//#if MC>1182
-import net.minecraft.commands.CommandBuildContext;
-//#endif
+import net.minecraft.commands.arguments.ResourceArgument;
 import net.minecraft.commands.synchronization.SuggestionProviders;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
-import tocraft.craftedcore.patched.CEntitySummonArgument;
-import tocraft.craftedcore.patched.TComponent;
 import tocraft.walkers.Walkers;
 
-import static tocraft.craftedcore.patched.CCommandSourceStack.sendSuccess;
-
 public class EntityBlacklistCommands {
-    //#if MC>1182
     public static LiteralCommandNode<CommandSourceStack> getRootNode(CommandBuildContext ctx) {
-        //#else
-        //$$ public static LiteralCommandNode<CommandSourceStack> getRootNode() {
-        //$$     // just 'coz I'm lazy
-        //$$     Object ctx = null;
-        //#endif
         LiteralCommandNode<CommandSourceStack> rootNode = Commands.literal("entityBlacklist").build();
 
         LiteralCommandNode<CommandSourceStack> addToList = Commands.literal("add")
-                .then(Commands.argument("entity", CEntitySummonArgument.id(ctx)).suggests(SuggestionProviders.SUMMONABLE_ENTITIES)
+                .then(Commands.argument("entity", ResourceArgument.resource(ctx, Registries.ENTITY_TYPE)).suggests(SuggestionProviders.SUMMONABLE_ENTITIES)
                         .executes(context -> {
-                            addToList(context.getSource(), CEntitySummonArgument.getEntityTypeId(context, "entity"));
+                            addToList(context.getSource(), ResourceArgument.getSummonableEntityType(context, "entity").key().location());
                             return 1;
                         }))
                 .build();
         LiteralCommandNode<CommandSourceStack> removeFromList = Commands.literal("remove")
-                .then(Commands.argument("entity", CEntitySummonArgument.id(ctx)).suggests(SuggestionProviders.SUMMONABLE_ENTITIES)
+                .then(Commands.argument("entity", ResourceArgument.resource(ctx, Registries.ENTITY_TYPE)).suggests(SuggestionProviders.SUMMONABLE_ENTITIES)
                         .executes(context -> {
-                            removeFromList(context.getSource(), CEntitySummonArgument.getEntityTypeId(context, "entity"));
+                            removeFromList(context.getSource(), ResourceArgument.getSummonableEntityType(context, "entity").key().location());
                             return 1;
                         }))
                 .build();
@@ -71,7 +62,7 @@ public class EntityBlacklistCommands {
     }
 
     private static void isWhitelist(CommandSourceStack source) {
-        sendSuccess(source, TComponent.translatable("craftedcore.config.get", "entityBlacklistIsWhitelist", Walkers.CONFIG.entityBlacklistIsWhitelist), false);
+        source.sendSuccess(() -> Component.translatable("craftedcore.config.get", "entityBlacklistIsWhitelist", Walkers.CONFIG.entityBlacklistIsWhitelist), false);
     }
 
     private static void setIsWhitelist(CommandSourceStack source, boolean value) {
@@ -82,7 +73,7 @@ public class EntityBlacklistCommands {
             Walkers.CONFIG.sendToPlayer(player);
         }
 
-        sendSuccess(source, TComponent.translatable("craftedcore.config.set", "entityBlacklistIsWhitelist", String.valueOf(value)), false);
+        source.sendSuccess(() -> Component.translatable("craftedcore.config.set", "entityBlacklistIsWhitelist", String.valueOf(value)), false);
     }
 
     private static int clearEntities(CommandSourceStack source) {
@@ -93,18 +84,18 @@ public class EntityBlacklistCommands {
             Walkers.CONFIG.sendToPlayer(player);
         }
 
-        sendSuccess(source, TComponent.translatable("walkers.entityBlacklist.clear"), false);
+        source.sendSuccess(() -> Component.translatable("walkers.entityBlacklist.clear"), false);
 
         return 1;
     }
 
     private static int listEntities(CommandSourceStack source) {
         for (String s : Walkers.CONFIG.entityBlacklist) {
-            sendSuccess(source, TComponent.translatable("walkers.entityBlacklist.list", s), false);
+            source.sendSuccess(() -> Component.translatable("walkers.entityBlacklist.list", s), false);
         }
 
         if (Walkers.CONFIG.entityBlacklist.isEmpty()) {
-            sendSuccess(source, TComponent.translatable("walkers.entityBlacklist.isEmpty"), false);
+            source.sendSuccess(() -> Component.translatable("walkers.entityBlacklist.isEmpty"), false);
         }
 
         return 1;
@@ -118,7 +109,7 @@ public class EntityBlacklistCommands {
             Walkers.CONFIG.sendToPlayer(player);
         }
 
-        sendSuccess(source, TComponent.translatable("walkers.entityBlacklist.add", type.toString()), false);
+        source.sendSuccess(() -> Component.translatable("walkers.entityBlacklist.add", type.toString()), false);
     }
 
     private static void removeFromList(CommandSourceStack source, ResourceLocation type) {
@@ -129,6 +120,6 @@ public class EntityBlacklistCommands {
             Walkers.CONFIG.sendToPlayer(player);
         }
 
-        sendSuccess(source, TComponent.translatable("walkers.entityBlacklist.remove", type.toString()), false);
+        source.sendSuccess(() -> Component.translatable("walkers.entityBlacklist.remove", type.toString()), false);
     }
 }

@@ -10,7 +10,6 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import tocraft.walkers.Walkers;
 import tocraft.walkers.api.model.ClassArmProvider;
 
 @SuppressWarnings("unused")

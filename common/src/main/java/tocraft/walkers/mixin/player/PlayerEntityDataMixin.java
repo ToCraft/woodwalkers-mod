@@ -18,7 +18,6 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import tocraft.craftedcore.patched.CEntity;
 import tocraft.walkers.Walkers;
 import tocraft.walkers.api.FlightHelper;
 import tocraft.walkers.api.PlayerShape;
@@ -122,7 +121,7 @@ public abstract class PlayerEntityDataMixin extends LivingEntity implements Play
             // ensure entity data exists
             if (!entityTag.isEmpty()) {
                 if (walkers$shape == null || !type.get().equals(walkers$shape.getType())) {
-                    walkers$shape = (LivingEntity) type.get().create(CEntity.level(this));
+                    walkers$shape = (LivingEntity) type.get().create(this.level());
 
                     // refresh player dimensions/hitbox on client
                     ((DimensionsRefresher) this).shape_refreshDimensions();
@@ -243,8 +242,7 @@ public abstract class PlayerEntityDataMixin extends LivingEntity implements Play
             // Clear health value if needed
             if (Walkers.CONFIG.percentScalingHealth) {
                 player.setHealth(Math.min(currentHealthPercent * player.getMaxHealth(), player.getMaxHealth()));
-            }
-            else {
+            } else {
                 player.setHealth(Math.min(player.getHealth(), player.getMaxHealth()));
             }
         }
@@ -288,10 +286,10 @@ public abstract class PlayerEntityDataMixin extends LivingEntity implements Play
         }
 
         // sync with client
-        if (!CEntity.level(player).isClientSide) {
+        if (!player.level().isClientSide) {
             PlayerShape.sync((ServerPlayer) player);
 
-            Int2ObjectMap<Object> trackers = ((ThreadedAnvilChunkStorageAccessor) ((ServerLevel) CEntity.level(player))
+            Int2ObjectMap<Object> trackers = ((ThreadedAnvilChunkStorageAccessor) ((ServerLevel) player.level())
                     .getChunkSource().chunkMap).getEntityMap();
             Object tracking = trackers.get(player.getId());
             ((EntityTrackerAccessor) tracking).getSeenBy().forEach(

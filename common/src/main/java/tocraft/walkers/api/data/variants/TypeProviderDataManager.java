@@ -6,13 +6,13 @@ import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.JsonOps;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import tocraft.craftedcore.data.SynchronizedJsonReloadListener;
-import tocraft.craftedcore.patched.CRegistries;
-import tocraft.craftedcore.patched.Identifier;
 import tocraft.craftedcore.platform.PlatformData;
 import tocraft.walkers.Walkers;
 import tocraft.walkers.api.variant.TypeProvider;
@@ -31,19 +31,17 @@ public class TypeProviderDataManager extends SynchronizedJsonReloadListener {
 
     @SuppressWarnings("unchecked")
     @Override
-    protected void onApply(Map<ResourceLocation, JsonElement> map) {
+    protected void onApply(@NotNull Map<ResourceLocation, JsonElement> map) {
         // prevent duplicates and the registration of removed entries
         TypeProviderRegistry.clearAll();
         TypeProviderRegistry.registerDefault();
 
         for (Map.Entry<ResourceLocation, JsonElement> mapEntry : map.entrySet()) {
-            Either<TypeProviderEntry<?>, String> typeProviderEntryStringEither = typeProviderFromJson(mapEntry.getValue().getAsJsonObject());
+            Either<TypeProviderEntry<?>, String> either = typeProviderFromJson(mapEntry.getValue().getAsJsonObject());
 
             // print error
-            if (typeProviderEntryStringEither.right().isPresent()) {
-                Walkers.LOGGER.warn(String.format(typeProviderEntryStringEither.right().get(), mapEntry.getKey()));
-            } else if (typeProviderEntryStringEither.left().isPresent()) {
-                TypeProviderEntry<?> typeProviderEntry = typeProviderEntryStringEither.left().get();
+            if (either.left().isPresent()) {
+                TypeProviderEntry<?> typeProviderEntry = either.left().get();
 
                 EntityType<LivingEntity> entityType = (EntityType<LivingEntity>) typeProviderEntry.entityType();
                 if (entityType != null) {
@@ -51,6 +49,8 @@ public class TypeProviderDataManager extends SynchronizedJsonReloadListener {
 
                     Walkers.LOGGER.info("{}: {} registered for {}", getClass().getSimpleName(), typeProviderEntry.entityTypeKey(), typeProviderEntry.typeProvider().getClass());
                 }
+            } else {
+                Walkers.LOGGER.warn("Couldn't parse json as type provider: {}", mapEntry.getKey());
             }
         }
     }
@@ -59,7 +59,7 @@ public class TypeProviderDataManager extends SynchronizedJsonReloadListener {
     /*
      * String is an exception while loading. Can be ignored for normal use (just use Either.left)
      */
-    public static Codec<Either<TypeProviderEntry<?>, String>> TYPE_PROVIDER_LIST_CODEC = RecordCodecBuilder.create((instance) -> instance.group(
+    public static final Codec<Either<TypeProviderEntry<?>, String>> TYPE_PROVIDER_LIST_CODEC = RecordCodecBuilder.create((instance) -> instance.group(
             ResourceLocation.CODEC.fieldOf("entity_type").forGetter(o -> o.left().orElseThrow().entityTypeKey()),
             Codec.STRING.optionalFieldOf("required_mod", "").forGetter(o -> {
                 String requiredMod = o.left().orElseThrow().requiredMod();
@@ -90,7 +90,7 @@ public class TypeProviderDataManager extends SynchronizedJsonReloadListener {
         if (typeProviderOptional.isPresent()) {
             typeProvider = typeProviderOptional.get();
         } else if (parent.isPresent()) {
-            typeProvider = TypeProviderRegistry.getProvider((EntityType<? extends LivingEntity>) Walkers.getEntityTypeRegistry().get(parent.get()));
+            typeProvider = TypeProviderRegistry.getProvider((EntityType<? extends LivingEntity>) BuiltInRegistries.ENTITY_TYPE.get(parent.get()));
         } else if (typeProviderClassOptional.isPresent()) {
             try {
                 typeProvider = Class.forName(typeProviderClassOptional.get()).asSubclass(TypeProvider.class).getDeclaredConstructor().newInstance();
@@ -108,13 +108,7 @@ public class TypeProviderDataManager extends SynchronizedJsonReloadListener {
     })));
 
     private static Either<TypeProviderEntry<?>, String> typeProviderFromJson(JsonObject json) {
-        //#if MC>=1205
         return TYPE_PROVIDER_LIST_CODEC.parse(JsonOps.INSTANCE, json).getOrThrow(JsonParseException::new);
-        //#else
-        //$$ return TYPE_PROVIDER_LIST_CODEC.parse(JsonOps.INSTANCE, json).getOrThrow(false, msg -> {
-        //$$     throw new JsonParseException(msg);
-        //$$ });
-        //#endif
     }
 
     @SuppressWarnings("unused")
@@ -129,8 +123,8 @@ public class TypeProviderDataManager extends SynchronizedJsonReloadListener {
         @SuppressWarnings("unchecked")
         @Nullable
         public EntityType<L> entityType() {
-            if ((requiredMod() == null || requiredMod().isBlank() || PlatformData.isModLoaded(requiredMod())) && Walkers.getEntityTypeRegistry().containsKey(entityTypeKey()))
-                return (EntityType<L>) Walkers.getEntityTypeRegistry().get(entityTypeKey());
+            if ((requiredMod() == null || requiredMod().isBlank() || PlatformData.isModLoaded(requiredMod())) && BuiltInRegistries.ENTITY_TYPE.containsKey(entityTypeKey()))
+                return (EntityType<L>) BuiltInRegistries.ENTITY_TYPE.get(entityTypeKey());
             else
                 return null;
         }

@@ -38,7 +38,8 @@ public class PlayerAbilityLibIntegration extends AbstractIntegration {
             Class<?> palClass = Class.forName("io.github.ladysnake.pal.Pal");
             Method getAbilitySource = palClass.getDeclaredMethod("getAbilitySource", ResourceLocation.class);
             return getAbilitySource.invoke(null, id);
-        } catch (ClassNotFoundException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+        } catch (ClassNotFoundException | IllegalAccessException | InvocationTargetException |
+                 NoSuchMethodException e) {
             error(e);
             return null;
         }

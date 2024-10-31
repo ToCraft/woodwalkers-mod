@@ -35,21 +35,21 @@ public class MobHunterPreyMixin {
 
     @Inject(method = "<init>", at = @At("TAIL"))
     protected void registerCustomGoals(CallbackInfo ci) {
-            // ensure hunter can attack players with a shape similar to their normal prey
-            if (!Walkers.CONFIG.hunterAttackAsPreyMorphedPlayer) {
-                return;
-            } else {
-                for (Map.Entry<ShapeTrait<?>, Predicate<LivingEntity>> trait : TraitRegistry.getAllRegisteredById(PreyTrait.ID).entrySet()) {
-                    PreyTrait<?> preyTrait = (PreyTrait<?>) trait.getKey();
+        // ensure hunter can attack players with a shape similar to their normal prey
+        if (!Walkers.CONFIG.hunterAttackAsPreyMorphedPlayer) {
+            return;
+        } else {
+            for (Map.Entry<ShapeTrait<?>, Predicate<LivingEntity>> trait : TraitRegistry.getAllRegisteredById(PreyTrait.ID).entrySet()) {
+                PreyTrait<?> preyTrait = (PreyTrait<?>) trait.getKey();
 
-                    if (preyTrait.isHunter((Mob) (Object) this)) {
-                        targetSelector.addGoal(preyTrait.getPriority(), new NearestAttackableTargetGoal<>((Mob) (Object) this, Player.class, preyTrait.getRandInt(), false, false, player -> {
-                            LivingEntity shape = PlayerShape.getCurrentShape((Player) player);
-                            return shape != null && trait.getValue().test(shape);
-                        }));
-                    }
+                if (preyTrait.isHunter((Mob) (Object) this)) {
+                    targetSelector.addGoal(preyTrait.getPriority(), new NearestAttackableTargetGoal<>((Mob) (Object) this, Player.class, preyTrait.getRandInt(), false, false, player -> {
+                        LivingEntity shape = PlayerShape.getCurrentShape((Player) player);
+                        return shape != null && trait.getValue().test(shape);
+                    }));
                 }
             }
+        }
 
         if ((Object) this instanceof PathfinderMob mob) {
             for (Map.Entry<ShapeTrait<?>, Predicate<LivingEntity>> trait : TraitRegistry.getAllRegisteredById(FearedTrait.ID).entrySet()) {
@@ -60,10 +60,10 @@ public class MobHunterPreyMixin {
                         LivingEntity shape = PlayerShape.getCurrentShape((Player) player);
                         return shape != null && trait.getValue().test(shape);
                     },
-                    6.0F,
-                    1.0D,
-                    1.2D,
-                    player -> true
+                            6.0F,
+                            1.0D,
+                            1.2D,
+                            player -> true
                     ));
                 }
             }

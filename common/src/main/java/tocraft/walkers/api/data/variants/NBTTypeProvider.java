@@ -10,9 +10,6 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
-import tocraft.craftedcore.patched.CRegistries;
-import tocraft.craftedcore.patched.Identifier;
-import tocraft.craftedcore.patched.TComponent;
 import tocraft.walkers.Walkers;
 import tocraft.walkers.api.variant.TypeProvider;
 
@@ -39,7 +36,7 @@ public class NBTTypeProvider<T extends LivingEntity> extends TypeProvider<T> {
         if (range >= 0 && fallback <= range) {
             this.range = range;
         } else if (nbtEntryList.left().isPresent()) {
-            switch (nbtEntryList.left().get().get(0).nbtType().toUpperCase()) {
+            switch (nbtEntryList.left().get().getFirst().nbtType().toUpperCase()) {
                 case "BOOL", "BOOLEAN" -> this.range = 1;
                 default -> this.range = fallback;
             }
@@ -82,7 +79,7 @@ public class NBTTypeProvider<T extends LivingEntity> extends TypeProvider<T> {
             if (validData.size() > 1) {
                 Walkers.LOGGER.error("{}: found too much valid variant ids: {} for entity: {}", getClass().getSimpleName(), validData.toArray(Integer[]::new), entity.getType().getDescriptionId());
             }
-            return validData.get(0);
+            return validData.getFirst();
         } else {
             Walkers.LOGGER.error("{}: No Variant for entity type {} found.", getClass().getSimpleName(), entity.getType().getDescriptionId());
             return getFallbackData();
@@ -119,14 +116,14 @@ public class NBTTypeProvider<T extends LivingEntity> extends TypeProvider<T> {
         if (nbtEntryList.left().isPresent()) {
             for (NBTEntry<?> nbtEntry : nbtEntryList.left().get()) {
                 Object value = nbtEntry.getValue(data);
-                if (value instanceof Integer intValue) {
-                    tag.putInt(nbtEntry.nbtField(), intValue);
-                } else if (value instanceof String stringValue) {
-                    tag.putString(nbtEntry.nbtField(), stringValue);
-                } else if (value instanceof Boolean booleanValue) {
-                    tag.putBoolean(nbtEntry.nbtField(), booleanValue);
-                } else if (value == null) {
-                    Walkers.LOGGER.error("{}: variant parameter for {} not found.", getClass().getSimpleName(), type.getDescriptionId());
+                switch (value) {
+                    case Integer intValue -> tag.putInt(nbtEntry.nbtField(), intValue);
+                    case String stringValue -> tag.putString(nbtEntry.nbtField(), stringValue);
+                    case Boolean booleanValue -> tag.putBoolean(nbtEntry.nbtField(), booleanValue);
+                    case null ->
+                            Walkers.LOGGER.error("{}: variant parameter for {} not found.", getClass().getSimpleName(), type.getDescriptionId());
+                    default -> {
+                    }
                 }
             }
         }
@@ -153,7 +150,7 @@ public class NBTTypeProvider<T extends LivingEntity> extends TypeProvider<T> {
     @Override
     public Component modifyText(T entity, MutableComponent text) {
         if (nameMap.containsKey(String.valueOf(getVariantData(entity))))
-            return TComponent.translatable(nameMap.get(String.valueOf(getVariantData(entity))), text);
+            return Component.translatable(nameMap.get(String.valueOf(getVariantData(entity))), text);
         else
             return text;
     }

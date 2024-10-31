@@ -72,7 +72,7 @@ public class Integrations {
     /**
      * Register an Integration for the specified mod id
      *
-     * @param modid the mod that is required. Use "minecraft" if no mod is required
+     * @param modid       the mod that is required. Use "minecraft" if no mod is required
      * @param integration the {@link AbstractIntegration Integration} that should be registered
      */
     public static void register(String modid, AbstractIntegration integration) {
@@ -82,7 +82,7 @@ public class Integrations {
     /**
      * Register an Integration for the specified mod id
      *
-     * @param modid the mod that is required. Use "minecraft" if no mod is required
+     * @param modid       the mod that is required. Use "minecraft" if no mod is required
      * @param integration the {@link AbstractIntegration Integration} that should be registered. Obtained as a supplier so the class is only instantiated once it's guaranteed that the mod is loaded. This way, you can use classes of the mod without worrying about {@link ClassNotFoundException ClassNotFoundExceptions} when the mod isn't loaded
      */
     public static void register(String modid, Supplier<AbstractIntegration> integration) {

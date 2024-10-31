@@ -10,7 +10,6 @@ import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import org.jetbrains.annotations.Nullable;
 import tocraft.craftedcore.event.client.ClientTickEvents;
-import tocraft.craftedcore.patched.TComponent;
 import tocraft.walkers.Walkers;
 import tocraft.walkers.WalkersClient;
 import tocraft.walkers.ability.AbilityRegistry;
@@ -37,7 +36,7 @@ public class KeyPressHandler implements ClientTickEvents.Client {
                 if (ApiLevel.getCurrentLevel().canMorph) {
                     SwapPackets.sendSwapRequest();
                 } else {
-                    client.player.displayClientMessage(TComponent.translatable("walkers.feature_not_available"), true);
+                    client.player.displayClientMessage(Component.translatable("walkers.feature_not_available"), true);
                 }
             }
 
@@ -53,7 +52,7 @@ public class KeyPressHandler implements ClientTickEvents.Client {
                         WalkersClient.isRenderingVariantsMenu = !WalkersClient.isRenderingVariantsMenu;
                     }
                 } else {
-                    client.player.displayClientMessage(TComponent.translatable("walkers.feature_not_available"), true);
+                    client.player.displayClientMessage(Component.translatable("walkers.feature_not_available"), true);
                 }
             }
 
@@ -65,7 +64,7 @@ public class KeyPressHandler implements ClientTickEvents.Client {
                 if (ApiLevel.getCurrentLevel().canUnlock) {
                     handleUnlockKey(client);
                 } else {
-                    client.player.displayClientMessage(TComponent.translatable("walkers.feature_not_available"), true);
+                    client.player.displayClientMessage(Component.translatable("walkers.feature_not_available"), true);
                 }
             } else if (currentTimer != Walkers.CONFIG.unlockTimer) currentTimer = Walkers.CONFIG.unlockTimer;
         }
@@ -86,7 +85,7 @@ public class KeyPressHandler implements ClientTickEvents.Client {
     private void handleUnlockKey(Minecraft client) {
         // check if player is blacklisted
         if (client.player != null && Walkers.isPlayerBlacklisted(client.player.getUUID()) && Walkers.CONFIG.blacklistPreventsUnlocking) {
-            client.player.displayClientMessage(TComponent.translatable("walkers.player_blacklisted"), true);
+            client.player.displayClientMessage(Component.translatable("walkers.player_blacklisted"), true);
             return;
         }
 
@@ -99,17 +98,17 @@ public class KeyPressHandler implements ClientTickEvents.Client {
                 if (type != null) {
                     // Ensures, the mob isn't on the blacklist
                     if (EntityBlacklist.isBlacklisted(type.getEntityType()))
-                        client.player.displayClientMessage(TComponent.translatable("walkers.unlock_entity_blacklisted"), true);
+                        client.player.displayClientMessage(Component.translatable("walkers.unlock_entity_blacklisted"), true);
                     else {
                         if (currentTimer <= 0) {
                             // unlock shape
                             UnlockPackets.sendUnlockRequest(type);
                             // send unlock message
-                            Component name = TComponent.translatable(type.getEntityType().getDescriptionId());
-                            client.player.displayClientMessage(TComponent.translatable("walkers.unlock_entity", name), true);
+                            Component name = Component.translatable(type.getEntityType().getDescriptionId());
+                            client.player.displayClientMessage(Component.translatable("walkers.unlock_entity", name), true);
                             currentTimer = Walkers.CONFIG.unlockTimer;
                         } else {
-                            client.player.displayClientMessage(TComponent.translatable("walkers.unlock_progress"), true);
+                            client.player.displayClientMessage(Component.translatable("walkers.unlock_progress"), true);
                             currentTimer -= 1;
                         }
                     }

@@ -31,6 +31,7 @@ public abstract class AbstractIntegration {
     public void registerTypeProvider() {
 
     }
+
     /**
      * Called to blacklist mods via {@link tocraft.walkers.api.blacklist.EntityBlacklist EntityBlacklist}
      */
@@ -42,7 +43,7 @@ public abstract class AbstractIntegration {
     /**
      * called to modify the way entities attack a morphed player
      *
-     * @param mob the mob that wants to attack the player
+     * @param mob    the mob that wants to attack the player
      * @param target the player that is morphed
      * @return whether the mob cannot attack the morphed player
      */

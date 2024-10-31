@@ -1,10 +1,6 @@
 package tocraft.walkers.screen.hud;
 
-//#if MC>1194
 import net.minecraft.client.gui.GuiGraphics;
-//#else
-//$$ import com.mojang.blaze3d.vertex.PoseStack;
-//#endif
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -21,11 +17,7 @@ public class OverlayEventHandler {
 
     private static class RenderFood implements RenderEvents.OverlayRendering {
         @Override
-        //#if MC>1194
         public InteractionResult render(@Nullable GuiGraphics graphics, Player player) {
-        //#else
-        //$$ public InteractionResult render(@Nullable PoseStack graphics, Player player) {
-        //#endif
             if (player != null) {
                 LivingEntity shape = PlayerShape.getCurrentShape(player);
 

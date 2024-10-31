@@ -3,6 +3,7 @@ package tocraft.walkers.ability;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.MapCodec;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.tags.EntityTypeTags;
@@ -10,29 +11,18 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.NeutralMob;
-import net.minecraft.world.entity.animal.MushroomCow;
+import net.minecraft.world.entity.animal.*;
 import net.minecraft.world.entity.animal.goat.Goat;
 import net.minecraft.world.entity.animal.horse.AbstractHorse;
 import net.minecraft.world.entity.animal.horse.Llama;
-//#if MC>1194
 import net.minecraft.world.entity.animal.sniffer.Sniffer;
-//#endif
 import net.minecraft.world.entity.boss.enderdragon.EnderDragon;
 import net.minecraft.world.entity.boss.wither.WitherBoss;
 import net.minecraft.world.entity.monster.*;
-import net.minecraft.world.entity.animal.*;
-//#if MC>1182
 import net.minecraft.world.entity.monster.warden.Warden;
-//#endif
-//#if MC>=1205
-import java.util.function.Function;
-import net.minecraft.world.item.alchemy.PotionContents;
-import net.minecraft.core.component.DataComponents;
-//#else
-//$$ import net.minecraft.world.item.alchemy.PotionUtils;
-//#endif
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.item.alchemy.Potions;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
@@ -42,6 +32,7 @@ import tocraft.walkers.ability.impl.specific.*;
 import tocraft.walkers.integrations.Integrations;
 
 import java.util.*;
+import java.util.function.Function;
 import java.util.function.Predicate;
 
 @SuppressWarnings("unused")
@@ -91,14 +82,10 @@ public class AbilityRegistry {
         registerByClass(Llama.class, new LlamaAbility<>());
         registerByClass(Witch.class, new ThrowPotionsAbility<>());
         registerByClass(Evoker.class, new EvokerAbility<>());
-        //#if MC>1182
         registerByClass(Warden.class, new WardenAbility<>());
-        //#endif
         registerByClass(Wolf.class, new AngerAbility<>(SoundEvents.WOLF_PANT, SoundEvents.WOLF_GROWL));
         registerByClass(Sheep.class, new SheepAbility<>());
-        //#if MC>1194
         registerByClass(Sniffer.class, new SnifferAbility<>());
-        //#endif
         registerByClass(Chicken.class, new ChickenAbility<>());
         registerByClass(MushroomCow.class, new SaturateAbility<>());
         registerByClass(Bee.class, new AngerAbility<>(SoundEvents.BEE_LOOP, SoundEvents.BEE_LOOP_AGGRESSIVE));
@@ -110,14 +97,9 @@ public class AbilityRegistry {
         registerByClass(Skeleton.class, new GetItemAbility<>(new ItemStack(Items.ARROW, 4)));
         ItemStack slownessArrows = new ItemStack(Items.TIPPED_ARROW, 4);
         ItemStack poisonedArrows = new ItemStack(Items.TIPPED_ARROW, 4);
-        //#if MC>=1205
         slownessArrows.set(DataComponents.POTION_CONTENTS, new PotionContents(Potions.SLOWNESS));
         poisonedArrows.set(DataComponents.POTION_CONTENTS, new PotionContents(Potions.POISON));
         registerByClass(Bogged.class, new GetItemAbility<>(poisonedArrows));
-        //#else
-        //$$ PotionUtils.setPotion(slownessArrows, Potions.SLOWNESS);
-        //$$ PotionUtils.setPotion(poisonedArrows, Potions.POISON);
-        //#endif
         registerByClass(Stray.class, new GetItemAbility<>(slownessArrows));
 
         // handle Integrations
@@ -232,15 +214,11 @@ public class AbilityRegistry {
         Codec<MapCodec<? extends GenericShapeAbility<?>>> codec = ResourceLocation.CODEC.flatXmap(
                 resourceLocation -> Optional.ofNullable(AbilityRegistry.getAbilityCodec(resourceLocation))
                         .map(DataResult::success)
-                        .orElseGet(() -> Walkers.dataError("Unknown shape ability: " + resourceLocation)),
+                        .orElseGet(() -> DataResult.error(() -> "Unknown shape ability: " + resourceLocation)),
                 abilityCodec -> Optional.ofNullable(getAbilityId(abilityCodec))
                         .map(DataResult::success)
-                        .orElseGet(() -> Walkers.dataError("Unknown shape ability codec: " + abilityCodec))
+                        .orElseGet(() -> DataResult.error(() -> "Unknown shape ability codec: " + abilityCodec))
         );
-        //#if MC>=1205
         return codec.dispatchStable(GenericShapeAbility::codec, Function.identity());
-        //#else
-        //$$ return codec.dispatchStable(GenericShapeAbility::codec, MapCodec::codec);
-        //#endif
     }
 }

@@ -51,11 +51,7 @@ public abstract class RavagerEntityMixin extends LivingEntity {
                     }
 
                     // Limb updates for movement
-                    //#if MC>1182
                     this.calculateEntityAnimation(false);
-                    //#else
-                    //$$ this.calculateEntityAnimation(this, false);
-                    //#endif
                     return;
                 }
             }

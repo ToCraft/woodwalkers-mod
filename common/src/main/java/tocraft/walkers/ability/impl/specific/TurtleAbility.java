@@ -11,7 +11,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.TurtleEggBlock;
 import net.minecraft.world.level.block.state.BlockState;
-import tocraft.craftedcore.patched.CEntity;
 import tocraft.walkers.Walkers;
 import tocraft.walkers.ability.ShapeAbility;
 
@@ -25,7 +24,7 @@ public class TurtleAbility<T extends LivingEntity> extends ShapeAbility<T> {
 
     @Override
     public void onUse(Player player, LivingEntity shape, Level world) {
-        if (!player.isInWater() && CEntity.isOnGround(player) && world.getBlockState(player.blockPosition()).isAir()) {
+        if (!player.isInWater() && player.onGround() && world.getBlockState(player.blockPosition()).isAir()) {
             BlockState turtlEggBlockstate = Blocks.TURTLE_EGG.defaultBlockState().setValue(TurtleEggBlock.EGGS, player.getRandom().nextInt(4) + 1);
             world.setBlock(player.blockPosition(), turtlEggBlockstate, 3);
             // play sound

@@ -7,7 +7,6 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.ApiStatus;
 import tocraft.craftedcore.network.ModernNetworking;
-import tocraft.craftedcore.patched.CEntity;
 import tocraft.walkers.ability.AbilityRegistry;
 import tocraft.walkers.ability.ShapeAbility;
 import tocraft.walkers.api.events.ShapeEvents;
@@ -62,7 +61,7 @@ public class PlayerAbilities {
                         return;
                     }
 
-                    ability.onUse(player, shape, CEntity.level(player));
+                    ability.onUse(player, shape, player.level());
                     PlayerAbilities.setCooldown(player, ability.getCooldown(shape));
                     PlayerAbilities.sync((ServerPlayer) player);
                 }

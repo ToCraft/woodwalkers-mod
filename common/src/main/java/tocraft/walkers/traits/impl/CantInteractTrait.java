@@ -8,6 +8,8 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.Entity;
@@ -27,18 +29,18 @@ public class CantInteractTrait<E extends LivingEntity> extends ShapeTrait<E> {
     public static final ResourceLocation ID = Walkers.id("cant_interact");
     public static final MapCodec<CantInteractTrait<?>> CODEC = RecordCodecBuilder.mapCodec((instance) -> instance.group(
             Codec.BOOL.optionalFieldOf("can_only_interact_with_listed", false).forGetter(o -> o.canOnlyInteractWithListed),
-            Codec.list(ResourceLocation.CODEC).optionalFieldOf("types", new ArrayList<>()).forGetter(o -> o.types.stream().map(o1 -> EntityType.getKey(o1)).toList()),
+            Codec.list(ResourceLocation.CODEC).optionalFieldOf("types", new ArrayList<>()).forGetter(o -> o.types.stream().map(EntityType::getKey).toList()),
             Codec.list(ResourceLocation.CODEC).optionalFieldOf("tags", new ArrayList<>()).forGetter(o -> o.tags.stream().map(TagKey::location).toList())
     ).apply(instance, instance.stable((canOnlyInteractWithListed, typeIds, tagIds) -> {
         List<EntityType<?>> reinforcements = new ArrayList<>();
         List<TagKey<EntityType<?>>> reinforcementTags = new ArrayList<>();
         for (ResourceLocation resourceLocation : typeIds) {
-            if (Walkers.getEntityTypeRegistry().containsKey(resourceLocation)) {
-                reinforcements.add(Walkers.getEntityTypeRegistry().get(resourceLocation));
+            if (BuiltInRegistries.ENTITY_TYPE.containsKey(resourceLocation)) {
+                reinforcements.add(BuiltInRegistries.ENTITY_TYPE.get(resourceLocation));
             }
         }
         for (ResourceLocation resourceLocation : tagIds) {
-            reinforcementTags.add(TagKey.create(Walkers.getEntityTypeRegistry().key(), resourceLocation));
+            reinforcementTags.add(TagKey.create(Registries.ENTITY_TYPE, resourceLocation));
         }
         return new CantInteractTrait<>(canOnlyInteractWithListed, reinforcements, reinforcementTags);
     })));

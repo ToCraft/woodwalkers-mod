@@ -16,11 +16,7 @@ import tocraft.walkers.traits.impl.ImmunityTrait;
 @Mixin(MobEffect.class)
 public class MobEffectMixin {
     @SuppressWarnings({"RedundantCast", "EqualsBetweenInconvertibleTypes"})
-    //#if MC>1204
     @Inject(method = "applyInstantenousEffect", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/effect/MobEffect;applyEffectTick(Lnet/minecraft/world/entity/LivingEntity;I)Z"), cancellable = true)
-    //#else
-    //$$ @Inject(method = "applyInstantenousEffect", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/effect/MobEffect;applyEffectTick(Lnet/minecraft/world/entity/LivingEntity;I)V"), cancellable = true)
-    //#endif
     private void onApplyEffect(Entity source, Entity indirectSource, LivingEntity livingEntity, int amplifier, double health, CallbackInfo ci) {
         if (livingEntity instanceof Player player) {
             LivingEntity shape = PlayerShape.getCurrentShape(player);

@@ -1,6 +1,6 @@
 package tocraft.walkers.api.variant;
 
-import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -11,9 +11,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import tocraft.craftedcore.patched.CRegistries;
-import tocraft.craftedcore.patched.Identifier;
-import tocraft.craftedcore.patched.TComponent;
 import tocraft.walkers.Walkers;
 import tocraft.walkers.api.blacklist.EntityBlacklist;
 
@@ -74,12 +71,12 @@ public class ShapeType<T extends LivingEntity> {
 
     @Nullable
     public static ShapeType<?> from(CompoundTag compound) {
-        ResourceLocation id = Identifier.parse(compound.getString("EntityID"));
-        if (!Walkers.getEntityTypeRegistry().containsKey(id)) {
+        ResourceLocation id = ResourceLocation.parse(compound.getString("EntityID"));
+        if (!BuiltInRegistries.ENTITY_TYPE.containsKey(id)) {
             return null;
         }
 
-        return from((EntityType<? extends LivingEntity>) Walkers.getEntityTypeRegistry().get(id),
+        return from((EntityType<? extends LivingEntity>) BuiltInRegistries.ENTITY_TYPE.get(id),
                 compound.contains("Variant") ? compound.getInt("Variant") : -1);
     }
 
@@ -114,7 +111,7 @@ public class ShapeType<T extends LivingEntity> {
 
     public static List<ShapeType<?>> getAllTypes(Level world) {
         if (LIVING_TYPE_CASH.isEmpty()) {
-            for (EntityType<?> type : Walkers.getEntityTypeRegistry()) {
+            for (EntityType<?> type : BuiltInRegistries.ENTITY_TYPE) {
                 try {
                     Entity instance = type.create(world);
                     if (instance instanceof LivingEntity) {
@@ -188,9 +185,9 @@ public class ShapeType<T extends LivingEntity> {
     public static <L extends LivingEntity> Component createTooltipText(L entity) {
         TypeProvider<L> provider = TypeProviderRegistry.getProvider((EntityType<L>) entity.getType());
         if (provider != null) {
-            return provider.modifyText(entity, TComponent.translatable(entity.getType().getDescriptionId()));
+            return provider.modifyText(entity, Component.translatable(entity.getType().getDescriptionId()));
         }
 
-        return TComponent.translatable(entity.getType().getDescriptionId());
+        return Component.translatable(entity.getType().getDescriptionId());
     }
 }

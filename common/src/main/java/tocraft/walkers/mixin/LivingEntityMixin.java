@@ -5,18 +5,19 @@ import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.core.BlockPos;
-//#if MC>=1205
 import net.minecraft.core.Holder;
-import net.minecraft.world.food.FoodProperties;
-//#endif
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
-import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.animal.Parrot;
 import net.minecraft.world.entity.animal.Sheep;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -30,7 +31,6 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import tocraft.craftedcore.patched.CEntity;
 import tocraft.walkers.api.PlayerShape;
 import tocraft.walkers.impl.NearbySongAccessor;
 import tocraft.walkers.impl.ShapeDataProvider;
@@ -54,13 +54,8 @@ public abstract class LivingEntityMixin extends Entity implements NearbySongAcce
         super(type, world);
     }
 
-    //#if MC>=1205
     @WrapOperation(method = "travel", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;hasEffect(Lnet/minecraft/core/Holder;)Z", ordinal = 0))
     private boolean slowFall(LivingEntity instance, Holder<MobEffect> effect, Operation<Boolean> original) {
-    //#else
-    //$$ @WrapOperation(method = "travel", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;hasEffect(Lnet/minecraft/world/effect/MobEffect;)Z", ordinal = 0))
-    //$$ private boolean slowFall(LivingEntity instance, MobEffect effect, Operation<Boolean> original) {
-        //#endif
         if ((Object) this instanceof Player player) {
             LivingEntity shape = PlayerShape.getCurrentShape(player);
 
@@ -81,11 +76,7 @@ public abstract class LivingEntityMixin extends Entity implements NearbySongAcce
         return original.call(instance, effect);
     }
 
-    //#if MC>=1205
     @ModifyVariable(method = "travel", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;hasEffect(Lnet/minecraft/core/Holder;)Z", ordinal = 1), ordinal = 0)
-    //#else
-    //$$ @ModifyVariable(method = "travel", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;hasEffect(Lnet/minecraft/world/effect/MobEffect;)Z", ordinal = 1), ordinal = 0)
-    //#endif
     public float applyWaterCreatureSwimSpeedBoost(float j) {
         if ((Object) this instanceof Player player) {
             LivingEntity shape = PlayerShape.getCurrentShape(player);
@@ -117,11 +108,7 @@ public abstract class LivingEntityMixin extends Entity implements NearbySongAcce
                     LivingEntity.Fallsounds fallSounds = shape.getFallSounds();
                     this.playSound(damageAmount > 4 ? fallSounds.big() : fallSounds.small(), 1.0F, 1.0F);
                     ((LivingEntityAccessor) shape).callPlayBlockFallSound();
-                    //#if MC>1182
                     this.hurt(damageSources().fall(), (float) damageAmount);
-                    //#else
-                    //$$ this.hurt(DamageSource.FALL, (float) damageAmount);
-                    //#endif
                     cir.setReturnValue(true);
                 } else {
                     cir.setReturnValue(false);
@@ -131,11 +118,7 @@ public abstract class LivingEntityMixin extends Entity implements NearbySongAcce
     }
 
     @Inject(method = "hasEffect", at = @At("HEAD"), cancellable = true)
-    //#if MC>=1205
     private void returnHasNightVision(Holder<MobEffect> effect, CallbackInfoReturnable<Boolean> cir) {
-    //#else
-    //$$ private void returnHasNightVision(MobEffect effect, CallbackInfoReturnable<Boolean> cir) {
-        //#endif
         if ((Object) this instanceof Player player) {
             LivingEntity shape = PlayerShape.getCurrentShape(player);
             if (TraitRegistry.has(shape, MobEffectTrait.ID)) {
@@ -149,11 +132,7 @@ public abstract class LivingEntityMixin extends Entity implements NearbySongAcce
             }
 
             for (ShapeTrait<LivingEntity> immunityTrait : TraitRegistry.get(shape, ImmunityTrait.ID)) {
-                //#if MC>=1205
                 if (((ImmunityTrait<LivingEntity>) immunityTrait).effect.equals(effect.value())) {
-                //#else
-                //$$ if (((ImmunityTrait<LivingEntity>) immunityTrait).effect.equals(effect)) {
-                //#endif
                     cir.setReturnValue(false);
                     return;
                 }
@@ -162,11 +141,7 @@ public abstract class LivingEntityMixin extends Entity implements NearbySongAcce
     }
 
     @Inject(method = "getEffect", at = @At("HEAD"), cancellable = true)
-    //#if MC>=1205
     private void returnNightVisionInstance(Holder<MobEffect> effect, CallbackInfoReturnable<MobEffectInstance> cir) {
-    //#else
-    //$$ private void returnNightVisionInstance(MobEffect effect, CallbackInfoReturnable<MobEffectInstance> cir) {
-        //#endif
         if ((Object) this instanceof Player player) {
             LivingEntity shape = PlayerShape.getCurrentShape(player);
             if (TraitRegistry.has(shape, MobEffectTrait.ID)) {
@@ -183,11 +158,7 @@ public abstract class LivingEntityMixin extends Entity implements NearbySongAcce
             }
 
             for (ShapeTrait<LivingEntity> immunityTrait : TraitRegistry.get(shape, ImmunityTrait.ID)) {
-                //#if MC>=1205
                 if (((ImmunityTrait<LivingEntity>) immunityTrait).effect.equals(effect.value())) {
-                    //#else
-                    //$$ if (((ImmunityTrait<LivingEntity>) immunityTrait).effect.equals(effect)) {
-                    //#endif
                     cir.setReturnValue(null);
                     return;
                 }
@@ -195,29 +166,6 @@ public abstract class LivingEntityMixin extends Entity implements NearbySongAcce
         }
     }
 
-    //#if MC<1205
-    //$$ @Inject(at = @At("HEAD"), method = "getEyeHeight", cancellable = true)
-    //$$ public void getEyeHeight(Pose pose, EntityDimensions dimensions, CallbackInfoReturnable<Float> cir) {
-    //$$     if ((LivingEntity) (Object) this instanceof Player player) {
-    //$$
-    //$$         // this is cursed
-    //$$         try {
-    //$$             LivingEntity shape = PlayerShape.getCurrentShape(player);
-    //$$
-    //$$             if (shape != null) {
-    //$$                 float shapeEyeHeight = shape.getEyeHeight(pose);
-    //$$                 if (pose == Pose.CROUCHING && TraitRegistry.has(shape, HumanoidTrait.ID)) {
-    //$$                     cir.setReturnValue(shapeEyeHeight * 1.27F / 1.62F);
-    //$$                     return;
-    //$$                 }
-    //$$
-    //$$                 cir.setReturnValue(shapeEyeHeight);
-    //$$             }
-    //$$         } catch (Exception ignored) {
-    //$$         }
-    //$$     }
-    //$$ }
-    //#endif
 
     @Inject(method = "isSensitiveToWater", at = @At("HEAD"), cancellable = true)
     protected void shape_isSensitiveToWater(CallbackInfoReturnable<Boolean> cir) {
@@ -283,7 +231,7 @@ public abstract class LivingEntityMixin extends Entity implements NearbySongAcce
             LivingEntity shape = PlayerShape.getCurrentShape(player);
 
             if (shape != null) {
-                BlockState blockState = CEntity.level(this).getBlockState(this.blockPosition());
+                BlockState blockState = this.level().getBlockState(this.blockPosition());
                 for (ClimbBlocksTrait<?> climbBlocksTrait : TraitRegistry.get(shape, ClimbBlocksTrait.ID).stream().map(entry -> (ClimbBlocksTrait<?>) entry).toList()) {
                     for (Block invalidBlock : climbBlocksTrait.invalidBlocks) {
                         if (blockState.is(invalidBlock)) {
@@ -307,17 +255,8 @@ public abstract class LivingEntityMixin extends Entity implements NearbySongAcce
     }
 
 
-    //#if MC>1206
     @Inject(method = "eat(Lnet/minecraft/world/level/Level;Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/food/FoodProperties;)Lnet/minecraft/world/item/ItemStack;", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;addEatEffect(Lnet/minecraft/world/food/FoodProperties;)V"))
     private void regenerateWoolFromFood(Level level, ItemStack food, FoodProperties foodProperties, CallbackInfoReturnable<ItemStack> cir) {
-    //#else
-    //#if MC==1206
-    //$$ @Inject(method = "eat", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;addEatEffect(Lnet/minecraft/world/food/FoodProperties;)V"))
-    //#else
-    //$$ @Inject(method = "eat", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;addEatEffect(Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/level/Level;Lnet/minecraft/world/entity/LivingEntity;)V"))
-    //#endif
-    //$$ private void regenerateWoolFromFood(Level level, ItemStack food, CallbackInfoReturnable<ItemStack> cir) {
-        //#endif
         if ((Object) this instanceof Player player) {
             LivingEntity shape = PlayerShape.getCurrentShape(player);
             if (shape instanceof Sheep sheepShape) {
@@ -327,23 +266,14 @@ public abstract class LivingEntityMixin extends Entity implements NearbySongAcce
         }
     }
 
-    //#if MC>1206
     @Inject(method = "eat(Lnet/minecraft/world/level/Level;Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/food/FoodProperties;)Lnet/minecraft/world/item/ItemStack;", at = @At(value = "RETURN"))
     private void dieFromCookies(Level level, ItemStack food, FoodProperties foodProperties, CallbackInfoReturnable<ItemStack> cir) {
-    //#else
-    //$$ @Inject(method = "eat", at = @At(value = "RETURN"))
-    //$$ private void dieFromCookies(Level level, ItemStack food, CallbackInfoReturnable<ItemStack> cir) {
-        //#endif
         if ((Object) this instanceof Player player) {
             LivingEntity shape = PlayerShape.getCurrentShape(player);
             if (shape instanceof Parrot) {
                 player.addEffect(new MobEffectInstance(MobEffects.POISON, 900));
                 if (player.isCreative() || !this.isInvulnerable()) {
-                    //#if MC>1182
                     this.hurt(this.damageSources().playerAttack(player), Float.MAX_VALUE);
-                    //#else
-                    //$$ this.hurt(DamageSource.playerAttack(player), Float.MAX_VALUE);
-                    //#endif
                 }
             }
         }

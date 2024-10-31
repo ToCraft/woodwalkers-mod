@@ -6,8 +6,6 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.LivingEntity;
 import org.jetbrains.annotations.Nullable;
 import tocraft.craftedcore.network.ModernNetworking;
-import tocraft.craftedcore.patched.CEntity;
-import tocraft.craftedcore.patched.TComponent;
 import tocraft.walkers.Walkers;
 import tocraft.walkers.api.PlayerShape;
 import tocraft.walkers.api.platform.ApiLevel;
@@ -24,7 +22,7 @@ public class SwapPackets {
                 (context, packet) -> context.getPlayer().getServer().execute(() -> {
                     // check if player is blacklisted
                     if (Walkers.isPlayerBlacklisted(context.getPlayer().getUUID()) && Walkers.CONFIG.blacklistPreventsMorphing) {
-                        context.getPlayer().displayClientMessage(TComponent.translatable("walkers.player_blacklisted"), true);
+                        context.getPlayer().displayClientMessage(Component.translatable("walkers.player_blacklisted"), true);
                         return;
                     }
 
@@ -44,7 +42,7 @@ public class SwapPackets {
                     if (type != null) {
                         // update Player
                         PlayerShape.updateShapes((ServerPlayer) context.getPlayer(),
-                                type.create(CEntity.level(context.getPlayer()), context.getPlayer()));
+                                type.create(context.getPlayer().level(), context.getPlayer()));
                     } else {
                         // Swap back to player if server allows it
                         PlayerShape.updateShapes((ServerPlayer) context.getPlayer(), null);

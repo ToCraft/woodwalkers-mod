@@ -5,9 +5,6 @@ import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 import tocraft.walkers.api.variant.ShapeType;
 
-import java.util.Optional;
-import java.util.UUID;
-
 @ApiStatus.Internal
 public interface PlayerDataProvider {
 

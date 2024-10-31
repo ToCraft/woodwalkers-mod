@@ -1,4 +1,3 @@
-//#if MC>1182
 package tocraft.walkers.ability.impl.specific;
 
 import net.minecraft.resources.ResourceLocation;
@@ -34,4 +33,3 @@ public class WardenAbility<T extends LivingEntity> extends ShapeAbility<T> {
         return 200;
     }
 }
-//#endif

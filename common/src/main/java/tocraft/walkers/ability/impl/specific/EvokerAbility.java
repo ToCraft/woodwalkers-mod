@@ -15,7 +15,6 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
-import tocraft.craftedcore.patched.CBlockPos;
 import tocraft.walkers.Walkers;
 import tocraft.walkers.ability.ShapeAbility;
 
@@ -59,7 +58,7 @@ public class EvokerAbility<T extends LivingEntity> extends ShapeAbility<T> {
 
                 // If the block underneath is solid, we are good to go.
                 EvokerFangs fangs = new EvokerFangs(world, origin.x(), origin.y(), origin.z(), player.getYRot(), blockOut * 2, player);
-                BlockPos underneathPosition = CBlockPos.containing(origin).below();
+                BlockPos underneathPosition = BlockPos.containing(origin).below();
                 BlockState underneath = world.getBlockState(underneathPosition);
                 if (underneath.isFaceSturdy(world, underneathPosition, Direction.UP) && world.isEmptyBlock(underneathPosition.above())) {
                     world.addFreshEntity(fangs);
@@ -67,7 +66,7 @@ public class EvokerAbility<T extends LivingEntity> extends ShapeAbility<T> {
                 }
 
                 // Check underneath (2x down) again...
-                BlockPos underneath2Position = CBlockPos.containing(origin).below(2);
+                BlockPos underneath2Position = BlockPos.containing(origin).below(2);
                 BlockState underneath2 = world.getBlockState(underneath2Position);
                 if (underneath2.isFaceSturdy(world, underneath2Position, Direction.UP) && world.isEmptyBlock(underneath2Position.above())) {
                     fangs.setPosRaw(fangs.getX(), fangs.getY() - 1, fangs.getZ());
@@ -77,7 +76,7 @@ public class EvokerAbility<T extends LivingEntity> extends ShapeAbility<T> {
                 }
 
                 // Check above (1x up)
-                BlockPos upPosition = CBlockPos.containing(origin).above();
+                BlockPos upPosition = BlockPos.containing(origin).above();
                 BlockState up = world.getBlockState(underneath2Position);
                 if (up.isFaceSturdy(world, upPosition, Direction.UP) && world.isEmptyBlock(upPosition)) {
                     fangs.setPosRaw(fangs.getX(), fangs.getY() + 1, fangs.getZ());

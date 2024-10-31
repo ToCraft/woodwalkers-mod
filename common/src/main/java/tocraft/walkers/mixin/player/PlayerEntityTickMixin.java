@@ -1,12 +1,9 @@
 package tocraft.walkers.mixin.player;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Registry;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
-import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EntityType;
@@ -31,9 +28,6 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import tocraft.craftedcore.patched.CEntity;
-import tocraft.craftedcore.patched.CRegistries;
-import tocraft.craftedcore.patched.Identifier;
 import tocraft.walkers.ability.AbilityRegistry;
 import tocraft.walkers.ability.impl.specific.GrassEaterAbility;
 import tocraft.walkers.api.PlayerAbilities;
@@ -73,7 +67,7 @@ public abstract class PlayerEntityTickMixin extends LivingEntity {
         }
 
         // Update misc. server-side entity properties for the player.
-        if (!CEntity.level(this).isClientSide) {
+        if (!this.level().isClientSide) {
             PlayerDataProvider data = (PlayerDataProvider) this;
             data.walkers$setRemainingHostilityTime(Math.max(0, data.walkers$getRemainingHostilityTime() - 1));
 
@@ -91,17 +85,13 @@ public abstract class PlayerEntityTickMixin extends LivingEntity {
             if (!shapeData.walkers$isShape()) {
                 shapeData.walkers$setIsShape(true);
             }
-            //#if MC>1182
             shapeData.walkers$setPlayerDamageSource(this.damageSources().playerAttack((Player) (Object) this));
-            //#else
-            //$$ shapeData.walkers$setPlayerDamageSource(DamageSource.playerAttack((Player) (Object) this));
-            //#endif
         }
     }
 
     @Inject(method = "tick", at = @At("HEAD"))
     private void pufferfishServerTick(CallbackInfo info) {
-        if (!CEntity.level(this).isClientSide && this.isAlive()) {
+        if (!this.level().isClientSide && this.isAlive()) {
             LivingEntity shape = PlayerShape.getCurrentShape((Player) (Object) this);
             if (shape instanceof Pufferfish pufferfishShape) {
                 if (((PufferfishAccessor) pufferfishShape).getInflateCounter() > 0) {
@@ -131,11 +121,11 @@ public abstract class PlayerEntityTickMixin extends LivingEntity {
 
     @Inject(method = "tick", at = @At("HEAD"))
     private void dolphinServerTick(CallbackInfo info) {
-        if (!CEntity.level(this).isClientSide && this.isAlive()) {
+        if (!this.level().isClientSide && this.isAlive()) {
             Player player = (Player) (Object) this;
             LivingEntity shape = PlayerShape.getCurrentShape(player);
             if (shape instanceof Dolphin) {
-                Player nearestPlayer = CEntity.level(player).getNearestPlayer(DolphinAccessor.getSWIM_WITH_PLAYER_TARGETING(), player);
+                Player nearestPlayer = player.level().getNearestPlayer(DolphinAccessor.getSWIM_WITH_PLAYER_TARGETING(), player);
                 if (nearestPlayer != null && nearestPlayer.isSwimming()) {
                     nearestPlayer.addEffect(new MobEffectInstance(MobEffects.DOLPHINS_GRACE, 100), player);
                 }
@@ -145,7 +135,7 @@ public abstract class PlayerEntityTickMixin extends LivingEntity {
 
     @Inject(method = "tick", at = @At("HEAD"))
     private void applyMobEffectTrait(CallbackInfo info) {
-        if (!CEntity.level(this).isClientSide && this.isAlive()) {
+        if (!this.level().isClientSide && this.isAlive()) {
             Player player = (Player) (Object) this;
             LivingEntity shape = PlayerShape.getCurrentShape(player);
             if (TraitRegistry.has(shape, MobEffectTrait.ID)) {
@@ -159,7 +149,7 @@ public abstract class PlayerEntityTickMixin extends LivingEntity {
                     // apply to nearby
                     switch (mobEffectTrait.applyToNearby) {
                         case 0 -> {
-                            List<Player> nearbyPlayers = CEntity.level(player).getNearbyPlayers(TargetingConditions.forNonCombat().range(mobEffectTrait.maxDistanceForEntities).ignoreLineOfSight(), player, player.getBoundingBox().inflate(mobEffectTrait.maxDistanceForEntities, mobEffectTrait.maxDistanceForEntities, mobEffectTrait.maxDistanceForEntities));
+                            List<Player> nearbyPlayers = player.level().getNearbyPlayers(TargetingConditions.forNonCombat().range(mobEffectTrait.maxDistanceForEntities).ignoreLineOfSight(), player, player.getBoundingBox().inflate(mobEffectTrait.maxDistanceForEntities, mobEffectTrait.maxDistanceForEntities, mobEffectTrait.maxDistanceForEntities));
                             if (!nearbyPlayers.isEmpty()) {
                                 for (int i = 0; i < nearbyPlayers.size() && (mobEffectTrait.amountOfEntitiesToApplyTo < 0 || i < mobEffectTrait.amountOfEntitiesToApplyTo); i++) {
                                     nearbyPlayers.get(i).addEffect(new MobEffectInstance(mobEffectInstance.getEffect(), mobEffectInstance.getDuration(), mobEffectInstance.getAmplifier(), mobEffectInstance.isAmbient(), mobEffectInstance.isVisible(), mobEffectInstance.showIcon()), player);
@@ -167,7 +157,7 @@ public abstract class PlayerEntityTickMixin extends LivingEntity {
                             }
                         }
                         case 1 -> {
-                            List<Mob> nearbyMobs = CEntity.level(player).getNearbyEntities(Mob.class, TargetingConditions.forNonCombat().range(mobEffectTrait.maxDistanceForEntities).ignoreLineOfSight(), player, player.getBoundingBox().inflate(mobEffectTrait.maxDistanceForEntities, mobEffectTrait.maxDistanceForEntities, mobEffectTrait.maxDistanceForEntities));
+                            List<Mob> nearbyMobs = player.level().getNearbyEntities(Mob.class, TargetingConditions.forNonCombat().range(mobEffectTrait.maxDistanceForEntities).ignoreLineOfSight(), player, player.getBoundingBox().inflate(mobEffectTrait.maxDistanceForEntities, mobEffectTrait.maxDistanceForEntities, mobEffectTrait.maxDistanceForEntities));
                             if (!nearbyMobs.isEmpty()) {
                                 for (int i = 0; i < nearbyMobs.size() && (mobEffectTrait.amountOfEntitiesToApplyTo < 0 || i < mobEffectTrait.amountOfEntitiesToApplyTo); i++) {
                                     nearbyMobs.get(i).addEffect(new MobEffectInstance(mobEffectInstance.getEffect(), mobEffectInstance.getDuration(), mobEffectInstance.getAmplifier(), mobEffectInstance.isAmbient(), mobEffectInstance.isVisible(), mobEffectInstance.showIcon()), player);
@@ -175,8 +165,8 @@ public abstract class PlayerEntityTickMixin extends LivingEntity {
                             }
                         }
                         case 2 -> {
-                            List<Mob> nearbyMobs = CEntity.level(player).getNearbyEntities(Mob.class, TargetingConditions.forNonCombat().range(mobEffectTrait.maxDistanceForEntities).ignoreLineOfSight(), player, player.getBoundingBox().inflate(mobEffectTrait.maxDistanceForEntities, mobEffectTrait.maxDistanceForEntities, mobEffectTrait.maxDistanceForEntities));
-                            List<Player> nearbyPlayers = CEntity.level(player).getNearbyPlayers(TargetingConditions.forNonCombat().range(mobEffectTrait.maxDistanceForEntities).ignoreLineOfSight(), player, player.getBoundingBox().inflate(mobEffectTrait.maxDistanceForEntities, mobEffectTrait.maxDistanceForEntities, mobEffectTrait.maxDistanceForEntities));
+                            List<Mob> nearbyMobs = player.level().getNearbyEntities(Mob.class, TargetingConditions.forNonCombat().range(mobEffectTrait.maxDistanceForEntities).ignoreLineOfSight(), player, player.getBoundingBox().inflate(mobEffectTrait.maxDistanceForEntities, mobEffectTrait.maxDistanceForEntities, mobEffectTrait.maxDistanceForEntities));
+                            List<Player> nearbyPlayers = player.level().getNearbyPlayers(TargetingConditions.forNonCombat().range(mobEffectTrait.maxDistanceForEntities).ignoreLineOfSight(), player, player.getBoundingBox().inflate(mobEffectTrait.maxDistanceForEntities, mobEffectTrait.maxDistanceForEntities, mobEffectTrait.maxDistanceForEntities));
                             List<LivingEntity> nearbyEntites = new ArrayList<>();
                             nearbyEntites.addAll(nearbyMobs);
                             nearbyEntites.addAll(nearbyPlayers);
@@ -201,9 +191,9 @@ public abstract class PlayerEntityTickMixin extends LivingEntity {
     @Inject(method = "tick", at = @At("HEAD"))
     private void sheepServerTick(CallbackInfo info) {
         if (walkers$IS_TALL_GRASS == null)
-            walkers$IS_TALL_GRASS = BlockStatePredicate.forBlock(CEntity.level(this).registryAccess().registryOrThrow((ResourceKey<? extends Registry<Block>>) CRegistries.getRegistry(Identifier.parse("block")).key()).get(Identifier.parse("grass")));
+            walkers$IS_TALL_GRASS = BlockStatePredicate.forBlock(Blocks.TALL_GRASS);
 
-        if (!CEntity.level(this).isClientSide && this.isAlive()) {
+        if (!this.level().isClientSide && this.isAlive()) {
             ServerPlayer serverPlayer = (ServerPlayer) (Object) this;
             LivingEntity shape = PlayerShape.getCurrentShape(serverPlayer);
             if (shape != null && AbilityRegistry.get(shape) instanceof GrassEaterAbility<?> grassEaterAbility) {
@@ -215,8 +205,8 @@ public abstract class PlayerEntityTickMixin extends LivingEntity {
 
                     if (grassEaterAbility.eatTick.get(serverPlayer.getUUID()) == Mth.positiveCeilDiv(4, 2)) {
                         BlockPos blockPos = serverPlayer.blockPosition();
-                        if (walkers$IS_TALL_GRASS.test(CEntity.level(this).getBlockState(blockPos)) && walkers$isLookingAtPos(blockPos)) {
-                            CEntity.level(this).destroyBlock(blockPos, false);
+                        if (walkers$IS_TALL_GRASS.test(this.level().getBlockState(blockPos)) && walkers$isLookingAtPos(blockPos)) {
+                            this.level().destroyBlock(blockPos, false);
 
                             gameEvent(GameEvent.EAT);
                             serverPlayer.getFoodData().eat(3, 0.2F);
@@ -224,9 +214,9 @@ public abstract class PlayerEntityTickMixin extends LivingEntity {
                             if (shape instanceof Sheep sheepShape) sheepShape.setSheared(false);
                         } else {
                             BlockPos blockPos2 = blockPos.below();
-                            if (CEntity.level(this).getBlockState(blockPos2).is(Blocks.GRASS_BLOCK) && walkers$isLookingAtPos(blockPos2)) {
-                                CEntity.level(this).levelEvent(LevelEvent.PARTICLES_DESTROY_BLOCK, blockPos2, Block.getId(Blocks.GRASS_BLOCK.defaultBlockState()));
-                                CEntity.level(this).setBlock(blockPos2, Blocks.DIRT.defaultBlockState(), 2);
+                            if (this.level().getBlockState(blockPos2).is(Blocks.GRASS_BLOCK) && walkers$isLookingAtPos(blockPos2)) {
+                                this.level().levelEvent(LevelEvent.PARTICLES_DESTROY_BLOCK, blockPos2, Block.getId(Blocks.GRASS_BLOCK.defaultBlockState()));
+                                this.level().setBlock(blockPos2, Blocks.DIRT.defaultBlockState(), 2);
 
                                 gameEvent(GameEvent.EAT);
                                 serverPlayer.getFoodData().eat(3, 0.1F);

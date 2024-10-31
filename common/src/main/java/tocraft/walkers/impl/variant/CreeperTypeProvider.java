@@ -6,7 +6,6 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.monster.Creeper;
 import net.minecraft.world.level.Level;
-import tocraft.craftedcore.patched.TComponent;
 import tocraft.walkers.api.variant.TypeProvider;
 
 public class CreeperTypeProvider extends TypeProvider<Creeper> {
@@ -37,7 +36,7 @@ public class CreeperTypeProvider extends TypeProvider<Creeper> {
     @Override
     public Component modifyText(Creeper creeper, MutableComponent text) {
         int variant = getVariantData(creeper);
-        return TComponent.literal(variant == 1 ? "Powered " : "").append(text);
+        return Component.literal(variant == 1 ? "Powered " : "").append(text);
     }
 }
 

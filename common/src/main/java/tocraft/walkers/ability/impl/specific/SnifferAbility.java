@@ -1,4 +1,3 @@
-//#if MC>1194
 package tocraft.walkers.ability.impl.specific;
 
 import net.minecraft.core.BlockPos;
@@ -12,8 +11,6 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
-import tocraft.craftedcore.patched.CEntity;
-import tocraft.craftedcore.patched.Identifier;
 import tocraft.walkers.Walkers;
 import tocraft.walkers.ability.ShapeAbility;
 
@@ -31,19 +28,19 @@ public class SnifferAbility<T extends LivingEntity> extends ShapeAbility<T> {
     @Override
     public void onUse(Player player, T shape, Level world) {
         // Ensures, the player isn't in Water/Lava and touches the ground
-        if (player.isInLava() || player.isInWater() || !CEntity.isOnGround(player))
+        if (player.isInLava() || player.isInWater() || !player.onGround())
             return;
 
         BlockPos playerPos = player.blockPosition();
         BlockPos blockPos = new BlockPos(playerPos.getX(), playerPos.getY() - 1, playerPos.getZ());
         List<Block> diggableBlocks = new ArrayList<>();
-        diggableBlocks.add(BuiltInRegistries.BLOCK.get(Identifier.parse("minecraft:dirt")));
-        diggableBlocks.add(BuiltInRegistries.BLOCK.get(Identifier.parse("minecraft:grass_block")));
-        diggableBlocks.add(BuiltInRegistries.BLOCK.get(Identifier.parse("minecraft:podzol")));
-        diggableBlocks.add(BuiltInRegistries.BLOCK.get(Identifier.parse("minecraft:rooted_dirt")));
-        diggableBlocks.add(BuiltInRegistries.BLOCK.get(Identifier.parse("minecraft:moss_block")));
-        diggableBlocks.add(BuiltInRegistries.BLOCK.get(Identifier.parse("minecraft:mud")));
-        diggableBlocks.add(BuiltInRegistries.BLOCK.get(Identifier.parse("minecraft:muddy_mangrove_roots")));
+        diggableBlocks.add(BuiltInRegistries.BLOCK.get(ResourceLocation.parse("minecraft:dirt")));
+        diggableBlocks.add(BuiltInRegistries.BLOCK.get(ResourceLocation.parse("minecraft:grass_block")));
+        diggableBlocks.add(BuiltInRegistries.BLOCK.get(ResourceLocation.parse("minecraft:podzol")));
+        diggableBlocks.add(BuiltInRegistries.BLOCK.get(ResourceLocation.parse("minecraft:rooted_dirt")));
+        diggableBlocks.add(BuiltInRegistries.BLOCK.get(ResourceLocation.parse("minecraft:moss_block")));
+        diggableBlocks.add(BuiltInRegistries.BLOCK.get(ResourceLocation.parse("minecraft:mud")));
+        diggableBlocks.add(BuiltInRegistries.BLOCK.get(ResourceLocation.parse("minecraft:muddy_mangrove_roots")));
 
         // checks, if the block bellow the player is in the 'diggableBlocks'-List
         if (diggableBlocks.contains(world.getBlockState(blockPos).getBlock()) && Math.random() <= 0.5D) {
@@ -72,4 +69,3 @@ public class SnifferAbility<T extends LivingEntity> extends ShapeAbility<T> {
         return 9600;
     }
 }
-//#endif

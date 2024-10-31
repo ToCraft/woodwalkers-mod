@@ -34,7 +34,6 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import tocraft.craftedcore.patched.CEntity;
 import tocraft.craftedcore.util.Maths;
 import tocraft.walkers.Walkers;
 import tocraft.walkers.api.PlayerShape;
@@ -44,9 +43,7 @@ import tocraft.walkers.api.model.EntityUpdater;
 import tocraft.walkers.api.model.EntityUpdaters;
 import tocraft.walkers.mixin.accessor.EntityAccessor;
 import tocraft.walkers.mixin.accessor.LivingEntityAccessor;
-//#if MC>1182
 import tocraft.walkers.mixin.client.accessor.LimbAnimatorAccessor;
-//#endif
 import tocraft.walkers.mixin.client.accessor.LivingEntityRendererAccessor;
 
 @SuppressWarnings({"ALL", "unchecked"})
@@ -75,15 +72,9 @@ public abstract class PlayerEntityRendererMixin extends LivingEntityRenderer<Abs
                 return false;
             }
 
-            //#if MC>1182
             ((LimbAnimatorAccessor) shape.walkAnimation).setPrevSpeed(((LimbAnimatorAccessor) player.walkAnimation).getPrevSpeed());
             shape.walkAnimation.setSpeed(player.walkAnimation.speed());
             ((LimbAnimatorAccessor) shape.walkAnimation).setPos(player.walkAnimation.position());
-            //#else
-            //$$ shape.animationSpeedOld = player.animationSpeedOld;
-            //$$ shape.animationSpeed = player.animationSpeed;
-            //$$ shape.animationPosition = player.animationPosition;
-            //#endif
             shape.swinging = player.swinging;
             shape.swingTime = player.swingTime;
             shape.oAttackAnim = player.oAttackAnim;
@@ -96,7 +87,7 @@ public abstract class PlayerEntityRendererMixin extends LivingEntityRenderer<Abs
             shape.swingingArm = player.swingingArm;
             ((LivingEntityAccessor) shape).setSwimAmount(((LivingEntityAccessor) player).getSwimAmount());
             ((LivingEntityAccessor) shape).setSwimAmountO(((LivingEntityAccessor) player).getSwimAmountO());
-            shape.setOnGround(CEntity.isOnGround(player));
+            shape.setOnGround(player.onGround());
             shape.setDeltaMovement(player.getDeltaMovement());
             shape.setInvisible(player.isInvisibleTo(Minecraft.getInstance().player));
 
@@ -160,11 +151,7 @@ public abstract class PlayerEntityRendererMixin extends LivingEntityRenderer<Abs
                 // Only render nametags if the server option is true and the entity being
                 // rendered is NOT this player/client
                 if (Walkers.CONFIG.showPlayerNametag && player != Minecraft.getInstance().player) {
-                    //#if MC>=1205
                     renderNameTag((AbstractClientPlayer) player, player.getDisplayName(), matrixStack, buffer, packedLight, 0);
-                    //#else
-                    //$$ renderNameTag((AbstractClientPlayer) player, player.getDisplayName(), matrixStack, buffer, packedLight);
-                    //#endif
                 }
             }
 

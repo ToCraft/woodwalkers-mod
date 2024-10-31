@@ -17,7 +17,7 @@ body:
     id: mc-version
     attributes:
       label: Minecraft version
-      placeholder: e.g. 1.20.2
+      placeholder: e.g. 1.21.2
     validations:
       required: true
   - type: input

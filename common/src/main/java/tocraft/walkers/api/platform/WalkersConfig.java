@@ -7,6 +7,7 @@ import tocraft.walkers.Walkers;
 
 import java.util.*;
 
+@SuppressWarnings("CanBeFinal")
 public class WalkersConfig implements Config {
 
     @Comment("Whether a player's equipped shape is revoked on death.")
@@ -48,7 +49,7 @@ public class WalkersConfig implements Config {
     @Comment("Whether the player should have the same default amor values as the mob.")
     public boolean scalingAmor = true;
     @Comment("The maximum value of default amor. Useful for not having players who can't take damage.")
-    public  int maxAmor = 30;
+    public int maxAmor = 30;
     @Comment("The maximum value of default amor toughness. Useful for not having players who can't take damage.")
     public int maxAmorToughness = 20;
     @Comment("In blocks, how far can the Enderman ability teleport?")
@@ -58,12 +59,10 @@ public class WalkersConfig implements Config {
     public boolean showPlayerNametag = false;
     @Comment("The default fly speed for transformed players.")
     public float flySpeed = 0.05f;
-    //#if MC>1182
     @Comment("If true, players with the Warden shape will have a shorter view range with the darkness effect.")
     public boolean wardenIsBlinded = true;
     @Comment("If true, players with the Warden shape will blind other nearby players.")
     public boolean wardenBlindsNearby = true;
-    //#endif
     @Comment("If true, unlocking a shape will ignore current second shapes.")
     @Synchronize
     public boolean unlockOverridesCurrentShape = false;
