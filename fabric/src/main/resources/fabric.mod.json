@@ -3,7 +3,7 @@
   "id": "walkers",
   "version": "${version}",
   "name": "Walkers",
-  "icon": "icon.png",
+  "icon": "pack.png",
   "description": "Play as your favorite entities!",
   "authors": [
     "To_Craft"
