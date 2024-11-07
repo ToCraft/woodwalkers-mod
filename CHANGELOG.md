@@ -1,8 +1,9 @@
 walkers 5.6
 ================
 - backport CantFreezeTrait
-- fix another data pack error
+- fix another data pack error with traits
 - add turkish by Feitan_Portor
+- cleanup shape data
 
 walkers 5.5
 ================

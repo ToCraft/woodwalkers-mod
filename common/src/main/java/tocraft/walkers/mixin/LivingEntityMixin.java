@@ -384,10 +384,16 @@ public abstract class LivingEntityMixin extends Entity implements NearbySongAcce
     private void setPlayerSource(DamageSource source, float amount, CallbackInfoReturnable<Boolean> cir) {
         Entity attacker = source.getEntity();
         if (attacker instanceof Mob mobEntity) {
-            if (((ShapeDataProvider) mobEntity).walkers$isShape()) {
-                DamageSource playerDamageSource = ((ShapeDataProvider) mobEntity).walkers$playerDamageSource();
-                if (playerDamageSource != null) {
-                    cir.setReturnValue(this.hurt(playerDamageSource, amount));
+            int playerId = ((ShapeDataProvider) mobEntity).walkers$shapedPlayer();
+            if (playerId != -1) {
+                Entity player = serverLevel.getEntity(playerId);
+                if (player instanceof Player) {
+                    //#if MC>1182
+                    DamageSource damageSource = this.damageSources().playerAttack((Player) (Object) this);
+                    //#else
+                    DamageSource damageSource = DamageSource.playerAttack((Player) (Object) this);
+                    //#endif
+                    cir.setReturnValue(this.hurt(damageSource, amount));
                 }
             }
         }
