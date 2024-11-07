@@ -23,7 +23,6 @@ import java.util.function.Supplier;
 
 @Mixin(Consumable.class)
 public class ConsumableMixin {
-    // TODO: move to a trait
     @Unique
     private static final Supplier<List<Item>> WOLVES_IGNORE = Suppliers.memoize(() -> Arrays.asList(Items.CHICKEN, Items.PUFFERFISH, Items.ROTTEN_FLESH));
 

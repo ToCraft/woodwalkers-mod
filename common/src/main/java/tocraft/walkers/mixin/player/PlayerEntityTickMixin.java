@@ -83,10 +83,7 @@ public abstract class PlayerEntityTickMixin extends LivingEntity {
     private void setShapeData(CallbackInfo ci) {
         LivingEntity shape = PlayerShape.getCurrentShape((Player) (Object) this);
         if (shape instanceof ShapeDataProvider shapeData) {
-            if (!shapeData.walkers$isShape()) {
-                shapeData.walkers$setIsShape(true);
-            }
-            shapeData.walkers$setPlayerDamageSource(this.damageSources().playerAttack((Player) (Object) this));
+            shapeData.walkers$ShapedPlayer(getId());
         }
     }
 
