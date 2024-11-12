@@ -206,10 +206,11 @@ public abstract class PlayerEntityDataMixin extends LivingEntity implements Play
                 healthAttribute.setBaseValue(Math.min(Walkers.CONFIG.maxHealth, shape.getMaxHealth()));
 
                 // set health
-                if (Walkers.CONFIG.percentScalingHealth)
+                if (Walkers.CONFIG.percentScalingHealth) {
                     player.setHealth(Math.min(currentHealthPercent * player.getMaxHealth(), player.getMaxHealth()));
-                else
+                } else {
                     player.setHealth(Math.min(player.getHealth(), player.getMaxHealth()));
+                }
             }
             if (Walkers.CONFIG.scalingAmor) {
                 AttributeInstance shapeArmorAttribute = shape.getAttribute(Attributes.ARMOR);
@@ -226,11 +227,19 @@ public abstract class PlayerEntityDataMixin extends LivingEntity implements Play
         // If the shape is null (going back to player), set the player's base health
         // value to 20 (default) to clear old changes.
         if (shape == null) {
-            float currentHealthPercent = player.getHealth() / player.getMaxHealth();
-
             if (Walkers.CONFIG.scalingHealth && healthAttribute != null) {
                 healthAttribute.setBaseValue(20);
+
+                // Clear health value if needed
+                if (Walkers.CONFIG.percentScalingHealth) {
+                    float currentHealthPercent = player.getHealth() / player.getMaxHealth();
+
+                    player.setHealth(Math.min(currentHealthPercent * player.getMaxHealth(), player.getMaxHealth()));
+                } else {
+                    player.setHealth(Math.min(player.getHealth(), player.getMaxHealth()));
+                }
             }
+
             if (Walkers.CONFIG.scalingAmor) {
                 if (armorAttribute != null) {
                     armorAttribute.setBaseValue(0);
@@ -238,13 +247,6 @@ public abstract class PlayerEntityDataMixin extends LivingEntity implements Play
                 if (armorToughnessAttribute != null) {
                     armorAttribute.setBaseValue(0);
                 }
-            }
-
-            // Clear health value if needed
-            if (Walkers.CONFIG.percentScalingHealth) {
-                player.setHealth(Math.min(currentHealthPercent * player.getMaxHealth(), player.getMaxHealth()));
-            } else {
-                player.setHealth(Math.min(player.getHealth(), player.getMaxHealth()));
             }
         }
 
