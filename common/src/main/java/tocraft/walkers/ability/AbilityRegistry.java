@@ -105,6 +105,7 @@ public class AbilityRegistry {
         // handle Integrations
         Integrations.registerAbilities();
 
+        // registration warnings
         for (GenericShapeAbility<?> ability : genericAbilities.values()) {
             if (!abilityCodecById.containsKey(ability.getId())) {
                 Walkers.LOGGER.warn("{} isn't registered!", ability.getId());

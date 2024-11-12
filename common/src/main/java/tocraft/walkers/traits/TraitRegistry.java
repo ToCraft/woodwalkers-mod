@@ -182,21 +182,23 @@ public class TraitRegistry {
     public static synchronized <L extends LivingEntity> List<ShapeTrait<L>> getAll(L shape) {
         List<ShapeTrait<L>> traits = new ArrayList<>();
         if (shape != null) {
-            if (traitsByEntityTypes.containsKey(shape.getType())) {
-                traits.addAll(traitsByEntityTypes.get(shape.getType()).stream().map(trait -> (ShapeTrait<L>) trait).toList());
+            List<ShapeTrait<?>> list = traitsByEntityTypes.get(shape.getType());
+            if (list != null) {
+                traits.addAll(list.stream().map(trait -> (ShapeTrait<L>) trait).toList());
             }
-            for (Class<? extends LivingEntity> aClass : traitsByEntityClasses.keySet()) {
-                if (aClass.isInstance(shape))
-                    traits.addAll(traitsByEntityClasses.get(aClass).stream().map(trait -> (ShapeTrait<L>) trait).toList());
-            }
-            for (TagKey<EntityType<?>> entityTypeTagKey : traitsByEntityTags.keySet()) {
-                if (shape.getType().is(entityTypeTagKey)) {
-                    traits.addAll(traitsByEntityTags.get(entityTypeTagKey).stream().map(trait -> (ShapeTrait<L>) trait).toList());
+            for (Map.Entry<Class<? extends LivingEntity>, List<ShapeTrait<?>>> entry : traitsByEntityClasses.entrySet()) {
+                if (entry.getKey().isInstance(shape)) {
+                    traits.addAll(entry.getValue().stream().map(trait -> (ShapeTrait<L>) trait).toList());
                 }
             }
-            for (Predicate<LivingEntity> predicate : traitsByPredicates.keySet()) {
-                if (predicate.test(shape)) {
-                    traits.addAll(traitsByPredicates.get(predicate).stream().map(trait -> (ShapeTrait<L>) trait).toList());
+            for (Map.Entry<TagKey<EntityType<?>>, List<ShapeTrait<?>>> entry : traitsByEntityTags.entrySet()) {
+                if (shape.getType().is(entry.getKey())) {
+                    traits.addAll(entry.getValue().stream().map(trait -> (ShapeTrait<L>) trait).toList());
+                }
+            }
+            for (Map.Entry<Predicate<LivingEntity>, List<ShapeTrait<?>>> entry : traitsByPredicates.entrySet()) {
+                if (entry.getKey().test(shape)) {
+                    traits.addAll(entry.getValue().stream().map(trait -> (ShapeTrait<L>) trait).toList());
                 }
             }
         }
@@ -355,21 +357,22 @@ public class TraitRegistry {
 
     public static <L extends LivingEntity> boolean has(L shape, ResourceLocation traitId) {
         if (shape != null) {
-            if (traitsByEntityTypes.containsKey(shape.getType()) && traitsByEntityTypes.get(shape.getType()).stream().anyMatch(trait -> trait.getId() == traitId)) {
+            List<ShapeTrait<?>> list = traitsByEntityTypes.get(shape.getType());
+            if (list != null && list.stream().anyMatch(trait -> trait.getId() == traitId)) {
                 return true;
             }
-            for (Class<? extends LivingEntity> aClass : traitsByEntityClasses.keySet()) {
-                if (aClass.isInstance(shape) && traitsByEntityClasses.get(aClass).stream().anyMatch(trait -> trait.getId() == traitId)) {
+            for (Map.Entry<Class<? extends LivingEntity>, List<ShapeTrait<?>>> entry : traitsByEntityClasses.entrySet()) {
+                if (entry.getKey().isInstance(shape) && entry.getValue().stream().anyMatch(trait -> trait.getId() == traitId)) {
                     return true;
                 }
             }
-            for (TagKey<EntityType<?>> entityTypeTagKey : traitsByEntityTags.keySet()) {
-                if (shape.getType().is(entityTypeTagKey) && traitsByEntityTags.get(entityTypeTagKey).stream().anyMatch(trait -> trait.getId() == traitId)) {
+            for (Map.Entry<TagKey<EntityType<?>>, List<ShapeTrait<?>>> entry : traitsByEntityTags.entrySet()) {
+                if (shape.getType().is(entry.getKey()) && entry.getValue().stream().anyMatch(trait -> trait.getId() == traitId)) {
                     return true;
                 }
             }
-            for (Predicate<LivingEntity> predicate : traitsByPredicates.keySet()) {
-                if (predicate.test(shape) && traitsByPredicates.get(predicate).stream().anyMatch(trait -> trait.getId() == traitId)) {
+            for (Map.Entry<Predicate<LivingEntity>, List<ShapeTrait<?>>> entry : traitsByPredicates.entrySet()) {
+                if (entry.getKey().test(shape) && entry.getValue().stream().anyMatch(trait -> trait.getId() == traitId)) {
                     return true;
                 }
             }
