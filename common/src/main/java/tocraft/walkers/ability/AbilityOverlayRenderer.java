@@ -3,6 +3,7 @@ package tocraft.walkers.ability;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.Item;
 import tocraft.craftedcore.event.client.RenderEvents;
 import tocraft.craftedcore.gui.TimerOverlayRenderer;
 import tocraft.walkers.api.PlayerAbilities;
@@ -22,8 +23,11 @@ public class AbilityOverlayRenderer {
 
             ShapeAbility<LivingEntity> shapeAbility = AbilityRegistry.get(shape);
 
-            if (shapeAbility != null) {
-                TimerOverlayRenderer.register(matrices, PlayerAbilities.getCooldown(player), shapeAbility.getCooldown(shape), shapeAbility.getIcon());
+            if (player != null && shapeAbility != null) {
+                Item icon = shapeAbility.getIcon();
+                if (icon != null) {
+                    TimerOverlayRenderer.register(matrices, PlayerAbilities.getCooldown(player), shapeAbility.getCooldown(shape), icon);
+                }
             }
         });
     }
