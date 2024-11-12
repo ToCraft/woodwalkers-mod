@@ -1,5 +1,6 @@
 package tocraft.walkers.mixin;
 
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.monster.hoglin.Hoglin;
 import net.minecraft.world.entity.monster.hoglin.HoglinAi;
@@ -19,7 +20,7 @@ public class HoglinBrainMixin {
             method = "findNearestValidAttackTarget",
             at = @At("RETURN"),
             cancellable = true)
-    private static void findNearestValidAttackTarget(Hoglin hoglin, CallbackInfoReturnable<Optional<? extends LivingEntity>> cir) {
+    private static void findNearestValidAttackTarget(ServerLevel serverLevel, Hoglin hoglin, CallbackInfoReturnable<Optional<? extends LivingEntity>> cir) {
         Optional<? extends LivingEntity> ret = cir.getReturnValue();
         if (ret.isPresent()) {
             LivingEntity target = ret.get();

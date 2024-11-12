@@ -6,6 +6,7 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.NotNull;
 import tocraft.craftedcore.network.ModernNetworking;
 import tocraft.walkers.ability.AbilityRegistry;
 import tocraft.walkers.ability.ShapeAbility;
@@ -28,7 +29,7 @@ public class PlayerAbilities {
         return ((PlayerDataProvider) player).walkers$getAbilityCooldown();
     }
 
-    public static boolean canUseAbility(Player player) {
+    public static boolean canUseAbility(@NotNull Player player) {
         return !player.isSpectator() && ((PlayerDataProvider) player).walkers$getAbilityCooldown() <= 0;
     }
 
