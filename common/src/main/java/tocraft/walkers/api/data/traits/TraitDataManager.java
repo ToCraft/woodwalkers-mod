@@ -63,7 +63,7 @@ public class TraitDataManager extends SynchronizedJsonReloadListener {
     }
 
     private static void logRegistration(Object key, @NotNull List<ShapeTrait<?>> traitList) {
-        Walkers.LOGGER.info("{}: {} registered for {}", TraitDataManager.class.getSimpleName(), key, traitList.stream().map(trait -> trait.getClass().getSimpleName()).toArray(String[]::new));
+        Walkers.LOGGER.debug("{}: {} registered for {}", TraitDataManager.class.getSimpleName(), traitList.stream().map(trait -> trait.getClass().getSimpleName()).toArray(String[]::new), key);
     }
 
     public static final Codec<TraitList> TRAIT_LIST_CODEC = RecordCodecBuilder.create((instance) -> instance.group(Codec.STRING.optionalFieldOf("required_mod", "").forGetter(TraitList::requiredMod), Codec.list(ResourceLocation.CODEC).optionalFieldOf("entity_types", new ArrayList<>()).forGetter(TraitList::entityTypeKeys), Codec.list(ResourceLocation.CODEC).optionalFieldOf("entity_tags", new ArrayList<>()).forGetter(TraitList::entityTagKeys), Codec.list(TraitRegistry.getTraitCodec()).fieldOf("traits").forGetter(TraitList::traitList)).apply(instance, instance.stable(TraitList::new)));

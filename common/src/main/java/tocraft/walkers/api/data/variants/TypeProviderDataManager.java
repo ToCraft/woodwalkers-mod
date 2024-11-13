@@ -47,7 +47,7 @@ public class TypeProviderDataManager extends SynchronizedJsonReloadListener {
                 if (entityType != null) {
                     TypeProviderRegistry.register(entityType, (TypeProvider<LivingEntity>) typeProviderEntry.typeProvider());
 
-                    Walkers.LOGGER.info("{}: {} registered for {}", getClass().getSimpleName(), typeProviderEntry.entityTypeKey(), typeProviderEntry.typeProvider().getClass());
+                    Walkers.LOGGER.debug("{}: {} registered with {} variants", getClass().getSimpleName(), typeProviderEntry.entityTypeKey(), typeProviderEntry.typeProvider().getRange());
                 }
             } else {
                 Walkers.LOGGER.warn("Couldn't parse json as type provider: {}", mapEntry.getKey());

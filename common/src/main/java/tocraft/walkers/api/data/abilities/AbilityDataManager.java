@@ -69,7 +69,7 @@ public class AbilityDataManager extends SynchronizedJsonReloadListener {
     }
 
     private static void logRegistration(Object key, @NotNull ShapeAbility<?> ability) {
-        Walkers.LOGGER.info("{}: {} registered for {}", AbilityDataManager.class.getSimpleName(), key, ability.getClass().getSimpleName());
+        Walkers.LOGGER.debug("{}: {} registered for {}", AbilityDataManager.class.getSimpleName(), ability.getClass().getSimpleName(), key);
     }
 
     public static final Codec<AbilityList> ABILITY_LIST_CODEC = RecordCodecBuilder.create((instance) -> instance.group(

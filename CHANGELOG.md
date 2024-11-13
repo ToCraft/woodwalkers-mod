@@ -1,7 +1,7 @@
 walkers 6
 ================
 - port to 1.21.3
-- many background improvements
+- many background improvements & code cleanup
 - add turkish by Feitan_Portor
 
 walkers 5.4
