@@ -3,6 +3,7 @@ walkers 6.0
 - port to 1.21.3
 - many background improvements & code cleanup
 - add turkish by Feitan_Portor
+- update clientside hitbox on respawn
 
 walkers 5.4
 ================
