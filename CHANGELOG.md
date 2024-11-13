@@ -6,6 +6,7 @@ walkers 5.6
 - cleanup shape data
 - blacklist whisperwoods:wisp
 - fix Parrots get poison when eating cookies
+- update clientside hitbox on respawn
 
 walkers 5.5
 ================
