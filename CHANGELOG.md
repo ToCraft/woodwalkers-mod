@@ -1,4 +1,4 @@
-walkers 6
+walkers 6.0
 ================
 - port to 1.21.3
 - many background improvements & code cleanup
