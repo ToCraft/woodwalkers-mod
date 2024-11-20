@@ -17,6 +17,7 @@ import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.entity.ambient.Bat;
 import net.minecraft.world.entity.animal.*;
 import net.minecraft.world.entity.animal.allay.Allay;
+import net.minecraft.world.entity.animal.axolotl.Axolotl;
 import net.minecraft.world.entity.animal.horse.AbstractHorse;
 import net.minecraft.world.entity.boss.enderdragon.EnderDragon;
 import net.minecraft.world.entity.boss.wither.WitherBoss;
@@ -109,6 +110,9 @@ public class TraitRegistry {
         registerByPredicate(entity -> entity instanceof Turtle && entity.isBaby(), PreyTrait.ofHunterClass(Fox.class));
         // ocelot prey
         registerByClass(Chicken.class, (PreyTrait<Chicken>) PreyTrait.ofHunterClass(Ocelot.class));
+        // axolotl prey
+        registerByTag(EntityTypeTags.AXOLOTL_HUNT_TARGETS, PreyTrait.ofHunterClass(Axolotl.class));
+        registerByTag(EntityTypeTags.AXOLOTL_ALWAYS_HOSTILES, PreyTrait.ofHunterClass(Axolotl.class));
         // hostile attacked by iron golem
         registerByPredicate(entity -> entity instanceof Enemy && !(entity instanceof Creeper), new PreyTrait<>(List.of(), List.of(), List.of(IronGolem.class), List.of(), 3, 5));
         // hurt by high temperature
@@ -130,6 +134,7 @@ public class TraitRegistry {
         registerByClass(Wolf.class, (FearedTrait<Wolf>) FearedTrait.ofFearfulClass(AbstractSkeleton.class));
         registerByPredicate(entity -> entity instanceof Ocelot || entity instanceof Cat, FearedTrait.ofFearfulClass(Creeper.class));
         registerByClass(Ocelot.class, (FearedTrait<Ocelot>) FearedTrait.ofFearfulClass(Chicken.class));
+        registerByClass(Axolotl.class, (FearedTrait<Axolotl>) FearedTrait.ofFearfulTag(EntityTypeTags.AXOLOTL_HUNT_TARGETS));
         // climb blocks
         registerByClass(Spider.class, new ClimbBlocksTrait<>());
         registerByClass(Spider.class, new ClimbBlocksTrait<>(List.of(Blocks.COBWEB), new ArrayList<>()));
@@ -148,6 +153,7 @@ public class TraitRegistry {
         registerByClass(Dolphin.class, new AquaticTrait<>());
         // walk on powder snow
         registerByClass(Rabbit.class, new WalkOnPowderSnow<>());
+        registerByTag(EntityTypeTags.POWDER_SNOW_WALKABLE_MOBS, new WalkOnPowderSnow<>());
         // slow falling
         registerByClass(Chicken.class, new SlowFallingTrait<>());
         // support deprecated entity tags
@@ -175,6 +181,8 @@ public class TraitRegistry {
         registerByClass(SnowGolem.class, new CantFreezeTrait<>());
         registerByClass(PolarBear.class, new CantFreezeTrait<>());
         registerByClass(Stray.class, new CantFreezeTrait<>());
+        registerByClass(WitherBoss.class, new CantFreezeTrait<>());
+        registerByTag(EntityTypeTags.FREEZE_IMMUNE_ENTITY_TYPES, new CantFreezeTrait<>());
 
         // handle Integrations
         Integrations.registerTraits();

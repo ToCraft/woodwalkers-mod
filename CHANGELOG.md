@@ -4,6 +4,8 @@ walkers 6.1
 - fix maxAmorToughness config option
 - improve hitbox handling, handle scale attribute
 - scale step height
+- add CantFreeze trait
+- add support for various minecraft entity type tags
 
 walkers 6.0
 ================
@@ -11,7 +13,6 @@ walkers 6.0
 - many background improvements & code cleanup
 - add turkish by Feitan_Portor
 - update clientside hitbox on respawn
-- add CantFreeze trait
 
 walkers 5.4
 ================
