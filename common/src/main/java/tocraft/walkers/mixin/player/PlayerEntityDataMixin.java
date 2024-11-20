@@ -219,7 +219,7 @@ public abstract class PlayerEntityDataMixin extends LivingEntity implements Play
                 }
                 AttributeInstance shapeArmorToughnessAttribute = shape.getAttribute(Attributes.ARMOR_TOUGHNESS);
                 if (armorToughnessAttribute != null && shapeArmorToughnessAttribute != null) {
-                    armorToughnessAttribute.setBaseValue(Math.min(Walkers.CONFIG.maxAmor, shapeArmorToughnessAttribute.getBaseValue()));
+                    armorToughnessAttribute.setBaseValue(Math.min(Walkers.CONFIG.maxAmorToughness, shapeArmorToughnessAttribute.getBaseValue()));
                 }
             }
         }
