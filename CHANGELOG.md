@@ -1,3 +1,7 @@
+walkers 5.6
+================
+- backport CantFreezeTrait
+
 walkers 5.5
 ================
 - fix trait data packs on server
