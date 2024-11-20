@@ -5,6 +5,7 @@ walkers 5.6
 - add turkish by Feitan_Portor
 - cleanup shape data
 - blacklist whisperwoods:wisp
+- fix Parrots get poison when eating cookies
 
 walkers 5.5
 ================

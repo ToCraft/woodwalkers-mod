@@ -18,6 +18,7 @@ import net.minecraft.world.entity.animal.Parrot;
 import net.minecraft.world.entity.animal.Sheep;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
@@ -337,7 +338,7 @@ public abstract class LivingEntityMixin extends Entity implements NearbySongAcce
         //#endif
         if ((Object) this instanceof Player player) {
             LivingEntity shape = PlayerShape.getCurrentShape(player);
-            if (shape instanceof Parrot) {
+            if (shape instanceof Parrot && food.is(Items.COOKIE)) {
                 player.addEffect(new MobEffectInstance(MobEffects.POISON, 900));
                 if (player.isCreative() || !this.isInvulnerable()) {
                     //#if MC>1182
