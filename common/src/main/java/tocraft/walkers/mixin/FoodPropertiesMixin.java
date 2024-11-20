@@ -9,6 +9,7 @@ import net.minecraft.world.entity.animal.Sheep;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.component.Consumable;
 import net.minecraft.world.level.Level;
 import org.spongepowered.asm.mixin.Mixin;
@@ -32,7 +33,7 @@ public class FoodPropertiesMixin {
 
     @Inject(method = "onConsume", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/food/FoodData;eat(Lnet/minecraft/world/food/FoodProperties;)V"))
     private void dieFromCookies(Level level, LivingEntity entity, ItemStack itemStack, Consumable consumable, CallbackInfo ci) {
-        if (entity instanceof Player player && level instanceof ServerLevel serverLevel) {
+        if (entity instanceof Player player && level instanceof ServerLevel serverLevel && itemStack.is(Items.COOKIE)) {
             LivingEntity shape = PlayerShape.getCurrentShape(player);
             if (shape instanceof Parrot) {
                 player.addEffect(new MobEffectInstance(MobEffects.POISON, 900));

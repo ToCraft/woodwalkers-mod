@@ -1,3 +1,7 @@
+walkers 6.1
+================
+- fix Parrots get poison when eating cookies
+
 walkers 6.0
 ================
 - port to 1.21.3
