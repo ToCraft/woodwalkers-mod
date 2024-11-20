@@ -19,6 +19,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.FluidState;
+import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -252,14 +253,18 @@ public abstract class LivingEntityMixin extends Entity implements NearbySongAcce
     }
 
     @Inject(method = "canFreeze", at = @At("RETURN"), cancellable = true)
-    private void temperatureTraitPreventFreeze(CallbackInfoReturnable<Boolean> cir) {
+    private void temperatureTraitPreventFreeze(@NotNull CallbackInfoReturnable<Boolean> cir) {
         if (cir.getReturnValue()) {
             if ((Object) this instanceof Player) {
                 LivingEntity shape = PlayerShape.getCurrentShape((Player) (Object) this);
                 if (shape != null) {
-                    for (ShapeTrait<LivingEntity> temperatureTrait : TraitRegistry.get(shape, TemperatureTrait.ID)) {
-                        if (((TemperatureTrait<LivingEntity>) temperatureTrait).coldEnoughToSnow) {
-                            cir.setReturnValue(false);
+                    if (TraitRegistry.has(shape, CantFreezeTrait.ID)) {
+                        cir.setReturnValue(false);
+                    } else {
+                        for (ShapeTrait<LivingEntity> temperatureTrait : TraitRegistry.get(shape, TemperatureTrait.ID)) {
+                            if (((TemperatureTrait<LivingEntity>) temperatureTrait).coldEnoughToSnow) {
+                                cir.setReturnValue(false);
+                            }
                         }
                     }
                 }

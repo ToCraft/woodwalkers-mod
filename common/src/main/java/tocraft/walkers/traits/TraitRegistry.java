@@ -70,6 +70,7 @@ public class TraitRegistry {
         registerCodec(NocturnalTrait.ID, NocturnalTrait.CODEC);
         registerCodec(CantInteractTrait.ID, CantInteractTrait.CODEC);
         registerCodec(ImmunityTrait.ID, ImmunityTrait.CODEC);
+        registerCodec(CantFreezeTrait.ID, CantFreezeTrait.CODEC);
     }
 
     @SuppressWarnings("unchecked")
@@ -170,6 +171,10 @@ public class TraitRegistry {
         // immunity
         registerByClass(WitherBoss.class, new ImmunityTrait<>(MobEffects.WITHER.value()));
         registerByClass(WitherSkeleton.class, new ImmunityTrait<>(MobEffects.WITHER.value()));
+        // can't freeze
+        registerByClass(SnowGolem.class, new CantFreezeTrait<>());
+        registerByClass(PolarBear.class, new CantFreezeTrait<>());
+        registerByClass(Stray.class, new CantFreezeTrait<>());
 
         // handle Integrations
         Integrations.registerTraits();

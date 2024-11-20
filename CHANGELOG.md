@@ -11,6 +11,7 @@ walkers 6.0
 - many background improvements & code cleanup
 - add turkish by Feitan_Portor
 - update clientside hitbox on respawn
+- add CantFreeze trait
 
 walkers 5.4
 ================
