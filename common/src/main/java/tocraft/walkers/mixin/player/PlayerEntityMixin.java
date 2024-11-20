@@ -59,7 +59,6 @@ public abstract class PlayerEntityMixin extends LivingEntityMixin {
         if (entity != null) {
             if (pose != Pose.CROUCHING || !TraitRegistry.has(entity, HumanoidTrait.ID)) {
                 EntityDimensions shapeDimensions = entity.getDimensions(pose);
-                Drowned
                 cir.setReturnValue(shapeDimensions);
             }
         }

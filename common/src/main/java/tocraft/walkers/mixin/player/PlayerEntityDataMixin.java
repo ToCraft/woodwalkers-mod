@@ -224,6 +224,14 @@ public abstract class PlayerEntityDataMixin extends LivingEntity implements Play
             if (playerScaleAttribute != null && shapeScaleAttribute != null) {
                 shapeScaleAttribute.setBaseValue(playerScaleAttribute.getBaseValue());
             }
+
+            if (Walkers.CONFIG.scalingStepHeight) {
+                AttributeInstance playerStepHeightAttr = player.getAttribute(Attributes.STEP_HEIGHT);
+
+                if (playerStepHeightAttr != null) {
+                    playerStepHeightAttr.setBaseValue(shape.maxUpStep());
+                }
+            }
         }
 
         // refresh entity hitbox dimensions
@@ -251,6 +259,14 @@ public abstract class PlayerEntityDataMixin extends LivingEntity implements Play
                 }
                 if (armorToughnessAttribute != null) {
                     armorAttribute.setBaseValue(0);
+                }
+            }
+
+            if (Walkers.CONFIG.scalingStepHeight) {
+                AttributeInstance playerStepHeightAttr = player.getAttribute(Attributes.STEP_HEIGHT);
+
+                if (playerStepHeightAttr != null) {
+                    playerStepHeightAttr.setBaseValue(0.6);
                 }
             }
         }

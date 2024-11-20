@@ -52,6 +52,8 @@ public class WalkersConfig implements Config {
     public int maxAmor = 30;
     @Comment("The maximum value of default amor toughness. Useful for not having players who can't take damage.")
     public int maxAmorToughness = 20;
+    @Comment("Whether the player step height should be adjusted to the one of the mob.")
+    public boolean scalingStepHeight = true;
     @Comment("In blocks, how far can the Enderman ability teleport?")
     public int endermanAbilityTeleportDistance = 32;
     @Comment("Should player nametags render above players disguised with a shape? Note that the server is the authority for this config option.")

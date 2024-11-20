@@ -46,6 +46,11 @@ public class PlayerManagerMixin {
             if (playerScaleAttribute != null && shapeScaleAttribute != null) {
                 shapeScaleAttribute.setBaseValue(playerScaleAttribute.getBaseValue());
             }
+            // Re-sync step height for shape
+            if (Walkers.CONFIG.scalingStepHeight) {
+                player.getAttribute(Attributes.STEP_HEIGHT)
+                        .setBaseValue(shape.getAttributeBaseValue(Attributes.STEP_HEIGHT));
+            }
             // sync max health & attack damage with clients
             player.connection.send(new ClientboundUpdateAttributesPacket(player.getId(),
                     player.getAttributes().getSyncableAttributes()));
