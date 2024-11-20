@@ -23,7 +23,6 @@ import tocraft.walkers.Walkers;
 import tocraft.walkers.api.FlightHelper;
 import tocraft.walkers.api.PlayerShape;
 import tocraft.walkers.api.variant.ShapeType;
-import tocraft.walkers.impl.DimensionsRefresher;
 import tocraft.walkers.impl.PlayerDataProvider;
 import tocraft.walkers.mixin.EntityTrackerAccessor;
 import tocraft.walkers.mixin.ThreadedAnvilChunkStorageAccessor;
@@ -112,7 +111,7 @@ public abstract class PlayerEntityDataMixin extends LivingEntity implements Play
         // set shape to null (no shape) if the entity id is "minecraft:empty"
         if (tag.getString("id").equals("minecraft:empty")) {
             this.walkers$shape = null;
-            ((DimensionsRefresher) this).shape_refreshDimensions();
+            this.refreshDimensions();
         }
 
         // if entity type was valid, deserialize entity data from tag
@@ -125,7 +124,7 @@ public abstract class PlayerEntityDataMixin extends LivingEntity implements Play
                     walkers$shape = (LivingEntity) type.get().create(this.level(), EntitySpawnReason.LOAD);
 
                     // refresh player dimensions/hitbox on client
-                    ((DimensionsRefresher) this).shape_refreshDimensions();
+                    this.refreshDimensions();
                 }
 
                 walkers$shape.load(entityTag);
@@ -193,9 +192,6 @@ public abstract class PlayerEntityDataMixin extends LivingEntity implements Play
 
         this.walkers$shape = shape;
 
-        // refresh entity hitbox dimensions
-        ((DimensionsRefresher) player).shape_refreshDimensions();
-
         // shape is valid and scaling health is on; set entity's max health and current
         // health to reflect shape.
         if (shape != null) {
@@ -222,7 +218,16 @@ public abstract class PlayerEntityDataMixin extends LivingEntity implements Play
                     armorToughnessAttribute.setBaseValue(Math.min(Walkers.CONFIG.maxAmorToughness, shapeArmorToughnessAttribute.getBaseValue()));
                 }
             }
+
+            AttributeInstance playerScaleAttribute = player.getAttribute(Attributes.SCALE);
+            AttributeInstance shapeScaleAttribute = shape.getAttribute(Attributes.SCALE);
+            if (playerScaleAttribute != null && shapeScaleAttribute != null) {
+                shapeScaleAttribute.setBaseValue(playerScaleAttribute.getBaseValue());
+            }
         }
+
+        // refresh entity hitbox dimensions
+        player.refreshDimensions();
 
         // If the shape is null (going back to player), set the player's base health
         // value to 20 (default) to clear old changes.

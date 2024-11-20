@@ -88,6 +88,7 @@ public abstract class PlayerEntityRendererMixin extends LivingEntityRenderer<Abs
             livingState.wornHeadAnimationPos = player.wornHeadAnimationPos;
             livingState.isInWater = player.isInWater;
             livingState.mainArm = player.mainArm;
+            livingState.scale = player.scale;
 
             if (shape instanceof HumanoidRenderState humanoidShape) {
                 humanoidShape.swimAmount = player.swimAmount;

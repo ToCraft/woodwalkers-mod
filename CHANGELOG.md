@@ -2,6 +2,7 @@ walkers 6.1
 ================
 - fix Parrots get poison when eating cookies
 - fix maxAmorToughness config option
+- improve hitbox handling, handle scale attribute
 
 walkers 6.0
 ================

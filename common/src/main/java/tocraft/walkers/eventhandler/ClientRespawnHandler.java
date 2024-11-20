@@ -4,7 +4,6 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.player.LocalPlayer;
 import tocraft.craftedcore.event.client.ClientPlayerEvents;
-import tocraft.walkers.impl.DimensionsRefresher;
 import tocraft.walkers.impl.PlayerDataProvider;
 
 @Environment(EnvType.CLIENT)
@@ -16,6 +15,6 @@ public final class ClientRespawnHandler implements ClientPlayerEvents.ClientPlay
         ((PlayerDataProvider) newPlayer).walkers$setAbilityCooldown(((PlayerDataProvider) oldPlayer).walkers$getAbilityCooldown());
         ((PlayerDataProvider) newPlayer).walkers$setRemainingHostilityTime(((PlayerDataProvider) oldPlayer).walkers$getRemainingHostilityTime());
 
-        ((DimensionsRefresher) newPlayer).shape_refreshDimensions();
+        newPlayer.refreshDimensions();
     }
 }

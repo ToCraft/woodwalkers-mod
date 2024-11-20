@@ -9,7 +9,6 @@ import org.jetbrains.annotations.Nullable;
 import tocraft.craftedcore.client.CraftedCoreClient;
 import tocraft.craftedcore.network.ModernNetworking;
 import tocraft.craftedcore.network.client.ClientNetworking.ApplicablePacket;
-import tocraft.walkers.impl.DimensionsRefresher;
 import tocraft.walkers.impl.PlayerDataProvider;
 import tocraft.walkers.network.impl.SyncApiLevelPackets;
 import tocraft.walkers.network.impl.UnlockPackets;
@@ -57,7 +56,7 @@ public class ClientNetworking implements NetworkHandler {
                 // set shape to null (no shape) if the entity id is "minecraft:empty"
                 if (id.equals("minecraft:empty")) {
                     data.walkers$setCurrentShape(null);
-                    ((DimensionsRefresher) syncTarget).shape_refreshDimensions();
+                    syncTarget.refreshDimensions();
                     return;
                 }
 
@@ -73,7 +72,7 @@ public class ClientNetworking implements NetworkHandler {
                         data.walkers$setCurrentShape(shape);
 
                         // refresh player dimensions/hitbox on client
-                        ((DimensionsRefresher) syncTarget).shape_refreshDimensions();
+                        syncTarget.refreshDimensions();
                     }
 
                     if (shape != null) {

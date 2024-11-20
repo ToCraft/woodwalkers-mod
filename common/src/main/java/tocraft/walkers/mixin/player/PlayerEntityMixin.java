@@ -15,10 +15,7 @@ import net.minecraft.world.entity.animal.Bee;
 import net.minecraft.world.entity.animal.Fox;
 import net.minecraft.world.entity.animal.IronGolem;
 import net.minecraft.world.entity.animal.Pufferfish;
-import net.minecraft.world.entity.monster.Ravager;
-import net.minecraft.world.entity.monster.Slime;
-import net.minecraft.world.entity.monster.Spider;
-import net.minecraft.world.entity.monster.WitherSkeleton;
+import net.minecraft.world.entity.monster.*;
 import net.minecraft.world.entity.monster.warden.Warden;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.vehicle.Boat;
@@ -60,10 +57,9 @@ public abstract class PlayerEntityMixin extends LivingEntityMixin {
         LivingEntity entity = PlayerShape.getCurrentShape((Player) (Object) this);
 
         if (entity != null) {
-            EntityDimensions shapeDimensions = entity.getDimensions(pose);
-            if (pose == Pose.CROUCHING && TraitRegistry.has(entity, HumanoidTrait.ID)) {
-                cir.setReturnValue(EntityDimensions.scalable(shapeDimensions.width(), shapeDimensions.height() * 1.5F / 1.8F));
-            } else {
+            if (pose != Pose.CROUCHING || !TraitRegistry.has(entity, HumanoidTrait.ID)) {
+                EntityDimensions shapeDimensions = entity.getDimensions(pose);
+                Drowned
                 cir.setReturnValue(shapeDimensions);
             }
         }
