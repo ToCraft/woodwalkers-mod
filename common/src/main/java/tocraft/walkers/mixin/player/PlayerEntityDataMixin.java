@@ -241,11 +241,12 @@ public abstract class PlayerEntityDataMixin extends LivingEntity implements Play
         // value to 20 (default) to clear old changes.
         if (shape == null) {
             if (Walkers.CONFIG.scalingHealth && healthAttribute != null) {
+                float currentHealthPercent = player.getHealth() / player.getMaxHealth();
+
                 healthAttribute.setBaseValue(20);
 
                 // Clear health value if needed
                 if (Walkers.CONFIG.percentScalingHealth) {
-                    float currentHealthPercent = player.getHealth() / player.getMaxHealth();
 
                     player.setHealth(Math.min(currentHealthPercent * player.getMaxHealth(), player.getMaxHealth()));
                 } else {
