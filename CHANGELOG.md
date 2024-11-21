@@ -6,6 +6,7 @@ walkers 6.1
 - scale step height
 - add CantFreeze trait
 - add support for various minecraft entity type tags
+- remove jump boost for slimes
 
 walkers 6.0
 ================
