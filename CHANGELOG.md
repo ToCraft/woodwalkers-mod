@@ -7,6 +7,7 @@ walkers 6.1
 - add CantFreeze trait
 - add support for various minecraft entity type tags
 - remove jump boost for slimes
+- add AlexsCaves mobs to flying.json
 
 walkers 6.0
 ================
