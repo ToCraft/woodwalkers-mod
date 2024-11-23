@@ -1,6 +1,7 @@
 walkers 6.3.2
 ================
 - add a config option to prevent hostile mobs from attacking neutral
+- add AlexsCaves mobs to flying.json
 
 walkers 6.3.1
 ================
