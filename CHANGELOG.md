@@ -1,3 +1,7 @@
+walkers 5.8.0
+================
+- add AlexsCaves mobs to flying.json
+
 walkers 5.7
 ================
 - fix some arm rendering issues
