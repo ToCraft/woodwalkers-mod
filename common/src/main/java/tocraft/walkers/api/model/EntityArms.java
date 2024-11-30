@@ -128,7 +128,7 @@ public class EntityArms {
                 (stack, model) -> stack.translate(0, 0, .6));
         register(PolarBearModel.class,
                 (bear, model) -> ((QuadrupedEntityModelAccessor) model).getRightFrontLeg(),
-                (stack, model) -> stack.translate(0, 0, .3));
+                (stack, model) -> stack.translate(0, -.3, 0));
         register(RavagerModel.class,
                 (bear, model) -> ((RavagerEntityModelAccessor) model).getRightFrontLeg());
         register(SquidModel.class,

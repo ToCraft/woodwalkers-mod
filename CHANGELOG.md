@@ -8,6 +8,7 @@ walkers 6.1
 - add support for various minecraft entity type tags
 - remove jump boost for slimes
 - add AlexsCaves mobs to flying.json
+- fix polar bear left arm
 
 walkers 6.0
 ================
