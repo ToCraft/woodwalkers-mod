@@ -26,6 +26,7 @@ import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.entity.raid.Raider;
 import net.minecraft.world.level.block.Blocks;
 import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import tocraft.walkers.Walkers;
 import tocraft.walkers.ability.ShapeAbility;
@@ -34,6 +35,7 @@ import tocraft.walkers.traits.impl.*;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
@@ -221,7 +223,7 @@ public class TraitRegistry {
     /**
      * @return a list of every available trait for the specified entity
      */
-    public static synchronized <L extends LivingEntity> List<ShapeTrait<L>> get(L shape, ResourceLocation traitId) {
+    public static synchronized <L extends LivingEntity> @NotNull List<ShapeTrait<L>> get(L shape, ResourceLocation traitId) {
         List<ShapeTrait<L>> traits = getAll(shape);
         List<ShapeTrait<L>> filteredTraits = new ArrayList<>();
         for (ShapeTrait<L> trait : traits) {
@@ -233,7 +235,7 @@ public class TraitRegistry {
     }
 
     @ApiStatus.Experimental
-    public static synchronized Map<ShapeTrait<?>, Predicate<LivingEntity>> getAllRegisteredById(ResourceLocation traitId) {
+    public static synchronized @NotNull Map<ShapeTrait<?>, Predicate<LivingEntity>> getAllRegisteredById(ResourceLocation traitId) {
         Map<ShapeTrait<?>, Predicate<LivingEntity>> traits = new HashMap<>();
         for (Map.Entry<EntityType<? extends LivingEntity>, List<ShapeTrait<?>>> traitList : traitsByEntityTypes.entrySet()) {
             for (ShapeTrait<?> trait : traitList.getValue()) {
@@ -276,8 +278,8 @@ public class TraitRegistry {
     /**
      * must be called within {@link #registerDefault()} or {@link tocraft.walkers.integrations.AbstractIntegration#registerTraits() Integration.registerTraits()}
      */
-    public static <A extends LivingEntity> void registerByType(EntityType<A> type, List<ShapeTrait<A>> newtraits) {
-        List<ShapeTrait<?>> traits = traitsByEntityTypes.containsKey(type) ? traitsByEntityTypes.get(type) : new ArrayList<>();
+    public static <A extends LivingEntity> void registerByType(EntityType<A> type, @NotNull List<ShapeTrait<A>> newtraits) {
+        List<ShapeTrait<?>> traits = traitsByEntityTypes.getOrDefault(type, new CopyOnWriteArrayList<>());
         for (ShapeTrait<A> trait : newtraits) {
             if (trait.canBeRegisteredMultipleTimes() || traits.stream().noneMatch(entry -> entry.getId().equals(trait.getId()))) {
                 traits.add(trait);
@@ -296,8 +298,8 @@ public class TraitRegistry {
     /**
      * must be called within {@link #registerDefault()} or {@link tocraft.walkers.integrations.AbstractIntegration#registerTraits() Integration.registerTraits()}
      */
-    public static <A extends LivingEntity> void registerByTag(TagKey<EntityType<?>> tag, List<ShapeTrait<A>> newtraits) {
-        List<ShapeTrait<?>> traits = traitsByEntityTags.containsKey(tag) ? traitsByEntityTags.get(tag) : new ArrayList<>();
+    public static <A extends LivingEntity> void registerByTag(TagKey<EntityType<?>> tag, @NotNull List<ShapeTrait<A>> newtraits) {
+        List<ShapeTrait<?>> traits = traitsByEntityTags.getOrDefault(tag, new CopyOnWriteArrayList<>());
         for (ShapeTrait<A> trait : newtraits) {
             if (trait.canBeRegisteredMultipleTimes() || traits.stream().noneMatch(entry -> entry.getId().equals(trait.getId()))) {
                 traits.add(trait);
@@ -316,8 +318,8 @@ public class TraitRegistry {
     /**
      * must be called within {@link #registerDefault()} or {@link tocraft.walkers.integrations.AbstractIntegration#registerTraits() Integration.registerTraits()}
      */
-    public static <A extends LivingEntity> void registerByClass(Class<A> entityClass, List<ShapeTrait<A>> newtraits) {
-        List<ShapeTrait<?>> traits = traitsByEntityClasses.containsKey(entityClass) ? traitsByEntityClasses.get(entityClass) : new ArrayList<>();
+    public static <A extends LivingEntity> void registerByClass(Class<A> entityClass, @NotNull List<ShapeTrait<A>> newtraits) {
+        List<ShapeTrait<?>> traits = traitsByEntityClasses.getOrDefault(entityClass, new CopyOnWriteArrayList<>());
         for (ShapeTrait<A> trait : newtraits) {
             if (trait.canBeRegisteredMultipleTimes() || traits.stream().noneMatch(entry -> entry.getId().equals(trait.getId()))) {
                 traits.add(trait);
@@ -341,8 +343,8 @@ public class TraitRegistry {
      * Register a list of traits for a predicate
      * must be called within {@link #registerDefault()} or {@link tocraft.walkers.integrations.AbstractIntegration#registerTraits() Integration.registerTraits()}
      */
-    public static void registerByPredicate(Predicate<LivingEntity> entityPredicate, List<ShapeTrait<?>> newTraits) {
-        List<ShapeTrait<?>> traits = traitsByPredicates.containsKey(entityPredicate) ? traitsByPredicates.get(entityPredicate) : new ArrayList<>();
+    public static void registerByPredicate(Predicate<LivingEntity> entityPredicate, @NotNull List<ShapeTrait<?>> newTraits) {
+        List<ShapeTrait<?>> traits = traitsByPredicates.getOrDefault(entityPredicate, new CopyOnWriteArrayList<>());
         for (ShapeTrait<?> trait : newTraits) {
             if (trait.canBeRegisteredMultipleTimes() || traits.stream().noneMatch(entry -> entry.getId().equals(trait.getId()))) {
                 traits.add(trait);

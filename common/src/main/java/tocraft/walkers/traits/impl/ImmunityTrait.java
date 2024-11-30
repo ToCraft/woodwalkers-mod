@@ -37,12 +37,6 @@ public class ImmunityTrait<E extends LivingEntity> extends ShapeTrait<E> {
 
     @Override
     @Environment(EnvType.CLIENT)
-    public boolean iconMightDiffer() {
-        return true;
-    }
-
-    @Override
-    @Environment(EnvType.CLIENT)
     public @Nullable TextureAtlasSprite getIcon() {
         return null;
     }
