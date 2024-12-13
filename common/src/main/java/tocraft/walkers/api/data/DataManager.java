@@ -12,7 +12,6 @@ public class DataManager {
         SynchronizedReloadListenerRegistry.register(new AbilityDataManager(), Walkers.id("ability_data_manager"));
         SynchronizedReloadListenerRegistry.register(new TypeProviderDataManager(), Walkers.id("variants_data_manager"));
         SynchronizedReloadListenerRegistry.register(new TraitDataManager(), Walkers.id("trait_data_manager"));
-        SynchronizedReloadListenerRegistry.register(new TraitDataManager(true), Walkers.id("skills_data_manager"));
         SynchronizedReloadListenerRegistry.register(new EntityBlacklistDataManager(), Walkers.id("entity_blacklist_data_manager"));
     }
 }

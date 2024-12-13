@@ -1,3 +1,7 @@
+walkers 5.5
+================
+- fix trait data packs on server
+
 walkers 5.4
 ================
 - fix Incompatibility with CarryOn mod

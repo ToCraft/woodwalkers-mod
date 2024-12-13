@@ -20,15 +20,9 @@ import java.util.Map;
 
 public class TraitDataManager extends SynchronizedJsonReloadListener {
     public static final Gson GSON = new GsonBuilder().registerTypeAdapter(ResourceLocation.class, new ResourceLocation.Serializer()).create();
-    private final boolean isDeprecatedSkills;
 
     public TraitDataManager() {
-        this(false);
-    }
-
-    public TraitDataManager(boolean isDeprecatedSkills) {
-        super(GSON, Walkers.MODID + (isDeprecatedSkills ? "/skills" : "/traits"));
-        this.isDeprecatedSkills = isDeprecatedSkills;
+        super(GSON, Walkers.MODID + "/traits");
     }
 
     @SuppressWarnings("unchecked")
@@ -42,10 +36,6 @@ public class TraitDataManager extends SynchronizedJsonReloadListener {
             TraitList traitList = traitListFromJson(mapEntry.getValue().getAsJsonObject());
 
             if (!traitList.isEmpty()) {
-                if (isDeprecatedSkills) {
-                    Walkers.LOGGER.error("{}: Using the skills directory & key is deprecated. Please merge to 'trait's.", getClass().getSimpleName());
-                }
-
                 if (traitList.requiredMod() == null || traitList.requiredMod().isBlank() || PlatformData.isModLoaded(traitList.requiredMod())) {
                     // entity types
                     for (EntityType<LivingEntity> entityType : traitList.entityTypes()) {
@@ -75,17 +65,15 @@ public class TraitDataManager extends SynchronizedJsonReloadListener {
 
     public static Codec<TraitList> TRAIT_LIST_CODEC = RecordCodecBuilder.create((instance) -> instance.group(Codec.STRING.optionalFieldOf("required_mod", "").forGetter(TraitList::requiredMod), Codec.list(ResourceLocation.CODEC).optionalFieldOf("entity_types", new ArrayList<>()).forGetter(TraitList::entityTypeKeys), Codec.list(ResourceLocation.CODEC).optionalFieldOf("entity_tags", new ArrayList<>()).forGetter(TraitList::entityTagKeys), Codec.list(TraitRegistry.getTraitCodec()).fieldOf("traits").forGetter(TraitList::traitList)).apply(instance, instance.stable(TraitList::new)));
 
-    public Codec<TraitList> SKILL_LIST_CODEC = RecordCodecBuilder.create((instance) -> instance.group(Codec.STRING.optionalFieldOf("required_mod", "").forGetter(TraitList::requiredMod), Codec.list(ResourceLocation.CODEC).optionalFieldOf("entity_types", new ArrayList<>()).forGetter(TraitList::entityTypeKeys), Codec.list(ResourceLocation.CODEC).optionalFieldOf("entity_tags", new ArrayList<>()).forGetter(TraitList::entityTagKeys), Codec.list(TraitRegistry.getTraitCodec()).fieldOf("skills").forGetter(TraitList::traitList)).apply(instance, instance.stable(TraitList::new)));
-
     //#if MC>=1205
     protected TraitList traitListFromJson(JsonObject json) {
-        return (isDeprecatedSkills ? SKILL_LIST_CODEC : TRAIT_LIST_CODEC).parse(JsonOps.INSTANCE, json).getOrThrow(msg -> {
+        return TRAIT_LIST_CODEC.parse(JsonOps.INSTANCE, json).getOrThrow(msg -> {
             throw new JsonParseException(msg);
         });
     }
     //#else
     //$$ protected TraitList traitListFromJson(JsonObject json) {
-    //$$     return (isDeprecatedSkills ? SKILL_LIST_CODEC : TRAIT_LIST_CODEC).parse(JsonOps.INSTANCE, json).getOrThrow(false, msg -> {
+    //$$     return TRAIT_LIST_CODEC.parse(JsonOps.INSTANCE, json).getOrThrow(false, msg -> {
     //$$         throw new JsonParseException(msg);
     //$$     });
     //$$ }
