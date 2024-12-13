@@ -9,6 +9,7 @@ walkers 6.1
 - remove jump boost for slimes
 - add AlexsCaves mobs to flying.json
 - fix polar bear left arm
+- support 1.21.4
 
 walkers 6.0
 ================

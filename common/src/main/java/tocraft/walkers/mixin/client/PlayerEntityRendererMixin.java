@@ -16,10 +16,7 @@ import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.client.renderer.entity.player.PlayerRenderer;
-import net.minecraft.client.renderer.entity.state.EntityRenderState;
-import net.minecraft.client.renderer.entity.state.HumanoidRenderState;
-import net.minecraft.client.renderer.entity.state.LivingEntityRenderState;
-import net.minecraft.client.renderer.entity.state.PlayerRenderState;
+import net.minecraft.client.renderer.entity.state.*;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Tuple;
@@ -87,8 +84,14 @@ public abstract class PlayerEntityRendererMixin extends LivingEntityRenderer<Abs
             livingState.yRot = player.yRot;
             livingState.wornHeadAnimationPos = player.wornHeadAnimationPos;
             livingState.isInWater = player.isInWater;
-            livingState.mainArm = player.mainArm;
             livingState.scale = player.scale;
+            //#if MC<1214
+            //$$ livingState.mainArm = player.mainArm;
+            //#else
+            if (livingState instanceof ArmedEntityRenderState armedState) {
+                armedState.mainArm = player.mainArm;
+            }
+            //#endif
 
             if (shape instanceof HumanoidRenderState humanoidShape) {
                 humanoidShape.swimAmount = player.swimAmount;
@@ -98,10 +101,12 @@ public abstract class PlayerEntityRendererMixin extends LivingEntityRenderer<Abs
                 humanoidShape.speedValue = player.speedValue;
                 humanoidShape.isCrouching = player.isCrouching;
                 humanoidShape.ticksUsingItem = player.ticksUsingItem;
-                humanoidShape.chestItem = player.chestItem;
                 humanoidShape.isUsingItem = player.isUsingItem;
-                humanoidShape.legsItem = player.legsItem;
-                humanoidShape.feetItem = player.feetItem;
+                //#if MC<1214
+                //$$ humanoidShape.chestItem = player.chestItem;
+                //$$ humanoidShape.legsItem = player.legsItem;
+                //$$ humanoidShape.feetItem = player.feetItem;
+                //#endif
             }
         }
     }

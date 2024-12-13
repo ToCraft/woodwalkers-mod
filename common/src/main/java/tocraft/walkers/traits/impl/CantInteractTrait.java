@@ -3,11 +3,6 @@ package tocraft.walkers.traits.impl;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
@@ -15,10 +10,7 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import tocraft.walkers.Walkers;
 import tocraft.walkers.traits.ShapeTrait;
 
@@ -108,16 +100,5 @@ public class CantInteractTrait<E extends LivingEntity> extends ShapeTrait<E> {
     @Override
     public MapCodec<? extends ShapeTrait<?>> codec() {
         return CODEC;
-    }
-
-    @Override
-    @Environment(EnvType.CLIENT)
-    public @Nullable TextureAtlasSprite getIcon() {
-        BakedModel itemModel = Minecraft.getInstance().getItemRenderer().getModel(new ItemStack(Items.IRON_SWORD), null, null, 15);
-        if (itemModel != null) {
-            return itemModel.getParticleIcon();
-        } else {
-            return super.getIcon();
-        }
     }
 }
