@@ -50,7 +50,7 @@ public class Walkers {
 
     public static final Logger LOGGER = LoggerFactory.getLogger(Walkers.class);
     public static final String MODID = "walkers";
-    public static final WalkersConfig CONFIG = ConfigLoader.read(MODID, WalkersConfig.class);
+    public static final WalkersConfig CONFIG = ConfigLoader.register(MODID);
     public static final List<UUID> devs = new ArrayList<>();
 
     static {
