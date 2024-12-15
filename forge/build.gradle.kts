@@ -19,5 +19,7 @@ loom {
 }
 
 dependencies {
-    modApi("dev.tocraft:craftedcore-forge:${parent!!.name}-${rootProject.properties["craftedcore_version"]}")
+    modApi("dev.tocraft:craftedcore-forge:${parent!!.name}-${rootProject.properties["craftedcore_version"]}") {
+        exclude("me.shedaniel.cloth")
+    }
 }
