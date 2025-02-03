@@ -1,6 +1,7 @@
 walkers 5.7
 ================
 - fix some arm rendering issues
+- add option to blacklist traits
 
 
 walkers 5.6
