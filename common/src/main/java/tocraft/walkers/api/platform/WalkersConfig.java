@@ -124,6 +124,13 @@ public class WalkersConfig implements Config {
     @Comment("Blacklist entity types (e.g. minecraft:blaze) to disable abilities for the specified mob.")
     @Synchronize
     public List<String> abilityBlacklist = new ArrayList<>();
+    @Comment("Map entity types to a list of traits to disable the traits for the specified entity type.")
+    @Synchronize
+    public Map<String, List<String>> traitBlacklist = new HashMap<>() {
+        {
+            put("example:my_mob", List.of("example:first_trait", "example:second_trait"));
+        }
+    };
     @Comment("Blacklist entity types (e.g. minecraft:blaze) to disable morphing into those.")
     @Synchronize
     public Set<String> entityBlacklist = new HashSet<>();

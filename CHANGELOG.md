@@ -1,3 +1,8 @@
+walkers 6.2
+================
+- add option to blacklist traits
+
+
 walkers 6.1
 ================
 - fix Parrots get poison when eating cookies

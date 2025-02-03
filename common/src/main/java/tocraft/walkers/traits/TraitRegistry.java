@@ -194,7 +194,7 @@ public class TraitRegistry {
      * @return a list of every available trait for the specified entity
      */
     @SuppressWarnings("unchecked")
-    public static synchronized <L extends LivingEntity> List<ShapeTrait<L>> getAll(L shape) {
+    public static synchronized <L extends LivingEntity> @NotNull List<ShapeTrait<L>> getAll(L shape) {
         List<ShapeTrait<L>> traits = new ArrayList<>();
         if (shape != null) {
             List<ShapeTrait<?>> list = traitsByEntityTypes.get(shape.getType());
@@ -216,7 +216,10 @@ public class TraitRegistry {
                     traits.addAll(entry.getValue().stream().map(trait -> (ShapeTrait<L>) trait).toList());
                 }
             }
+
+            return filterTraits(shape.getType(), traits);
         }
+
         return traits;
     }
 
@@ -240,21 +243,21 @@ public class TraitRegistry {
         for (Map.Entry<EntityType<? extends LivingEntity>, List<ShapeTrait<?>>> traitList : traitsByEntityTypes.entrySet()) {
             for (ShapeTrait<?> trait : traitList.getValue()) {
                 if (trait.getId() == traitId) {
-                    traits.put(trait, entity -> entity.getType().equals(traitList.getKey()));
+                    traits.put(trait, entity -> entity.getType().equals(traitList.getKey()) && notBlacklisted(entity.getType(), traitId));
                 }
             }
         }
         for (Map.Entry<Class<? extends LivingEntity>, List<ShapeTrait<?>>> traitList : traitsByEntityClasses.entrySet()) {
             for (ShapeTrait<?> trait : traitList.getValue()) {
                 if (trait.getId() == traitId) {
-                    traits.put(trait, entity -> traitList.getKey().isInstance(entity));
+                    traits.put(trait, entity -> traitList.getKey().isInstance(entity) && notBlacklisted(entity.getType(), traitId));
                 }
             }
         }
         for (Map.Entry<TagKey<EntityType<?>>, List<ShapeTrait<?>>> traitList : traitsByEntityTags.entrySet()) {
             for (ShapeTrait<?> trait : traitList.getValue()) {
                 if (trait.getId() == traitId) {
-                    traits.put(trait, entity -> entity.getType().is(traitList.getKey()));
+                    traits.put(trait, entity -> entity.getType().is(traitList.getKey()) && notBlacklisted(entity.getType(), traitId));
                 }
             }
         }
@@ -374,25 +377,48 @@ public class TraitRegistry {
         if (shape != null) {
             List<ShapeTrait<?>> list = traitsByEntityTypes.get(shape.getType());
             if (list != null && list.stream().anyMatch(trait -> trait.getId() == traitId)) {
-                return true;
+                return notBlacklisted(shape.getType(), traitId);
             }
             for (Map.Entry<Class<? extends LivingEntity>, List<ShapeTrait<?>>> entry : traitsByEntityClasses.entrySet()) {
                 if (entry.getKey().isInstance(shape) && entry.getValue().stream().anyMatch(trait -> trait.getId() == traitId)) {
-                    return true;
+                    return notBlacklisted(shape.getType(), traitId);
                 }
             }
             for (Map.Entry<TagKey<EntityType<?>>, List<ShapeTrait<?>>> entry : traitsByEntityTags.entrySet()) {
                 if (shape.getType().is(entry.getKey()) && entry.getValue().stream().anyMatch(trait -> trait.getId() == traitId)) {
-                    return true;
+                    return notBlacklisted(shape.getType(), traitId);
                 }
             }
             for (Map.Entry<Predicate<LivingEntity>, List<ShapeTrait<?>>> entry : traitsByPredicates.entrySet()) {
                 if (entry.getKey().test(shape) && entry.getValue().stream().anyMatch(trait -> trait.getId() == traitId)) {
-                    return true;
+                    return notBlacklisted(shape.getType(), traitId);
                 }
             }
         }
         return false;
+    }
+
+    @ApiStatus.Internal
+    private static boolean notBlacklisted(EntityType<?> type, @NotNull ResourceLocation traitId) {
+        return notBlacklisted(EntityType.getKey(type).toString(), traitId.toString());
+    }
+
+    private static boolean notBlacklisted(String type, String traitId) {
+        return !Walkers.CONFIG.traitBlacklist.getOrDefault(type, List.of()).contains(traitId);
+    }
+
+    @ApiStatus.Internal
+    private static <L extends LivingEntity> @NotNull List<ShapeTrait<L>> filterTraits(EntityType<?> type, @NotNull List<ShapeTrait<L>> traits) {
+        List<ShapeTrait<L>> filtered = new ArrayList<>();
+
+        String typeId = EntityType.getKey(type).toString();
+        for (ShapeTrait<L> trait : traits) {
+            if (notBlacklisted(typeId, trait.getId().toString())) {
+                filtered.add(trait);
+            }
+        }
+
+        return filtered;
     }
 
     @ApiStatus.Internal
