@@ -36,8 +36,8 @@ public class AbilityDataManager extends SynchronizedJsonReloadListener {
     @Override
     protected void onApply(@NotNull Map<ResourceLocation, JsonElement> map) {
         // prevent duplicates and the registration of removed entries
-        AbilityRegistry.clearAll();
-        AbilityRegistry.registerDefault();
+        /*AbilityRegistry.clearAll();
+        AbilityRegistry.registerDefault();*/
 
         for (Map.Entry<ResourceLocation, JsonElement> mapEntry : map.entrySet()) {
             AbilityList abilityList = ABILITY_LIST_CODEC.parse(JsonOps.INSTANCE, mapEntry.getValue().getAsJsonObject()).getOrThrow(msg -> {

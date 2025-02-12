@@ -1,6 +1,7 @@
 walkers 6.2
 ================
 - add option to blacklist traits
+- TEMPORARY fix for data packs
 
 
 walkers 6.1

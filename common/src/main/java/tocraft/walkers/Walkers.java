@@ -21,8 +21,10 @@ import tocraft.craftedcore.platform.VersionChecker;
 import tocraft.walkers.ability.AbilityRegistry;
 import tocraft.walkers.api.PlayerShape;
 import tocraft.walkers.api.WalkersTickHandlers;
+import tocraft.walkers.api.blacklist.EntityBlacklist;
 import tocraft.walkers.api.data.DataManager;
 import tocraft.walkers.api.platform.WalkersConfig;
+import tocraft.walkers.api.variant.TypeProviderRegistry;
 import tocraft.walkers.command.WalkersCommand;
 import tocraft.walkers.eventhandler.LivingBreatheHandler;
 import tocraft.walkers.eventhandler.RespawnHandler;
@@ -71,6 +73,12 @@ public class Walkers {
 
         PlayerEvents.PLAYER_RESPAWN.register(new RespawnHandler());
         EntityEvents.LIVING_BREATHE.register(new LivingBreatheHandler());
+
+        //FIXME: Registries should be cleared before load and loaded every data reload
+        AbilityRegistry.registerDefault();
+        EntityBlacklist.registerDefault();
+        TraitRegistry.registerDefault();
+        TypeProviderRegistry.registerDefault();
     }
 
     public static void registerJoinSyncPacket() {

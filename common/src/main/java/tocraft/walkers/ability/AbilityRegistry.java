@@ -25,6 +25,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.item.alchemy.Potions;
 import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import tocraft.walkers.Walkers;
 import tocraft.walkers.ability.impl.generic.*;
@@ -120,7 +121,7 @@ public class AbilityRegistry {
      * @return the last registered {@link ShapeAbility} for the specified shape
      */
     @SuppressWarnings("unchecked")
-    public static <L extends LivingEntity> ShapeAbility<L> get(L shape) {
+    public static <L extends LivingEntity> @Nullable ShapeAbility<L> get(@NotNull L shape) {
         // check ability blacklist
         if (Walkers.CONFIG.abilityBlacklist.contains(EntityType.getKey(shape.getType()).toString()))
             return null;
@@ -160,7 +161,7 @@ public class AbilityRegistry {
     /**
      * must be called within {@link #registerDefault()} or {@link tocraft.walkers.integrations.AbstractIntegration#registerAbilities() Integration.registerAbilities()}
      */
-    public static <A extends LivingEntity> void registerByClass(Class<A> entityClass, ShapeAbility<A> ability) {
+    public static <A extends LivingEntity> void registerByClass(@NotNull Class<A> entityClass, ShapeAbility<A> ability) {
         registerByPredicate(entityClass::isInstance, ability);
     }
 
@@ -179,11 +180,12 @@ public class AbilityRegistry {
         }
     }
 
-    public static <L extends LivingEntity> boolean has(L shape) {
+    public static <L extends LivingEntity> boolean has(@NotNull L shape) {
         // check ability blacklist
 
-        if (Walkers.CONFIG.abilityBlacklist.contains(EntityType.getKey(shape.getType()).toString()))
+        if (Walkers.CONFIG.abilityBlacklist.contains(EntityType.getKey(shape.getType()).toString())) {
             return false;
+        }
         return specificAbilities.keySet().stream().anyMatch(predicate -> predicate.test(shape)) || genericAbilities.keySet().stream().anyMatch(predicate -> predicate.test(shape));
     }
 

@@ -28,8 +28,8 @@ public class EntityBlacklistDataManager extends SynchronizedJsonReloadListener {
     @Override
     protected void onApply(@NotNull Map<ResourceLocation, JsonElement> map) {
         // prevent duplicates and the registration of removed entries
-        EntityBlacklist.clearAll();
-        EntityBlacklist.registerDefault();
+        /*EntityBlacklist.clearAll();
+        EntityBlacklist.registerDefault();*/
 
         for (Map.Entry<ResourceLocation, JsonElement> mapEntry : map.entrySet()) {
             if (mapEntry.getKey().getPath().equals("blacklist")) {

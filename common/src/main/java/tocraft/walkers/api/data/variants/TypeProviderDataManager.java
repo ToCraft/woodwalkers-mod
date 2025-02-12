@@ -33,8 +33,8 @@ public class TypeProviderDataManager extends SynchronizedJsonReloadListener {
     @Override
     protected void onApply(@NotNull Map<ResourceLocation, JsonElement> map) {
         // prevent duplicates and the registration of removed entries
-        TypeProviderRegistry.clearAll();
-        TypeProviderRegistry.registerDefault();
+        /*TypeProviderRegistry.clearAll();
+        TypeProviderRegistry.registerDefault();*/
 
         for (Map.Entry<ResourceLocation, JsonElement> mapEntry : map.entrySet()) {
             Either<TypeProviderEntry<?>, String> either = typeProviderFromJson(mapEntry.getValue().getAsJsonObject());
