@@ -2,6 +2,7 @@ walkers 6.2
 ================
 - add option to blacklist traits
 - TEMPORARY fix for data packs
+- blacklist whisperwoods:wisp
 
 
 walkers 6.1
