@@ -4,6 +4,7 @@ walkers 5.6
 - fix another data pack error with traits
 - add turkish by Feitan_Portor
 - cleanup shape data
+- blacklist whisperwoods:wisp
 
 walkers 5.5
 ================
