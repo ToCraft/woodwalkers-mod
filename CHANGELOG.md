@@ -1,6 +1,7 @@
 walkers 5.6
 ================
 - backport CantFreezeTrait
+- fix another data pack error
 
 walkers 5.5
 ================
