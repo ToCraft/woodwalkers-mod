@@ -46,7 +46,7 @@ import tocraft.walkers.mixin.client.accessor.LimbAnimatorAccessor;
 
 @SuppressWarnings({"rawtypes", "unchecked"})
 @Environment(EnvType.CLIENT)
-@Mixin(PlayerRenderer.class)
+@Mixin(value = PlayerRenderer.class, priority = 1001)
 public abstract class PlayerEntityRendererMixin extends LivingEntityRenderer<AbstractClientPlayer, PlayerRenderState, PlayerModel> {
     private PlayerEntityRendererMixin(EntityRendererProvider.Context ctx, PlayerModel model, float shadowRadius) {
         super(ctx, model, shadowRadius);
