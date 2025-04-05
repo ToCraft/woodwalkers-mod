@@ -10,7 +10,6 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.projectile.ThrownPotion;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.Potion;
@@ -22,6 +21,8 @@ import tocraft.walkers.ability.GenericShapeAbility;
 
 import java.util.Arrays;
 import java.util.List;
+
+import net.minecraft.world.entity.projectile.ThrownSplashPotion;
 
 public class ThrowPotionsAbility<T extends LivingEntity> extends GenericShapeAbility<T> {
     public static final List<Holder<Potion>> VALID_POTIONS = Arrays.asList(Potions.HARMING, Potions.POISON, Potions.SLOWNESS, Potions.WEAKNESS);
@@ -42,7 +43,7 @@ public class ThrowPotionsAbility<T extends LivingEntity> extends GenericShapeAbi
 
     @Override
     public void onUse(ServerPlayer player, T shape, ServerLevel world) {
-        ThrownPotion potionEntity = new ThrownPotion(world, player, PotionContents.createItemStack(Items.SPLASH_POTION, validPotions.get(world.random.nextInt(validPotions.size()))));
+        ThrownSplashPotion potionEntity = new ThrownSplashPotion(world, player, PotionContents.createItemStack(Items.SPLASH_POTION, validPotions.get(world.random.nextInt(validPotions.size()))));
         potionEntity.setXRot(-20.0F);
         Vec3 rotation = player.getLookAngle();
         potionEntity.shoot(rotation.x(), rotation.y(), rotation.z(), 0.75F, 8.0F);

@@ -77,6 +77,6 @@ public class ClimbBlocksTrait<E extends LivingEntity> extends ShapeTrait<E> {
     @Override
     @Environment(EnvType.CLIENT)
     public @Nullable TextureAtlasSprite getIcon() {
-        return Minecraft.getInstance().getBlockRenderer().getBlockModelShaper().getBlockModel(Blocks.VINE.defaultBlockState()).getParticleIcon();
+        return Minecraft.getInstance().getBlockRenderer().getBlockModelShaper().getBlockModel(Blocks.VINE.defaultBlockState()).particleIcon();
     }
 }

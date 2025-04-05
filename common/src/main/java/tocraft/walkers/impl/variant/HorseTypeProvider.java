@@ -5,8 +5,11 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.animal.horse.Horse;
 import net.minecraft.world.entity.animal.horse.Variant;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.NotNull;
 import tocraft.walkers.api.variant.TypeProvider;
+import tocraft.walkers.mixin.accessor.HorseAccessor;
 
 public class HorseTypeProvider extends TypeProvider<Horse> {
 
@@ -16,9 +19,9 @@ public class HorseTypeProvider extends TypeProvider<Horse> {
     }
 
     @Override
-    public Horse create(EntityType<Horse> type, Level world, int data) {
+    public Horse create(EntityType<Horse> type, Level world, @NotNull Player player, int data) {
         Horse horse = new Horse(type, world);
-        horse.setVariant(Variant.byId(data));
+        ((HorseAccessor) horse).callSetVariant(Variant.byId(data));
         return horse;
     }
 
@@ -28,8 +31,8 @@ public class HorseTypeProvider extends TypeProvider<Horse> {
     }
 
     @Override
-    public int getRange() {
-        return 6;
+    public int getRange(Level level) {
+        return Variant.values().length;
     }
 
     @Override

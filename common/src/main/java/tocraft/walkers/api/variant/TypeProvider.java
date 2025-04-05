@@ -6,33 +6,33 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Locale;
 
 public abstract class TypeProvider<T extends LivingEntity> {
     @SuppressWarnings("unchecked")
-    public ShapeType<T> create(T entity) {
+    public ShapeType<T> create(@NotNull T entity) {
         return ShapeType.from((EntityType<T>) entity.getType(), getVariantData(entity));
     }
 
     public abstract int getVariantData(T entity);
 
-    public abstract T create(EntityType<T> type, Level world, int data);
-
     /**
      * Create the entity based on player data
      */
-    public T create(EntityType<T> type, Level world, int data, Player player) {
-        return create(type, world, data);
-    }
+    public abstract T create(EntityType<T> type, Level world, @NotNull Player player, int data);
 
     public abstract int getFallbackData();
 
-    public abstract int getRange();
+    /**
+     * @return the highest variant id + 1
+     */
+    public abstract int getRange(Level level);
 
     public abstract Component modifyText(T entity, MutableComponent text);
 
-    public final String formatTypePrefix(String prefix) {
+    public final @NotNull String formatTypePrefix(@NotNull String prefix) {
         return String.valueOf(prefix.charAt(0)).toUpperCase(Locale.ROOT) + prefix.substring(1);
     }
 }

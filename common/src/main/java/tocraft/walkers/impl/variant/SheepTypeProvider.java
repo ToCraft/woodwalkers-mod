@@ -3,10 +3,13 @@ package tocraft.walkers.impl.variant;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.animal.Sheep;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.NotNull;
 import tocraft.walkers.api.variant.TypeProvider;
+
+import net.minecraft.world.entity.animal.sheep.Sheep;
 
 public class SheepTypeProvider extends TypeProvider<Sheep> {
 
@@ -16,7 +19,7 @@ public class SheepTypeProvider extends TypeProvider<Sheep> {
     }
 
     @Override
-    public Sheep create(EntityType<Sheep> type, Level world, int data) {
+    public Sheep create(EntityType<Sheep> type, Level world, @NotNull Player player, int data) {
         Sheep sheep = new Sheep(type, world);
         sheep.setColor(DyeColor.byId(data));
         return sheep;
@@ -28,8 +31,8 @@ public class SheepTypeProvider extends TypeProvider<Sheep> {
     }
 
     @Override
-    public int getRange() {
-        return DyeColor.BLACK.getId();
+    public int getRange(Level level) {
+        return 16;
     }
 
     @Override

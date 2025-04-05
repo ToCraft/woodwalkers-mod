@@ -1,5 +1,6 @@
 package tocraft.walkers.impl.variant;
 
+import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -8,6 +9,7 @@ import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.entity.npc.VillagerType;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.NotNull;
 import tocraft.walkers.Walkers;
 import tocraft.walkers.api.variant.TypeProvider;
 
@@ -16,33 +18,25 @@ import java.util.Random;
 public class VillagerTypeProvider extends TypeProvider<Villager> {
 
     @Override
-    public int getVariantData(Villager entity) {
-        return BuiltInRegistries.VILLAGER_PROFESSION.getId(entity.getVillagerData().getProfession());
+    public int getVariantData(@NotNull Villager entity) {
+        return BuiltInRegistries.VILLAGER_PROFESSION.getId(entity.getVillagerData().profession().value());
     }
 
     @Override
-    public Villager create(EntityType<Villager> type, Level level, int data) {
+    public Villager create(EntityType<Villager> type, Level level, @NotNull Player player, int data) {
         Villager villager = new Villager(type, level);
-        villager.setVillagerData(villager.getVillagerData().setProfession(BuiltInRegistries.VILLAGER_PROFESSION.byId(data)));
-        return villager;
-    }
-
-    @Override
-    public Villager create(EntityType<Villager> type, Level level, int data, Player player) {
-        if (player != null && Walkers.CONFIG.multiVectorVariants > 0) {
-            Villager villager = new Villager(type, level);
-            VillagerType villagerType;
+        if (Walkers.CONFIG.multiVectorVariants > 0) {
+            Holder<VillagerType> villagerType;
             if (Walkers.CONFIG.multiVectorVariants == 2) {
-                villagerType = VillagerType.byBiome(level.getBiome(player.blockPosition()));
+                villagerType = BuiltInRegistries.VILLAGER_TYPE.get(VillagerType.byBiome(level.getBiome(player.blockPosition()))).orElseThrow();
             } else {
-                villagerType = BuiltInRegistries.VILLAGER_TYPE.byId(new Random().nextInt(0, BuiltInRegistries.VILLAGER_TYPE.size() - 1));
+                villagerType = BuiltInRegistries.VILLAGER_TYPE.get(new Random().nextInt(0, BuiltInRegistries.VILLAGER_TYPE.size() - 1)).orElseThrow();
             }
-            villager.setVariant(villagerType);
-            villager.setVillagerData(villager.getVillagerData().setProfession(BuiltInRegistries.VILLAGER_PROFESSION.byId(data)));
-            return villager;
+            villager.setVillagerData(villager.getVillagerData().withProfession(BuiltInRegistries.VILLAGER_PROFESSION.get(data).orElseThrow()).withType(villagerType));
         } else {
-            return create(type, level, data);
+            villager.setVillagerData(villager.getVillagerData().withProfession(BuiltInRegistries.VILLAGER_PROFESSION.get(data).orElseThrow()));
         }
+        return villager;
     }
 
     @Override
@@ -51,12 +45,12 @@ public class VillagerTypeProvider extends TypeProvider<Villager> {
     }
 
     @Override
-    public int getRange() {
-        return BuiltInRegistries.VILLAGER_PROFESSION.size() - 1;
+    public int getRange(Level level) {
+        return BuiltInRegistries.VILLAGER_PROFESSION.size();
     }
 
     @Override
-    public Component modifyText(Villager entity, MutableComponent text) {
-        return Component.literal(formatTypePrefix(entity.getVillagerData().getProfession().toString()) + " ").append(text);
+    public Component modifyText(@NotNull Villager entity, MutableComponent text) {
+        return Component.literal(formatTypePrefix(entity.getVillagerData().profession().toString()) + " ").append(text);
     }
 }

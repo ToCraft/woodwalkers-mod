@@ -32,7 +32,7 @@ public class JumpAbility<T extends LivingEntity> extends GenericShapeAbility<T> 
     @Override
     public void onUse(ServerPlayer player, T shape, ServerLevel world) {
         int level = 1 + (int) (Math.random() * ((3 - 1) + 1));
-        player.addEffect(new MobEffectInstance(MobEffects.JUMP, this.getCooldown(shape) / 2, level, true, false));
+        player.addEffect(new MobEffectInstance(MobEffects.JUMP_BOOST, this.getCooldown(shape) / 2, level, true, false));
         world.playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.HORSE_JUMP, SoundSource.PLAYERS, 1.0F, 1.0F);
     }
 

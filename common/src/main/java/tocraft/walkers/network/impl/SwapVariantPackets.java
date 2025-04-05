@@ -28,16 +28,16 @@ public class SwapVariantPackets {
                         return;
                     }
 
-                    int variantID = packet.getInt("variant_id");
+                    int variantID = packet.getInt("variant_id").orElse(-1);
                     context.getPlayer().getServer().execute(() -> {
                         if (Walkers.CONFIG.unlockEveryVariant) {
                             ShapeType<?> currentShapeType = ShapeType.from(PlayerShape.getCurrentShape(context.getPlayer()));
 
                             TypeProvider<?> typeProvider = TypeProviderRegistry.getProvider(currentShapeType.getEntityType());
-                            int range = typeProvider != null ? typeProvider.getRange() : -1;
+                            int range = typeProvider != null ? typeProvider.getRange(context.getPlayer().level()) : -1;
 
                             // switch to special shape
-                            if (Walkers.hasSpecialShape(context.getPlayer().getUUID()) && EntityType.getKey(currentShapeType.getEntityType()).equals(ResourceLocation.parse("minecraft:wolf")) && variantID == range + 1) {
+                            if (Walkers.hasSpecialShape(context.getPlayer().getUUID()) && EntityType.getKey(currentShapeType.getEntityType()).equals(ResourceLocation.parse("minecraft:wolf")) && variantID == range) {
                                 Entity created;
                                 CompoundTag nbt = new CompoundTag();
 

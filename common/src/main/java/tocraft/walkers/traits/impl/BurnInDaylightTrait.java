@@ -43,6 +43,6 @@ public class BurnInDaylightTrait<E extends LivingEntity> extends ShapeTrait<E> {
     @Override
     @Environment(EnvType.CLIENT)
     public @Nullable TextureAtlasSprite getIcon() {
-        return Minecraft.getInstance().getBlockRenderer().getBlockModelShaper().getBlockModel(Blocks.FIRE.defaultBlockState()).getParticleIcon();
+        return Minecraft.getInstance().getBlockRenderer().getBlockModelShaper().getBlockModel(Blocks.FIRE.defaultBlockState()).particleIcon();
     }
 }

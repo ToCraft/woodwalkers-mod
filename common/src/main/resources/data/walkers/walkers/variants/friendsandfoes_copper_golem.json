@@ -4,11 +4,16 @@
   "type_provider": {
     "fallback": 0,
     "range": 3,
-    "nbt": [
-      {
-        "nbt_type": "INTEGER",
-        "nbt_field": "OxidationLevel"
+    "variants": {
+      "0": {
+        "OxidationLevel": 0
+      },
+      "1": {
+        "OxidationLevel": 1
+      },
+      "2": {
+        "OxidationLevel": 2
       }
-    ]
+    }
   }
 }

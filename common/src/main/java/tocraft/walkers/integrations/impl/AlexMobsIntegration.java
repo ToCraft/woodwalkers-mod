@@ -37,7 +37,7 @@ public class AlexMobsIntegration extends AbstractIntegration {
         registerAlexMobsTargetTagTrait("sunbird_scorch", 3, 5);
         registerAlexMobsTargetTagTrait("tiger", 4, 220);
         registerAlexMobsTargetTagTrait("warped_toad", 4, 50);
-        TraitRegistry.registerByPredicate(entity -> (entity instanceof Enemy && !(entity instanceof Creeper) && !(entity.getType().getCategory().name().contains("water") && entity.isInWaterOrBubble()) && !entity.getType().is(getTag("bunfungus_ignores"))), new PreyTrait<>(List.of(), List.of(getType("bunfungus")), List.of(), List.of(), 3, 5));
+        TraitRegistry.registerByPredicate(entity -> (entity instanceof Enemy && !(entity instanceof Creeper) && !(entity.getType().getCategory().name().contains("water") && entity.isInWater()) && !entity.getType().is(getTag("bunfungus_ignores"))), new PreyTrait<>(List.of(), List.of(getType("bunfungus")), List.of(), List.of(), 3, 5));
         // FearedTrait
         registerAlexMobsFearTagTrait("mimic_octopus");
         registerAlexMobsFearTagTrait("skunk");

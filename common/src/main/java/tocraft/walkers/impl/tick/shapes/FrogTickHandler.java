@@ -11,11 +11,13 @@ public class FrogTickHandler implements WalkersTickHandler<Frog> {
     @Override
     public void tick(Player player, Frog frog) {
         if (player.level().isClientSide) {
-            boolean walk = player.onGround() && player.getDeltaMovement().horizontalDistanceSqr() > 1.0E-6 && !player.isInWaterOrBubble();
-            boolean swim = player.getDeltaMovement().horizontalDistanceSqr() > 1.0E-6 && player.isInWaterOrBubble();
+            boolean isInWater = player.isInWater();
+
+            boolean walk = player.onGround() && player.getDeltaMovement().horizontalDistanceSqr() > 1.0E-6 && !isInWater;
+            boolean swim = player.getDeltaMovement().horizontalDistanceSqr() > 1.0E-6 && isInWater;
 
             // Jumping
-            if (!player.onGround() && !swim && !walk && !player.isInWaterOrBubble()) {
+            if (!player.onGround() && !swim && !walk && !isInWater) {
                 frog.jumpAnimationState.startIfStopped(frog.tickCount);
             } else {
                 frog.jumpAnimationState.stop();
@@ -24,7 +26,7 @@ public class FrogTickHandler implements WalkersTickHandler<Frog> {
             // Swimming
             if (swim) {
                 frog.swimIdleAnimationState.stop();
-            } else if (player.isInWaterOrBubble()) {
+            } else if (isInWater) {
                 frog.swimIdleAnimationState.startIfStopped(frog.tickCount);
             } else {
                 frog.swimIdleAnimationState.stop();
@@ -43,7 +45,7 @@ public class FrogTickHandler implements WalkersTickHandler<Frog> {
             }
         } else {
             // Buffs - jump boost
-            player.addEffect(new MobEffectInstance(MobEffects.JUMP, 20 * 2, 2, true, false));
+            player.addEffect(new MobEffectInstance(MobEffects.JUMP_BOOST, 20 * 2, 2, true, false));
         }
     }
 }

@@ -18,7 +18,7 @@ public class JumpBoostTickHandler<T extends LivingEntity> implements WalkersTick
     public void tick(Player player, LivingEntity entity) {
         if (!player.level().isClientSide) {
             if (player.tickCount % 5 == 0) {
-                player.addEffect(new MobEffectInstance(MobEffects.JUMP, 20 * 2, level, true, false));
+                player.addEffect(new MobEffectInstance(MobEffects.JUMP_BOOST, 20 * 2, level, true, false));
             }
         }
     }

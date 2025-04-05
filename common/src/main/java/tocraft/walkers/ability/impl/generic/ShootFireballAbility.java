@@ -74,8 +74,7 @@ public class ShootFireballAbility<T extends LivingEntity> extends GenericShapeAb
                             player.getLookAngle().y,
                             player.getLookAngle().z),
                     2);
-            fireball.moveTo(fireball.getX(), fireball.getY() + 1.75, fireball.getZ(), fireball.getYRot(), fireball.getXRot());
-            fireball.absMoveTo(fireball.getX(), fireball.getY(), fireball.getZ());
+            fireball.setPos(fireball.getX(), fireball.getY() + 1.75, fireball.getZ());
         } else {
             fireball = new SmallFireball(
                     world,

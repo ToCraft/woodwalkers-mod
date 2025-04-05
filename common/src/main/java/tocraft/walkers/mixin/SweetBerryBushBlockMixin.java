@@ -2,6 +2,7 @@ package tocraft.walkers.mixin;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.InsideBlockEffectApplier;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.animal.Bee;
 import net.minecraft.world.entity.animal.Fox;
@@ -23,7 +24,7 @@ public class SweetBerryBushBlockMixin {
             at = @At(value = "HEAD"),
             cancellable = true
     )
-    private void onDamage(BlockState state, Level world, BlockPos pos, Entity entity, CallbackInfo ci) {
+    private void onDamage(BlockState blockState, Level level, BlockPos blockPos, Entity entity, InsideBlockEffectApplier insideBlockEffectApplier, CallbackInfo ci) {
         if (entity instanceof Player player) {
             LivingEntity shape = PlayerShape.getCurrentShape(player);
 

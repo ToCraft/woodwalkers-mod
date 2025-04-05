@@ -1,3 +1,5 @@
+import dev.tocraft.gradle.preprocess.tasks.ApplyPreProcessTask
+
 plugins {
     id("dev.tocraft.modmaster.version")
 }
@@ -9,3 +11,5 @@ ext {
     modMeta["craftedcore_version"] = project.properties["craftedcore_version"] as String
     set("mod_meta", modMeta)
 }
+
+

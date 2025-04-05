@@ -15,7 +15,7 @@ public final class LivingBreatheHandler implements EntityEvents.LivingBreathe {
             LivingEntity shape = PlayerShape.getCurrentShape((Player) entity);
 
             if (shape != null) {
-                boolean isInWater = entity.isInWaterOrBubble();
+                boolean isInWater = entity.isInWater();
 
                 for (AquaticTrait<LivingEntity> trait : TraitRegistry.get(shape, AquaticTrait.ID).stream().map(trait -> (AquaticTrait<LivingEntity>) trait).toList()) {
                     return isInWater ? trait.isAquatic : trait.isLand;

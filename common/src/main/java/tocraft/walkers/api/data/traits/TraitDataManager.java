@@ -22,7 +22,7 @@ import java.util.List;
 import java.util.Map;
 
 public class TraitDataManager extends SynchronizedJsonReloadListener {
-    public static final Gson GSON = new GsonBuilder().registerTypeAdapter(ResourceLocation.class, new ResourceLocation.Serializer()).create();
+    public static final Gson GSON = new GsonBuilder().create();
 
     public TraitDataManager() {
         super(GSON, Walkers.MODID + "/traits");

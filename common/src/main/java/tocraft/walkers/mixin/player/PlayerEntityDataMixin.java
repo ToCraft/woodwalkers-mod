@@ -56,17 +56,17 @@ public abstract class PlayerEntityDataMixin extends LivingEntity implements Play
     private void readNbt(CompoundTag tag, CallbackInfo info) {
         // This is the new tag for saving Walkers unlock information.
         // It includes metadata for variants.
-        CompoundTag unlockedShape = tag.getCompound("UnlockedShape");
+        CompoundTag unlockedShape = tag.getCompound("UnlockedShape").orElse(new CompoundTag());
         this.walkers$unlocked = ShapeType.from(unlockedShape);
-
+    
         // Abilities
-        walkers$abilityCooldown = tag.getInt(ABILITY_COOLDOWN_KEY);
-
+        walkers$abilityCooldown = tag.getInt(ABILITY_COOLDOWN_KEY).orElse(0);
+    
         // Hostility
-        walkers$remainingTime = tag.getInt("RemainingHostilityTime");
-
+        walkers$remainingTime = tag.getInt("RemainingHostilityTime").orElse(0);
+    
         // Current Walkers
-        walkers$readCurrentShape(tag.getCompound("CurrentShape"));
+        walkers$readCurrentShape(tag.getCompound("CurrentShape").orElse(new CompoundTag()));
     }
 
     @Inject(method = "addAdditionalSaveData", at = @At("RETURN"))
@@ -109,14 +109,14 @@ public abstract class PlayerEntityDataMixin extends LivingEntity implements Play
         Optional<EntityType<?>> type = EntityType.by(tag);
 
         // set shape to null (no shape) if the entity id is "minecraft:empty"
-        if (tag.getString("id").equals("minecraft:empty")) {
+        if (tag.getString("id").map(it -> it.equals("minecraft:empty")).orElse(false)) {
             this.walkers$shape = null;
             this.refreshDimensions();
         }
 
         // if entity type was valid, deserialize entity data from tag
         else if (type.isPresent()) {
-            CompoundTag entityTag = tag.getCompound("EntityData");
+            CompoundTag entityTag = tag.getCompound("EntityData").orElse(new CompoundTag());
 
             // ensure entity data exists
             if (!entityTag.isEmpty()) {

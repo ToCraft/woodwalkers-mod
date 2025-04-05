@@ -39,6 +39,9 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
+import net.minecraft.world.entity.animal.wolf.Wolf;
+import net.minecraft.world.entity.animal.sheep.Sheep;
+
 @SuppressWarnings("unused")
 public class TraitRegistry {
     private static final Map<Predicate<LivingEntity>, List<ShapeTrait<?>>> traitsByPredicates = new ConcurrentHashMap<>();

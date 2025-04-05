@@ -2,17 +2,16 @@
   "entity_type": "friendsandfoes:mauler",
   "type_provider": {
     "fallback": 0,
-    "range": 2,
-    "nbt": [
-      {
-        "nbt_type": "STRING",
-        "nbt_field": "Type",
-        "parameters": {
-          "0": "badlands",
-          "1": "desert",
-          "2": "savanna"
-        }
+    "variants": {
+      "0": {
+        "Type": "badlands"
+      },
+      "1": {
+        "Type": "desert"
+      },
+      "2": {
+        "Type": "savanna"
       }
-    ]
+    }
   }
 }

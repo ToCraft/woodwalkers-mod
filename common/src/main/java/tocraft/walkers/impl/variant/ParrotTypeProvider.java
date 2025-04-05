@@ -5,8 +5,11 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.animal.Parrot;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.NotNull;
 import tocraft.walkers.api.variant.TypeProvider;
+import tocraft.walkers.mixin.accessor.ParrotAccessor;
 
 public class ParrotTypeProvider extends TypeProvider<Parrot> {
 
@@ -20,14 +23,14 @@ public class ParrotTypeProvider extends TypeProvider<Parrot> {
             .build();
 
     @Override
-    public int getVariantData(Parrot entity) {
+    public int getVariantData(@NotNull Parrot entity) {
         return entity.getVariant().getId();
     }
 
     @Override
-    public Parrot create(EntityType<Parrot> type, Level world, int data) {
+    public Parrot create(EntityType<Parrot> type, Level world, @NotNull Player player, int data) {
         Parrot parrot = new Parrot(type, world);
-        parrot.setVariant(Parrot.Variant.byId(data));
+        ((ParrotAccessor) parrot).callSetVariant(Parrot.Variant.byId(data));
         return parrot;
     }
 
@@ -37,8 +40,8 @@ public class ParrotTypeProvider extends TypeProvider<Parrot> {
     }
 
     @Override
-    public int getRange() {
-        return 4;
+    public int getRange(Level level) {
+        return Parrot.Variant.values().length;
     }
 
     @Override

@@ -26,7 +26,7 @@ import java.util.List;
 import java.util.Map;
 
 public class AbilityDataManager extends SynchronizedJsonReloadListener {
-    public static final Gson GSON = new GsonBuilder().registerTypeAdapter(ResourceLocation.class, new ResourceLocation.Serializer()).create();
+    public static final Gson GSON = new GsonBuilder().create();
 
     public AbilityDataManager() {
         super(GSON, Walkers.MODID + "/abilities");

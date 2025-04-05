@@ -10,12 +10,6 @@ import net.minecraft.world.item.Item;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.Nullable;
 
-//#if MC<1214
-//$$ import net.minecraft.client.Minecraft;
-//$$ import net.minecraft.client.resources.model.BakedModel;
-//$$ import net.minecraft.world.item.ItemStack;
-//$$ import net.minecraft.world.item.Items;
-//#endif
 
 @SuppressWarnings("unused")
 public abstract class ShapeTrait<E extends LivingEntity> {
@@ -34,15 +28,6 @@ public abstract class ShapeTrait<E extends LivingEntity> {
 
     @Environment(EnvType.CLIENT)
     public @Nullable TextureAtlasSprite getIcon() {
-        //#if MC<1214
-        //$$ Item item = getItemIcon();
-        //$$ if (item != null) {
-        //$$     BakedModel itemModel = Minecraft.getInstance().getItemRenderer().getModel(new ItemStack(item), null, null, 15);
-        //$$     if (itemModel != null) {
-        //$$         return itemModel.getParticleIcon();
-        //$$     }
-        //$$ }
-        //#endif
         return null;
     }
 

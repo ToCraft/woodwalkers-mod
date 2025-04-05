@@ -16,7 +16,7 @@ import tocraft.walkers.traits.impl.ImmunityTrait;
 
 @Mixin(MobEffectInstance.class)
 public class MobEffectInstanceMixin {
-    @WrapOperation(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/effect/MobEffect;applyEffectTick(Lnet/minecraft/server/level/ServerLevel;Lnet/minecraft/world/entity/LivingEntity;I)Z"))
+    @WrapOperation(method = "tickServer", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/effect/MobEffect;applyEffectTick(Lnet/minecraft/server/level/ServerLevel;Lnet/minecraft/world/entity/LivingEntity;I)Z"))
     private boolean onApplyEffect(MobEffect effect, ServerLevel level, LivingEntity livingEntity, int amplifier, Operation<Boolean> original) {
         if (livingEntity instanceof Player player) {
             LivingEntity shape = PlayerShape.getCurrentShape(player);

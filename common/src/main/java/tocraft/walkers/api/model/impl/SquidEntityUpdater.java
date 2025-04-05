@@ -22,7 +22,7 @@ public class SquidEntityUpdater<S extends Squid> implements EntityUpdater<S> {
             squid.tentacleMovement = 6.2831855F;
         }
 
-        if (player.isInWaterOrBubble()) {
+        if (player.isInWater()) {
             if (squid.tentacleMovement < 3.1415927F) {
                 float f = squid.tentacleMovement / 3.1415927F;
                 squid.tentacleAngle = Mth.sin(f * f * 3.1415927F) * 3.1415927F * 0.25F;

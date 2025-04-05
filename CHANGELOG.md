@@ -1,3 +1,8 @@
+walkers 6.4
+================
+- support 1.21.5
+- EoL for versions older then 1.21.5
+
 walkers 6.3
 ================
 - fix render issue with MobHealthBar (and similar mods)

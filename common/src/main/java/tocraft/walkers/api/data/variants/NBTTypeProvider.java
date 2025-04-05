@@ -1,14 +1,17 @@
 package tocraft.walkers.api.data.variants;
 
-import com.mojang.datafixers.util.Either;
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.DataResult;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 import tocraft.walkers.Walkers;
@@ -18,124 +21,89 @@ import java.util.*;
 
 // this is amazing
 public class NBTTypeProvider<T extends LivingEntity> extends TypeProvider<T> {
+    public static final MapCodec<List<CompoundTag>> VARIANT_DATA_CODEC = Codec.unboundedMap(Codec.STRING, CompoundTag.CODEC).fieldOf("variants").flatXmap(map -> {
+        List<CompoundTag> variantData = new ArrayList<>();
+        // sort map to prevent errors while creating list
+        map.entrySet().stream().sorted(Comparator.comparingInt(entry -> Integer.parseInt(entry.getKey()))).forEach(entry -> variantData.add(entry.getValue()));
+        return DataResult.success(variantData);
+    }, list -> {
+        Map<String, CompoundTag> map = new HashMap<>();
+        for (int i = 0; i < list.size(); i++) {
+            map.put(String.valueOf(i), list.get(i));
+        }
+        return DataResult.success(map);
+    });
+
     public static final Codec<NBTTypeProvider<?>> CODEC = RecordCodecBuilder.create((instance) -> instance.group(
             Codec.INT.optionalFieldOf("fallback", 0).forGetter(NBTTypeProvider::getFallbackData),
-            Codec.INT.optionalFieldOf("range", -1).forGetter(NBTTypeProvider::getRange),
-            Codec.either(Codec.list(NBTEntry.CODEC), AdvancedNBTEntries.CODEC).fieldOf("nbt").forGetter(o -> o.nbtEntryList),
+            VARIANT_DATA_CODEC.fieldOf("variants").forGetter(o -> o.variantData),
             Codec.unboundedMap(Codec.STRING, Codec.STRING).optionalFieldOf("names", new HashMap<>()).forGetter(o -> o.nameMap)
     ).apply(instance, instance.stable(NBTTypeProvider::new)));
 
     private final int fallback;
-    private final int range;
-    private final Either<List<NBTEntry<?>>, AdvancedNBTEntries> nbtEntryList;
+    private final List<CompoundTag> variantData;
     private final Map<String, String> nameMap;
 
-    public NBTTypeProvider(int fallback, int range, Either<List<NBTEntry<?>>, AdvancedNBTEntries> nbtEntryList, Map<String, String> nameMap) {
+    public NBTTypeProvider(int fallback, List<CompoundTag> variantData, Map<String, String> nameMap) {
         this.fallback = fallback;
-        this.nbtEntryList = nbtEntryList;
+        this.variantData = variantData;
         this.nameMap = nameMap;
-        if (range >= 0 && fallback <= range) {
-            this.range = range;
-        } else if (nbtEntryList.left().isPresent()) {
-            switch (nbtEntryList.left().get().getFirst().nbtType().toUpperCase()) {
-                case "BOOL", "BOOLEAN" -> this.range = 1;
-                default -> this.range = fallback;
-            }
-        } else if (nbtEntryList.right().isPresent()) {
-            this.range = nbtEntryList.right().get().highestId();
-        } else {
-            this.range = 0;
-        }
     }
 
-    @SuppressWarnings("unchecked")
     @Override
-    public int getVariantData(T entity) {
+    public int getVariantData(@NotNull T entity) {
         CompoundTag tag = new CompoundTag();
         entity.save(tag);
-        List<List<Integer>> validValues = new ArrayList<>();
-        if (nbtEntryList.left().isPresent()) {
-            for (NBTEntry<?> nbtEntry : nbtEntryList.left().get()) {
-                if (tag.contains(nbtEntry.nbtField())) {
-                    switch (nbtEntry.nbtType().toUpperCase()) {
-                        case "BOOL", "BOOLEAN" ->
-                                validValues.add(((NBTEntry<Boolean>) nbtEntry).getIndex(tag.getBoolean(nbtEntry.nbtField())));
-                        case "STRING" ->
-                                validValues.add(((NBTEntry<String>) nbtEntry).getIndex(tag.getString(nbtEntry.nbtField())));
-                        case "INT", "INTEGER" ->
-                                validValues.add(((NBTEntry<Integer>) nbtEntry).getIndex(tag.getInt(nbtEntry.nbtField())));
-                    }
-                }
-            }
-        }
 
-        // support AdvancedNBTEntries
-        else if (nbtEntryList.right().isPresent()) {
-            validValues.add(List.of(nbtEntryList.right().get().getData(tag)));
-        }
-
-        // check if data applies to all nbt fields
-        List<Integer> validData = getValidDataValues(validValues);
-        if (!validData.isEmpty()) {
-            if (validData.size() > 1) {
-                Walkers.LOGGER.error("{}: found too much valid variant ids: {} for entity: {}", getClass().getSimpleName(), validData.toArray(Integer[]::new), entity.getType().getDescriptionId());
-            }
-            return validData.getFirst();
+        int i = getData(tag);
+        if (i != -1) {
+            return i;
         } else {
-            Walkers.LOGGER.error("{}: No Variant for entity type {} found.", getClass().getSimpleName(), entity.getType().getDescriptionId());
+            Walkers.LOGGER.error("{}: No Variant for entity type {} found.", getClass().getSimpleName(), EntityType.getKey(entity.getType()));
             return getFallbackData();
         }
     }
 
-    @NotNull
-    private static List<Integer> getValidDataValues(List<List<Integer>> validValues) {
-        List<Integer> validData = new ArrayList<>();
-        for (List<Integer> validValue : validValues) {
-            for (Integer i : validValue) {
-                boolean invalid = false;
-                for (List<Integer> value : validValues) {
-                    if (!value.contains(i)) {
-                        invalid = true;
-                        break;
-                    }
-                }
-                if (!invalid) {
-                    if (!validData.contains(i)) {
-                        validData.add(i);
-                    }
-                }
-            }
-        }
-        return validData;
-    }
-
     @SuppressWarnings("unchecked")
     @Override
-    public T create(EntityType<T> type, Level world, int data) {
+    public T create(EntityType<T> type, Level world, @NotNull Player player, int data) {
         CompoundTag tag = new CompoundTag();
 
-        if (nbtEntryList.left().isPresent()) {
-            for (NBTEntry<?> nbtEntry : nbtEntryList.left().get()) {
-                Object value = nbtEntry.getValue(data);
-                switch (value) {
-                    case Integer intValue -> tag.putInt(nbtEntry.nbtField(), intValue);
-                    case String stringValue -> tag.putString(nbtEntry.nbtField(), stringValue);
-                    case Boolean booleanValue -> tag.putBoolean(nbtEntry.nbtField(), booleanValue);
-                    case null ->
-                            Walkers.LOGGER.error("{}: variant parameter for {} not found.", getClass().getSimpleName(), type.getDescriptionId());
-                    default -> {
-                    }
-                }
-            }
-        }
-        // support AdvancedNBTEntries
-        else if (nbtEntryList.right().isPresent()) {
-            nbtEntryList.right().get().fromData(tag, data);
-        }
+        fromData(tag, data);
 
         CompoundTag compoundTag = tag.copy();
         compoundTag.putString("id", Objects.requireNonNull(EntityType.getKey(type)).toString());
         return (T) EntityType.loadEntityRecursive(compoundTag, world, EntitySpawnReason.LOAD, entity -> entity);
+    }
+
+    public int getData(CompoundTag tag) {
+        for (CompoundTag compoundTag : variantData) {
+            boolean bool = true;
+            for (String key : compoundTag.keySet()) {
+                if (!tag.contains(key) || tag.get(key) != compoundTag.get(key)) {
+                    bool = false;
+                }
+                if (!bool) {
+                    break;
+                }
+            }
+            if (bool) {
+                return variantData.indexOf(compoundTag);
+            }
+        }
+
+        return -1;
+    }
+
+    public void fromData(CompoundTag tag, int data) {
+        if (data < variantData.size()) {
+            for (String key : variantData.get(data).keySet()) {
+                Tag value = variantData.get(data).get(key);
+                if (value != null) {
+                    tag.put(key, value);
+                }
+            }
+        }
     }
 
     @Override
@@ -144,8 +112,8 @@ public class NBTTypeProvider<T extends LivingEntity> extends TypeProvider<T> {
     }
 
     @Override
-    public int getRange() {
-        return range;
+    public int getRange(Level level) {
+        return variantData.size();
     }
 
     @Override

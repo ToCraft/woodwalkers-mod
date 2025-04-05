@@ -4,8 +4,11 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.animal.Rabbit;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.NotNull;
 import tocraft.walkers.api.variant.TypeProvider;
+import tocraft.walkers.mixin.accessor.RabbitAccessor;
 
 public class RabbitTypeProvider extends TypeProvider<Rabbit> {
 
@@ -17,10 +20,10 @@ public class RabbitTypeProvider extends TypeProvider<Rabbit> {
     }
 
     @Override
-    public Rabbit create(EntityType<Rabbit> type, Level level, int data) {
+    public Rabbit create(EntityType<Rabbit> type, Level level, @NotNull Player player, int data) {
         Rabbit rabbit = new Rabbit(type, level);
         if (data == 6) data = 99;
-        rabbit.setVariant(Rabbit.Variant.byId(data));
+        ((RabbitAccessor) rabbit).callSetVariant(Rabbit.Variant.byId(data));
         return rabbit;
     }
 
@@ -30,8 +33,8 @@ public class RabbitTypeProvider extends TypeProvider<Rabbit> {
     }
 
     @Override
-    public int getRange() {
-        return Rabbit.Variant.values().length - 1;
+    public int getRange(Level level) {
+        return Rabbit.Variant.values().length;
     }
 
     @Override

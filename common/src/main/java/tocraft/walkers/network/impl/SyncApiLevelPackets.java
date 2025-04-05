@@ -9,7 +9,7 @@ import tocraft.walkers.network.NetworkHandler;
 public class SyncApiLevelPackets {
     public static void handleSyncPacket(CompoundTag nbt) {
         if (nbt != null) {
-            String apiLevelId = nbt.getString("api_level");
+            String apiLevelId = nbt.getString("api_level").orElseThrow();
             ApiLevel apiLevel = ApiLevel.valueOf(apiLevelId);
             ApiLevel.ON_API_LEVEL_CHANGE_EVENT.invoke().setServerApiLevel(apiLevel);
         }

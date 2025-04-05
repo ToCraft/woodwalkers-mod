@@ -1,6 +1,5 @@
 package tocraft.walkers.eventhandler;
 
-import net.minecraft.nbt.NbtOps;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.InteractionResult;
@@ -21,7 +20,6 @@ import tocraft.walkers.Walkers;
 import tocraft.walkers.api.FlightHelper;
 import tocraft.walkers.api.PlayerHostility;
 import tocraft.walkers.api.PlayerShape;
-import tocraft.walkers.impl.variant.WolfTypeProvider;
 import tocraft.walkers.traits.ShapeTrait;
 import tocraft.walkers.traits.TraitRegistry;
 import tocraft.walkers.traits.impl.*;
@@ -34,9 +32,6 @@ public class WalkersEventHandlers {
         registerEntityRidingHandler();
         registerPlayerRidingHandler();
         registerLivingDeathHandler();
-
-        // set WolfTypeProvider Range when on server
-        ResourceEvents.DATA_PACK_SYNC.register(player -> WolfTypeProvider.setRange(player.level()));
 
         EntityEvents.INTERACT_WITH_PLAYER.register((player, entity, hand) -> {
             LivingEntity shape = PlayerShape.getCurrentShape(player);
@@ -53,13 +48,13 @@ public class WalkersEventHandlers {
 
         PlayerEvents.ALLOW_SLEEP_TIME.register((player, sleepingPos, vanillaResult) -> {
             if (TraitRegistry.has(PlayerShape.getCurrentShape(player), NocturnalTrait.ID)) {
-                return player.level().isDay() ? InteractionResult.SUCCESS : InteractionResult.FAIL;
+                return !player.level().dimensionType().hasFixedTime() && player.level().getSkyDarken() < 4 ? InteractionResult.SUCCESS : InteractionResult.FAIL;
             }
             return InteractionResult.PASS;
         });
 
         PlayerEvents.SLEEP_FINISHED_TIME.register((level, newTime) -> {
-            if (level.isDay() && !level.getPlayers(player -> player.isSleeping() && TraitRegistry.has(PlayerShape.getCurrentShape(player), NocturnalTrait.ID)).isEmpty()) {
+            if (!level.dimensionType().hasFixedTime() && level.getSkyDarken() < 4 && !level.getPlayers(player -> player.isSleeping() && TraitRegistry.has(PlayerShape.getCurrentShape(player), NocturnalTrait.ID)).isEmpty()) {
                 return newTime + level.getDayTime() % 24000L > 12000L ? 13000 : -11000;
             } else {
                 return newTime;
@@ -152,7 +147,7 @@ public class WalkersEventHandlers {
                             zombieVillager.finalizeSpawn((ServerLevelAccessor) player.level(), player.level().getCurrentDifficultyAt(zombieVillager.blockPosition()), EntitySpawnReason.CONVERSION, new Zombie.ZombieGroupData(false, true));
                             zombieVillager.setTradeOffers(villager.getOffers());
                             zombieVillager.setVillagerData(villager.getVillagerData());
-                            zombieVillager.setGossips(villager.getGossips().store(NbtOps.INSTANCE));
+                            zombieVillager.setGossips(villager.getGossips().copy());
                             zombieVillager.setVillagerXp(villager.getVillagerXp());
                         });
                     }

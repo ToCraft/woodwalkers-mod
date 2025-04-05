@@ -5,8 +5,11 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.animal.horse.Llama;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.NotNull;
 import tocraft.walkers.api.variant.TypeProvider;
+import tocraft.walkers.mixin.accessor.LlamaAccessor;
 
 public class LlamaTypeProvider<L extends Llama> extends TypeProvider<L> {
 
@@ -16,10 +19,10 @@ public class LlamaTypeProvider<L extends Llama> extends TypeProvider<L> {
     }
 
     @Override
-    public L create(EntityType<L> type, Level world, int data) {
+    public L create(EntityType<L> type, Level world, @NotNull Player player, int data) {
         L llama = type.create(world, EntitySpawnReason.LOAD);
         if (llama != null) {
-            llama.setVariant(L.Variant.byId(data));
+            ((LlamaAccessor) llama).callSetVariant(L.Variant.byId(data));
         }
         return llama;
     }
@@ -30,8 +33,8 @@ public class LlamaTypeProvider<L extends Llama> extends TypeProvider<L> {
     }
 
     @Override
-    public int getRange() {
-        return L.Variant.values().length - 1;
+    public int getRange(Level level) {
+        return L.Variant.values().length;
     }
 
     @Override

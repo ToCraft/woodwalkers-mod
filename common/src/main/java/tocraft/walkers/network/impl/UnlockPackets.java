@@ -24,11 +24,12 @@ public class UnlockPackets {
 
     public static void handleUnlockSyncPacket(ModernNetworking.Context context, CompoundTag nbt) {
         if (nbt != null && ApiLevel.getCurrentLevel().canUnlock) {
-            CompoundTag idTag = nbt.getCompound(UNLOCK_KEY);
+            CompoundTag idTag = nbt.getCompound(UNLOCK_KEY).orElse(new CompoundTag());
 
             ClientNetworking.runOrQueue(context, player -> {
-                if (!idTag.isEmpty())
+                if (!idTag.isEmpty()) {
                     ((PlayerDataProvider) player).walkers$set2ndShape(ShapeType.from(idTag));
+                }
             });
         }
     }
@@ -48,12 +49,12 @@ public class UnlockPackets {
                 return;
             }
 
-            boolean validType = nbt.getBoolean("valid_type");
+            boolean validType = nbt.getBoolean("valid_type").orElse(false);
             if (validType) {
-                ResourceLocation typeId = ResourceLocation.parse(nbt.getString("type_id"));
+                ResourceLocation typeId = ResourceLocation.parse(nbt.getString("type_id").orElseThrow());
                 EntityType<? extends LivingEntity> entityType = (EntityType<? extends LivingEntity>) BuiltInRegistries.ENTITY_TYPE.get(typeId).orElseThrow().value();
 
-                int variant = nbt.getInt("variant");
+                int variant = nbt.getInt("variant").orElse(-1);
 
                 context.getPlayer().getServer().execute(() -> {
                     @Nullable
@@ -84,8 +85,10 @@ public class UnlockPackets {
         // Serialize unlocked to tag
         CompoundTag compound = new CompoundTag();
         CompoundTag id = new CompoundTag();
-        if (((PlayerDataProvider) player).walkers$get2ndShape() != null)
-            id = ((PlayerDataProvider) player).walkers$get2ndShape().writeCompound();
+        ShapeType<?> ndShape = ((PlayerDataProvider) player).walkers$get2ndShape();
+        if (ndShape != null) {
+            id = ndShape.writeCompound();
+        }
         compound.put(UNLOCK_KEY, id);
 
         // Send to client

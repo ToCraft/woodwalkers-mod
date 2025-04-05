@@ -7,7 +7,9 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.NotNull;
 import tocraft.walkers.Walkers;
 import tocraft.walkers.api.variant.TypeProvider;
 import tocraft.walkers.api.variant.TypeProviderRegistry;
@@ -16,6 +18,7 @@ import tocraft.walkers.integrations.AbstractIntegration;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 // Reflections are simply great!
 public class MoreMobVariantsIntegration extends AbstractIntegration {
@@ -68,13 +71,17 @@ public class MoreMobVariantsIntegration extends AbstractIntegration {
             List<ResourceLocation> variants = getVariants(type);
             CompoundTag nbt = new CompoundTag();
             entity.saveWithoutId(nbt);
-            ResourceLocation id = ResourceLocation.parse(nbt.getString("VariantID"));
+            Optional<String> str = nbt.getString("VariantID");
+            if (str.isEmpty()) {
+                return getFallbackData();
+            }
+            ResourceLocation id = ResourceLocation.parse(str.get());
             return variants.indexOf(id);
         }
 
         @SuppressWarnings("unchecked")
         @Override
-        public L create(EntityType<L> type, Level world, int data) {
+        public L create(EntityType<L> type, Level world, @NotNull Player player, int data) {
             CompoundTag nbt = new CompoundTag();
             nbt.putString("id", EntityType.getKey(type).toString());
             ResourceLocation variantId = getVariants(type).get(data);
@@ -88,17 +95,17 @@ public class MoreMobVariantsIntegration extends AbstractIntegration {
         }
 
         @Override
-        public int getRange() {
+        public int getRange(Level level) {
             return getVariants(type).size() - 1;
         }
 
         @Override
-        public Component modifyText(L entity, MutableComponent text) {
+        public @NotNull Component modifyText(@NotNull L entity, MutableComponent text) {
             List<ResourceLocation> variants = getVariants(type);
             CompoundTag nbt = new CompoundTag();
             entity.saveWithoutId(nbt);
-            ResourceLocation id = ResourceLocation.parse(nbt.getString("VariantID"));
-            return Component.literal(formatTypePrefix(id.getPath()) + " ").append(text);
+            String str = nbt.getString("VariantID").orElse("");
+            return Component.literal(formatTypePrefix(str) + " ").append(text);
         }
     }
 }

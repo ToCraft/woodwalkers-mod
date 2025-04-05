@@ -18,6 +18,7 @@ import tocraft.walkers.api.blacklist.EntityBlacklist;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 @SuppressWarnings({"unchecked", "unused"})
 public class ShapeType<T extends LivingEntity> {
@@ -44,7 +45,7 @@ public class ShapeType<T extends LivingEntity> {
         this.variantData = variantData;
     }
 
-    public ShapeType(T entity) {
+    public ShapeType(@NotNull T entity) {
         this.type = (EntityType<T>) entity.getType();
 
         // Discover variant data based on entity NBT data.
@@ -71,36 +72,36 @@ public class ShapeType<T extends LivingEntity> {
     }
 
     @Nullable
-    public static ShapeType<?> from(CompoundTag compound) {
-        ResourceLocation id = ResourceLocation.parse(compound.getString("EntityID"));
+    public static ShapeType<?> from(@NotNull CompoundTag compound) {
+        Optional<String> str = compound.getString("EntityID");
+        if (str.isEmpty() ) {
+            return null;
+        }
+        ResourceLocation id = ResourceLocation.parse(str.get());
         if (!BuiltInRegistries.ENTITY_TYPE.containsKey(id)) {
             return null;
         }
 
-        return from((EntityType<? extends LivingEntity>) BuiltInRegistries.ENTITY_TYPE.get(id).orElseThrow().value(),
-                compound.contains("Variant") ? compound.getInt("Variant") : -1);
+        return from((EntityType<? extends LivingEntity>) BuiltInRegistries.ENTITY_TYPE.get(id).orElseThrow().value(), compound.getInt("Variant").orElse(-1));
     }
 
     @Nullable
     public static <Z extends LivingEntity> ShapeType<Z> from(EntityType<Z> entityType, int variant) {
-        TypeProvider<Z> typeProvider = TypeProviderRegistry.getProvider(entityType);
-        if (typeProvider != null) {
-            if (variant < -1 || variant > typeProvider.getRange()) {
-                return null;
-            }
+        if (variant < -1) {
+            return null;
         }
 
         return new ShapeType<>(entityType, variant);
     }
 
-    public static <T extends LivingEntity> List<ShapeType<T>> getAllTypes(EntityType<T> entityType) {
+    public static <T extends LivingEntity> @NotNull List<ShapeType<T>> getAllTypes(EntityType<T> entityType, Level level) {
         List<ShapeType<T>> types = new ArrayList<>();
         // check blacklist
         if (!EntityBlacklist.isBlacklisted(entityType)) {
             // check variants
             TypeProvider<?> variant = TypeProviderRegistry.getProvider(entityType);
             if (variant != null) {
-                for (int i = 0; i <= variant.getRange(); i++) {
+                for (int i = 0; i < variant.getRange(level); i++) {
                     types.add(new ShapeType<>(entityType, i));
                 }
             } else {
@@ -110,7 +111,7 @@ public class ShapeType<T extends LivingEntity> {
         return types;
     }
 
-    public static List<ShapeType<?>> getAllTypes(Level world) {
+    public static @NotNull List<ShapeType<?>> getAllTypes(Level world) {
         if (LIVING_TYPE_CASH.isEmpty()) {
             for (EntityType<?> type : BuiltInRegistries.ENTITY_TYPE) {
                 try {
@@ -126,7 +127,7 @@ public class ShapeType<T extends LivingEntity> {
 
         List<ShapeType<? extends LivingEntity>> types = new ArrayList<>();
         for (EntityType<? extends LivingEntity> type : LIVING_TYPE_CASH) {
-            types.addAll(getAllTypes(type));
+            types.addAll(getAllTypes(type, world));
         }
 
         return types;
@@ -143,22 +144,13 @@ public class ShapeType<T extends LivingEntity> {
         return type;
     }
 
-    public T create(Level world) {
-        TypeProvider<T> typeProvider = TypeProviderRegistry.getProvider(type);
-        if (typeProvider != null) {
-            return typeProvider.create(type, world, variantData);
-        }
-
-        return type.create(world, EntitySpawnReason.LOAD);
-    }
-
     /**
      * Create the entity based on player data
      */
     public T create(Level world, Player player) {
         TypeProvider<T> typeProvider = TypeProviderRegistry.getProvider(type);
-        if (typeProvider != null) {
-            return typeProvider.create(type, world, variantData, player);
+        if (typeProvider != null && variantData < typeProvider.getRange(world)) {
+            return typeProvider.create(type, world, player, variantData);
         }
 
         return type.create(world, EntitySpawnReason.LOAD);
@@ -183,7 +175,7 @@ public class ShapeType<T extends LivingEntity> {
         return Objects.hash(type, variantData);
     }
 
-    public static <L extends LivingEntity> Component createTooltipText(L entity) {
+    public static <L extends LivingEntity> Component createTooltipText(@NotNull L entity) {
         TypeProvider<L> provider = TypeProviderRegistry.getProvider((EntityType<L>) entity.getType());
         if (provider != null) {
             return provider.modifyText(entity, Component.translatable(entity.getType().getDescriptionId()));

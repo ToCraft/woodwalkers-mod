@@ -3,31 +3,58 @@
   "required_mod": "flowerymooblooms",
   "type_provider": {
     "fallback": 0,
-    "range": 16,
-    "nbt": [
-      {
-        "nbt_type": "STRING",
-        "nbt_field": "Variant",
-        "parameters": {
-          "0": "allium",
-          "1": "azure_bluet",
-          "2": "blue_orchid",
-          "3": "cornflower",
-          "4": "dandelion",
-          "5": "lilac",
-          "6": "lily_of_the_valley",
-          "7": "orange_tulip",
-          "8": "oxeye_daisy",
-          "9": "peony",
-          "10": "pink_tulip",
-          "11": "poppy",
-          "12": "red_tulip",
-          "13": "rose_bush",
-          "14": "sunflower",
-          "15": "white_tulip",
-          "16": "buttercup"
-        }
+    "variants": {
+      "0": {
+        "Variant": "allium"
+      },
+      "1": {
+        "Variant": "azure_bluet"
+      },
+      "2": {
+        "Variant": "blue_orchid"
+      },
+      "3": {
+        "Variant": "cornflower"
+      },
+      "4": {
+        "Variant": "dandelion"
+      },
+      "5": {
+        "Variant": "lilac"
+      },
+      "6": {
+        "Variant": "lily_of_the_valley"
+      },
+      "7": {
+        "Variant": "orange_tulip"
+      },
+      "8": {
+        "Variant": "oxeye_daisy"
+      },
+      "9": {
+        "Variant": "peony"
+      },
+      "10": {
+        "Variant": "pink_tulip"
+      },
+      "11": {
+        "Variant": "poppy"
+      },
+      "12": {
+        "Variant": "red_tulip"
+      },
+      "13": {
+        "Variant": "rose_bush"
+      },
+      "14": {
+        "Variant": "sunflower"
+      },
+      "15": {
+        "Variant": "white_tulip"
+      },
+      "16": {
+        "Variant": "buttercup"
       }
-    ]
+    }
   }
 }

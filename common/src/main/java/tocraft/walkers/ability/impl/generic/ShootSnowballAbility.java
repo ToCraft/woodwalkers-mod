@@ -14,6 +14,7 @@ import net.minecraft.world.entity.projectile.Snowball;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import org.jetbrains.annotations.NotNull;
 import tocraft.walkers.Walkers;
 import tocraft.walkers.ability.GenericShapeAbility;
 
@@ -22,7 +23,7 @@ public class ShootSnowballAbility<T extends LivingEntity> extends GenericShapeAb
     public static final MapCodec<ShootSnowballAbility<?>> CODEC = RecordCodecBuilder.mapCodec((instance) -> instance.stable(new ShootSnowballAbility<>()));
 
     @Override
-    public void onUse(ServerPlayer player, T shape, ServerLevel world) {
+    public void onUse(@NotNull ServerPlayer player, T shape, @NotNull ServerLevel world) {
         world.playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.SNOWBALL_THROW, SoundSource.NEUTRAL, 0.5F, 0.4F / (world.random.nextFloat() * 0.4F + 0.8F));
 
         if (!world.isClientSide) {

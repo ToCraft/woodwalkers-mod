@@ -3,12 +3,13 @@ package tocraft.walkers.ability.impl.specific;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.entity.animal.Sheep;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.ShearsItem;
 import tocraft.walkers.Walkers;
+
+import net.minecraft.world.entity.animal.sheep.Sheep;
 
 public class SheepAbility<T extends Sheep> extends GrassEaterAbility<T> {
     public static final ResourceLocation ID = Walkers.id("sheep");

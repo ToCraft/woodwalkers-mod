@@ -11,7 +11,6 @@ import net.minecraft.world.entity.EntityEvent;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.animal.Wolf;
 import net.minecraft.world.entity.monster.warden.Warden;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
@@ -28,6 +27,8 @@ import tocraft.walkers.impl.SonicBoomUser;
 
 import java.util.HashSet;
 import java.util.Set;
+
+import net.minecraft.world.entity.animal.wolf.Wolf;
 
 @Mixin(Player.class)
 public abstract class PlayerSonicBoomMixin extends LivingEntity implements SonicBoomUser {

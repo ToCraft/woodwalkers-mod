@@ -48,15 +48,14 @@ public class VariantMenu {
 
                     // get range of variants
                     TypeProvider<?> typeProvider = TypeProviderRegistry.getProvider(currentShapeType.getEntityType());
-                    int range = typeProvider != null ? typeProvider.getRange() : -1;
+                    int range = typeProvider != null ? typeProvider.getRange(minecraft.level) : -1;
                     // add special shape as extra variant
                     if (hasSpecialVariant) {
-                        range++;
                         LivingEntity currentShape = PlayerShape.getCurrentShape(minecraft.player);
                         if (currentShape != null) {
                             CompoundTag nbt = new CompoundTag();
                             currentShape.saveWithoutId(nbt);
-                            if (nbt.contains("isSpecial") && nbt.getBoolean("isSpecial")) {
+                            if (nbt.contains("isSpecial") && nbt.getBoolean("isSpecial").orElse(false)) {
                                 currentVariantId = range;
                             }
                         }

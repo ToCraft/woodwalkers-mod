@@ -4,7 +4,9 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.monster.Slime;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.NotNull;
 import tocraft.walkers.api.variant.TypeProvider;
 import tocraft.walkers.mixin.accessor.SlimeEntityAccessor;
 
@@ -16,7 +18,7 @@ public class SlimeTypeProvider extends TypeProvider<Slime> {
     }
 
     @Override
-    public Slime create(EntityType<Slime> type, Level world, int data) {
+    public Slime create(EntityType<Slime> type, Level world, @NotNull Player player, int data) {
         Slime slime = new Slime(type, world);
         ((SlimeEntityAccessor) slime).callSetSize(data + 1, true);
         return slime;
@@ -28,12 +30,12 @@ public class SlimeTypeProvider extends TypeProvider<Slime> {
     }
 
     @Override
-    public int getRange() {
-        return 4;
+    public int getRange(Level level) {
+        return 5;
     }
 
     @Override
-    public Component modifyText(Slime entity, MutableComponent text) {
+    public Component modifyText(@NotNull Slime entity, MutableComponent text) {
         return Component.literal(String.format("Size %d ", entity.getSize())).append(text);
     }
 }

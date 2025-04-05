@@ -29,10 +29,11 @@ public abstract class ShadowMixin {
     @Inject(
             method = "renderShadow",
             at = @At("HEAD"))
-    private static void storeContext(PoseStack poseStack, MultiBufferSource multiBufferSource, EntityRenderState state, float f, float g, LevelReader levelReader, float h, CallbackInfo ci) {
+    private static void storeContext(PoseStack poseStack, MultiBufferSource multiBufferSource, EntityRenderState state, float f, LevelReader levelReader, float g, CallbackInfo ci) {
         shape_shadowState = state;
     }
 
+    /*
     @ModifyVariable(
             method = "renderShadow",
             at = @At(value = "INVOKE", target = "Lnet/minecraft/util/Mth;floor(D)I", ordinal = 0), index = 6, argsOnly = true)
@@ -49,5 +50,5 @@ public abstract class ShadowMixin {
         }
 
         return value;
-    }
+    }*/
 }

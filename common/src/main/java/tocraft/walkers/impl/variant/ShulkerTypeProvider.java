@@ -4,9 +4,12 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.monster.Shulker;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.NotNull;
 import tocraft.walkers.api.variant.TypeProvider;
+import tocraft.walkers.mixin.accessor.ShulkerAccessor;
 
 import java.util.Optional;
 
@@ -19,10 +22,10 @@ public class ShulkerTypeProvider extends TypeProvider<Shulker> {
     }
 
     @Override
-    public Shulker create(EntityType<Shulker> type, Level world, int data) {
+    public Shulker create(EntityType<Shulker> type, Level world, @NotNull Player player, int data) {
         Shulker shulker = new Shulker(type, world);
         if (data < 16) {
-            shulker.setVariant(Optional.of(DyeColor.byId(data)));
+            ((ShulkerAccessor) shulker).callSetVariant(Optional.of(DyeColor.byId(data)));
         }
         return shulker;
     }
@@ -33,8 +36,8 @@ public class ShulkerTypeProvider extends TypeProvider<Shulker> {
     }
 
     @Override
-    public int getRange() {
-        return 16;
+    public int getRange(Level level) {
+        return 17;
     }
 
     @Override

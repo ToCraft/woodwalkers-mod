@@ -4,7 +4,9 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.animal.axolotl.Axolotl;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.NotNull;
 import tocraft.walkers.api.variant.TypeProvider;
 import tocraft.walkers.mixin.accessor.AxolotlEntityAccessor;
 
@@ -17,7 +19,7 @@ public class AxolotlTypeProvider extends TypeProvider<Axolotl> {
 
     @SuppressWarnings("ConstantConditions")
     @Override
-    public Axolotl create(EntityType<Axolotl> type, Level world, int data) {
+    public Axolotl create(EntityType<Axolotl> type, Level world, @NotNull Player player, int data) {
         Axolotl axolotl = new Axolotl(type, world);
         ((AxolotlEntityAccessor) axolotl).callSetVariant(Axolotl.Variant.values()[data]);
         return axolotl;
@@ -29,8 +31,8 @@ public class AxolotlTypeProvider extends TypeProvider<Axolotl> {
     }
 
     @Override
-    public int getRange() {
-        return Axolotl.Variant.values().length - 1;
+    public int getRange(Level level) {
+        return Axolotl.Variant.values().length;
     }
 
     @Override

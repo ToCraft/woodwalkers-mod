@@ -4,7 +4,9 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.animal.Fox;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.NotNull;
 import tocraft.walkers.api.variant.TypeProvider;
 import tocraft.walkers.mixin.accessor.FoxEntityAccessor;
 
@@ -17,7 +19,7 @@ public class FoxTypeProvider extends TypeProvider<Fox> {
 
     @SuppressWarnings("ConstantConditions")
     @Override
-    public Fox create(EntityType<Fox> type, Level world, int data) {
+    public Fox create(EntityType<Fox> type, Level world, @NotNull Player player, int data) {
         Fox fox = new Fox(type, world);
         ((FoxEntityAccessor) fox).callSetVariant(Fox.Variant.byId(data));
         return fox;
@@ -29,8 +31,8 @@ public class FoxTypeProvider extends TypeProvider<Fox> {
     }
 
     @Override
-    public int getRange() {
-        return Fox.Variant.values().length - 1;
+    public int getRange(Level level) {
+        return Fox.Variant.values().length;
     }
 
     @Override

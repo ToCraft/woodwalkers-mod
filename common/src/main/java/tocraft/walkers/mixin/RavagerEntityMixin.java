@@ -10,6 +10,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
 
 @Mixin(Ravager.class)
 public abstract class RavagerEntityMixin extends LivingEntity {
@@ -43,7 +44,7 @@ public abstract class RavagerEntityMixin extends LivingEntity {
                     }
 
                     // Update movement/velocity
-                    if (this.isControlledByLocalInstance()) {
+                    if (this.walkers$isControlledByLocalInstance()) {
                         this.setSpeed((float) this.getAttributeValue(Attributes.MOVEMENT_SPEED));
                         super.travel(new Vec3(sidewaysSpeed, movementInput.y, forwardSpeed));
                     } else if (rider instanceof Player) {
@@ -66,5 +67,15 @@ public abstract class RavagerEntityMixin extends LivingEntity {
     public LivingEntity getControllingPassenger() {
         Entity rider = getFirstPassenger();
         return rider instanceof Player ? (LivingEntity) rider : super.getControllingPassenger();
+    }
+
+    @Unique
+    private boolean walkers$isControlledByLocalInstance() {
+        LivingEntity p = this.getControllingPassenger();
+        if (p instanceof Player player) {
+            return player.isLocalPlayer();
+        } else {
+            return this.isEffectiveAi();
+        }
     }
 }

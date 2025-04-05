@@ -187,7 +187,7 @@ public abstract class PlayerEntityMixin extends LivingEntityMixin {
     @SuppressWarnings("deprecation")
     @Unique
     private boolean walkers$isInDaylight() {
-        if (this.level().isDay() && !this.level().isClientSide) {
+        if (!this.level().isClientSide && !this.level().dimensionType().hasFixedTime() && this.level().getSkyDarken() < 4) {
             float brightnessAtEyes = getLightLevelDependentMagicValue();
             BlockPos daylightTestPosition = BlockPos.containing(getX(), (double) Math.round(getY()), getZ());
 

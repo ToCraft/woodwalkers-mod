@@ -6,7 +6,9 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.monster.Creeper;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.NotNull;
 import tocraft.walkers.api.variant.TypeProvider;
 
 public class CreeperTypeProvider extends TypeProvider<Creeper> {
@@ -16,7 +18,7 @@ public class CreeperTypeProvider extends TypeProvider<Creeper> {
     }
 
     @Override
-    public Creeper create(EntityType<Creeper> type, Level world, int data) {
+    public Creeper create(EntityType<Creeper> type, Level world, @NotNull Player player, int data) {
         CompoundTag tag = new CompoundTag();
         tag.putBoolean("powered", data == 1);
         CompoundTag compoundTag = tag.copy();
@@ -30,8 +32,8 @@ public class CreeperTypeProvider extends TypeProvider<Creeper> {
     }
 
     @Override
-    public int getRange() {
-        return 1;
+    public int getRange(Level level) {
+        return 2;
     }
 
     @Override

@@ -25,7 +25,7 @@ public interface LivingEntityAccessor {
     void callPlayBlockFallSound();
 
     @Invoker
-    int callCalculateFallDamage(float fallDistance, float damageMultiplier);
+    int callCalculateFallDamage(double fallDistance, float damageMultiplier);
 
     @Invoker
     float callGetSoundVolume();

@@ -8,7 +8,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.TamableAnimal;
-import net.minecraft.world.entity.animal.Wolf;
 import net.minecraft.world.level.Level;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
@@ -17,6 +16,8 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import tocraft.walkers.Walkers;
+
+import net.minecraft.world.entity.animal.wolf.Wolf;
 
 @SuppressWarnings({"RedundantCast"})
 @Mixin(Wolf.class)
@@ -58,7 +59,7 @@ public abstract class WolfEntityMixin extends TamableAnimal {
 
     @Inject(method = "readAdditionalSaveData", at = @At("RETURN"))
     protected void onReadCustomDataFromNbt(CompoundTag nbt, CallbackInfo ci) {
-        ((Entity) (Object) this).getEntityData().set(walkers$isSpecial, nbt.getBoolean("isSpecial"));
+        ((Entity) (Object) this).getEntityData().set(walkers$isSpecial, nbt.getBoolean("isSpecial").orElse(false));
     }
 
     @Inject(method = "getTexture", at = @At("HEAD"), cancellable = true)
@@ -67,7 +68,7 @@ public abstract class WolfEntityMixin extends TamableAnimal {
         this.saveWithoutId(nbt);
 
         if (nbt.contains("isSpecial")) {
-            if (nbt.getBoolean("isSpecial")) {
+            if (nbt.getBoolean("isSpecial").orElse(false)) {
                 if (this.isTame()) {
                     cir.setReturnValue(walkers$SPECIAL_TAMED);
                 } else {

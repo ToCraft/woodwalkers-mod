@@ -13,7 +13,6 @@ import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.targeting.TargetingConditions;
 import net.minecraft.world.entity.animal.Dolphin;
 import net.minecraft.world.entity.animal.Pufferfish;
-import net.minecraft.world.entity.animal.Sheep;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -46,6 +45,8 @@ import tocraft.walkers.traits.impl.MobEffectTrait;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Predicate;
+
+import net.minecraft.world.entity.animal.sheep.Sheep;
 
 @SuppressWarnings({"ConstantConditions", "unused"})
 @Mixin(Player.class)

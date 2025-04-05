@@ -6,6 +6,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.animal.horse.Llama;
 import net.minecraft.world.entity.projectile.LlamaSpit;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
@@ -28,7 +29,7 @@ public class LlamaAbility<T extends LivingEntity> extends ShapeAbility<T> {
         Vec3 rotation = player.getLookAngle();
         spit.shoot(rotation.x, rotation.y, rotation.z, 1.5F, 10.0F);
         spit.syncPacketPositionCodec(player.getX(), player.getEyeY(), player.getZ());
-        spit.absMoveTo(player.getX(), player.getEyeY(), player.getZ());
+        spit.setPos(player.getX(), player.getEyeY(), player.getZ());
 
         // Play SFX
         world.playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.LLAMA_SPIT, player.getSoundSource(), 1.0F, 1.0F + (world.random.nextFloat() - world.random.nextFloat()) * 0.2F);

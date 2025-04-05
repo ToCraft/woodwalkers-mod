@@ -1,5 +1,6 @@
 package tocraft.walkers.network;
 
+import net.minecraft.core.UUIDUtil;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntityType;
@@ -42,9 +43,9 @@ public class ClientNetworking implements NetworkHandler {
     }
 
     public static void handleWalkersSyncPacket(ModernNetworking.Context context, CompoundTag packetData) {
-        final UUID uuid = packetData.getUUID("uuid");
-        final String id = packetData.getString("type");
-        final CompoundTag entityNbt = packetData.getCompound("entity_tag");
+        final UUID uuid = UUIDUtil.uuidFromIntArray(packetData.getIntArray("uuid").orElseThrow());
+        final String id = packetData.getString("type").orElseThrow();
+        final CompoundTag entityNbt = packetData.getCompound("entity_tag").orElseThrow();
 
         runOrQueue(context, player -> {
             @Nullable
@@ -84,7 +85,7 @@ public class ClientNetworking implements NetworkHandler {
     }
 
     public static void handleAbilitySyncPacket(ModernNetworking.Context context, CompoundTag packet) {
-        int cooldown = packet.getInt("cooldown");
+        int cooldown = packet.getInt("cooldown").orElseThrow();
         runOrQueue(context, player -> ((PlayerDataProvider) player).walkers$setAbilityCooldown(cooldown));
     }
 }

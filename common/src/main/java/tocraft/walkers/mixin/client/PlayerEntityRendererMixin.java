@@ -85,13 +85,9 @@ public abstract class PlayerEntityRendererMixin extends LivingEntityRenderer<Abs
             livingState.wornHeadAnimationPos = player.wornHeadAnimationPos;
             livingState.isInWater = player.isInWater;
             livingState.scale = player.scale;
-            //#if MC<1214
-            //$$ livingState.mainArm = player.mainArm;
-            //#else
             if (livingState instanceof ArmedEntityRenderState armedState) {
                 armedState.mainArm = player.mainArm;
             }
-            //#endif
 
             if (shape instanceof HumanoidRenderState humanoidShape) {
                 humanoidShape.swimAmount = player.swimAmount;
@@ -102,11 +98,6 @@ public abstract class PlayerEntityRendererMixin extends LivingEntityRenderer<Abs
                 humanoidShape.isCrouching = player.isCrouching;
                 humanoidShape.ticksUsingItem = player.ticksUsingItem;
                 humanoidShape.isUsingItem = player.isUsingItem;
-                //#if MC<1214
-                //$$ humanoidShape.chestItem = player.chestItem;
-                //$$ humanoidShape.legsItem = player.legsItem;
-                //$$ humanoidShape.feetItem = player.feetItem;
-                //#endif
             }
         }
     }

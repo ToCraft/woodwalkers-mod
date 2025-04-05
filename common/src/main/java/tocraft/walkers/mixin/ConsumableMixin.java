@@ -4,7 +4,6 @@ import com.google.common.base.Suppliers;
 import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
 import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.animal.Wolf;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -20,6 +19,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
+
+import net.minecraft.world.entity.animal.wolf.Wolf;
 
 @Mixin(Consumable.class)
 public class ConsumableMixin {

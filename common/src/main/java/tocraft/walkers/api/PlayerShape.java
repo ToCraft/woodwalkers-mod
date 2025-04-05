@@ -1,5 +1,6 @@
 package tocraft.walkers.api;
 
+import net.minecraft.core.UUIDUtil;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionResult;
@@ -68,7 +69,7 @@ public class PlayerShape {
         }
 
         // put entity type ID under the key "id", or "minecraft:empty" if no shape is equipped (or the shape entity type is invalid)
-        data.putUUID("uuid", changed.getUUID());
+        data.putIntArray("uuid", UUIDUtil.uuidToIntArray(changed.getUUID()));
         data.putString("type", shape == null ? "minecraft:empty" : EntityType.getKey(shape.getType()).toString());
         data.put("entity_tag", entityTag);
         ModernNetworking.sendToPlayer(packetTarget, NetworkHandler.SHAPE_SYNC, data);

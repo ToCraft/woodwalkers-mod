@@ -82,7 +82,7 @@ public abstract class LivingEntityMixin extends Entity implements NearbySongAcce
     }
 
     @Inject(method = "causeFallDamage", at = @At(value = "HEAD"), cancellable = true)
-    private void causeFallDamage(float fallDistance, float damageMultiplier, DamageSource damageSource,
+    private void causeFallDamage(double fallDistance, float damageMultiplier, DamageSource damageSource,
                                  CallbackInfoReturnable<Boolean> cir) {
         if ((Object) this instanceof Player player) {
             LivingEntity shape = PlayerShape.getCurrentShape(player);
