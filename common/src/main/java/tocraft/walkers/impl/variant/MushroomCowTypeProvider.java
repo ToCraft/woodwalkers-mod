@@ -30,7 +30,7 @@ public class MushroomCowTypeProvider extends TypeProvider<MushroomCow> {
     }
 
     @Override
-    public int getRange(Level level) {
+    public int size(Level level) {
         return MushroomCow.Variant.values().length;
     }
 

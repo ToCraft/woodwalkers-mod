@@ -29,7 +29,7 @@ public class PandaTypeProvider extends TypeProvider<Panda> {
     }
 
     @Override
-    public int getRange(Level level) {
+    public int size(Level level) {
         return Panda.Gene.values().length;
     }
 

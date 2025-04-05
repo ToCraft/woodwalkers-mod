@@ -3,18 +3,19 @@
   "entity_type": "super_block_world:boom_boom",
   "type_provider": {
     "fallback": 0,
-    "range": 3,
-    "nbt": [
-      {
-        "nbt_type": "string",
-        "nbt_field": "State",
-        "parameters": {
-          "0": "normal",
-          "1": "dizzy",
-          "2": "spinning",
-          "3": "flying"
-        }
+    "variants": {
+      "0": {
+        "State": "normal"
+      },
+      "1": {
+        "State": "dizzy"
+      },
+      "2": {
+        "State": "spinning"
+      },
+      "3": {
+        "State": "flying"
       }
-    ]
+    }
   }
 }

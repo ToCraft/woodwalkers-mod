@@ -31,7 +31,7 @@ public class FoxTypeProvider extends TypeProvider<Fox> {
     }
 
     @Override
-    public int getRange(Level level) {
+    public int size(Level level) {
         return Fox.Variant.values().length;
     }
 

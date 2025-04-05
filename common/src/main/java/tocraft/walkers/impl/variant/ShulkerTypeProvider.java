@@ -36,7 +36,7 @@ public class ShulkerTypeProvider extends TypeProvider<Shulker> {
     }
 
     @Override
-    public int getRange(Level level) {
+    public int size(Level level) {
         return 17;
     }
 

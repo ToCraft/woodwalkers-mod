@@ -32,7 +32,7 @@ public class CreeperTypeProvider extends TypeProvider<Creeper> {
     }
 
     @Override
-    public int getRange(Level level) {
+    public int size(Level level) {
         return 2;
     }
 

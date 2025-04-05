@@ -3,22 +3,83 @@
   "entity_type": "minecraft:sheep",
   "type_provider": {
     "fallback": 0,
-    "range": 18,
-    "nbt": [
-      {
-        "nbt_type": "int",
-        "nbt_field": "Color"
+    "variants": {
+      "0": {
+        "Color": 0,
+        "VariantID": "moremobvariants:default"
       },
-      {
-        "nbt_type": "string",
-        "nbt_field": "VariantID",
-        "parameters": {
-          "0": "moremobvariants:default",
-          "16": "moremobvariants:fuzzy",
-          "17": "moremobvariants:patched",
-          "18": "moremobvariants:rocky"
-        }
+      "1": {
+        "Color": 1,
+        "VariantID": "moremobvariants:default"
+      },
+      "2": {
+        "Color": 2,
+        "VariantID": "moremobvariants:default"
+      },
+      "3": {
+        "Color": 3,
+        "VariantID": "moremobvariants:default"
+      },
+      "4": {
+        "Color": 4,
+        "VariantID": "moremobvariants:default"
+      },
+      "5": {
+        "Color": 5,
+        "VariantID": "moremobvariants:default"
+      },
+      "6": {
+        "Color": 6,
+        "VariantID": "moremobvariants:default"
+      },
+      "7": {
+        "Color": 7,
+        "VariantID": "moremobvariants:default"
+      },
+      "8": {
+        "Color": 8,
+        "VariantID": "moremobvariants:default"
+      },
+      "9": {
+        "Color": 9,
+        "VariantID": "moremobvariants:default"
+      },
+      "10": {
+        "Color": 10,
+        "VariantID": "moremobvariants:default"
+      },
+      "11": {
+        "Color": 11,
+        "VariantID": "moremobvariants:default"
+      },
+      "12": {
+        "Color": 12,
+        "VariantID": "moremobvariants:default"
+      },
+      "13": {
+        "Color": 13,
+        "VariantID": "moremobvariants:default"
+      },
+      "14": {
+        "Color": 14,
+        "VariantID": "moremobvariants:default"
+      },
+      "15": {
+        "Color": 15,
+        "VariantID": "moremobvariants:default"
+      },
+      "16": {
+        "Color": 16,
+        "VariantID": "moremobvariants:fuzzy"
+      },
+      "17": {
+        "Color": 17,
+        "VariantID": "moremobvariants:patched"
+      },
+      "18": {
+        "Color": 18,
+        "VariantID": "moremobvariants:rocky"
       }
-    ]
+    }
   }
 }

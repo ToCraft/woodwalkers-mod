@@ -3,28 +3,23 @@
   "entity_type": "alexsmobs:bison",
   "type_provider": {
     "fallback": 0,
-    "range": 3,
-    "nbt": [
-      {
-        "nbt_type": "boolean",
-        "nbt_field": "Snowy",
-        "parameters": {
-          "0": "true",
-          "1": "true",
-          "2": "false",
-          "3": "false"
-        }
+    "variants": {
+      "0": {
+        "Snowy": true,
+        "Sheared": true
       },
-      {
-        "nbt_type": "boolean",
-        "nbt_field": "Sheared",
-        "parameters": {
-          "0": "true",
-          "1": "false",
-          "2": "true",
-          "3": "false"
-        }
+      "1": {
+        "Snowy": true,
+        "Sheared": false
+      },
+      "2": {
+        "Snowy": false,
+        "Sheared": true
+      },
+      "3": {
+        "Snowy": false,
+        "Sheared": false
       }
-    ]
+    }
   }
 }

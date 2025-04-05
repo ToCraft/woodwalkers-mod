@@ -3,12 +3,37 @@
   "entity_type": "unusualfishmod:rhinotetra",
   "type_provider": {
     "fallback": 0,
-    "range": 9,
-    "nbt": [
-      {
-        "nbt_type": "integer",
-        "nbt_field": "Variant"
+    "variants": {
+      "0": {
+        "Variant": 0
+      },
+      "1": {
+        "Variant": 1
+      },
+      "2": {
+        "Variant": 2
+      },
+      "3": {
+        "Variant": 3
+      },
+      "4": {
+        "Variant": 4
+      },
+      "5": {
+        "Variant": 5
+      },
+      "6": {
+        "Variant": 6
+      },
+      "7": {
+        "Variant": 7
+      },
+      "8": {
+        "Variant": 8
+      },
+      "9": {
+        "Variant": 9
       }
-    ]
+    }
   }
 }

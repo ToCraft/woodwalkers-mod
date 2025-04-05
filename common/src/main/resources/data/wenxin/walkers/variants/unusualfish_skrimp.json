@@ -3,12 +3,16 @@
   "entity_type": "unusualfishmod:skrimp",
   "type_provider": {
     "fallback": 0,
-    "range": 2,
-    "nbt": [
-      {
-        "nbt_type": "integer",
-        "nbt_field": "Variant"
+    "variants": {
+      "0": {
+        "Variant": 0
+      },
+      "1": {
+        "Variant": 1
+      },
+      "2": {
+        "Variant": 2
       }
-    ]
+    }
   }
 }

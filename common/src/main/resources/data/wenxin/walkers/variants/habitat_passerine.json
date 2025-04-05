@@ -4,23 +4,17 @@
   "type_provider": {
     "fallback": 0,
     "range": 9,
-    "nbt": [
-      {
-        "nbt_type": "string",
-        "nbt_field": "Variant",
-        "parameters": {
-          "0": "habitat:american_goldfinch",
-          "1": "habitat:bali_myna",
-          "2": "habitat:blue_jay",
-          "3": "habitat:common_sparrow",
-          "4": "habitat:eastern_bluebird",
-          "5": "habitat:eurasian_bullfinch",
-          "6": "habitat:flame_robin",
-          "7": "habitat:northern_cardinal",
-          "8": "habitat:red_throated_parrotfinch",
-          "9": "habitat:violet_backed_starling"
-        }
-      }
-    ]
+    "variants": {
+      "0":{"Variant":"habitat:american_goldfinch"},
+      "1":{"Variant":"habitat:bali_myna"},
+      "2":{"Variant":"habitat:blue_jay"},
+      "3":{"Variant":"habitat:common_sparrow"},
+      "4":{"Variant":"habitat:eastern_bluebird"},
+      "5":{"Variant":"habitat:eurasian_bullfinch"},
+      "6":{"Variant":"habitat:flame_robin"},
+      "7":{"Variant":"habitat:northern_cardinal"},
+      "8":{"Variant":"habitat:red_throated_parrotfinch"},
+      "9":{"Variant":"habitat:violet_backed_starling"}
+    }
   }
 }

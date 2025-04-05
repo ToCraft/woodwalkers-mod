@@ -2,6 +2,8 @@ walkers 6.4
 ================
 - support 1.21.5
 - EoL for versions older then 1.21.5
+- API overhaul for TypeProviders (variants)
+- slightly modify advanced system to register variants & remove old system **You need to update your data packs!**
 
 walkers 6.3
 ================

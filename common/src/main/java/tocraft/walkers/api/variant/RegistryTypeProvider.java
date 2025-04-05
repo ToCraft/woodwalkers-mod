@@ -53,7 +53,7 @@ public class RegistryTypeProvider<T extends LivingEntity, V> extends TypeProvide
     }
 
     @Override
-    public int getRange(Level level) {
+    public int size(Level level) {
         return level.registryAccess().lookupOrThrow(this.registry).size();
     }
 

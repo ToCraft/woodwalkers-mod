@@ -28,7 +28,7 @@ public abstract class TypeProvider<T extends LivingEntity> {
     /**
      * @return the highest variant id + 1
      */
-    public abstract int getRange(Level level);
+    public abstract int size(Level level);
 
     public abstract Component modifyText(T entity, MutableComponent text);
 

@@ -36,7 +36,7 @@ public class NBTTypeProvider<T extends LivingEntity> extends TypeProvider<T> {
 
     public static final Codec<NBTTypeProvider<?>> CODEC = RecordCodecBuilder.create((instance) -> instance.group(
             Codec.INT.optionalFieldOf("fallback", 0).forGetter(NBTTypeProvider::getFallbackData),
-            VARIANT_DATA_CODEC.fieldOf("variants").forGetter(o -> o.variantData),
+            VARIANT_DATA_CODEC.forGetter(o -> o.variantData),
             Codec.unboundedMap(Codec.STRING, Codec.STRING).optionalFieldOf("names", new HashMap<>()).forGetter(o -> o.nameMap)
     ).apply(instance, instance.stable(NBTTypeProvider::new)));
 
@@ -112,7 +112,7 @@ public class NBTTypeProvider<T extends LivingEntity> extends TypeProvider<T> {
     }
 
     @Override
-    public int getRange(Level level) {
+    public int size(Level level) {
         return variantData.size();
     }
 

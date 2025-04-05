@@ -46,7 +46,7 @@ public class ZombieVillagerTypeProvider extends TypeProvider<ZombieVillager> {
     }
 
     @Override
-    public int getRange(Level level) {
+    public int size(Level level) {
         return BuiltInRegistries.VILLAGER_PROFESSION.size();
     }
 

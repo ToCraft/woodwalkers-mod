@@ -31,7 +31,7 @@ public class HorseTypeProvider extends TypeProvider<Horse> {
     }
 
     @Override
-    public int getRange(Level level) {
+    public int size(Level level) {
         return Variant.values().length;
     }
 

@@ -31,7 +31,7 @@ public class SheepTypeProvider extends TypeProvider<Sheep> {
     }
 
     @Override
-    public int getRange(Level level) {
+    public int size(Level level) {
         return 16;
     }
 

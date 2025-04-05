@@ -3,62 +3,67 @@
   "entity_type": "minecraft:pig",
   "type_provider": {
     "fallback": 0,
-    "range": 11,
-    "nbt": [
-      {
-        "nbt_type": "string",
-        "nbt_field": "VariantID",
-        "parameters": {
-          "0": "moremobvariants:default",
-          "1": "moremobvariants:mottled",
-          "2": "moremobvariants:piebald",
-          "3": "moremobvariants:pink_footed",
-          "4": "moremobvariants:sooty",
-          "5": "moremobvariants:spotted",
-          "6": "moremobvariants:default",
-          "7": "moremobvariants:mottled",
-          "8": "moremobvariants:piebald",
-          "9": "moremobvariants:pink_footed",
-          "10": "moremobvariants:sooty",
-          "11": "moremobvariants:spotted"
-        }
+    "variants": {
+      "0": {
+        "VariantID": "moremobvariants:default",
+        "IsMuddy": true,
+        "MuddyTimeLeft": -1
       },
-      {
-        "nbt_type": "boolean",
-        "nbt_field": "IsMuddy",
-        "parameters": {
-          "0": "true",
-          "1": "true",
-          "2": "true",
-          "3": "true",
-          "4": "true",
-          "5": "true",
-          "6": "false",
-          "7": "false",
-          "8": "false",
-          "9": "false",
-          "10": "false",
-          "11": "false"
-        }
+      "1": {
+        "VariantID": "moremobvariants:mottled",
+        "IsMuddy": true,
+        "MuddyTimeLeft": -1
       },
-      {
-        "nbt_type": "integer",
-        "nbt_field": "MuddyTimeLeft",
-        "parameters": {
-          "0": "-1",
-          "1": "-1",
-          "2": "-1",
-          "3": "-1",
-          "4": "-1",
-          "5": "-1",
-          "6": "-1",
-          "7": "-1",
-          "8": "-1",
-          "9": "-1",
-          "10": "-1",
-          "11": "-1"
-        }
+      "2": {
+        "VariantID": "moremobvariants:piebald",
+        "IsMuddy": true,
+        "MuddyTimeLeft": -1
+      },
+      "3": {
+        "VariantID": "moremobvariants:pink_footed",
+        "IsMuddy": true,
+        "MuddyTimeLeft": -1
+      },
+      "4": {
+        "VariantID": "moremobvariants:sooty",
+        "IsMuddy": true,
+        "MuddyTimeLeft": -1
+      },
+      "5": {
+        "VariantID": "moremobvariants:spotted",
+        "IsMuddy": true,
+        "MuddyTimeLeft": -1
+      },
+      "6": {
+        "VariantID": "moremobvariants:default",
+        "IsMuddy": false,
+        "MuddyTimeLeft": -1
+      },
+      "7": {
+        "VariantID": "moremobvariants:mottled",
+        "IsMuddy": false,
+        "MuddyTimeLeft": -1
+      },
+      "8": {
+        "VariantID": "moremobvariants:piebald",
+        "IsMuddy": false,
+        "MuddyTimeLeft": -1
+      },
+      "9": {
+        "VariantID": "moremobvariants:pink_footed",
+        "IsMuddy": false,
+        "MuddyTimeLeft": -1
+      },
+      "10": {
+        "VariantID": "moremobvariants:sooty",
+        "IsMuddy": false,
+        "MuddyTimeLeft": -1
+      },
+      "11": {
+        "VariantID": "moremobvariants:spotted",
+        "IsMuddy": false,
+        "MuddyTimeLeft": -1
       }
-    ]
+    }
   }
 }

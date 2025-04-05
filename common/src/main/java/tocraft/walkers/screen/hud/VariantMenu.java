@@ -48,7 +48,7 @@ public class VariantMenu {
 
                     // get range of variants
                     TypeProvider<?> typeProvider = TypeProviderRegistry.getProvider(currentShapeType.getEntityType());
-                    int range = typeProvider != null ? typeProvider.getRange(minecraft.level) : -1;
+                    int range = typeProvider != null ? typeProvider.size(minecraft.level) : -1;
                     // add special shape as extra variant
                     if (hasSpecialVariant) {
                         LivingEntity currentShape = PlayerShape.getCurrentShape(minecraft.player);
@@ -68,7 +68,7 @@ public class VariantMenu {
                     guiGraphics.fillGradient(x, 0, x * 6, y + 10, -1072689136, -804253680);
                     // render entities
                     if (range > -1) {
-                        WalkersClient.variantOffset = Mth.clamp(WalkersClient.variantOffset, -currentVariantId - (hasSpecialVariant ? 1 : 0), range - currentVariantId);
+                        WalkersClient.variantOffset = Mth.clamp(WalkersClient.variantOffset, -currentVariantId - (hasSpecialVariant ? 1 : 0), range - currentVariantId - 1);
                         for (int i = 1; i <= 5; i++) {
                             int thisVariantId = currentVariantId - 3 + i + WalkersClient.variantOffset;
                             LivingEntity entity = null;
@@ -81,7 +81,7 @@ public class VariantMenu {
                                     nbt.putString("id", EntityType.getKey(type.getEntityType()).toString());
                                     return (LivingEntity) EntityType.loadEntityRecursive(nbt, level, EntitySpawnReason.LOAD, it -> it);
                                 });
-                            } else if ((thisVariantId > -1 || (hasSpecialVariant && thisVariantId == -1)) && (thisVariantId <= range || thisVariantId == currentVariantId)) {
+                            } else if ((thisVariantId > -1 || (hasSpecialVariant && thisVariantId == -1)) && (thisVariantId < range || thisVariantId == currentVariantId)) {
                                 ShapeType<?> thisShapeType = ShapeType.from(currentShapeType.getEntityType(), thisVariantId);
                                 if (thisShapeType != null) {
                                     entity = renderEntities.computeIfAbsent(thisShapeType, type -> type.create(level, minecraft.player));

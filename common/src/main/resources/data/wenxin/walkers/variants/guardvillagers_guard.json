@@ -3,11 +3,13 @@
   "entity_type": "guardvillagers:guard",
   "type_provider": {
     "range": 1,
-    "nbt": [
-      {
-        "nbt_type": "boolean",
-        "nbt_field": "SpawnWithArmor"
+    "variants": {
+      "0": {
+        "SpawnWithAmor": 0
+      },
+      "1": {
+        "SpawnWithAmor": 1
       }
-    ]
+    }
   }
 }

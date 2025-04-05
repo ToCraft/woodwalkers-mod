@@ -2,50 +2,47 @@
   "entity_type": "minecraft:goat",
   "type_provider": {
     "fallback": 0,
-    "range": 7,
-    "nbt": [
-      {
-        "nbt_type": "boolean",
-        "nbt_field": "HasLeftHorn",
-        "parameters": {
-          "0": "true",
-          "1": "true",
-          "2": "true",
-          "3": "true",
-          "4": "false",
-          "5": "false",
-          "6": "false",
-          "7": "false"
-        }
+    "variants": {
+      "0": {
+        "HasLeftHorn": true,
+        "HasRightHorn": true,
+        "IsScreamingGoat": true
       },
-      {
-        "nbt_type": "boolean",
-        "nbt_field": "HasRightHorn",
-        "parameters": {
-          "0": "true",
-          "1": "true",
-          "2": "false",
-          "3": "false",
-          "4": "true",
-          "5": "true",
-          "6": "false",
-          "7": "false"
-        }
+      "1": {
+        "HasLeftHorn": true,
+        "HasRightHorn": true,
+        "IsScreamingGoat": false
       },
-      {
-        "nbt_type": "boolean",
-        "nbt_field": "IsScreamingGoat",
-        "parameters": {
-          "0": "true",
-          "1": "false",
-          "2": "true",
-          "3": "false",
-          "4": "true",
-          "5": "false",
-          "6": "true",
-          "7": "false"
-        }
+      "2": {
+        "HasLeftHorn": true,
+        "HasRightHorn": false,
+        "IsScreamingGoat": true
+      },
+      "3": {
+        "HasLeftHorn": true,
+        "HasRightHorn": false,
+        "IsScreamingGoat": false
+      },
+      "4": {
+        "HasLeftHorn": false,
+        "HasRightHorn": true,
+        "IsScreamingGoat": true
+      },
+      "5": {
+        "HasLeftHorn": false,
+        "HasRightHorn": true,
+        "IsScreamingGoat": false
+      },
+      "6": {
+        "HasLeftHorn": false,
+        "HasRightHorn": false,
+        "IsScreamingGoat": true
+      },
+      "7": {
+        "HasLeftHorn": false,
+        "HasRightHorn": false,
+        "IsScreamingGoat": false
       }
-    ]
+    }
   }
 }

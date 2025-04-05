@@ -33,7 +33,7 @@ public class LlamaTypeProvider<L extends Llama> extends TypeProvider<L> {
     }
 
     @Override
-    public int getRange(Level level) {
+    public int size(Level level) {
         return L.Variant.values().length;
     }
 

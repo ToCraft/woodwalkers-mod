@@ -40,7 +40,7 @@ public class TropicalFishTypeProvider extends TypeProvider<TropicalFish> {
     }
 
     @Override
-    public int getRange(Level level) {
+    public int size(Level level) {
         return TropicalFish.COMMON_VARIANTS.size();
     }
 

@@ -33,7 +33,7 @@ public class RabbitTypeProvider extends TypeProvider<Rabbit> {
     }
 
     @Override
-    public int getRange(Level level) {
+    public int size(Level level) {
         return Rabbit.Variant.values().length;
     }
 

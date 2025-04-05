@@ -34,7 +34,7 @@ public class SwapVariantPackets {
                             ShapeType<?> currentShapeType = ShapeType.from(PlayerShape.getCurrentShape(context.getPlayer()));
 
                             TypeProvider<?> typeProvider = TypeProviderRegistry.getProvider(currentShapeType.getEntityType());
-                            int range = typeProvider != null ? typeProvider.getRange(context.getPlayer().level()) : -1;
+                            int range = typeProvider != null ? typeProvider.size(context.getPlayer().level()) : -1;
 
                             // switch to special shape
                             if (Walkers.hasSpecialShape(context.getPlayer().getUUID()) && EntityType.getKey(currentShapeType.getEntityType()).equals(ResourceLocation.parse("minecraft:wolf")) && variantID == range) {

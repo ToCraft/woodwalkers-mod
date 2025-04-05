@@ -95,7 +95,7 @@ public class MoreMobVariantsIntegration extends AbstractIntegration {
         }
 
         @Override
-        public int getRange(Level level) {
+        public int size(Level level) {
             return getVariants(type).size() - 1;
         }
 

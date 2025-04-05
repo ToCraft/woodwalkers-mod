@@ -101,7 +101,7 @@ public class ShapeType<T extends LivingEntity> {
             // check variants
             TypeProvider<?> variant = TypeProviderRegistry.getProvider(entityType);
             if (variant != null) {
-                for (int i = 0; i < variant.getRange(level); i++) {
+                for (int i = 0; i < variant.size(level); i++) {
                     types.add(new ShapeType<>(entityType, i));
                 }
             } else {
@@ -149,7 +149,7 @@ public class ShapeType<T extends LivingEntity> {
      */
     public T create(Level world, Player player) {
         TypeProvider<T> typeProvider = TypeProviderRegistry.getProvider(type);
-        if (typeProvider != null && variantData < typeProvider.getRange(world)) {
+        if (typeProvider != null && variantData < typeProvider.size(world)) {
             return typeProvider.create(type, world, player, variantData);
         }
 

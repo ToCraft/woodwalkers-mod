@@ -3,12 +3,55 @@
   "entity_type": "twilightforest:bighorn_sheep",
   "type_provider": {
     "fallback": 0,
-    "range": 15,
-    "nbt": [
-      {
-        "nbt_type": "int",
-        "nbt_field": "Color"
+    "variants": {
+      "0": {
+        "Color": 0
+      },
+      "1": {
+        "Color": 1
+      },
+      "2": {
+        "Color": 2
+      },
+      "3": {
+        "Color": 3
+      },
+      "4": {
+        "Color": 4
+      },
+      "5": {
+        "Color": 5
+      },
+      "6": {
+        "Color": 6
+      },
+      "7": {
+        "Color": 7
+      },
+      "8": {
+        "Color": 8
+      },
+      "9": {
+        "Color": 9
+      },
+      "10": {
+        "Color": 10
+      },
+      "11": {
+        "Color": 11
+      },
+      "12": {
+        "Color": 12
+      },
+      "13": {
+        "Color": 13
+      },
+      "14": {
+        "Color": 14
+      },
+      "15": {
+        "Color": 15
       }
-    ]
+    }
   }
 }

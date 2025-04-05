@@ -40,7 +40,7 @@ public class ParrotTypeProvider extends TypeProvider<Parrot> {
     }
 
     @Override
-    public int getRange(Level level) {
+    public int size(Level level) {
         return Parrot.Variant.values().length;
     }
 

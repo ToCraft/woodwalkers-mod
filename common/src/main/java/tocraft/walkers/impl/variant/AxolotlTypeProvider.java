@@ -31,7 +31,7 @@ public class AxolotlTypeProvider extends TypeProvider<Axolotl> {
     }
 
     @Override
-    public int getRange(Level level) {
+    public int size(Level level) {
         return Axolotl.Variant.values().length;
     }
 
