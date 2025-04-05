@@ -73,12 +73,6 @@ public class Walkers {
 
         PlayerEvents.PLAYER_RESPAWN.register(new RespawnHandler());
         EntityEvents.LIVING_BREATHE.register(new LivingBreatheHandler());
-
-        //FIXME: Registries should be cleared before load and loaded every data reload
-        AbilityRegistry.registerDefault();
-        EntityBlacklist.registerDefault();
-        TraitRegistry.registerDefault();
-        TypeProviderRegistry.registerDefault();
     }
 
     public static void registerJoinSyncPacket() {

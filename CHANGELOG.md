@@ -1,6 +1,7 @@
 walkers 6.3
 ================
 - fix render issue with MobHealthBar (and similar mods)
+- FINALLY fixed issue with the data managers
 
 walkers 6.2
 ================
