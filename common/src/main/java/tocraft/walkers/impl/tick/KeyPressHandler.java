@@ -8,6 +8,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import tocraft.craftedcore.event.client.ClientTickEvents;
 import tocraft.walkers.Walkers;
@@ -22,13 +23,14 @@ import tocraft.walkers.network.ClientNetworking;
 import tocraft.walkers.network.impl.SwapPackets;
 import tocraft.walkers.network.impl.SwapVariantPackets;
 import tocraft.walkers.network.impl.UnlockPackets;
+import tocraft.walkers.screen.hud.VariantMenu;
 
 @Environment(EnvType.CLIENT)
 public class KeyPressHandler implements ClientTickEvents.Client {
     private float currentTimer = 0f;
 
     @Override
-    public void tick(Minecraft client) {
+    public void tick(@NotNull Minecraft client) {
         if (client.player != null) {
             if (WalkersClient.ABILITY_KEY.consumeClick()) handleAbilityKey(client);
 
@@ -47,6 +49,7 @@ public class KeyPressHandler implements ClientTickEvents.Client {
                         ShapeType<?> shapeType = ShapeType.from(shape);
                         if (WalkersClient.isRenderingVariantsMenu) {
                             SwapVariantPackets.sendSwapRequest(shapeType.getVariantData() + WalkersClient.variantOffset);
+                            VariantMenu.clearEntities();
                         }
                         WalkersClient.variantOffset = 0;
                         WalkersClient.isRenderingVariantsMenu = !WalkersClient.isRenderingVariantsMenu;
@@ -70,7 +73,7 @@ public class KeyPressHandler implements ClientTickEvents.Client {
         }
     }
 
-    private void handleAbilityKey(Minecraft client) {
+    private void handleAbilityKey(@NotNull Minecraft client) {
         LivingEntity shape = PlayerShape.getCurrentShape(client.player);
 
         if (shape != null) {
@@ -82,7 +85,7 @@ public class KeyPressHandler implements ClientTickEvents.Client {
 
     //TODO: Merge this into something similar to the OnInteractEvent
     @SuppressWarnings("ConstantConditions")
-    private void handleUnlockKey(Minecraft client) {
+    private void handleUnlockKey(@NotNull Minecraft client) {
         // check if player is blacklisted
         if (client.player != null && Walkers.isPlayerBlacklisted(client.player.getUUID()) && Walkers.CONFIG.blacklistPreventsUnlocking) {
             client.player.displayClientMessage(Component.translatable("walkers.player_blacklisted"), true);

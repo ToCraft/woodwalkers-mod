@@ -48,7 +48,8 @@ public class SwapVariantPackets {
                             }
                             // switch normally
                             else {
-                                if (currentShapeType != null && currentShapeType.getVariantData() != variantID) {
+                                // DO NOT check if variant is already equipped; some variants are biome based!
+                                if (currentShapeType != null) {
                                     ShapeType<?> newShapeType = ShapeType.from(currentShapeType.getEntityType(), variantID);
                                     if (newShapeType != null) {
                                         if (PlayerShapeChanger.change2ndShape((ServerPlayer) context.getPlayer(), newShapeType) || !ApiLevel.getCurrentLevel().canUnlock) {

@@ -4,6 +4,7 @@ import com.mojang.blaze3d.platform.InputConstants;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.KeyMapping;
+import org.jetbrains.annotations.ApiStatus;
 import org.lwjgl.glfw.GLFW;
 import tocraft.craftedcore.event.client.ClientPlayerEvents;
 import tocraft.craftedcore.event.client.ClientTickEvents;
@@ -22,6 +23,7 @@ import tocraft.walkers.screen.hud.VariantMenu;
 @Environment(EnvType.CLIENT)
 public class WalkersClient {
     public static boolean isRenderingVariantsMenu = false;
+    @ApiStatus.Internal
     public static int variantOffset = 0;
     private final VariantMenu variantMenu = new VariantMenu();
 

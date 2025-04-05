@@ -11,6 +11,7 @@ import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.ApiStatus;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
 import tocraft.walkers.Walkers;
@@ -24,8 +25,15 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class VariantMenu {
-    private final Map<ShapeType<?>, LivingEntity> renderEntities = new HashMap<>();
-    private final Map<ShapeType<?>, LivingEntity> renderSpecialEntities = new HashMap<>();
+    private static final Map<ShapeType<?>, LivingEntity> renderEntities = new HashMap<>();
+    private static final Map<ShapeType<?>, LivingEntity> renderSpecialEntities = new HashMap<>();
+
+    // reset cached entities so e.g. biome based variants are rendered correctly
+    @ApiStatus.Internal
+    public static void clearEntities() {
+        renderEntities.clear();
+        renderSpecialEntities.clear();
+    }
 
     public void render(GuiGraphics guiGraphics) {
         Minecraft minecraft = Minecraft.getInstance();

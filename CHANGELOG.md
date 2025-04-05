@@ -2,6 +2,7 @@ walkers 6.3
 ================
 - fix render issue with MobHealthBar (and similar mods)
 - FINALLY fixed issue with the data managers
+- improve variant menu for biome based variants
 
 walkers 6.2
 ================
