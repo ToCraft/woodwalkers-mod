@@ -87,7 +87,7 @@ public class AbilityRegistry {
         registerByClass(Witch.class, new ThrowPotionsAbility<>());
         registerByClass(Evoker.class, new EvokerAbility<>());
         registerByClass(Warden.class, new WardenAbility<>());
-        registerByClass(Wolf.class, new AngerAbility<>(SoundEvents.WOLF_SOUNDS.get(WolfSoundVariants.SoundSet.CUTE).pantSound().value(), SoundEvents.WOLF_SOUNDS.get(WolfSoundVariants.SoundSet.ANGRY).growlSound().value()));
+        registerByClass(Wolf.class, new AngerAbility<>(SoundEvents.WOLF_SOUNDS.get(WolfSoundVariants.SoundSet.CUTE).whineSound().value(), SoundEvents.WOLF_SOUNDS.get(WolfSoundVariants.SoundSet.ANGRY).growlSound().value()));
         registerByClass(Sheep.class, new SheepAbility<>());
         registerByClass(Sniffer.class, new SnifferAbility<>());
         registerByClass(Chicken.class, new ChickenAbility<>());

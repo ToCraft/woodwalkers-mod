@@ -1,5 +1,8 @@
 package tocraft.walkers.screen.hud;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
@@ -14,6 +17,7 @@ import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.ApiStatus;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
+import tocraft.craftedcore.event.client.RenderEvents;
 import tocraft.walkers.Walkers;
 import tocraft.walkers.WalkersClient;
 import tocraft.walkers.api.PlayerShape;
@@ -24,7 +28,8 @@ import tocraft.walkers.api.variant.TypeProviderRegistry;
 import java.util.HashMap;
 import java.util.Map;
 
-public class VariantMenu {
+@Environment(EnvType.CLIENT)
+public class VariantMenu implements RenderEvents.HUDRendering {
     private static final Map<ShapeType<?>, LivingEntity> renderEntities = new HashMap<>();
     private static final Map<ShapeType<?>, LivingEntity> renderSpecialEntities = new HashMap<>();
 
@@ -35,7 +40,7 @@ public class VariantMenu {
         renderSpecialEntities.clear();
     }
 
-    public void render(GuiGraphics guiGraphics) {
+    public void render(GuiGraphics guiGraphics, DeltaTracker delta) {
         Minecraft minecraft = Minecraft.getInstance();
         if (!minecraft.options.hideGui && WalkersClient.isRenderingVariantsMenu && Walkers.CONFIG.unlockEveryVariant && minecraft.screen == null) {
             Level level = minecraft.level;
@@ -68,7 +73,7 @@ public class VariantMenu {
                     guiGraphics.fillGradient(x, 0, x * 6, y + 10, -1072689136, -804253680);
                     // render entities
                     if (range > -1) {
-                        WalkersClient.variantOffset = Mth.clamp(WalkersClient.variantOffset, -currentVariantId - (hasSpecialVariant ? 1 : 0), range - currentVariantId - 1);
+                        WalkersClient.variantOffset = Mth.clamp(WalkersClient.variantOffset, -currentVariantId - (hasSpecialVariant ? 1 : 0), range - currentVariantId- (hasSpecialVariant ? 0 : 1));
                         for (int i = 1; i <= 5; i++) {
                             int thisVariantId = currentVariantId - 3 + i + WalkersClient.variantOffset;
                             LivingEntity entity = null;

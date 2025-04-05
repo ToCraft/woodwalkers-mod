@@ -9,6 +9,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -41,25 +42,31 @@ public abstract class WolfEntityMixin extends TamableAnimal {
     @SuppressWarnings("ConstantConditions")
     @Inject(method = "tick", at = @At("HEAD"))
     public void onTick(CallbackInfo ci) {
-        if (this.hasCustomName() && this.getCustomName().getString().equalsIgnoreCase("Patreon"))
-            ((Entity) (Object) this).getEntityData().set(walkers$isSpecial, true);
-        else
-            ((Entity) (Object) this).getEntityData().set(walkers$isSpecial, false);
+        if (this.hasCustomName()) {
+            if (this.getCustomName().getString().equalsIgnoreCase("Patreon")) {
+                ((Entity) (Object) this).getEntityData().set(walkers$isSpecial, true);
+            } else {
+                // reset texture on rename
+                ((Entity) (Object) this).getEntityData().set(walkers$isSpecial, false);
+            }
+        }
     }
 
     @Inject(method = "defineSynchedData", at = @At("RETURN"))
-    protected void onInitDataTracker(SynchedEntityData.Builder builder, CallbackInfo ci) {
+    protected void onInitDataTracker(SynchedEntityData.@NotNull Builder builder, CallbackInfo ci) {
         builder.define(walkers$isSpecial, false);
     }
 
     @Inject(method = "addAdditionalSaveData", at = @At("RETURN"))
-    protected void onWriteCustomDataToNbt(CompoundTag nbt, CallbackInfo ci) {
-        nbt.putBoolean("isSpecial", ((Entity) (Object) this).getEntityData().get(walkers$isSpecial));
+    protected void onWriteCustomDataToNbt(@NotNull CompoundTag nbt, CallbackInfo ci) {
+        if (((Entity) (Object) this).getEntityData().get(walkers$isSpecial)) {
+            nbt.putBoolean("isSpecial", true);
+        }
     }
 
     @Inject(method = "readAdditionalSaveData", at = @At("RETURN"))
-    protected void onReadCustomDataFromNbt(CompoundTag nbt, CallbackInfo ci) {
-        ((Entity) (Object) this).getEntityData().set(walkers$isSpecial, nbt.getBoolean("isSpecial").orElse(false));
+    protected void onReadCustomDataFromNbt(@NotNull CompoundTag nbt, CallbackInfo ci) {
+        ((Entity) (Object) this).getEntityData().set(walkers$isSpecial, nbt.getBooleanOr("isSpecial", false));
     }
 
     @Inject(method = "getTexture", at = @At("HEAD"), cancellable = true)
@@ -67,13 +74,11 @@ public abstract class WolfEntityMixin extends TamableAnimal {
         CompoundTag nbt = new CompoundTag();
         this.saveWithoutId(nbt);
 
-        if (nbt.contains("isSpecial")) {
-            if (nbt.getBoolean("isSpecial").orElse(false)) {
-                if (this.isTame()) {
-                    cir.setReturnValue(walkers$SPECIAL_TAMED);
-                } else {
-                    cir.setReturnValue(((Wolf) (Object) this).isAngry() ? walkers$SPECIAL_ANGRY : walkers$SPECIAL_WILD);
-                }
+        if (nbt.getBooleanOr("isSpecial", false)) {
+            if (this.isTame()) {
+                cir.setReturnValue(walkers$SPECIAL_TAMED);
+            } else {
+                cir.setReturnValue(((Wolf) (Object) this).isAngry() ? walkers$SPECIAL_ANGRY : walkers$SPECIAL_WILD);
             }
         }
     }

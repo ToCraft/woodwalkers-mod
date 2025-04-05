@@ -19,7 +19,7 @@ import java.util.Objects;
 import java.util.Optional;
 
 public class RegistryTypeProvider<T extends LivingEntity, V> extends TypeProvider<T> {
-    private final ResourceKey<Registry<V>> registry;
+    protected final ResourceKey<Registry<V>> registry;
 
     public RegistryTypeProvider(ResourceKey<Registry<V>> registry) {
         this.registry = registry;
@@ -53,7 +53,7 @@ public class RegistryTypeProvider<T extends LivingEntity, V> extends TypeProvide
     }
 
     @Override
-    public int size(Level level) {
+    public int size(@NotNull Level level) {
         return level.registryAccess().lookupOrThrow(this.registry).size();
     }
 
