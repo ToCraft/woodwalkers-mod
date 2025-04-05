@@ -3,13 +3,12 @@ package tocraft.walkers.impl.variant;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.animal.sheep.Sheep;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 import tocraft.walkers.api.variant.TypeProvider;
-
-import net.minecraft.world.entity.animal.sheep.Sheep;
 
 public class SheepTypeProvider extends TypeProvider<Sheep> {
 

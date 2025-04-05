@@ -6,7 +6,6 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.animal.horse.Llama;
 import net.minecraft.world.entity.projectile.LlamaSpit;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;

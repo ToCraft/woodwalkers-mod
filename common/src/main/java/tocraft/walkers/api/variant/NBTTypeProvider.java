@@ -1,4 +1,4 @@
-package tocraft.walkers.api.data.variants;
+package tocraft.walkers.api.variant;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
@@ -15,7 +15,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 import tocraft.walkers.Walkers;
-import tocraft.walkers.api.variant.TypeProvider;
 
 import java.util.*;
 

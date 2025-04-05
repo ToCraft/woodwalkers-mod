@@ -58,13 +58,13 @@ public abstract class PlayerEntityDataMixin extends LivingEntity implements Play
         // It includes metadata for variants.
         CompoundTag unlockedShape = tag.getCompound("UnlockedShape").orElse(new CompoundTag());
         this.walkers$unlocked = ShapeType.from(unlockedShape);
-    
+
         // Abilities
         walkers$abilityCooldown = tag.getInt(ABILITY_COOLDOWN_KEY).orElse(0);
-    
+
         // Hostility
         walkers$remainingTime = tag.getInt("RemainingHostilityTime").orElse(0);
-    
+
         // Current Walkers
         walkers$readCurrentShape(tag.getCompound("CurrentShape").orElse(new CompoundTag()));
     }

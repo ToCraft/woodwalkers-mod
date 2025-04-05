@@ -73,7 +73,7 @@ public class VariantMenu implements RenderEvents.HUDRendering {
                     guiGraphics.fillGradient(x, 0, x * 6, y + 10, -1072689136, -804253680);
                     // render entities
                     if (range > -1) {
-                        WalkersClient.variantOffset = Mth.clamp(WalkersClient.variantOffset, -currentVariantId - (hasSpecialVariant ? 1 : 0), range - currentVariantId- (hasSpecialVariant ? 0 : 1));
+                        WalkersClient.variantOffset = Mth.clamp(WalkersClient.variantOffset, -currentVariantId - (hasSpecialVariant ? 1 : 0), range - currentVariantId - (hasSpecialVariant ? 0 : 1));
                         for (int i = 1; i <= 5; i++) {
                             int thisVariantId = currentVariantId - 3 + i + WalkersClient.variantOffset;
                             LivingEntity entity = null;

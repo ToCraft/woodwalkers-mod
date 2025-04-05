@@ -10,6 +10,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.projectile.ThrownSplashPotion;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.Potion;
@@ -21,8 +22,6 @@ import tocraft.walkers.ability.GenericShapeAbility;
 
 import java.util.Arrays;
 import java.util.List;
-
-import net.minecraft.world.entity.projectile.ThrownSplashPotion;
 
 public class ThrowPotionsAbility<T extends LivingEntity> extends GenericShapeAbility<T> {
     public static final List<Holder<Potion>> VALID_POTIONS = Arrays.asList(Potions.HARMING, Potions.POISON, Potions.SLOWNESS, Potions.WEAKNESS);

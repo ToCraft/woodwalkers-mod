@@ -1,6 +1,7 @@
 package tocraft.walkers.api.data.variants;
 
 import com.google.gson.*;
+import com.mojang.datafixers.util.Either;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.JsonOps;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -13,6 +14,8 @@ import org.jetbrains.annotations.Nullable;
 import tocraft.craftedcore.data.SynchronizedJsonReloadListener;
 import tocraft.craftedcore.platform.PlatformData;
 import tocraft.walkers.Walkers;
+import tocraft.walkers.api.variant.NBTTypeProvider;
+import tocraft.walkers.api.variant.RegistryTypeProvider;
 import tocraft.walkers.api.variant.TypeProvider;
 import tocraft.walkers.api.variant.TypeProviderRegistry;
 
@@ -33,7 +36,7 @@ public class TypeProviderDataManager extends SynchronizedJsonReloadListener {
         TypeProviderRegistry.registerDefault();
 
         for (Map.Entry<ResourceLocation, JsonElement> mapEntry : map.entrySet()) {
-            TypeProviderEntry<?> typeProviderEntry = typeProviderFromJson(mapEntry.getValue().getAsJsonObject());
+            TypeProviderEntry typeProviderEntry = typeProviderFromJson(mapEntry.getValue().getAsJsonObject());
 
             // Register Variants
             EntityType<LivingEntity> entityType = (EntityType<LivingEntity>) typeProviderEntry.entityType();
@@ -47,36 +50,39 @@ public class TypeProviderDataManager extends SynchronizedJsonReloadListener {
     /*
      * String is an exception while loading. Can be ignored for normal use (just use Either.left)
      */
-    public static final Codec<TypeProviderEntry<?>> TYPE_PROVIDER_LIST_CODEC = RecordCodecBuilder.create((instance) -> instance.group(
+    public static final Codec<TypeProviderEntry> TYPE_PROVIDER_LIST_CODEC = RecordCodecBuilder.create((instance) -> instance.group(
             ResourceLocation.CODEC.fieldOf("entity_type").forGetter(TypeProviderEntry::entityTypeKey),
             Codec.STRING.optionalFieldOf("required_mod", "").forGetter(o -> {
                 String requiredMod = o.requiredMod();
                 if (requiredMod == null) return "";
                 else return requiredMod;
             }),
-            NBTTypeProvider.CODEC.fieldOf("type_provider").forGetter(o -> o.typeProvider)
+            Codec.either(NBTTypeProvider.CODEC, RegistryTypeProvider.CODEC).fieldOf("type_provider").forGetter(o -> o.providerEither)
     ).apply(instance, instance.stable(TypeProviderEntry::new)));
 
-    private static TypeProviderEntry<?> typeProviderFromJson(JsonObject json) {
+    private static TypeProviderEntry typeProviderFromJson(JsonObject json) {
         return TYPE_PROVIDER_LIST_CODEC.parse(JsonOps.INSTANCE, json).getOrThrow(JsonParseException::new);
     }
 
     @SuppressWarnings("unused")
-    public record TypeProviderEntry<L extends LivingEntity>(ResourceLocation entityTypeKey,
-                                                            @Nullable String requiredMod,
-                                                            NBTTypeProvider<L> typeProvider) {
+    public record TypeProviderEntry(ResourceLocation entityTypeKey,
+                                    @Nullable String requiredMod,
+                                    Either<NBTTypeProvider<?>, RegistryTypeProvider<?, ?>> providerEither) {
 
-        public TypeProviderEntry(EntityType<L> entityType, String requiredMod, NBTTypeProvider<L> typeProvider) {
-            this(EntityType.getKey(entityType), requiredMod, typeProvider);
+        public TypeProviderEntry(EntityType<?> entityType, String requiredMod, NBTTypeProvider<?> typeProvider) {
+            this(EntityType.getKey(entityType), requiredMod, Either.left(typeProvider));
         }
 
-        @SuppressWarnings("unchecked")
         @Nullable
-        public EntityType<L> entityType() {
+        public EntityType<?> entityType() {
             if ((requiredMod() == null || requiredMod().isBlank() || PlatformData.isModLoaded(requiredMod())) && BuiltInRegistries.ENTITY_TYPE.containsKey(entityTypeKey()))
-                return (EntityType<L>) BuiltInRegistries.ENTITY_TYPE.get(entityTypeKey()).orElseThrow().value();
+                return BuiltInRegistries.ENTITY_TYPE.get(entityTypeKey()).orElseThrow().value();
             else
                 return null;
+        }
+
+        public TypeProvider<?> typeProvider() {
+            return providerEither.map(n -> n, t -> t);
         }
     }
 }
