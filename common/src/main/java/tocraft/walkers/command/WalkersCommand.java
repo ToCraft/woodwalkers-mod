@@ -28,6 +28,7 @@ import tocraft.walkers.api.PlayerShapeChanger;
 import tocraft.walkers.api.variant.ShapeType;
 import tocraft.walkers.impl.PlayerDataProvider;
 
+// TODO: Morph into & set 2ndShape by variant id
 public class WalkersCommand {
     public static void initialize() {
         CommandEvents.REGISTRATION.register((dispatcher, ctx, selection) -> register(dispatcher, ctx));
