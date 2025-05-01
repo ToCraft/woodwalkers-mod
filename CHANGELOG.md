@@ -1,3 +1,7 @@
+walkers 6.5
+================
+- fix some arm rendering issues
+
 walkers 6.4
 ================
 - support 1.21.5
