@@ -1,3 +1,8 @@
+walkers 5.7
+================
+- fix some arm rendering issues
+
+
 walkers 5.6
 ================
 - backport CantFreezeTrait

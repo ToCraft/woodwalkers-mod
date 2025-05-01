@@ -42,13 +42,25 @@ public class GenericEntityArm<L extends LivingEntity, T extends EntityModel<L>> 
     @NotNull
     private final String[] modelParts;
 
+    private boolean failed = false;
+
+    @Nullable
     @Override
     public ModelPart getArm(LivingEntity entity, T model) {
         ModelLayerLocation modelLayer = modelLayerLocation != null ? modelLayerLocation : new ModelLayerLocation(EntityType.getKey(entity.getType()), "main");
-        ModelPart modelPart = Minecraft.getInstance().getEntityModels().bakeLayer(modelLayer);
-        for (String part : modelParts) {
-            modelPart = modelPart.getChild(part);
+        try {
+            ModelPart modelPart = Minecraft.getInstance().getEntityModels().bakeLayer(modelLayer);
+            for (String part : modelParts) {
+                modelPart = modelPart.getChild(part);
+            }
+            return modelPart;
+        } catch (Exception e) {
+            // make error note only once
+            if (!failed) {
+                Walkers.LOGGER.error("{}: Caught an error rendering the arm for the {}.", GenericEntityArm.class.getSimpleName(), EntityType.getKey(entity.getType()), e);
+                failed = true;
+            }
+            return null;
         }
-        return modelPart;
     }
 }
