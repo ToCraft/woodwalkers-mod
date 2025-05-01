@@ -1,3 +1,8 @@
+walkers 6.5
+================
+- **BACKPORTED VERSION FOR 1.21.2 AND 1.21.4**
+- fix some arm rendering issues
+
 walkers 6.3
 ================
 - fix render issue with MobHealthBar (and similar mods)

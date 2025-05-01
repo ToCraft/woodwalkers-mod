@@ -8,6 +8,7 @@ import net.minecraft.client.renderer.entity.state.LivingEntityRenderState;
 import net.minecraft.util.Tuple;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import tocraft.craftedcore.util.Maths;
 import tocraft.walkers.api.model.impl.GenericEntityArm;
@@ -57,7 +58,7 @@ public class EntityArms {
 
     @Nullable
     @SuppressWarnings("unchecked")
-    public static <T extends LivingEntity, R extends LivingEntityRenderState> Tuple<ModelPart, ArmRenderingManipulator<?>> get(T entity,
+    public static <T extends LivingEntity, R extends LivingEntityRenderState> Tuple<ModelPart, ArmRenderingManipulator<?>> get(@NotNull T entity,
                                                                                                                                EntityModel<R> model) {
         // done to bypass type issues
         Tuple<EntityArmProvider<? extends LivingEntity, ? extends LivingEntityRenderState>, ArmRenderingManipulator<?>> before = DIRECT_PROVIDERS
