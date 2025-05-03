@@ -1,6 +1,7 @@
 walkers 6.5
 ================
 - fix some arm rendering issues
+- add BreezeAbility
 
 walkers 6.4
 ================

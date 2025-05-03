@@ -22,6 +22,7 @@ import net.minecraft.world.entity.animal.wolf.WolfSoundVariants;
 import net.minecraft.world.entity.boss.enderdragon.EnderDragon;
 import net.minecraft.world.entity.boss.wither.WitherBoss;
 import net.minecraft.world.entity.monster.*;
+import net.minecraft.world.entity.monster.breeze.Breeze;
 import net.minecraft.world.entity.monster.warden.Warden;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -97,6 +98,7 @@ public class AbilityRegistry {
         registerByClass(Pufferfish.class, new PufferfishAbility<>());
         registerByClass(Turtle.class, new TurtleAbility<>());
         registerByClass(Rabbit.class, new RabbitAbility<>());
+        registerByClass(Breeze.class, new BreezeAbility<>());
         // get item ability
         registerByClass(Skeleton.class, new GetItemAbility<>(new ItemStack(Items.ARROW, 4)));
         ItemStack slownessArrows = new ItemStack(Items.TIPPED_ARROW, 4);
