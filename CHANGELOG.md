@@ -3,6 +3,7 @@ walkers 6.5
 - fix some arm rendering issues
 - add BreezeAbility
 - disable abilities for snow golem by default
+- fix Hoglin, Piglin & Brute shaking
 
 walkers 6.4
 ================
