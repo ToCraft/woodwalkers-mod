@@ -4,6 +4,7 @@ walkers 6.5
 - add BreezeAbility
 - disable abilities for snow golem by default
 - fix Hoglin, Piglin & Brute shaking
+- fix LlamaAbility
 
 walkers 6.4
 ================

@@ -39,6 +39,7 @@ import tocraft.walkers.integrations.Integrations;
 import java.util.*;
 import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.stream.Stream;
 
 @SuppressWarnings("unused")
 public class AbilityRegistry {
@@ -71,7 +72,7 @@ public class AbilityRegistry {
         registerByTag(EntityTypeTags.RAIDERS, new RaidAbility<>());
 
         // Register 'normal' Abilities
-        registerByClass(AbstractHorse.class, new JumpAbility<>());
+        registerByPredicate(entity -> entity instanceof AbstractHorse && !(entity instanceof Llama), new JumpAbility<>());
         registerByClass(Blaze.class, new ShootFireballAbility<>(Items.BLAZE_POWDER, false));
         // higher explosion radius when charged
         registerByPredicate(entity -> entity instanceof Creeper && !((Creeper) entity).isPowered(), new ExplosionAbility<>());
@@ -187,11 +188,10 @@ public class AbilityRegistry {
 
     public static <L extends LivingEntity> boolean has(@NotNull L shape) {
         // check ability blacklist
-
         if (Walkers.CONFIG.abilityBlacklist.contains(EntityType.getKey(shape.getType()).toString())) {
             return false;
         }
-        return specificAbilities.keySet().stream().anyMatch(predicate -> predicate.test(shape)) || genericAbilities.keySet().stream().anyMatch(predicate -> predicate.test(shape));
+        return Stream.concat(specificAbilities.keySet().stream(), genericAbilities.keySet().stream()).parallel().anyMatch(predicate -> predicate.test(shape));
     }
 
     @ApiStatus.Internal
