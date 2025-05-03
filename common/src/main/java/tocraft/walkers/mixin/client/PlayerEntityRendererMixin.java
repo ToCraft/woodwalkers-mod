@@ -100,6 +100,12 @@ public abstract class PlayerEntityRendererMixin extends LivingEntityRenderer<Abs
                 humanoidShape.ticksUsingItem = player.ticksUsingItem;
                 humanoidShape.isUsingItem = player.isUsingItem;
             }
+
+            // fix wither heads
+            else if (shape instanceof WitherRenderState witherState) {
+                witherState.xHeadRots = new float[]{player.xRot, player.xRot};
+                witherState.yHeadRots = new float[]{player.bodyRot + player.yRot, player.bodyRot + player.yRot};
+            }
         }
     }
 

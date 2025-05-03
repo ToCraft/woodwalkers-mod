@@ -5,6 +5,7 @@ walkers 6.5
 - disable abilities for snow golem by default
 - fix Hoglin, Piglin & Brute shaking
 - fix LlamaAbility
+- fix wither heads
 
 walkers 6.4
 ================
