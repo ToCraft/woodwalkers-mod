@@ -123,7 +123,11 @@ public class WalkersConfig implements Config {
 
     @Comment("Blacklist entity types (e.g. minecraft:blaze) to disable abilities for the specified mob.")
     @Synchronize
-    public List<String> abilityBlacklist = new ArrayList<>();
+    public List<String> abilityBlacklist = new ArrayList<>() {
+        {
+            add("minecraft:snow_golem");
+        }
+    };
     @Comment("Map entity types to a list of traits to disable the traits for the specified entity type.")
     @Synchronize
     public Map<String, List<String>> traitBlacklist = new HashMap<>() {

@@ -2,6 +2,7 @@ walkers 6.5
 ================
 - fix some arm rendering issues
 - add BreezeAbility
+- disable abilities for snow golem by default
 
 walkers 6.4
 ================
