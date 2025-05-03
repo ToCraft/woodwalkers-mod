@@ -6,6 +6,7 @@ walkers 6.5
 - fix Hoglin, Piglin & Brute shaking
 - fix LlamaAbility
 - fix wither heads
+- add ExplosionAbility to Alex Caves' Nucleeper
 
 walkers 6.4
 ================

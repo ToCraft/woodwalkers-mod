@@ -1,0 +1,9 @@
+{
+  "entity_types": [
+    "alexscaves:nucleeper"
+  ],
+  "ability": {
+    "type": "walkers:explosion",
+    "radius": 25.0
+  }
+}
