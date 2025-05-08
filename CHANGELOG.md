@@ -7,6 +7,7 @@ walkers 6.5
 - fix LlamaAbility
 - fix wither heads
 - add ExplosionAbility to Alex Caves' Nucleeper
+- fix swimming speed for aquatic mobs
 
 walkers 6.4
 ================

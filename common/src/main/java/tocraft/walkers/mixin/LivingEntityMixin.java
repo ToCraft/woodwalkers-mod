@@ -1,5 +1,6 @@
 package tocraft.walkers.mixin;
 
+import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.fabricmc.api.EnvType;
@@ -65,20 +66,21 @@ public abstract class LivingEntityMixin extends Entity implements NearbySongAcce
         return original.call(instance, effect);
     }
 
-    @Inject(method = "isAffectedByFluids", at = @At("HEAD"))
-    public void applyWaterCreatureSwimSpeedBoost(CallbackInfoReturnable<Boolean> cir) {
-        if ((Object) this instanceof Player player) {
+    @ModifyExpressionValue(method = "travelInFluid", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;hasEffect(Lnet/minecraft/core/Holder;)Z"))
+    public boolean applyWaterCreatureSwimSpeedBoost(boolean org) {
+        if (!org && (Object) this instanceof Player player) {
             LivingEntity shape = PlayerShape.getCurrentShape(player);
 
             // Apply 'Dolphin's Grace' status effect benefits if the player's shape is a
             // water creature
             for (ShapeTrait<LivingEntity> trait : TraitRegistry.get(shape, AquaticTrait.ID)) {
                 if (((AquaticTrait<LivingEntity>) trait).isAquatic) {
-                    cir.setReturnValue(false);
-                    return;
+                    return true;
                 }
             }
         }
+
+        return org;
     }
 
     @Inject(method = "causeFallDamage", at = @At(value = "HEAD"), cancellable = true)
