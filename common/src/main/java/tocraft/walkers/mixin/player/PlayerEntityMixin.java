@@ -6,6 +6,7 @@ import net.minecraft.network.protocol.game.ClientboundGameEventPacket;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
@@ -331,6 +332,14 @@ public abstract class PlayerEntityMixin extends LivingEntityMixin {
                     this.kill(level);
                 }
             }
+        }
+    }
+
+    @Inject(method = "isInvulnerableTo", at = @At("HEAD"), cancellable = true)
+    private void invulnerabilityTrait(ServerLevel level, DamageSource damageSource, CallbackInfoReturnable<Boolean> cir) {
+        LivingEntity shape = PlayerShape.getCurrentShape((Player) (Object) this);
+        if (!damageSource.is(DamageTypeTags.BYPASSES_INVULNERABILITY) && TraitRegistry.has(shape, InvulnerabilityTrait.ID)) {
+            cir.setReturnValue(true);
         }
     }
 

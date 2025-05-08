@@ -76,6 +76,7 @@ public class TraitRegistry {
         registerCodec(CantInteractTrait.ID, CantInteractTrait.CODEC);
         registerCodec(ImmunityTrait.ID, ImmunityTrait.CODEC);
         registerCodec(CantFreezeTrait.ID, CantFreezeTrait.CODEC);
+        registerCodec(InvulnerabilityTrait.ID, InvulnerabilityTrait.CODEC);
     }
 
     @SuppressWarnings("unchecked")
@@ -187,6 +188,8 @@ public class TraitRegistry {
         registerByClass(Stray.class, new CantFreezeTrait<>());
         registerByClass(WitherBoss.class, new CantFreezeTrait<>());
         registerByTag(EntityTypeTags.FREEZE_IMMUNE_ENTITY_TYPES, new CantFreezeTrait<>());
+        // no damage
+        registerByType(EntityType.CREAKING, new InvulnerabilityTrait<>());
 
         // handle Integrations
         Integrations.registerTraits();

@@ -8,6 +8,7 @@ walkers 6.5
 - fix wither heads
 - add ExplosionAbility to Alex Caves' Nucleeper
 - fix swimming speed for aquatic mobs
+- add InvulnerabilityTrait
 
 walkers 6.4
 ================
