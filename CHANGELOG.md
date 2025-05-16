@@ -9,6 +9,7 @@ walkers 6.5
 - add ExplosionAbility to Alex Caves' Nucleeper
 - fix swimming speed for aquatic mobs
 - add InvulnerabilityTrait
+- add GoatAbility
 
 walkers 6.4
 ================

@@ -22,7 +22,7 @@ public class WalkersTickHandlers {
         register(EntityType.CAMEL, new JumpBoostTickHandler<>(0));
         register(EntityType.SNOW_GOLEM, new SnowGolemTickHandler());
         register(EntityType.RABBIT, new JumpBoostTickHandler<>(1));
-        register(EntityType.GOAT, new JumpBoostTickHandler<>(2));
+        register(EntityType.GOAT, new JumpBoostTickHandler<>(0)); // raise default goat jump high
         register(EntityType.MAGMA_CUBE, new JumpBoostTickHandler<>(2));
     }
 
