@@ -1,4 +1,4 @@
-name: Release
+name: Build
 
 on:
   push:
@@ -7,10 +7,10 @@ on:
       - '**.gradle.kts'
       - '**.properties'
       - '**/src/**'
-    branches:
+    branches-ignore:
+      - "1.**"
       - "main"
       - "master"
-      - "1.**"
   workflow_dispatch:
 
 permissions:
@@ -23,6 +23,6 @@ jobs:
     if: |
       !contains(github.event.head_commit.message, '[ci skip]')
     steps:
-      - uses: ToCraft/modmaster-release-action@v1
+      - uses: ToCraft/modmaster-build-action@v1
         with:
           java-version: '22'
