@@ -26,6 +26,7 @@ import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.entity.raid.Raider;
 import net.minecraft.world.level.block.Blocks;
 import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import tocraft.walkers.Walkers;
 import tocraft.walkers.ability.ShapeAbility;
