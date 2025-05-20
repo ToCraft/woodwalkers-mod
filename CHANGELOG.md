@@ -1,4 +1,4 @@
-walkers 6.5
+walkers 6.3.1
 ================
 - **BACKPORTED VERSION FOR 1.21.2 AND 1.21.4**
 - fix some arm rendering issues
