@@ -10,6 +10,7 @@ walkers 6.5
 - fix swimming speed for aquatic mobs
 - add InvulnerabilityTrait
 - add GoatAbility
+- add GuardianAbility
 
 walkers 6.4
 ================

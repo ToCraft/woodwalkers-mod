@@ -84,6 +84,7 @@ public class AbilityRegistry {
         registerByClass(WitherBoss.class, new WitherAbility<>());
         registerByClass(Cow.class, new ClearEffectsAbility<>());
         registerByClass(Goat.class, new GoatAbility<>());
+        registerByClass(Guardian.class, new GuardianAbility<>());
         registerByClass(Endermite.class, new RandomTeleportationAbility<>());
         registerByClass(Llama.class, new LlamaAbility<>());
         registerByClass(Witch.class, new ThrowPotionsAbility<>());
