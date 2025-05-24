@@ -1,4 +1,4 @@
-[![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/ToCraft/woodwalkers-mod/build_only.yml?style=for-the-badge)](https://github.com/ToCraft/woodwalkers-mod/actions/workflows/build_only.yml)
+[![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/ToCraft/woodwalkers-mod/build.yml?style=for-the-badge)](https://github.com/ToCraft/woodwalkers-mod/actions/workflows/build.yml)
 [![Maven metadata URL](https://img.shields.io/maven-metadata/v?metadataUrl=https%3A%2F%2Fmaven.tocraft.dev%2Fpublic%2Fdev%2Ftocraft%2Fwalkers%2Fmaven-metadata.xml&style=for-the-badge&label=Woodwalkers)](https://maven.tocraft.dev/#/public/dev/tocraft/walkers)
 [![Patreon](https://img.shields.io/badge/Patreon-F96854?style=for-the-badge&logo=patreon&logoColor=white)](https://patreon.com/ToCraft)
 
