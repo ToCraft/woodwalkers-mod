@@ -1,3 +1,7 @@
+walkers 6.6
+================
+- fix crash on NeoForge 1.21.5
+
 walkers 6.5
 ================
 - fix some arm rendering issues

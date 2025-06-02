@@ -6,6 +6,8 @@ license = "MIT"
 
 [[mixins]]
 config = "walkers.mixins.json"
+[[mixins]]
+config = "walkers-neoforge.mixins.json"
 
 [[mods]]
 modId = "walkers"
