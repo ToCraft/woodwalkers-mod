@@ -1,6 +1,7 @@
 walkers 6.6
 ================
 - fix crash on NeoForge 1.21.5
+- add option to block amor slots
 
 walkers 6.5
 ================

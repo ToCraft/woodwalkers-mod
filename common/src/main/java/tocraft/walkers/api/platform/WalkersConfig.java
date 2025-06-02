@@ -1,11 +1,13 @@
 package tocraft.walkers.api.platform;
 
+import net.minecraft.world.entity.EquipmentSlot;
 import tocraft.craftedcore.config.Config;
 import tocraft.craftedcore.config.annotions.Comment;
 import tocraft.craftedcore.config.annotions.Synchronize;
 import tocraft.walkers.Walkers;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @SuppressWarnings("CanBeFinal")
 public class WalkersConfig implements Config {
@@ -153,6 +155,13 @@ public class WalkersConfig implements Config {
     @Comment("Whether the player blacklist should prevent morphing.")
     @Synchronize
     public boolean blacklistPreventsMorphing = true;
+    @Comment("block equipment slots per entity type. Use '*' to select all entity types. Valid slots are: head, chest, legs, feet")
+    @Synchronize
+    public Map<String, List<String>> blockEquipmentSlots = new HashMap<>() {
+        {
+            put("minecraft:wolf", List.of("head", "legs", "feet", "offhand"));
+        }
+    };
 
     @Override
     public String getName() {
