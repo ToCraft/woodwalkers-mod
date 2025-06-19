@@ -1,10 +1,48 @@
 name: Feature Request
-labels:
-  - enhancement
-description: Suggest a new Feature or an Enhancement
+description: Suggest a new feature or an enhancement for the mod
+labels: ["enhancement"]
 body:
-  - type: textarea
+  - type: markdown
     attributes:
-      label: Describe your idea, include images if necessary
+      value: |
+        **Thank you for taking the time to suggest a new feature!**
+
+        To help us understand your idea, please complete the following steps before submitting:
+
+        1.  **Search existing requests:** Make sure this feature hasn't already been suggested by searching all issues here: [**Search Feature Requests**](https://github.com/ToCraft/woodwalkers-mod/issues?q=is%3Aissue+label%3Aenhancement)
+        2.  **Consider the scope:** Does this feature feel like it belongs in Woodwalkers? We value all ideas, but requests that align with the mod's core vision are more likely to be considered.
+
+  - type: textarea
+    id: problem-description
+    attributes:
+      label: What problem is this feature intended to solve?
+      description: "Please provide a clear and concise description of the limitation you are experiencing. This is the most important part of the request! For example: *'I find it tedious to manually edit the config file, because...'* "
+      placeholder: "Describe the problem here. What makes the current experience difficult or inefficient?"
     validations:
       required: true
+
+  - type: textarea
+    id: solution-description
+    attributes:
+      label: Describe the solution you'd like
+      description: "How do you envision this feature working? Provide as much detail as possible. Mockups, drawings, or screenshots of similar features in other mods are extremely helpful!"
+      placeholder: "Describe the feature in detail. E.g. how would a player interact with it? What does it look like?"
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Have you considered any alternative solutions or features?
+      description: "Tell us about any other ways you've thought of to solve the problem described above."
+      placeholder: "e.g. 'I also considered a magic item that automatically sorts chests, but I think a keybind is simpler...'"
+    validations:
+      required: false
+
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: Additional Context
+      description: "Add any other context, screenshots, or links about the feature request here."
+    validations:
+      required: false

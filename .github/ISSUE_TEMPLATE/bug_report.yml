@@ -1,68 +1,112 @@
 name: Bug Report
-labels:
-  - bug
-description: Report issues
+description: Report a bug or crash
+labels: ["bug"]
 body:
+  - type: markdown
+    attributes:
+      value: |
+        **Thank you for wanting to report a bug!**
+
+        ### POLICY: We only support the LATEST STABLE version of the mod.
+
+        It is **your responsibility** to ensure you are running the latest version before submitting. Bug reports for older mod or game versions will be closed immediately.
+
+        1.  **Search all issues (open and closed):** Check if your issue has already been reported here: [**Search Issues**](https://github.com/ToCraft/woodwalkers-mod/issues?q=is%3Aissue)
+        2.  **Consult the Wiki:** Find answers to common problems on our Wiki: [**Visit the Wiki**](https://github.com/ToCraft/woodwalkers-mod/wiki)
+
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: Pre-submission Checklist
+      description: You MUST confirm these points before submitting.
+      options:
+        - label: I certify that the mod version reported below is the latest stable release.
+          required: true
+        - label: I have searched all existing issues (open and closed) and have made sure this is not a duplicate.
+          required: true
+
+  - type: markdown
+    attributes:
+      value: |
+        ### Crucial Step: Test for Mod Conflicts
+        To properly diagnose this, you need to isolate the issue from any potential mod conflicts. Please perform the following steps:
+
+        1.  **Remove all other mods** except for Woodwalkers and any required libraries (e.g., Fabric API).
+        2.  Try to reproduce the error with only this minimal mod setup.
+        3.  If the error **persists**, the log from this test is what we need.
+        4.  If the error **disappears**, please re-add your other mods one by one until the error reappears. This will identify the conflicting mod.
+        
+        This process is crucial for us to be able to effectively troubleshoot the problem.
+
+  - type: checkboxes
+    id: conflict-check
+    attributes:
+      label: Mod Conflict Test Confirmation
+      description: Confirm that you have completed the test described above.
+      options:
+        - label: I have performed the mod conflict test as described above. The log file I am providing is from the most minimal setup that reproduces the bug.
+          required: true
+
   - type: dropdown
     id: modloader
     attributes:
-      label: Mod loader
+      label: Mod Loader
       options:
-        - Forge
         - NeoForge
         - Fabric
     validations:
       required: true
-  - type: input
-    id: mc-version
-    attributes:
-      label: Minecraft version
-      placeholder: e.g. 1.21.2
-    validations:
-      required: true
+
   - type: input
     id: walkers-version
     attributes:
-      label: Woodwalkers version
-      placeholder: e.g. 2.1
+      label: Woodwalkers Version
+      placeholder: "e.g. 2.1.0"
     validations:
       required: true
-  - type: input
-    id: craftedcore-version
-    attributes:
-      label: CraftedCore version
-      placeholder: e.g. 2.1
-    validations:
-      required: true
+
   - type: input
     id: modloader-version
     attributes:
-      label: Modloader version
-      placeholder: "e.g. 48.2.0"
+      label: Mod Loader Version
+      placeholder: "e.g. Fabric 0.16.14"
     validations:
       required: true
+
   - type: textarea
+    id: description
     attributes:
-      label: "The latest.log file"
-      description: "Drag-and-Drop your latest.log file or append a link to a Gist-file."
-      placeholder: "Your latest.log file"
+      label: Issue Description
+      description: "Provide a clear and concise description of the bug. What happened, and what did you expect to happen?"
+      placeholder: "e.g. When I enter a new world with Minecraft's default settings, the game crashes. I expected the world to load."
     validations:
       required: true
+
   - type: textarea
+    id: steps-to-reproduce
     attributes:
-      label: Issue description
-      placeholder: A description of the issue.
-    validations:
-      required: true
-  - type: textarea
-    attributes:
-      label: Steps to reproduce
+      label: Steps to Reproduce
       placeholder: |
-        e.g.
-        1. Start game
-        2. go into world
-        3. etc...
-  - type: textarea
+        1. Start game with only Woodwalkers and dependencies installed
+        2. Create a new world1
+        3. ...
+    validations:
+      required: true
+
+  - type: input
+    id: logs
     attributes:
-      label: Other
-      description: Anything else which is related to the issue, e.g. the mod it's crashing with.
+      label: Logs and Crash Reports
+      description: |
+        Provide the full log file or crash report from your test.
+        **Do not paste the log directly here.** Upload it to [mclo.gs](https://mclo.gs/) and paste the link here.
+      placeholder: "Paste the link to your log file here"
+    validations:
+      required: true
+
+  - type: textarea
+    id: other-context
+    attributes:
+      label: Other Information
+      description: "If this is a mod compatibility issue that you identified, please list the conflicting mod(s). Include any other relevant context."
+      placeholder: "e.g. This only happens when Mod XYZ is also installed."
