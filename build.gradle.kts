@@ -8,7 +8,7 @@ ext {
     val modMeta = mutableMapOf<String, Any>()
     modMeta["minecraft_version"] = project.name
     modMeta["version"] = version
-    modMeta["craftedcore_version"] = project.properties["craftedcore_version"] as String
+    modMeta["architectury_version"] = project.properties["architectury_version"] as String
     set("mod_meta", modMeta)
 }
 

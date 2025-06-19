@@ -5,9 +5,7 @@ plugins {
 }
 
 dependencies {
-    modApi("dev.tocraft:craftedcore:${parent!!.name}-${rootProject.properties["craftedcore_version"]}") {
-        exclude("me.shedaniel.cloth")
-    }
+    modApi("dev.architectury:architectury:${rootProject.properties["architectury_version"]}")
 }
 tasks.named<ApplyPreProcessTask>("applyPreProcessJava") {
     removeComments = true

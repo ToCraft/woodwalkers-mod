@@ -13,9 +13,5 @@ tasks.withType<ProcessResources> {
 }
 
 dependencies {
-    modApi("dev.tocraft:craftedcore-fabric:${parent!!.name}-${rootProject.properties["craftedcore_version"]}") {
-        exclude("net.fabricmc.fabric-api")
-        exclude("com.terraformersmc")
-        exclude("me.shedaniel.cloth")
-    }
+    modApi("dev.architectury:architectury-fabric:${rootProject.properties["architectury_version"]}")
 }
