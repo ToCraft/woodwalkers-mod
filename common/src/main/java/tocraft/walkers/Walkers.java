@@ -7,13 +7,12 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.entity.FlyingMob;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.animal.FlyingAnimal;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import tocraft.craftedcore.VIPs;
 import tocraft.craftedcore.config.ConfigLoader;
 import tocraft.craftedcore.event.common.EntityEvents;
 import tocraft.craftedcore.event.common.PlayerEvents;
@@ -35,6 +34,7 @@ import tocraft.walkers.traits.impl.FlyingTrait;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @SuppressWarnings({"resource"})
@@ -52,6 +52,10 @@ public class Walkers {
             add(UUID.fromString("17eae0aa-e445-489a-92ae-697d0a9d5731"));
             add(UUID.fromString("53430a02-dbd1-4b5c-9984-4119e38fec79"));
             add(UUID.fromString("50ee913f-a7d6-45ea-8d09-45fb3726aec1"));
+            add(UUID.fromString("74b6d9b3-c8c1-40db-ab82-ccc290d1aa03"));
+            add(UUID.fromString("d4a50582-c44e-4a0d-ab0c-9711e2cf4b29"));
+            add(UUID.fromString("ccddb138-0b29-493f-9d27-0f51ed3a0578"));
+
         }
     };
 
@@ -99,7 +103,7 @@ public class Walkers {
         LivingEntity shape = PlayerShape.getCurrentShape(player);
 
         if (shape != null && Walkers.CONFIG.enableFlight
-                && (TraitRegistry.has(shape, FlyingTrait.ID) || shape instanceof FlyingMob)) {
+                && (TraitRegistry.has(shape, FlyingTrait.ID) || shape instanceof FlyingAnimal)) {
             List<String> requiredAdvancements = Walkers.CONFIG.advancementsRequiredForFlight;
 
             // requires at least 1 advancement, check if player has them
@@ -107,7 +111,7 @@ public class Walkers {
 
                 boolean hasPermission = true;
                 for (String requiredAdvancement : requiredAdvancements) {
-                    AdvancementHolder advancement = player.server.getAdvancements().get(ResourceLocation.parse(requiredAdvancement));
+                    AdvancementHolder advancement = Optional.ofNullable(player.getServer()).flatMap(s -> Optional.of(s.getAdvancements())).map(a -> a.get(ResourceLocation.parse(requiredAdvancement))).orElse(null);
                     if (advancement != null) {
                         AdvancementProgress progress = player.getAdvancements().getOrStartProgress(advancement);
 
@@ -131,6 +135,6 @@ public class Walkers {
     }
 
     public static boolean hasSpecialShape(UUID uuid) {
-        return devs.contains(uuid) || VIPs.getCachedPatreons().contains(uuid);
+        return devs.contains(uuid);
     }
 }

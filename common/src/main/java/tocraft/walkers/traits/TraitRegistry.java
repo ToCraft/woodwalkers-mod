@@ -11,7 +11,6 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.FlyingMob;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.entity.ambient.Bat;
@@ -98,7 +97,7 @@ public class TraitRegistry {
         registerByClass(Bee.class, new FlyingTrait<>());
         registerByClass(Blaze.class, new FlyingTrait<>());
         registerByClass(EnderDragon.class, new FlyingTrait<>());
-        registerByClass(FlyingMob.class, new FlyingTrait<>());
+        registerByClass(FlyingAnimal.class, new FlyingTrait<>());
         registerByClass(Parrot.class, new FlyingTrait<>());
         registerByClass(Vex.class, new FlyingTrait<>());
         registerByClass(WitherBoss.class, new FlyingTrait<>());

@@ -3,5 +3,7 @@ plugins {
 }
 
 dependencies {
-    modApi("dev.architectury:architectury:${rootProject.properties["architectury_version"]}")
+    modApi("dev.tocraft:craftedcore:${rootProject.properties["minecraft"]}-${rootProject.properties["craftedcore_version"]}") {
+        exclude("me.shedaniel.cloth")
+    }
 }

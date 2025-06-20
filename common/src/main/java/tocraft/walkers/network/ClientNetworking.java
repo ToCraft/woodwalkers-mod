@@ -49,7 +49,7 @@ public class ClientNetworking implements NetworkHandler {
 
         runOrQueue(context, player -> {
             @Nullable
-            Player syncTarget = player.getCommandSenderWorld().getPlayerByUUID(uuid);
+            Player syncTarget = player.level().getPlayerByUUID(uuid);
 
             if (syncTarget != null) {
                 PlayerDataProvider data = (PlayerDataProvider) syncTarget;
