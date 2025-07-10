@@ -19,10 +19,10 @@
   "environment": "*",
   "entrypoints": {
     "main": [
-      "tocraft.walkers.Walkers::initialize"
+      "dev.tocraft.walkers.Walkers::initialize"
     ],
     "client": [
-      "tocraft.walkers.WalkersClient::initialize"
+      "dev.tocraft.walkers.WalkersClient::initialize"
     ]
   },
   "mixins": [

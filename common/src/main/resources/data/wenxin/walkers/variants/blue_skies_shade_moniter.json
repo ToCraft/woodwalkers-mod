@@ -4,16 +4,36 @@
   "type_provider": {
     "fallback": 0,
     "variants": {
-      "0": {"Biome": 0},
-      "1": {"Biome": 1},
-      "2": {"Biome": 2},
-      "3": {"Biome": 3},
-      "4": {"Biome": 4},
-      "5": {"Biome": 5},
-      "6": {"Biome": 6},
-      "7": {"Biome": 7},
-      "8": {"Biome": 8},
-      "9": {"FestiveStatus": 2}
+      "0": {
+        "Biome": 0
+      },
+      "1": {
+        "Biome": 1
+      },
+      "2": {
+        "Biome": 2
+      },
+      "3": {
+        "Biome": 3
+      },
+      "4": {
+        "Biome": 4
+      },
+      "5": {
+        "Biome": 5
+      },
+      "6": {
+        "Biome": 6
+      },
+      "7": {
+        "Biome": 7
+      },
+      "8": {
+        "Biome": 8
+      },
+      "9": {
+        "FestiveStatus": 2
+      }
     }
   }
 }
