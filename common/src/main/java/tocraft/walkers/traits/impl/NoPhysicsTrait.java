@@ -1,14 +1,18 @@
 package tocraft.walkers.traits.impl;
 
+import com.mojang.blaze3d.pipeline.RenderPipeline;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import tocraft.walkers.Walkers;
 import tocraft.walkers.traits.ShapeTrait;
@@ -32,10 +36,10 @@ public class NoPhysicsTrait<E extends LivingEntity> extends ShapeTrait<E> {
         return false;
     }
 
-    @Contract(pure = true)
     @Environment(EnvType.CLIENT)
     @Override
-    public @Nullable Item getItemIcon() {
-        return Items.ENDER_EYE;
+    public void renderIcon(RenderPipeline pipeline, @NotNull GuiGraphics graphics, int x, int y, int width, int height) {
+        ItemStack stack = new ItemStack(Items.ENDER_EYE);
+        graphics.renderItem(stack, x, y);
     }
 }

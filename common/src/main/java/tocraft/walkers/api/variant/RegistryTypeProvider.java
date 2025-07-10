@@ -15,6 +15,9 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.variant.VariantUtils;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.storage.TagValueInput;
+import net.minecraft.world.level.storage.TagValueOutput;
+import net.minecraft.world.level.storage.ValueInput;
 import org.jetbrains.annotations.NotNull;
 import tocraft.walkers.Walkers;
 
@@ -45,20 +48,22 @@ public class RegistryTypeProvider<T extends LivingEntity, V> extends TypeProvide
     }
 
     private @NotNull Optional<Holder<V>> getVariant(@NotNull T entity) {
-        CompoundTag tag = new CompoundTag();
-        entity.save(tag);
+        TagValueOutput out = TagValueOutput.createWithContext(Walkers.PROBLEM_REPORTER, entity.registryAccess());
+        entity.save(out);
+        CompoundTag nbt = out.buildResult();
+        ValueInput in = TagValueInput.create(Walkers.PROBLEM_REPORTER, entity.registryAccess(), nbt);
 
-        return VariantUtils.readVariant(tag, entity.registryAccess(), this.registry);
+        return VariantUtils.readVariant(in, this.registry);
     }
 
     @Override
     public T create(@NotNull EntityType<T> type, @NotNull Level level, @NotNull Player player, int data) {
-        CompoundTag compoundTag = new CompoundTag();
-        compoundTag.putString("id", Objects.requireNonNull(EntityType.getKey(type)).toString());
-        getRegistry(level).flatMap(reg -> reg.get(data)).ifPresent(v -> VariantUtils.writeVariant(compoundTag, v));
+        TagValueOutput out = TagValueOutput.createWithContext(Walkers.PROBLEM_REPORTER, level.registryAccess());
+        out.putString("id", Objects.requireNonNull(EntityType.getKey(type)).toString());
+        getRegistry(level).flatMap(reg -> reg.get(data)).ifPresent(v -> VariantUtils.writeVariant(out, v));
 
         //noinspection unchecked
-        return (T) EntityType.loadEntityRecursive(compoundTag, level, EntitySpawnReason.LOAD, entity -> entity);
+        return (T) EntityType.loadEntityRecursive(out.buildResult(), level, EntitySpawnReason.LOAD, entity -> entity);
     }
 
     @Override

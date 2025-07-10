@@ -34,10 +34,4 @@ public class ImmunityTrait<E extends LivingEntity> extends ShapeTrait<E> {
     public MapCodec<? extends ShapeTrait<?>> codec() {
         return CODEC;
     }
-
-    @Override
-    @Environment(EnvType.CLIENT)
-    public @Nullable TextureAtlasSprite getIcon() {
-        return null;
-    }
 }

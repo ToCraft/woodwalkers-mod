@@ -1,17 +1,22 @@
 package tocraft.walkers.traits.impl;
 
+import com.mojang.blaze3d.pipeline.RenderPipeline;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import tocraft.walkers.Walkers;
 import tocraft.walkers.traits.ShapeTrait;
@@ -74,9 +79,10 @@ public class ClimbBlocksTrait<E extends LivingEntity> extends ShapeTrait<E> {
         return CODEC;
     }
 
-    @Override
     @Environment(EnvType.CLIENT)
-    public @Nullable TextureAtlasSprite getIcon() {
-        return Minecraft.getInstance().getBlockRenderer().getBlockModelShaper().getBlockModel(Blocks.VINE.defaultBlockState()).particleIcon();
+    @Override
+    public void renderIcon(RenderPipeline pipeline, @NotNull GuiGraphics graphics, int x, int y, int width, int height) {
+        ItemStack stack = new ItemStack(Items.VINE);
+        graphics.renderItem(stack, x, y);
     }
 }

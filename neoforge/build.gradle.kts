@@ -18,7 +18,7 @@ tasks.withType<ProcessResources> {
 }
 
 dependencies {
-    modApi("dev.tocraft:craftedcore-neoforge:${rootProject.properties["minecraft"]}-${rootProject.properties["craftedcore_version"]}") {
+    modApi("dev.tocraft:craftedcore-neoforge:${rootProject.properties["craftedcore_version"]}") {
         exclude("me.shedaniel.cloth")
     }
 }

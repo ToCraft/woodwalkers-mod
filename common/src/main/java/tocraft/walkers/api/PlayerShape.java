@@ -7,9 +7,11 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.storage.TagValueOutput;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 import tocraft.craftedcore.network.ModernNetworking;
+import tocraft.walkers.Walkers;
 import tocraft.walkers.api.blacklist.EntityBlacklist;
 import tocraft.walkers.api.events.ShapeEvents;
 import tocraft.walkers.impl.PlayerDataProvider;
@@ -65,7 +67,9 @@ public class PlayerShape {
         // serialize current shape data to tag if it exists
         LivingEntity shape = getCurrentShape(changed);
         if (shape != null) {
-            shape.saveWithoutId(entityTag);
+            TagValueOutput out = TagValueOutput.createWithContext(Walkers.PROBLEM_REPORTER, changed.registryAccess());
+            shape.saveWithoutId(out);
+            entityTag = out.buildResult();
         }
 
         // put entity type ID under the key "id", or "minecraft:empty" if no shape is equipped (or the shape entity type is invalid)

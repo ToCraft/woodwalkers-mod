@@ -1,8 +1,10 @@
 package tocraft.walkers.traits;
 
+import com.mojang.blaze3d.pipeline.RenderPipeline;
 import com.mojang.serialization.MapCodec;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
@@ -27,13 +29,7 @@ public abstract class ShapeTrait<E extends LivingEntity> {
     }
 
     @Environment(EnvType.CLIENT)
-    public @Nullable TextureAtlasSprite getIcon() {
-        return null;
-    }
+    public void renderIcon(RenderPipeline pipeline, GuiGraphics graphics, int x, int y, int width, int height) {
 
-    @Contract(pure = true)
-    @Environment(EnvType.CLIENT)
-    public @Nullable Item getItemIcon() {
-        return null;
     }
 }

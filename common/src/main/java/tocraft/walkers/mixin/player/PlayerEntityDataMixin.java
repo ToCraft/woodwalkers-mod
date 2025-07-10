@@ -13,6 +13,9 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.animal.horse.AbstractHorse;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.storage.TagValueInput;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
@@ -53,38 +56,38 @@ public abstract class PlayerEntityDataMixin extends LivingEntity implements Play
     }
 
     @Inject(method = "readAdditionalSaveData", at = @At("RETURN"))
-    private void readNbt(CompoundTag tag, CallbackInfo info) {
+    private void readNbt(ValueInput in, CallbackInfo ci) {
         // This is the new tag for saving Walkers unlock information.
         // It includes metadata for variants.
-        CompoundTag unlockedShape = tag.getCompound("UnlockedShape").orElse(new CompoundTag());
+        ValueInput unlockedShape = in.childOrEmpty("UnlockedShape");
         this.walkers$unlocked = ShapeType.from(unlockedShape);
 
         // Abilities
-        walkers$abilityCooldown = tag.getInt(ABILITY_COOLDOWN_KEY).orElse(0);
+        walkers$abilityCooldown = in.getInt(ABILITY_COOLDOWN_KEY).orElse(0);
 
         // Hostility
-        walkers$remainingTime = tag.getInt("RemainingHostilityTime").orElse(0);
+        walkers$remainingTime = in.getInt("RemainingHostilityTime").orElse(0);
 
         // Current Walkers
-        walkers$readCurrentShape(tag.getCompound("CurrentShape").orElse(new CompoundTag()));
+        walkers$readCurrentShape(in.childOrEmpty("CurrentShape"));
     }
 
     @Inject(method = "addAdditionalSaveData", at = @At("RETURN"))
-    private void writeNbt(CompoundTag tag, CallbackInfo info) {
+    private void writeNbt(ValueOutput out, CallbackInfo ci) {
         // Write 'Unlocked' Walkers data
         CompoundTag id = new CompoundTag();
         if (walkers$unlocked != null)
             id = walkers$unlocked.writeCompound();
-        tag.put("UnlockedShape", id);
+        out.put("UnlockedShape", id);
 
         // Abilities
-        tag.putInt(ABILITY_COOLDOWN_KEY, walkers$abilityCooldown);
+        out.putInt(ABILITY_COOLDOWN_KEY, walkers$abilityCooldown);
 
         // Hostility
-        tag.putInt("RemainingHostilityTime", walkers$remainingTime);
+        out.putInt("RemainingHostilityTime", walkers$remainingTime);
 
         // Current Walkers
-        tag.put("CurrentShape", walkers$writeCurrentShape(new CompoundTag()));
+        out.put("CurrentShape", walkers$writeCurrentShape(new CompoundTag()));
     }
 
     @Unique
@@ -105,21 +108,21 @@ public abstract class PlayerEntityDataMixin extends LivingEntity implements Play
     }
 
     @Unique
-    public void walkers$readCurrentShape(CompoundTag tag) {
-        Optional<EntityType<?>> type = EntityType.by(tag);
+    public void walkers$readCurrentShape(ValueInput in) {
+        Optional<EntityType<?>> type = EntityType.by(in);
 
         // set shape to null (no shape) if the entity id is "minecraft:empty"
-        if (tag.getString("id").map(it -> it.equals("minecraft:empty")).orElse(false)) {
+        if (in.getString("id").map(it -> it.equals("minecraft:empty")).orElse(false)) {
             this.walkers$shape = null;
             this.refreshDimensions();
         }
 
         // if entity type was valid, deserialize entity data from tag
         else if (type.isPresent()) {
-            CompoundTag entityTag = tag.getCompound("EntityData").orElse(new CompoundTag());
+            Optional<ValueInput> entityTag = in.child("EntityData");
 
             // ensure entity data exists
-            if (!entityTag.isEmpty()) {
+            if (entityTag.isPresent()) {
                 if (walkers$shape == null || !type.get().equals(walkers$shape.getType())) {
                     walkers$shape = (LivingEntity) type.get().create(this.level(), EntitySpawnReason.LOAD);
 
@@ -127,7 +130,9 @@ public abstract class PlayerEntityDataMixin extends LivingEntity implements Play
                     this.refreshDimensions();
                 }
 
-                walkers$shape.load(entityTag);
+                if (walkers$shape != null) {
+                    walkers$shape.load(entityTag.get());
+                }
             }
         }
     }

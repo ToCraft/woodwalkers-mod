@@ -13,6 +13,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.storage.TagValueOutput;
 import org.jetbrains.annotations.NotNull;
 import tocraft.walkers.Walkers;
 
@@ -51,8 +52,9 @@ public class NBTTypeProvider<T extends LivingEntity> extends TypeProvider<T> {
 
     @Override
     public int getVariantData(@NotNull T entity) {
-        CompoundTag tag = new CompoundTag();
-        entity.save(tag);
+        TagValueOutput out = TagValueOutput.createWithContext(Walkers.PROBLEM_REPORTER, entity.registryAccess());
+        entity.save(out);
+        CompoundTag tag = out.buildResult();
 
         int i = getData(tag);
         if (i != -1) {

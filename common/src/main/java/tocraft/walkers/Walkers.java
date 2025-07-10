@@ -7,9 +7,11 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.ProblemReporter;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.animal.FlyingAnimal;
 import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,6 +41,19 @@ import java.util.UUID;
 
 @SuppressWarnings({"resource"})
 public class Walkers {
+    public static ProblemReporter PROBLEM_REPORTER = new ProblemReporter() {
+        @Contract(pure = true)
+        @Override
+        public @NotNull ProblemReporter forChild(PathElement pathElement) {
+            return this;
+        }
+
+        @Override
+        public void report(@NotNull Problem problem) {
+            Walkers.LOGGER.error(problem.description());
+        }
+    };
+
     @ApiStatus.Internal
     public static final Logger LOGGER = LoggerFactory.getLogger(Walkers.class);
     public static final String MODID = "walkers";

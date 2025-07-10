@@ -97,7 +97,7 @@ public class TraitRegistry {
         registerByClass(Bee.class, new FlyingTrait<>());
         registerByClass(Blaze.class, new FlyingTrait<>());
         registerByClass(EnderDragon.class, new FlyingTrait<>());
-        registerByClass(FlyingAnimal.class, new FlyingTrait<>());
+        registerByPredicate(entity -> entity instanceof FlyingAnimal, new FlyingTrait<>());
         registerByClass(Parrot.class, new FlyingTrait<>());
         registerByClass(Vex.class, new FlyingTrait<>());
         registerByClass(WitherBoss.class, new FlyingTrait<>());

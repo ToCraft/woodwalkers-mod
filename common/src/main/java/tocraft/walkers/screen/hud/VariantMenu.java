@@ -6,6 +6,7 @@ import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
@@ -14,6 +15,7 @@ import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.storage.TagValueOutput;
 import org.jetbrains.annotations.ApiStatus;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
@@ -58,8 +60,9 @@ public class VariantMenu implements RenderEvents.HUDRendering {
                     if (hasSpecialVariant) {
                         LivingEntity currentShape = PlayerShape.getCurrentShape(minecraft.player);
                         if (currentShape != null) {
-                            CompoundTag nbt = new CompoundTag();
-                            currentShape.saveWithoutId(nbt);
+                            TagValueOutput out = TagValueOutput.createWithContext(Walkers.PROBLEM_REPORTER, level.registryAccess());
+                            currentShape.saveWithoutId(out);
+                            CompoundTag nbt = out.buildResult();
                             if (nbt.contains("isSpecial") && nbt.getBoolean("isSpecial").orElse(false)) {
                                 currentVariantId = range;
                             }
@@ -93,17 +96,29 @@ public class VariantMenu implements RenderEvents.HUDRendering {
                                 }
                             }
                             if (entity != null) {
-                                InventoryScreen.renderEntityInInventory(guiGraphics, (float) x * i + (float) x / 2, (float) y * .75f, (int) (25 * (1 / (Math.max(entity.getBbHeight(), entity.getBbWidth())))), new Vector3f(), new Quaternionf().rotationXYZ(0.43633232F, (float) Math.PI, (float) Math.PI), null, entity);
+                                int leftPos = (int) ((float) x * i + (float) x / 2);
+                                int topPos = (int) ((float) y * .75f);
+                                int k = leftPos + 121;
+                                int l = topPos + 20;
+                                int m = leftPos + 161;
+                                int n = topPos + 80;
+                                InventoryScreen.renderEntityInInventory(guiGraphics, k, l, m, n, (int) (25 / (Math.max(entity.getBbHeight(), entity.getBbWidth()))), new Vector3f(), new Quaternionf().rotationXYZ(0.43633232F, (float) Math.PI, (float) Math.PI), null, entity);
                             }
                         }
                     } else {
                         LivingEntity entity = renderEntities.computeIfAbsent(currentShapeType, type -> type.create(level, minecraft.player));
                         if (entity != null) {
-                            InventoryScreen.renderEntityInInventory(guiGraphics, (float) x * 3 + (float) x / 2, (float) y * .75f, (int) (25 * (1 / (Math.max(entity.getBbHeight(), entity.getBbWidth())))), new Vector3f(), new Quaternionf().rotationXYZ(0.43633232F, (float) Math.PI, (float) Math.PI), null, entity);
+                            int leftPos = (int) ((float) x * 3 + (float) x / 2);
+                            int topPos = (int) ((float) y * .75f);
+                            int k = leftPos + 121;
+                            int l = topPos + 20;
+                            int m = leftPos + 161;
+                            int n = topPos + 80;
+                            InventoryScreen.renderEntityInInventory(guiGraphics, k, l, m, n, (int) (25 / (Math.max(entity.getBbHeight(), entity.getBbWidth()))), new Vector3f(), new Quaternionf().rotationXYZ(0.43633232F, (float) Math.PI, (float) Math.PI), null, entity);
                         }
                     }
                     // render focus
-                    guiGraphics.blit(RenderType::guiTextured, Walkers.id("textures/gui/focused.png"), x * 3, 5, 0, 0, x, y, x, y);
+                    guiGraphics.blit(RenderPipelines.GUI_TEXTURED, Walkers.id("textures/gui/focused.png"), x * 3, 5, 0, 0, x, y, x, y);
                 }
             }
         }

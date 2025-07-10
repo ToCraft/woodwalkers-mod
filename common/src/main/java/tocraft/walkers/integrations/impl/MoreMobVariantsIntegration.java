@@ -9,6 +9,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.storage.TagValueOutput;
 import org.jetbrains.annotations.NotNull;
 import tocraft.walkers.Walkers;
 import tocraft.walkers.api.variant.TypeProvider;
@@ -69,8 +70,9 @@ public class MoreMobVariantsIntegration extends AbstractIntegration {
         @Override
         public int getVariantData(L entity) {
             List<ResourceLocation> variants = getVariants(type);
-            CompoundTag nbt = new CompoundTag();
-            entity.saveWithoutId(nbt);
+            TagValueOutput out = TagValueOutput.createWithContext(Walkers.PROBLEM_REPORTER, entity.level().registryAccess());
+            entity.saveWithoutId(out);
+            CompoundTag nbt = out.buildResult();
             Optional<String> str = nbt.getString("VariantID");
             if (str.isEmpty()) {
                 return getFallbackData();
@@ -102,8 +104,9 @@ public class MoreMobVariantsIntegration extends AbstractIntegration {
         @Override
         public @NotNull Component modifyText(@NotNull L entity, MutableComponent text) {
             List<ResourceLocation> variants = getVariants(type);
-            CompoundTag nbt = new CompoundTag();
-            entity.saveWithoutId(nbt);
+            TagValueOutput out = TagValueOutput.createWithContext(Walkers.PROBLEM_REPORTER, entity.level().registryAccess());
+            entity.saveWithoutId(out);
+            CompoundTag nbt = out.buildResult();
             String str = nbt.getString("VariantID").orElse("");
             return Component.literal(formatTypePrefix(str) + " ").append(text);
         }

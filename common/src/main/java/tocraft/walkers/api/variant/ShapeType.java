@@ -10,6 +10,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.storage.ValueInput;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import tocraft.walkers.Walkers;
@@ -69,6 +70,20 @@ public class ShapeType<T extends LivingEntity> {
         }
 
         return new ShapeType<>(entity);
+    }
+
+    @Nullable
+    public static ShapeType<?> from(@NotNull ValueInput in) {
+        Optional<String> str = in.getString("EntityID");
+        if (str.isEmpty()) {
+            return null;
+        }
+        ResourceLocation id = ResourceLocation.parse(str.get());
+        if (!BuiltInRegistries.ENTITY_TYPE.containsKey(id)) {
+            return null;
+        }
+
+        return from((EntityType<? extends LivingEntity>) BuiltInRegistries.ENTITY_TYPE.get(id).orElseThrow().value(), in.getInt("Variant").orElse(-1));
     }
 
     @Nullable

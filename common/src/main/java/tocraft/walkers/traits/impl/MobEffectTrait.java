@@ -1,17 +1,19 @@
 package tocraft.walkers.traits.impl;
 
+import com.mojang.blaze3d.pipeline.RenderPipeline;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.gui.Gui;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
-import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.NotNull;
 import tocraft.walkers.Walkers;
 import tocraft.walkers.traits.ShapeTrait;
 
@@ -84,9 +86,9 @@ public class MobEffectTrait<E extends LivingEntity> extends ShapeTrait<E> {
         return true;
     }
 
-    @Override
     @Environment(EnvType.CLIENT)
-    public @Nullable TextureAtlasSprite getIcon() {
-        return Minecraft.getInstance().getMobEffectTextures().get(mobEffectInstance.getEffect());
+    @Override
+    public void renderIcon(RenderPipeline pipeline, @NotNull GuiGraphics graphics, int x, int y, int width, int height) {
+        graphics.blitSprite(RenderPipelines.GUI_TEXTURED, Gui.getMobEffectSprite(mobEffectInstance.getEffect()), x, y, width, height);
     }
 }

@@ -10,6 +10,9 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.animal.wolf.Wolf;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.storage.TagValueOutput;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
@@ -57,21 +60,22 @@ public abstract class WolfEntityMixin extends TamableAnimal {
     }
 
     @Inject(method = "addAdditionalSaveData", at = @At("RETURN"))
-    protected void onWriteCustomDataToNbt(@NotNull CompoundTag nbt, CallbackInfo ci) {
+    protected void onWriteCustomDataToNbt(ValueOutput out, CallbackInfo ci) {
         if (((Entity) (Object) this).getEntityData().get(walkers$isSpecial)) {
-            nbt.putBoolean("isSpecial", true);
+            out.putBoolean("isSpecial", true);
         }
     }
 
     @Inject(method = "readAdditionalSaveData", at = @At("RETURN"))
-    protected void onReadCustomDataFromNbt(@NotNull CompoundTag nbt, CallbackInfo ci) {
-        ((Entity) (Object) this).getEntityData().set(walkers$isSpecial, nbt.getBooleanOr("isSpecial", false));
+    protected void onReadCustomDataFromNbt(ValueInput in, CallbackInfo ci) {
+        ((Entity) (Object) this).getEntityData().set(walkers$isSpecial, in.getBooleanOr("isSpecial", false));
     }
 
     @Inject(method = "getTexture", at = @At("HEAD"), cancellable = true)
     private void setSpecialTexture(CallbackInfoReturnable<ResourceLocation> cir) {
-        CompoundTag nbt = new CompoundTag();
-        this.saveWithoutId(nbt);
+        TagValueOutput out = TagValueOutput.createWithContext(Walkers.PROBLEM_REPORTER, level().registryAccess());
+        this.saveWithoutId(out);
+        CompoundTag nbt = out.buildResult();
 
         if (nbt.getBooleanOr("isSpecial", false)) {
             if (this.isTame()) {

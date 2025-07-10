@@ -1,5 +1,5 @@
 plugins {
-    id("dev.tocraft.modmaster.root") version("single-1.6")
+    id("dev.tocraft.modmaster.root") version("single-1.7")
 }
 
 subprojects {
@@ -15,5 +15,3 @@ ext {
     modMeta["craftedcore_version"] = project.properties["craftedcore_version"] as String
     set("mod_meta", modMeta)
 }
-
-

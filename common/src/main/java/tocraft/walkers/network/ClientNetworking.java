@@ -6,10 +6,13 @@ import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.storage.TagValueInput;
+import net.minecraft.world.level.storage.ValueInput;
 import org.jetbrains.annotations.Nullable;
 import tocraft.craftedcore.client.CraftedCoreClient;
 import tocraft.craftedcore.network.ModernNetworking;
 import tocraft.craftedcore.network.client.ClientNetworking.ApplicablePacket;
+import tocraft.walkers.Walkers;
 import tocraft.walkers.impl.PlayerDataProvider;
 import tocraft.walkers.network.impl.SyncApiLevelPackets;
 import tocraft.walkers.network.impl.UnlockPackets;
@@ -63,7 +66,8 @@ public class ClientNetworking implements NetworkHandler {
 
                 // If entity type was valid, deserialize entity data from tag/
                 entityNbt.putString("id", id);
-                Optional<EntityType<?>> type = EntityType.by(entityNbt);
+                ValueInput in = TagValueInput.create(Walkers.PROBLEM_REPORTER, player.registryAccess(), entityNbt);
+                Optional<EntityType<?>> type = EntityType.by(in);
                 if (type.isPresent()) {
                     LivingEntity shape = data.walkers$getCurrentShape();
 
@@ -77,7 +81,7 @@ public class ClientNetworking implements NetworkHandler {
                     }
 
                     if (shape != null) {
-                        shape.load(entityNbt);
+                        shape.load(in);
                     }
                 }
             }

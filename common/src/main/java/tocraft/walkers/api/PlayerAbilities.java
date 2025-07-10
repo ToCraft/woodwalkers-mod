@@ -62,7 +62,7 @@ public class PlayerAbilities {
                         return;
                     }
 
-                    ability.onUse(player, shape, player.serverLevel());
+                    ability.onUse(player, shape, player.level());
                     PlayerAbilities.setCooldown(player, ability.getCooldown(shape));
                     PlayerAbilities.sync(player);
                 }
