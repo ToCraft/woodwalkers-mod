@@ -1,9 +1,9 @@
 package tocraft.walkers.eventhandler;
 
+import dev.tocraft.craftedcore.event.client.ClientPlayerEvents;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.player.LocalPlayer;
-import tocraft.craftedcore.event.client.ClientPlayerEvents;
 import tocraft.walkers.impl.PlayerDataProvider;
 
 @Environment(EnvType.CLIENT)

@@ -1,5 +1,9 @@
 package tocraft.walkers;
 
+import dev.tocraft.craftedcore.config.ConfigLoader;
+import dev.tocraft.craftedcore.event.common.EntityEvents;
+import dev.tocraft.craftedcore.event.common.PlayerEvents;
+import dev.tocraft.craftedcore.platform.VersionChecker;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import net.minecraft.advancements.AdvancementHolder;
 import net.minecraft.advancements.AdvancementProgress;
@@ -15,10 +19,6 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import tocraft.craftedcore.config.ConfigLoader;
-import tocraft.craftedcore.event.common.EntityEvents;
-import tocraft.craftedcore.event.common.PlayerEvents;
-import tocraft.craftedcore.platform.VersionChecker;
 import tocraft.walkers.ability.AbilityRegistry;
 import tocraft.walkers.api.PlayerShape;
 import tocraft.walkers.api.WalkersTickHandlers;
@@ -96,7 +96,7 @@ public class Walkers {
         VersionChecker.registerModrinthChecker(MODID, "woodwalkers", Component.literal("Woodwalkers"));
 
         PlayerEvents.PLAYER_JOIN.register(player -> {
-            Int2ObjectMap<Object> trackers = ((ThreadedAnvilChunkStorageAccessor) ((ServerLevel) player.level())
+            Int2ObjectMap<Object> trackers = ((ThreadedAnvilChunkStorageAccessor) player.level()
                     .getChunkSource().chunkMap).getEntityMap();
             trackers.forEach((entityid, tracking) -> {
                 if (player.level().getEntity(entityid) instanceof ServerPlayer) {

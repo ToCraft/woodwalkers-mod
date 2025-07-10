@@ -1,5 +1,6 @@
 package tocraft.walkers.api.model;
 
+import dev.tocraft.craftedcore.util.Maths;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.model.*;
@@ -10,7 +11,6 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import tocraft.craftedcore.util.Maths;
 import tocraft.walkers.api.model.impl.GenericEntityArm;
 import tocraft.walkers.mixin.client.accessor.*;
 

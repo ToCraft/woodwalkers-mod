@@ -1,8 +1,8 @@
 package tocraft.walkers.network.impl;
 
+import dev.tocraft.craftedcore.network.ModernNetworking;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerPlayer;
-import tocraft.craftedcore.network.ModernNetworking;
 import tocraft.walkers.api.platform.ApiLevel;
 import tocraft.walkers.network.NetworkHandler;
 

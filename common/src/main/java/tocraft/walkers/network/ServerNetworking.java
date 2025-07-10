@@ -1,9 +1,9 @@
 package tocraft.walkers.network;
 
+import dev.tocraft.craftedcore.event.common.PlayerEvents;
+import dev.tocraft.craftedcore.network.ModernNetworking;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
-import tocraft.craftedcore.event.common.PlayerEvents;
-import tocraft.craftedcore.network.ModernNetworking;
 import tocraft.walkers.api.PlayerAbilities;
 import tocraft.walkers.network.impl.SwapPackets;
 import tocraft.walkers.network.impl.SwapVariantPackets;

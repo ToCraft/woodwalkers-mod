@@ -1,5 +1,7 @@
 package tocraft.walkers.eventhandler;
 
+import dev.tocraft.craftedcore.event.common.EntityEvents;
+import dev.tocraft.craftedcore.event.common.PlayerEvents;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.InteractionResult;
@@ -13,8 +15,6 @@ import net.minecraft.world.entity.monster.Zombie;
 import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.ServerLevelAccessor;
-import tocraft.craftedcore.event.common.EntityEvents;
-import tocraft.craftedcore.event.common.PlayerEvents;
 import tocraft.walkers.Walkers;
 import tocraft.walkers.api.FlightHelper;
 import tocraft.walkers.api.PlayerHostility;

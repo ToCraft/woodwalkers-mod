@@ -1,6 +1,6 @@
 package tocraft.walkers.api.data;
 
-import tocraft.craftedcore.registration.SynchronizedReloadListenerRegistry;
+import dev.tocraft.craftedcore.registration.SynchronizedReloadListenerRegistry;
 import tocraft.walkers.Walkers;
 import tocraft.walkers.api.data.abilities.AbilityDataManager;
 import tocraft.walkers.api.data.blacklist.EntityBlacklistDataManager;

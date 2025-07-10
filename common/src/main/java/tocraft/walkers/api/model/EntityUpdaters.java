@@ -5,7 +5,6 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.state.EntityRenderState;
-import net.minecraft.data.worldgen.DimensionTypes;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.util.Mth;
@@ -15,7 +14,6 @@ import net.minecraft.world.entity.animal.Parrot;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.dimension.DimensionType;
 import tocraft.walkers.api.model.impl.AbstractHorseEntityUpdater;
 import tocraft.walkers.api.model.impl.ShulkerEntityUpdater;
 import tocraft.walkers.api.model.impl.SquidEntityUpdater;
@@ -147,27 +145,15 @@ public class EntityUpdaters {
         EntityUpdaters.register(EntityType.CAT, (player, cat) -> cat.setInSittingPose(false));
 
         EntityUpdaters.register(EntityType.HOGLIN, (player, hoglin) -> {
-            if (player.level().dimensionType().piglinSafe()) {
-                hoglin.setImmuneToZombification(true);
-            } else {
-                hoglin.setImmuneToZombification(false);
-            }
+            hoglin.setImmuneToZombification(player.level().dimensionType().piglinSafe());
         });
 
         EntityUpdaters.register(EntityType.PIGLIN, (player, piglin) -> {
-            if (player.level().dimensionType().piglinSafe()) {
-                piglin.setImmuneToZombification(true);
-            } else {
-                piglin.setImmuneToZombification(false);
-            }
+            piglin.setImmuneToZombification(player.level().dimensionType().piglinSafe());
         });
 
         EntityUpdaters.register(EntityType.PIGLIN_BRUTE, (player, piglinBrute) -> {
-            if (player.level().dimensionType().piglinSafe()) {
-                piglinBrute.setImmuneToZombification(true);
-            } else {
-                piglinBrute.setImmuneToZombification(false);
-            }
+            piglinBrute.setImmuneToZombification(player.level().dimensionType().piglinSafe());
         });
     }
 }

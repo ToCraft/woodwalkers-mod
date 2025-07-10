@@ -1,15 +1,15 @@
 package tocraft.walkers;
 
 import com.mojang.blaze3d.platform.InputConstants;
+import dev.tocraft.craftedcore.event.client.ClientPlayerEvents;
+import dev.tocraft.craftedcore.event.client.ClientTickEvents;
+import dev.tocraft.craftedcore.event.client.RenderEvents;
+import dev.tocraft.craftedcore.registration.KeyBindingRegistry;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.KeyMapping;
 import org.jetbrains.annotations.ApiStatus;
 import org.lwjgl.glfw.GLFW;
-import tocraft.craftedcore.event.client.ClientPlayerEvents;
-import tocraft.craftedcore.event.client.ClientTickEvents;
-import tocraft.craftedcore.event.client.RenderEvents;
-import tocraft.craftedcore.registration.KeyBindingRegistry;
 import tocraft.walkers.ability.AbilityOverlayRenderer;
 import tocraft.walkers.api.model.EntityArms;
 import tocraft.walkers.api.model.EntityUpdaters;

@@ -1,8 +1,8 @@
 package tocraft.walkers.eventhandler;
 
+import dev.tocraft.craftedcore.event.common.EntityEvents;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import tocraft.craftedcore.event.common.EntityEvents;
 import tocraft.walkers.api.PlayerShape;
 import tocraft.walkers.traits.TraitRegistry;
 import tocraft.walkers.traits.impl.AquaticTrait;

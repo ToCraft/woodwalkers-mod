@@ -2,6 +2,7 @@ package tocraft.walkers.command;
 
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.tree.LiteralCommandNode;
+import dev.tocraft.craftedcore.event.common.CommandEvents;
 import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
@@ -20,8 +21,9 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.level.storage.TagValueOutput;
 import org.jetbrains.annotations.Nullable;
-import tocraft.craftedcore.event.common.CommandEvents;
+import tocraft.walkers.Walkers;
 import tocraft.walkers.api.PlayerAbilities;
 import tocraft.walkers.api.PlayerShape;
 import tocraft.walkers.api.PlayerShapeChanger;
@@ -57,19 +59,19 @@ public class WalkersCommand {
                         .then(Commands.argument("entity", EntityArgument.entity())
                                 .executes(context -> {
                                     Entity entity = EntityArgument.getEntity(context, "entity");
-                                    CompoundTag nbt = new CompoundTag();
-                                    entity.saveWithoutId(nbt);
+                                    TagValueOutput out = TagValueOutput.createWithContext(Walkers.PROBLEM_REPORTER, context.getSource().registryAccess());
+                                    entity.saveWithoutId(out);
                                     for (ServerPlayer player : EntityArgument.getPlayers(context, "players")) {
                                         change2ndShape(context.getSource(),
                                                 player,
                                                 EntityType.getKey(entity.getType()),
-                                                nbt);
+                                                out.buildResult());
                                     }
 
                                     return 1;
                                 }))
                         .then(Commands.argument("shape", ResourceArgument.resource(ctx, Registries.ENTITY_TYPE))
-                                .suggests(SuggestionProviders.SUMMONABLE_ENTITIES).executes(context -> {
+                                .suggests(SuggestionProviders.cast(SuggestionProviders.SUMMONABLE_ENTITIES)).executes(context -> {
                                     for (ServerPlayer player : EntityArgument.getPlayers(context, "players")) {
                                         change2ndShape(context.getSource(),
                                                 player,
@@ -100,17 +102,17 @@ public class WalkersCommand {
                         .then(Commands.argument("entity", EntityArgument.entity())
                                 .executes(context -> {
                                     Entity entity = EntityArgument.getEntity(context, "entity");
-                                    CompoundTag nbt = new CompoundTag();
-                                    entity.saveWithoutId(nbt);
+                                    TagValueOutput out = TagValueOutput.createWithContext(Walkers.PROBLEM_REPORTER, context.getSource().registryAccess());
+                                    entity.saveWithoutId(out);
                                     for (ServerPlayer player : EntityArgument.getPlayers(context, "players")) {
                                         switchShape(context.getSource(),
                                                 player,
                                                 EntityType.getKey(entity.getType()),
-                                                nbt);
+                                                out.buildResult());
                                     }
                                     return 1;
                                 })).then(Commands.argument("shape", ResourceArgument.resource(ctx, Registries.ENTITY_TYPE))
-                                .suggests(SuggestionProviders.SUMMONABLE_ENTITIES).executes(context -> {
+                                .suggests(SuggestionProviders.cast(SuggestionProviders.SUMMONABLE_ENTITIES)).executes(context -> {
                                     for (ServerPlayer player : EntityArgument.getPlayers(context, "players")) {
                                         switchShape(context.getSource(),
                                                 player,

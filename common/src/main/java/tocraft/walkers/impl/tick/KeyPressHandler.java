@@ -1,5 +1,6 @@
 package tocraft.walkers.impl.tick;
 
+import dev.tocraft.craftedcore.event.client.ClientTickEvents;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
@@ -10,7 +11,6 @@ import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import tocraft.craftedcore.event.client.ClientTickEvents;
 import tocraft.walkers.Walkers;
 import tocraft.walkers.WalkersClient;
 import tocraft.walkers.ability.AbilityRegistry;
@@ -32,7 +32,9 @@ public class KeyPressHandler implements ClientTickEvents.Client {
     @Override
     public void tick(@NotNull Minecraft client) {
         if (client.player != null) {
-            if (WalkersClient.ABILITY_KEY.consumeClick()) handleAbilityKey(client);
+            if (WalkersClient.ABILITY_KEY.consumeClick()) {
+                handleAbilityKey(client);
+            }
 
             if (WalkersClient.TRANSFORM_KEY.consumeClick()) {
                 if (ApiLevel.getCurrentLevel().canMorph) {

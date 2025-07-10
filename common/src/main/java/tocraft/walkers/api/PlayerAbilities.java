@@ -1,5 +1,6 @@
 package tocraft.walkers.api;
 
+import dev.tocraft.craftedcore.network.ModernNetworking;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionResult;
@@ -7,7 +8,6 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
-import tocraft.craftedcore.network.ModernNetworking;
 import tocraft.walkers.ability.AbilityRegistry;
 import tocraft.walkers.ability.ShapeAbility;
 import tocraft.walkers.api.events.ShapeEvents;

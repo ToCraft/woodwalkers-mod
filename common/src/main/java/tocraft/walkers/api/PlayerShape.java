@@ -1,5 +1,6 @@
 package tocraft.walkers.api;
 
+import dev.tocraft.craftedcore.network.ModernNetworking;
 import net.minecraft.core.UUIDUtil;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerPlayer;
@@ -10,7 +11,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.storage.TagValueOutput;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
-import tocraft.craftedcore.network.ModernNetworking;
 import tocraft.walkers.Walkers;
 import tocraft.walkers.api.blacklist.EntityBlacklist;
 import tocraft.walkers.api.events.ShapeEvents;

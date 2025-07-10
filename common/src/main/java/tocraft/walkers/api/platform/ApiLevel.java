@@ -1,8 +1,8 @@
 package tocraft.walkers.api.platform;
 
+import dev.tocraft.craftedcore.event.Event;
+import dev.tocraft.craftedcore.event.EventFactory;
 import org.jetbrains.annotations.Nullable;
-import tocraft.craftedcore.event.Event;
-import tocraft.craftedcore.event.EventFactory;
 
 @SuppressWarnings("unused")
 public enum ApiLevel {

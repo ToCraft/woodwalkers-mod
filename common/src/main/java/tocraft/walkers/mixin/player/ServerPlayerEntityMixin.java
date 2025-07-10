@@ -1,7 +1,6 @@
 package tocraft.walkers.mixin.player;
 
 import com.mojang.authlib.GameProfile;
-import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.player.Player;
@@ -17,8 +16,9 @@ import tocraft.walkers.api.PlayerShapeChanger;
 @SuppressWarnings({"ConstantValue", "RedundantCast", "DataFlowIssue"})
 @Mixin(ServerPlayer.class)
 public abstract class ServerPlayerEntityMixin extends Player {
-    public ServerPlayerEntityMixin(Level world, BlockPos pos, float yaw, GameProfile gameProfile) {
-        super(world, pos, yaw, gameProfile);
+
+    public ServerPlayerEntityMixin(Level level, GameProfile gameProfile) {
+        super(level, gameProfile);
     }
 
     @Inject(method = "die", at = @At("HEAD"))

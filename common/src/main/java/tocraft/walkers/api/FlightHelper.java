@@ -1,10 +1,10 @@
 package tocraft.walkers.api;
 
+import dev.tocraft.craftedcore.event.Event;
+import dev.tocraft.craftedcore.event.EventFactory;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
-import tocraft.craftedcore.event.Event;
-import tocraft.craftedcore.event.EventFactory;
 import tocraft.walkers.Walkers;
 
 @FunctionalInterface

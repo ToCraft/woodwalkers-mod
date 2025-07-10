@@ -1,13 +1,11 @@
 package tocraft.walkers.api.platform;
 
-import net.minecraft.world.entity.EquipmentSlot;
-import tocraft.craftedcore.config.Config;
-import tocraft.craftedcore.config.annotions.Comment;
-import tocraft.craftedcore.config.annotions.Synchronize;
+import dev.tocraft.craftedcore.config.Config;
+import dev.tocraft.craftedcore.config.annotions.Comment;
+import dev.tocraft.craftedcore.config.annotions.Synchronize;
 import tocraft.walkers.Walkers;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 @SuppressWarnings("CanBeFinal")
 public class WalkersConfig implements Config {

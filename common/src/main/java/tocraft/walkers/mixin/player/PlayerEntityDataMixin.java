@@ -13,9 +13,9 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.animal.horse.AbstractHorse;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.storage.TagValueInput;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
@@ -78,7 +78,7 @@ public abstract class PlayerEntityDataMixin extends LivingEntity implements Play
         CompoundTag id = new CompoundTag();
         if (walkers$unlocked != null)
             id = walkers$unlocked.writeCompound();
-        out.put("UnlockedShape", id);
+        out.store("UnlockedShape", CompoundTag.CODEC, id);
 
         // Abilities
         out.putInt(ABILITY_COOLDOWN_KEY, walkers$abilityCooldown);
@@ -87,24 +87,22 @@ public abstract class PlayerEntityDataMixin extends LivingEntity implements Play
         out.putInt("RemainingHostilityTime", walkers$remainingTime);
 
         // Current Walkers
-        out.put("CurrentShape", walkers$writeCurrentShape(new CompoundTag()));
+        walkers$writeCurrentShape(out.child("CurrentShape"));
     }
 
     @Unique
-    private CompoundTag walkers$writeCurrentShape(CompoundTag tag) {
-        CompoundTag entityTag = new CompoundTag();
+    private void walkers$writeCurrentShape(@NotNull ValueOutput out) {
+        ValueOutput shapeOut = out.child("EntityData");
 
         // serialize current shapeAttackDamage data to tag if it exists
         if (walkers$shape != null) {
-            walkers$shape.saveWithoutId(entityTag);
+            walkers$shape.saveWithoutId(shapeOut);
         }
 
         // put entity type ID under the key "id", or "minecraft:empty" if no shape is
         // equipped (or the shape entity type is invalid)
-        tag.putString("id",
+        out.putString("id",
                 walkers$shape == null ? "minecraft:empty" : EntityType.getKey(walkers$shape.getType()).toString());
-        tag.put("EntityData", entityTag);
-        return tag;
     }
 
     @Unique

@@ -1,11 +1,11 @@
 package tocraft.walkers.screen.hud;
 
+import dev.tocraft.craftedcore.event.client.RenderEvents;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.Nullable;
-import tocraft.craftedcore.event.client.RenderEvents;
 import tocraft.walkers.api.PlayerShape;
 import tocraft.walkers.traits.TraitRegistry;
 import tocraft.walkers.traits.impl.AttackForHealthTrait;

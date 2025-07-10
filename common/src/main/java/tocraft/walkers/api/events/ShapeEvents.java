@@ -1,12 +1,12 @@
 package tocraft.walkers.api.events;
 
+import dev.tocraft.craftedcore.event.Event;
+import dev.tocraft.craftedcore.event.EventFactory;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.Nullable;
-import tocraft.craftedcore.event.Event;
-import tocraft.craftedcore.event.EventFactory;
 import tocraft.walkers.ability.ShapeAbility;
 import tocraft.walkers.api.variant.ShapeType;
 

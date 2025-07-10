@@ -2,6 +2,7 @@ package tocraft.walkers.mixin.client;
 
 import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.vertex.PoseStack;
+import dev.tocraft.craftedcore.util.Maths;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
@@ -32,7 +33,6 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import tocraft.craftedcore.util.Maths;
 import tocraft.walkers.Walkers;
 import tocraft.walkers.api.PlayerShape;
 import tocraft.walkers.api.model.ArmRenderingManipulator;
@@ -73,7 +73,7 @@ public abstract class PlayerEntityRendererMixin extends LivingEntityRenderer<Abs
         shape.z = player.z;
         shape.ageInTicks = player.ageInTicks;
         shape.passengerOffset = player.passengerOffset;
-        shape.leashState = player.leashState;
+        shape.leashStates = player.leashStates;
 
         if (shape instanceof LivingEntityRenderState livingState) {
             livingState.pose = player.pose;

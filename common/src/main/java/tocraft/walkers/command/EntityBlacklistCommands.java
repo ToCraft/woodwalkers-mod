@@ -18,14 +18,14 @@ public class EntityBlacklistCommands {
         LiteralCommandNode<CommandSourceStack> rootNode = Commands.literal("entityBlacklist").build();
 
         LiteralCommandNode<CommandSourceStack> addToList = Commands.literal("add")
-                .then(Commands.argument("entity", ResourceArgument.resource(ctx, Registries.ENTITY_TYPE)).suggests(SuggestionProviders.SUMMONABLE_ENTITIES)
+                .then(Commands.argument("entity", ResourceArgument.resource(ctx, Registries.ENTITY_TYPE)).suggests(SuggestionProviders.cast(SuggestionProviders.SUMMONABLE_ENTITIES))
                         .executes(context -> {
                             addToList(context.getSource(), ResourceArgument.getSummonableEntityType(context, "entity").key().location());
                             return 1;
                         }))
                 .build();
         LiteralCommandNode<CommandSourceStack> removeFromList = Commands.literal("remove")
-                .then(Commands.argument("entity", ResourceArgument.resource(ctx, Registries.ENTITY_TYPE)).suggests(SuggestionProviders.SUMMONABLE_ENTITIES)
+                .then(Commands.argument("entity", ResourceArgument.resource(ctx, Registries.ENTITY_TYPE)).suggests(SuggestionProviders.cast(SuggestionProviders.SUMMONABLE_ENTITIES))
                         .executes(context -> {
                             removeFromList(context.getSource(), ResourceArgument.getSummonableEntityType(context, "entity").key().location());
                             return 1;

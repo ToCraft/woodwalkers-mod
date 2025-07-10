@@ -54,6 +54,7 @@ public class GuardianAbility<T extends Guardian> extends ShapeAbility<T> {
             }
         }
     }
+
     @Override
     public Item getIcon() {
         return Items.HEART_OF_THE_SEA;

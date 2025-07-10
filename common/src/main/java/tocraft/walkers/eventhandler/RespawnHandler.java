@@ -1,7 +1,7 @@
 package tocraft.walkers.eventhandler;
 
+import dev.tocraft.craftedcore.event.common.PlayerEvents;
 import net.minecraft.server.level.ServerPlayer;
-import tocraft.craftedcore.event.common.PlayerEvents;
 import tocraft.walkers.api.PlayerShapeChanger;
 import tocraft.walkers.impl.PlayerDataProvider;
 

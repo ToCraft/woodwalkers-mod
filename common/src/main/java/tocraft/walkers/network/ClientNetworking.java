@@ -1,5 +1,8 @@
 package tocraft.walkers.network;
 
+import dev.tocraft.craftedcore.client.CraftedCoreClient;
+import dev.tocraft.craftedcore.network.ModernNetworking;
+import dev.tocraft.craftedcore.network.client.ClientNetworking.ApplicablePacket;
 import net.minecraft.core.UUIDUtil;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.EntitySpawnReason;
@@ -9,9 +12,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.storage.TagValueInput;
 import net.minecraft.world.level.storage.ValueInput;
 import org.jetbrains.annotations.Nullable;
-import tocraft.craftedcore.client.CraftedCoreClient;
-import tocraft.craftedcore.network.ModernNetworking;
-import tocraft.craftedcore.network.client.ClientNetworking.ApplicablePacket;
 import tocraft.walkers.Walkers;
 import tocraft.walkers.impl.PlayerDataProvider;
 import tocraft.walkers.network.impl.SyncApiLevelPackets;
