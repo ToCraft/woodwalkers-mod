@@ -1,3 +1,10 @@
+walkers 7.0
+================
+- port to 1.21.7
+- refactor code
+- remove multi-version structure
+- improve squid animation
+
 walkers 6.6
 ================
 - fix crash on NeoForge 1.21.5

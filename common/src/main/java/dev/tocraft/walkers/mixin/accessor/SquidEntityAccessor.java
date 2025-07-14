@@ -8,14 +8,8 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 public interface SquidEntityAccessor {
 
     @Accessor
-    float getRotateSpeed();
+    float getTentacleSpeed();
 
     @Accessor
-    void setRotateSpeed(float rotateSpeed);
-
-    @Accessor
-    float getSpeed();
-
-    @Accessor
-    void setSpeed(float speed);
+    void setTentacleSpeed(float tentacleSpeed);
 }
