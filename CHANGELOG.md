@@ -6,6 +6,7 @@ walkers 7.0
 - improve squid animation
 - improve rendering traits in screens
 - **change variant menu behaviour**
+- add guide for the variant menu
 
 walkers 6.6
 ================

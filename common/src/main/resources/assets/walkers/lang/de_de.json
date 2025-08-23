@@ -26,5 +26,6 @@
   "walkers.entityBlacklist.list": "%s ist gelistet.",
   "walkers.entityBlacklist.isEmpty": "Die Entity-Blacklist ist leer.",
   "walkers.entityBlacklist.clear": "Die Entity-Blacklist wurde gelöscht.",
-  "walkers.feature_not_available": "Diese Funktion wurde von einem Addon überschrieben."
+  "walkers.feature_not_available": "Diese Funktion wurde von einem Addon überschrieben.",
+  "walkers.variants_menu_guide": "Wechsle die Variante per scrollen, akzeptiere mit '%s'"
 }

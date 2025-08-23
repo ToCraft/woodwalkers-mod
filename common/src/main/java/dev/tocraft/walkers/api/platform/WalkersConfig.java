@@ -160,6 +160,8 @@ public class WalkersConfig implements Config {
             put("minecraft:wolf", List.of("head", "legs", "feet", "offhand"));
         }
     };
+    @Comment("Show info on how to variants menu works.")
+    public boolean show_variants_menu_guide = true;
 
     @Override
     public String getName() {

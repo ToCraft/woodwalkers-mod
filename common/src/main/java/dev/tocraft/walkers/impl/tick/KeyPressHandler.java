@@ -52,6 +52,12 @@ public class KeyPressHandler implements ClientTickEvents.Client {
                         if (WalkersClient.isRenderingVariantsMenu) {
                             SwapVariantPackets.sendSwapRequest(shapeType.getVariantData() + WalkersClient.variantOffset);
                             VariantMenu.clearEntities();
+                        } else if (Walkers.CONFIG.show_variants_menu_guide) {
+                            client.player.displayClientMessage(Component.translatable("walkers.variants_menu_guide", WalkersClient.VARIANTS_MENU_KEY.getTranslatedKeyMessage()), true);
+                            Walkers.CONFIG.show_variants_menu_guide = false;
+                            if (client.isSingleplayer()) {
+                                Walkers.CONFIG.save();
+                            }
                         }
                         WalkersClient.variantOffset = 0;
                         WalkersClient.isRenderingVariantsMenu = !WalkersClient.isRenderingVariantsMenu;

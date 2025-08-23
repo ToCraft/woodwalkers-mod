@@ -27,5 +27,6 @@
   "walkers.entityBlacklist.isEmpty": "The entity blacklist is empty.",
   "walkers.entityBlacklist.clear": "The entity blacklist was cleared.",
   "walkers.variants.minecraft.snow_golem.0": "Headless %s",
-  "walkers.feature_not_available": "This feature was overwritten by an addon."
+  "walkers.feature_not_available": "This feature was overwritten by an addon.",
+  "walkers.variants_menu_guide": "Cycle variants by scrolling, select with '%s'"
 }
