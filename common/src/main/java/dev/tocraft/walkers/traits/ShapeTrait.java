@@ -25,7 +25,7 @@ public abstract class ShapeTrait<E extends LivingEntity> {
     }
 
     @Environment(EnvType.CLIENT)
-    public void renderIcon(RenderPipeline pipeline, GuiGraphics graphics, int x, int y, int width, int height) {
-
+    public boolean renderIcon(RenderPipeline pipeline, GuiGraphics graphics, int x, int y, int width, int height) {
+        return false;
     }
 }

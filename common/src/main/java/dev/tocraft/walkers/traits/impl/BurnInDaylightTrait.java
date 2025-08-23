@@ -44,8 +44,9 @@ public class BurnInDaylightTrait<E extends LivingEntity> extends ShapeTrait<E> {
 
     @Environment(EnvType.CLIENT)
     @Override
-    public void renderIcon(RenderPipeline pipeline, @NotNull GuiGraphics graphics, int x, int y, int width, int height) {
+    public boolean renderIcon(RenderPipeline pipeline, @NotNull GuiGraphics graphics, int x, int y, int width, int height) {
         TextureAtlasSprite sprite = Minecraft.getInstance().getBlockRenderer().getBlockModelShaper().getBlockModel(Blocks.FIRE.defaultBlockState()).particleIcon();
         graphics.blitSprite(pipeline, sprite, x, y, width, height);
+        return true;
     }
 }

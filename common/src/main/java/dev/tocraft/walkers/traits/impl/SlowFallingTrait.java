@@ -36,7 +36,8 @@ public class SlowFallingTrait<E extends LivingEntity> extends ShapeTrait<E> {
 
     @Environment(EnvType.CLIENT)
     @Override
-    public void renderIcon(RenderPipeline pipeline, @NotNull GuiGraphics graphics, int x, int y, int width, int height) {
+    public boolean renderIcon(RenderPipeline pipeline, @NotNull GuiGraphics graphics, int x, int y, int width, int height) {
         graphics.blitSprite(RenderPipelines.GUI_TEXTURED, Gui.getMobEffectSprite(MobEffects.SLOW_FALLING), x, y, width, height);
+        return true;
     }
 }

@@ -35,8 +35,10 @@ public class CantFreezeTrait<E extends LivingEntity> extends ShapeTrait<E> {
 
     @Environment(EnvType.CLIENT)
     @Override
-    public void renderIcon(RenderPipeline pipeline, @NotNull GuiGraphics graphics, int x, int y, int width, int height) {
+    public boolean renderIcon(RenderPipeline pipeline, @NotNull GuiGraphics graphics, int x, int y, int width, int height) {
         ItemStack stack = new ItemStack(Items.PACKED_ICE);
         graphics.renderItem(stack, x, y);
+        return true;
     }
 }
+
