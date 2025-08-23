@@ -2,12 +2,6 @@ plugins {
     id("dev.tocraft.modmaster.root") version("single-1.7")
 }
 
-subprojects {
-    repositories {
-        mavenLocal()
-    }
-}
-
 ext {
     val modMeta = mutableMapOf<String, Any>()
     modMeta["minecraft_version"] = project.properties["minecraft"] as String

@@ -1,9 +1,11 @@
 walkers 7.0
 ================
-- port to 1.21.7
+- port to 1.21.7 & 1.21.8
 - refactor code
 - remove multi-version structure
 - improve squid animation
+- improve rendering traits in screens
+- **change variant menu behaviour**
 
 walkers 6.6
 ================
