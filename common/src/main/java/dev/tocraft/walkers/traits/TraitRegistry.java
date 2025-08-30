@@ -104,6 +104,7 @@ public class TraitRegistry {
         registerByClass(WitherBoss.class, new FlyingTrait<>());
         registerByClass(Ghast.class, new FlyingTrait<>());
         registerByClass(HappyGhast.class, new FlyingTrait<>());
+registerByClass(Phantom.class, new FlyingTrait<>());
         // wolf prey
         registerByClass(Bat.class, (PreyTrait<Bat>) PreyTrait.ofHunterClass(Wolf.class));
         registerByClass(Fox.class, (PreyTrait<Fox>) PreyTrait.ofHunterClass(Wolf.class));
