@@ -1,3 +1,7 @@
+walkers 7.1.0
+================
+- fix phantoms flying trait
+
 walkers 7.0
 ================
 - port to 1.21.7 & 1.21.8
