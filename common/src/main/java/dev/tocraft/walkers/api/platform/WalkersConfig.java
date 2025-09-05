@@ -10,6 +10,8 @@ import java.util.*;
 @SuppressWarnings("CanBeFinal")
 public class WalkersConfig implements Config {
 
+    @Comment("ONLY use if you know what you're doing! This OVERWRITES the serverside API level and CAN cause mod addons to stop working properly! -1 - do not overwrite, 0 - api only, 1 - unlocking only, 2 - morphing only, 3 - morphing & variants menu only, 4 - everything")
+    public int apiLevel = -1; // no config synchronization because it is synced via the Api Level sync packet
     @Comment("Whether a player's equipped shape is revoked on death.")
     public boolean revoke2ndShapeOnDeath = false;
     @Comment("Whether shapes equip the items (swords, items, tools) held by the underlying player.")

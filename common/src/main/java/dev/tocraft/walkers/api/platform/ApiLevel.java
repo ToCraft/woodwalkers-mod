@@ -2,6 +2,7 @@ package dev.tocraft.walkers.api.platform;
 
 import dev.tocraft.craftedcore.event.Event;
 import dev.tocraft.craftedcore.event.EventFactory;
+import dev.tocraft.walkers.Walkers;
 import org.jetbrains.annotations.Nullable;
 
 @SuppressWarnings("unused")
@@ -43,6 +44,13 @@ public enum ApiLevel {
     public static void setApiLevel(ApiLevel apiLevel) {
         if (ApiLevel.getCurrentLevel().compareTo(apiLevel) > 0) {
             ApiLevel.ON_API_LEVEL_CHANGE_EVENT.invoke().onApiLevelChange(apiLevel);
+        }
+    }
+
+    public static void readConfig() {
+        int i = Walkers.CONFIG.apiLevel;
+        if (i >= 0 && i < ApiLevel.values().length) {
+            setApiLevel(ApiLevel.values()[i]);
         }
     }
 

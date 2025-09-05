@@ -95,13 +95,13 @@ public class KeyPressHandler implements ClientTickEvents.Client {
     @SuppressWarnings("ConstantConditions")
     private void handleUnlockKey(@NotNull Minecraft client) {
         // check if player is blacklisted
-        if (client.player != null && Walkers.isPlayerBlacklisted(client.player.getUUID()) && Walkers.CONFIG.blacklistPreventsUnlocking) {
+        if (Walkers.isPlayerBlacklisted(client.player.getUUID()) && Walkers.CONFIG.blacklistPreventsUnlocking) {
             client.player.displayClientMessage(Component.translatable("walkers.player_blacklisted"), true);
             return;
         }
 
         HitResult hit = client.hitResult;
-        if (client.player != null && (((PlayerDataProvider) client.player).walkers$get2ndShape() == null || Walkers.CONFIG.unlockOverridesCurrentShape) && hit instanceof EntityHitResult) {
+        if ((((PlayerDataProvider) client.player).walkers$get2ndShape() == null || Walkers.CONFIG.unlockOverridesCurrentShape) && hit instanceof EntityHitResult) {
             Entity entityHit = ((EntityHitResult) hit).getEntity();
             if (entityHit instanceof LivingEntity living) {
                 @Nullable ShapeType<?> type = ShapeType.from(living);
