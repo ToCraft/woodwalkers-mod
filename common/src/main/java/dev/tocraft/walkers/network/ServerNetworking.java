@@ -23,7 +23,11 @@ public class ServerNetworking implements NetworkHandler {
         ModernNetworking.registerType(UNLOCK_SYNC);
         ModernNetworking.registerType(SYNC_API_LEVEL);
 
-        PlayerEvents.PLAYER_JOIN.register(SyncApiLevelPackets::sendSyncPacket);
+        // sync API level and 2nd Shape
+        PlayerEvents.PLAYER_JOIN.register(player -> {
+            SyncApiLevelPackets.sendSyncPacket(player);
+            UnlockPackets.sendSyncPacket(player);
+        });
     }
 
     @SuppressWarnings("ConstantConditions")

@@ -2,6 +2,7 @@ walkers 7.1.0
 ================
 - fix phantoms flying trait
 - add config option to overwrite the API Level
+- fix unlocking messages still displayed with 2nd shape
 
 walkers 7.0
 ================

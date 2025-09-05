@@ -63,9 +63,11 @@ public class UnlockPackets {
                         // set 2nd shape
                         boolean result = PlayerShapeChanger.change2ndShape((ServerPlayer) context.getPlayer(), type);
                         // update Player
-                        if (result)
+                        if (result) {
+                            sendSyncPacket((ServerPlayer) context.getPlayer());
                             PlayerShape.updateShapes((ServerPlayer) context.getPlayer(),
                                     type.create(context.getPlayer().level(), context.getPlayer()));
+                        }
                     }
                 });
             } else {
