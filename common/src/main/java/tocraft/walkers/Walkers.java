@@ -22,6 +22,7 @@ import tocraft.craftedcore.VIPs;
 import tocraft.craftedcore.config.ConfigLoader;
 import tocraft.craftedcore.event.common.EntityEvents;
 import tocraft.craftedcore.event.common.PlayerEvents;
+import tocraft.craftedcore.event.common.ServerLevelEvents;
 import tocraft.craftedcore.patched.CEntity;
 import tocraft.craftedcore.patched.CRegistries;
 import tocraft.craftedcore.patched.Identifier;
@@ -31,6 +32,7 @@ import tocraft.walkers.ability.AbilityRegistry;
 import tocraft.walkers.api.PlayerShape;
 import tocraft.walkers.api.WalkersTickHandlers;
 import tocraft.walkers.api.data.DataManager;
+import tocraft.walkers.api.platform.ApiLevel;
 import tocraft.walkers.api.platform.WalkersConfig;
 import tocraft.walkers.command.WalkersCommand;
 import tocraft.walkers.eventhandler.LivingBreatheHandler;
@@ -82,6 +84,8 @@ public class Walkers {
 
         PlayerEvents.PLAYER_RESPAWN.register(new RespawnHandler());
         EntityEvents.LIVING_BREATHE.register(new LivingBreatheHandler());
+
+        ServerLevelEvents.LEVEL_LOAD.register(level -> ApiLevel.readConfig());
     }
 
     public static void registerJoinSyncPacket() {

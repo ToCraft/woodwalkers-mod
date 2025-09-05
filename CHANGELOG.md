@@ -1,3 +1,7 @@
+walkers 5.8.6
+================
+- add config option to overwrite the API Level
+
 walkers 5.8.5
 ================
 - remove data files for versions before 1.20.1
