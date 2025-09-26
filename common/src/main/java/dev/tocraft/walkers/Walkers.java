@@ -29,6 +29,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.ProblemReporter;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.animal.FlyingAnimal;
+import net.minecraft.world.level.GameType;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -114,7 +115,11 @@ public class Walkers {
     }
 
     public static boolean hasFlyingPermissions(@NotNull ServerPlayer player) {
-        if (player.isCreative()) {
+        return hasFlyingPermissions(player, player.gameMode.getGameModeForPlayer());
+    }
+
+    public static boolean hasFlyingPermissions(@NotNull ServerPlayer player, @NotNull GameType gameMode) {
+        if (gameMode.isCreative()) {
             return true;
         }
 
