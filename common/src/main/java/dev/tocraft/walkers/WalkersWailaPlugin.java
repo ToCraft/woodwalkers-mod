@@ -2,11 +2,14 @@ package dev.tocraft.walkers;
 
 import dev.tocraft.walkers.api.PlayerShape;
 import mcp.mobius.waila.api.*;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.NotNull;
 
 @SuppressWarnings("unused")
+@Environment(EnvType.CLIENT)
 public class WalkersWailaPlugin implements IWailaClientPlugin {
 
     @Override
