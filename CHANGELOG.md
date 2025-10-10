@@ -2,6 +2,7 @@ walkers 7.2.0
 ================
 - fix the Permanent flight bug/Incompatibility with Essential Commands (by FugLong)
 - fix concurrent exception with AbilityRegistry
+- support WTHIT and prob. some other WAILA forks, too
 
 walkers 7.1.0
 ================

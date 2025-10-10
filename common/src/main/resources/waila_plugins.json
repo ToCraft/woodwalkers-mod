@@ -1,0 +1,8 @@
+{
+  "walkers:plugin": {
+    "entrypoints" : {
+      "client": "dev.tocraft.walkers.WalkersWailaPlugin"
+    },
+    "side": "client"
+  }
+}
