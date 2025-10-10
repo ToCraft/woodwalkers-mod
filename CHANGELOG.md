@@ -1,3 +1,7 @@
+walkers 6.3.2
+================
+- add a config option to prevent hostile mobs from attacking neutral
+
 walkers 6.3.1
 ================
 - **BACKPORTED VERSION FOR 1.21.2 AND 1.21.4**

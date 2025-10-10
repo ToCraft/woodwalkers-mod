@@ -20,12 +20,14 @@ public class WalkersConfig implements Config {
     public boolean playerCanTriggerHostiles = true;
     @Comment("Whether hostile mobs ignore players with hostile mob shapes.")
     public boolean hostilesIgnoreHostileShapedPlayer = true;
-    @Comment("Whether a hostile mob will stop targeting you after switching to a hostile mob shape.")
-    public boolean hostilesForgetNewHostileShapedPlayer = false;
+    @Comment("Whether hostile mobs ignore players, even if the player shapes into a not-hostile mob. Requires 'hostilesIgnoreHostileShapedPlayer' to be 'true'.")
+    public boolean hostilesIgnoreNotHostileShapedPlayer = false;
+    @Comment("Whether a hostile mob will stop targeting you after switching to a (hostile) mob shape.")
+    public boolean hostilesForgetNewShapedPlayer = false;
     @Comment("hunterAttackAsPreyMorphedPlayer")
     public boolean hunterAttackAsPreyMorphedPlayer = true;
     @Comment("If false, the PreyTrait doesn't cause owned hunter (e.g. tamed wolves) to hunt the player.")
-    public boolean ownedHunterAttackAsPreyMorphedPlayer = false;
+    public boolean ownedHunterAttackAsPreyMorphedPlayer = false; // TODO: check function
     @Comment("Whether Villagers will run from Players morphed as shapes villagers normally run from (Zombies).")
     public boolean villagersRunFrom2ndShapes = true;
     @Comment("Whether shape sounds take priority over Player Sounds (e.g. Blaze hurt sound when hit).")

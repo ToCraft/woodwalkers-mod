@@ -63,7 +63,7 @@ public abstract class ActiveTargetGoalMixin extends TrackTargetGoalMixin {
 
                     // hostile mobs (besides wither) should not target players morphed as hostile
                     // mobs
-                    else if (!(this.mob instanceof WitherBoss) && shape instanceof Enemy) {
+                    else if (!(this.mob instanceof WitherBoss) && (shape instanceof Enemy || Walkers.CONFIG.hostilesIgnoreNotHostileShapedPlayer)) {
                         // endermen should attack endermites
                         if (this.mob instanceof EnderMan && shape.getType().equals(EntityType.ENDERMITE)) {
                             return;
@@ -85,7 +85,7 @@ public abstract class ActiveTargetGoalMixin extends TrackTargetGoalMixin {
     @Override
     protected void shape_shouldContinue(CallbackInfoReturnable<Boolean> cir) {
         // check cancelling for hostiles
-        if (Walkers.CONFIG.hostilesIgnoreHostileShapedPlayer && Walkers.CONFIG.hostilesForgetNewHostileShapedPlayer
+        if ((Walkers.CONFIG.hostilesIgnoreHostileShapedPlayer) && Walkers.CONFIG.hostilesForgetNewShapedPlayer
                 && this.mob instanceof Enemy && this.target instanceof Player player) {
             LivingEntity shape = PlayerShape.getCurrentShape(player);
 
@@ -109,7 +109,7 @@ public abstract class ActiveTargetGoalMixin extends TrackTargetGoalMixin {
 
                     // hostile mobs (besides wither) should not target players morphed as hostile
                     // mobs
-                    else if (!(this.mob instanceof WitherBoss) && shape instanceof Enemy) {
+                    else if (!(this.mob instanceof WitherBoss) && (shape instanceof Enemy || Walkers.CONFIG.hostilesIgnoreNotHostileShapedPlayer)) {
                         cir.setReturnValue(false);
                     }
                 }
