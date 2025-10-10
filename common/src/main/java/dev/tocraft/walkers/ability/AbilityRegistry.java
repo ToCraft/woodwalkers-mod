@@ -136,13 +136,17 @@ public class AbilityRegistry {
 
         // cache the ability so the latest registered can be used
         ShapeAbility<L> ability = null;
-        for (Map.Entry<Predicate<LivingEntity>, ShapeAbility<?>> entry : specificAbilities.entrySet()) {
+        Set<Map.Entry<Predicate<LivingEntity>, ShapeAbility<?>>> specificAbilities = new LinkedHashSet<>();
+        specificAbilities.addAll(AbilityRegistry.specificAbilities.entrySet());
+        for (Map.Entry<Predicate<LivingEntity>, ShapeAbility<?>> entry : specificAbilities) {
             if (entry.getKey().test(shape)) {
                 ability = (ShapeAbility<L>) entry.getValue();
                 // don't break so it'll access the last registered ability
             }
         }
-        for (Map.Entry<Predicate<LivingEntity>, GenericShapeAbility<?>> entry : genericAbilities.entrySet()) {
+        Set<Map.Entry<Predicate<LivingEntity>, GenericShapeAbility<?>>> genericAbilities = new LinkedHashSet<>();
+        genericAbilities.addAll(AbilityRegistry.genericAbilities.entrySet());
+        for (Map.Entry<Predicate<LivingEntity>, GenericShapeAbility<?>> entry : genericAbilities) {
             if (entry.getKey().test(shape)) {
                 ability = (ShapeAbility<L>) entry.getValue();
                 // don't break so it'll access the last registered ability
