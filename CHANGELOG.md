@@ -4,6 +4,7 @@ walkers 7.2.0
 - fix concurrent exception with AbilityRegistry
 - support WTHIT and prob. some other WAILA forks, too
 - add a config option to prevent hostile mobs from attacking neutral
+- fix snow golem variants, description for villager & villager zombies
 
 walkers 7.1.0
 ================

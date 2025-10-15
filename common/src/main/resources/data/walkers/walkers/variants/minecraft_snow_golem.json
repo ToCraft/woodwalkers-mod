@@ -4,10 +4,10 @@
     "fallback": 1,
     "variants": {
       "0": {
-        "Pumpkin": false
+        "Pumpkin": true
       },
       "1": {
-        "Pumpkin": true
+        "Pumpkin": false
       }
     },
     "names": {
