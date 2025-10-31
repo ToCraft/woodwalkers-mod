@@ -25,7 +25,9 @@ import net.minecraft.world.entity.monster.Phantom;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.player.PlayerModelPart;
 import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.scores.Team;
 import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -48,6 +50,8 @@ import tocraft.walkers.mixin.accessor.LivingEntityAccessor;
 import tocraft.walkers.mixin.client.accessor.LimbAnimatorAccessor;
 //#endif
 import tocraft.walkers.mixin.client.accessor.LivingEntityRendererAccessor;
+
+import java.util.Objects;
 
 @SuppressWarnings({"ALL", "unchecked"})
 @Environment(EnvType.CLIENT)
@@ -159,12 +163,14 @@ public abstract class PlayerEntityRendererMixin extends LivingEntityRenderer<Abs
 
                 // Only render nametags if the server option is true and the entity being
                 // rendered is NOT this player/client
-                if (Walkers.CONFIG.showPlayerNametag && player != Minecraft.getInstance().player) {
-                    //#if MC>=1205
-                    renderNameTag((AbstractClientPlayer) player, player.getDisplayName(), matrixStack, buffer, packedLight, 0);
-                    //#else
-                    //$$ renderNameTag((AbstractClientPlayer) player, player.getDisplayName(), matrixStack, buffer, packedLight);
-                    //#endif
+                if (player != Minecraft.getInstance().player) {
+                    if (walkers$showName(player)) {
+                        //#if MC>=1205
+                        renderNameTag((AbstractClientPlayer) player, player.getDisplayName(), matrixStack, buffer, packedLight, 0);
+                        //#else
+                        //$$ renderNameTag((AbstractClientPlayer) player, player.getDisplayName(), matrixStack, buffer, packedLight);
+                        //#endif
+                    }
                 }
             }
 
@@ -172,6 +178,26 @@ public abstract class PlayerEntityRendererMixin extends LivingEntityRenderer<Abs
         } else {
             return true;
         }
+    }
+    @SuppressWarnings("DataFlowIssue")
+    @Unique
+    private static boolean walkers$showName(@NotNull LivingEntity player) {
+        Team team = player.getTeam();
+        boolean showName = Walkers.CONFIG.showPlayerNametag;
+
+        if (showName && team != null) {
+            Team.Visibility visibility = team.getNameTagVisibility();
+            Team localTeam = Minecraft.getInstance().player.getTeam();
+            boolean sameTeam = Objects.equals(localTeam != null ? localTeam.getName() : null, team.getName());
+
+            if (visibility == Team.Visibility.NEVER ||
+                    (sameTeam && visibility == Team.Visibility.HIDE_FOR_OWN_TEAM) ||
+                    (!sameTeam && visibility == Team.Visibility.HIDE_FOR_OTHER_TEAMS)) {
+
+                showName = false;
+            }
+        }
+        return showName;
     }
 
     @Unique
