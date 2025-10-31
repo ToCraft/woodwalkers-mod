@@ -2,6 +2,7 @@ walkers 6.3.2
 ================
 - add a config option to prevent hostile mobs from attacking neutral
 - add AlexsCaves mobs to flying.json
+- fix showPlayerNametag with Team settings
 
 walkers 6.3.1
 ================
