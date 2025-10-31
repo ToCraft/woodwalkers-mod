@@ -36,6 +36,7 @@ import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.monster.Phantom;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.scores.Team;
 import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
@@ -43,6 +44,8 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+
+import java.util.Objects;
 
 @SuppressWarnings({"rawtypes", "unchecked"})
 @Environment(EnvType.CLIENT)
@@ -181,9 +184,32 @@ public abstract class PlayerEntityRendererMixin extends LivingEntityRenderer<Abs
 
         // Only render nametags if the server option is true and the entity being
         // rendered is NOT this player/client
-        if (Walkers.CONFIG.showPlayerNametag && player != Minecraft.getInstance().player) {
-            shape.setCustomName(player.getCustomName());
+        if (player != Minecraft.getInstance().player) {
+            if (walkers$showName(player)) {
+                shape.setCustomName(player.getCustomName());
+            }
         }
+    }
+
+    @SuppressWarnings("DataFlowIssue")
+    @Unique
+    private static boolean walkers$showName(@NotNull AbstractClientPlayer player) {
+        Team team = player.getTeam();
+        boolean showName = Walkers.CONFIG.showPlayerNametag;
+
+        if (showName && team != null) {
+            Team.Visibility visibility = team.getNameTagVisibility();
+            Team localTeam = Minecraft.getInstance().player.getTeam();
+            boolean sameTeam = Objects.equals(localTeam != null ? localTeam.getName() : null, team.getName());
+
+            if (visibility == Team.Visibility.NEVER ||
+                    (sameTeam && visibility == Team.Visibility.HIDE_FOR_OWN_TEAM) ||
+                    (!sameTeam && visibility == Team.Visibility.HIDE_FOR_OTHER_TEAMS)) {
+
+                showName = false;
+            }
+        }
+        return showName;
     }
 
     @Override

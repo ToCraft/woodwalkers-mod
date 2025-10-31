@@ -6,6 +6,7 @@ walkers 7.2.0
 - add a config option to prevent hostile mobs from attacking neutral
 - fix snow golem variants, description for villager & villager zombies
 - emit particles on morph
+- fix showPlayerNametag with Team settings
 
 walkers 7.1.0
 ================
