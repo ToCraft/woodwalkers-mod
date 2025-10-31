@@ -5,6 +5,7 @@ walkers 7.2.0
 - support WTHIT and prob. some other WAILA forks, too
 - add a config option to prevent hostile mobs from attacking neutral
 - fix snow golem variants, description for villager & villager zombies
+- emit particles on morph
 
 walkers 7.1.0
 ================

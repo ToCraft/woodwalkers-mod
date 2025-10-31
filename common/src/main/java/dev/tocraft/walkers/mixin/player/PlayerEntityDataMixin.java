@@ -1,5 +1,6 @@
 package dev.tocraft.walkers.mixin.player;
 
+import dev.tocraft.craftedcore.event.common.ServerLevelEvents;
 import dev.tocraft.walkers.Walkers;
 import dev.tocraft.walkers.api.FlightHelper;
 import dev.tocraft.walkers.api.PlayerShape;
@@ -10,6 +11,7 @@ import dev.tocraft.walkers.mixin.ThreadedAnvilChunkStorageAccessor;
 import dev.tocraft.walkers.traits.TraitRegistry;
 import dev.tocraft.walkers.traits.impl.RiderTrait;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -273,6 +275,13 @@ public abstract class PlayerEntityDataMixin extends LivingEntity implements Play
                     playerStepHeightAttr.setBaseValue(0.6);
                 }
             }
+        }
+
+        // spawn particles
+        if (Walkers.CONFIG.emit_particles && player.level() instanceof ServerLevel l) {
+            l.sendParticles(ParticleTypes.TOTEM_OF_UNDYING, player.getX(), player.getY() + 1, player.getZ(), 25, .5, 1.0, .5, .5);
+            l.sendParticles(ParticleTypes.PORTAL, player.getX(), player.getY() + 1, player.getZ(), 25, .5, 1.0, .5, .5);
+            l.sendParticles(ParticleTypes.ELECTRIC_SPARK, player.getX(), player.getY() + 1, player.getZ(), 25, .5, 1.0, .5, .5);
         }
 
         // update flight properties on player depending on shape

@@ -166,6 +166,8 @@ public class WalkersConfig implements Config {
     };
     @Comment("Show info on how to variants menu works.")
     public boolean show_variants_menu_guide = true;
+    @Comment("emit particles on morph")
+    public boolean emit_particles = true;
 
     @Override
     public String getName() {
