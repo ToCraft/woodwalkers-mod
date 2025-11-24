@@ -47,4 +47,7 @@ public interface LivingEntityAccessor {
 
     @Accessor
     void setSwimAmountO(float swimAmount);
+
+    @Invoker
+    float callGetJumpPower(float multiplier);
 }

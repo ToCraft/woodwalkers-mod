@@ -19,8 +19,14 @@ public interface AbstractHorseAccessor {
     void setStandAnimO(float standAnimO);
 
     @Accessor
+    float getStandAnim();
+
+    @Accessor
     void setMouthAnim(float mouthAnim);
 
     @Accessor
     void setMouthAnimO(float mouthAnimO);
+
+    @Accessor
+    int getStandCounter();
 }

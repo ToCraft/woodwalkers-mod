@@ -1,6 +1,5 @@
 package dev.tocraft.walkers.mixin.player;
 
-import dev.tocraft.craftedcore.event.common.ServerLevelEvents;
 import dev.tocraft.walkers.Walkers;
 import dev.tocraft.walkers.api.FlightHelper;
 import dev.tocraft.walkers.api.PlayerShape;

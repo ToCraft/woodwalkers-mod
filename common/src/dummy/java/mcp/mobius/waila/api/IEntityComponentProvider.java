@@ -10,9 +10,7 @@ public interface IEntityComponentProvider {
      *
      * @param accessor contains most of the relevant information about the current environment
      * @param config   current plugin configuration
-     *
      * @return {@code null} if override is not required, an {@link Entity} otherwise
-     *
      * @see IClientRegistrar#override(IEntityComponentProvider, Class)
      */
     @Nullable

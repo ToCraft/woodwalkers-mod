@@ -1,6 +1,5 @@
 package dev.tocraft.walkers.api.model.impl;
 
-import com.mojang.logging.LogUtils;
 import dev.tocraft.walkers.api.model.EntityUpdater;
 import dev.tocraft.walkers.mixin.accessor.SquidEntityAccessor;
 import net.fabricmc.api.EnvType;
@@ -30,12 +29,12 @@ public class SquidEntityUpdater<S extends Squid> implements EntityUpdater<S> {
         }
         if (player.isInWater()) {
             Vec3 playerDeltaMovement = player.getDeltaMovement();
-            squid.yBodyRot = squid.yBodyRot + (-((float)Mth.atan2(playerDeltaMovement.x, playerDeltaMovement.z)) * (180.0F / (float)Math.PI) - squid.yBodyRot) * 0.1F;
+            squid.yBodyRot = squid.yBodyRot + (-((float) Mth.atan2(playerDeltaMovement.x, playerDeltaMovement.z)) * (180.0F / (float) Math.PI) - squid.yBodyRot) * 0.1F;
             squid.xBodyRot = Mth.approachDegrees(squid.xBodyRot, -player.getXRot() - 90F, 10.0F);
 
         } else {
             squid.tentacleAngle = Mth.abs(Mth.sin(squid.tentacleMovement)) * (float) Math.PI * 0.25F;
-            squid.xBodyRot = Mth.approachDegrees(squid.xBodyRot, - 90.0F, 2.0F);
+            squid.xBodyRot = Mth.approachDegrees(squid.xBodyRot, -90.0F, 2.0F);
         }
     }
 }

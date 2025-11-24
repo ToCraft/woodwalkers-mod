@@ -7,6 +7,7 @@ walkers 7.2.0
 - fix snow golem variants, description for villager & villager zombies
 - emit particles on morph
 - fix showPlayerNametag with Team settings
+- add horse jump & jump animation
 
 walkers 7.1.0
 ================

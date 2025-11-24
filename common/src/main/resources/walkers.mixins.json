@@ -4,6 +4,7 @@
   "package": "dev.tocraft.walkers.mixin",
   "compatibilityLevel": "JAVA_21",
   "mixins": [
+    "AbstractHorseMixin",
     "ActiveTargetGoalMixin",
     "AvoidEntityGoalMixin",
     "AxolotlAttackablesSensorMixin",
@@ -75,6 +76,7 @@
     "player.ServerPlayerEntityMixin"
   ],
   "client": [
+    "client.LocalPlayerMixin",
     "client.MouseHandlerMixin",
     "client.PlayerEntityRendererMixin",
     "client.PlayerRenderStateMixin",
