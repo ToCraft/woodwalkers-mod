@@ -195,6 +195,13 @@ public abstract class PlayerEntityDataMixin extends LivingEntity implements Play
         AttributeInstance armorAttribute = player.getAttribute(Attributes.ARMOR);
         AttributeInstance armorToughnessAttribute = player.getAttribute(Attributes.ARMOR_TOUGHNESS);
 
+        // spawn particles
+        if (Walkers.CONFIG.emit_particles && this.walkers$shape != shape && player.level() instanceof ServerLevel l) {
+            l.sendParticles(ParticleTypes.TOTEM_OF_UNDYING, player.getX(), player.getY() + 1, player.getZ(), 25, .5, 1.0, .5, .5);
+            l.sendParticles(ParticleTypes.PORTAL, player.getX(), player.getY() + 1, player.getZ(), 25, .5, 1.0, .5, .5);
+            l.sendParticles(ParticleTypes.ELECTRIC_SPARK, player.getX(), player.getY() + 1, player.getZ(), 25, .5, 1.0, .5, .5);
+        }
+
         this.walkers$shape = shape;
 
         // shape is valid and scaling health is on; set entity's max health and current
@@ -275,13 +282,6 @@ public abstract class PlayerEntityDataMixin extends LivingEntity implements Play
                     playerStepHeightAttr.setBaseValue(0.6);
                 }
             }
-        }
-
-        // spawn particles
-        if (Walkers.CONFIG.emit_particles && player.level() instanceof ServerLevel l) {
-            l.sendParticles(ParticleTypes.TOTEM_OF_UNDYING, player.getX(), player.getY() + 1, player.getZ(), 25, .5, 1.0, .5, .5);
-            l.sendParticles(ParticleTypes.PORTAL, player.getX(), player.getY() + 1, player.getZ(), 25, .5, 1.0, .5, .5);
-            l.sendParticles(ParticleTypes.ELECTRIC_SPARK, player.getX(), player.getY() + 1, player.getZ(), 25, .5, 1.0, .5, .5);
         }
 
         // update flight properties on player depending on shape
