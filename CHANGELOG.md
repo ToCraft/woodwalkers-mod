@@ -8,6 +8,7 @@ walkers 7.2.0
 - emit particles on morph
 - fix showPlayerNametag with Team settings
 - add horse jump & jump animation
+- make horses run faster
 
 walkers 7.1.0
 ================
