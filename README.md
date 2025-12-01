@@ -1,3 +1,8 @@
+> [!IMPORTANT]  
+> Due to changes in Mojang's code, this mod **will not support Minecraft 1.21.9 or newer**. If you are a developer with skills in Minecraft modding, you are absolutely welcome to port this mod and create a PR.
+
+---
+
 [![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/ToCraft/woodwalkers-mod/build.yml?style=for-the-badge)](https://github.com/ToCraft/woodwalkers-mod/actions/workflows/build.yml)
 [![Maven metadata URL](https://img.shields.io/maven-metadata/v?metadataUrl=https%3A%2F%2Fmaven.tocraft.dev%2Fpublic%2Fdev%2Ftocraft%2Fwalkers%2Fmaven-metadata.xml&style=for-the-badge&label=Woodwalkers)](https://maven.tocraft.dev/#/public/dev/tocraft/walkers)
 [![Patreon](https://img.shields.io/badge/Patreon-F96854?style=for-the-badge&logo=patreon&logoColor=white)](https://patreon.com/ToCraft)
