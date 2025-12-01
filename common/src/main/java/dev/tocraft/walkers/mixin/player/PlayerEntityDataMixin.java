@@ -52,6 +52,9 @@ public abstract class PlayerEntityDataMixin extends LivingEntity implements Play
     @Nullable
     private LivingEntity walkers$shape = null;
 
+    @Unique
+    private float walkers$normalHealth = -1;
+
     private PlayerEntityDataMixin(EntityType<? extends LivingEntity> type, Level world) {
         super(type, world);
     }
@@ -68,6 +71,9 @@ public abstract class PlayerEntityDataMixin extends LivingEntity implements Play
 
         // Hostility
         walkers$remainingTime = in.getInt("RemainingHostilityTime").orElse(0);
+
+        // Health
+        walkers$normalHealth = in.getFloatOr("walkersHealth", -1);
 
         // Current Walkers
         walkers$readCurrentShape(in.childOrEmpty("CurrentShape"));
@@ -86,6 +92,9 @@ public abstract class PlayerEntityDataMixin extends LivingEntity implements Play
 
         // Hostility
         out.putInt("RemainingHostilityTime", walkers$remainingTime);
+
+        // Health
+        out.putFloat("walkersHealth", walkers$normalHealth);
 
         // Current Walkers
         walkers$writeCurrentShape(out.child("CurrentShape"));
@@ -207,6 +216,8 @@ public abstract class PlayerEntityDataMixin extends LivingEntity implements Play
         // health to reflect shape.
         if (shape != null) {
             if (Walkers.CONFIG.scalingHealth && healthAttribute != null) {
+                this.walkers$normalHealth = player.getMaxHealth();
+
                 // calculate the current health in percentage, used later
                 float currentHealthPercent = player.getHealth() / player.getMaxHealth();
 
@@ -254,7 +265,15 @@ public abstract class PlayerEntityDataMixin extends LivingEntity implements Play
             if (Walkers.CONFIG.scalingHealth && healthAttribute != null) {
                 float currentHealthPercent = player.getHealth() / player.getMaxHealth();
 
-                healthAttribute.setBaseValue(20);
+                float health = Walkers.CONFIG.player_health;
+                if (health < 0) {
+                    if (walkers$normalHealth > 0) {
+                        health = walkers$normalHealth;
+                    } else {
+                        health = 20;
+                    }
+                }
+                healthAttribute.setBaseValue(health);
 
                 // Clear health value if needed
                 if (Walkers.CONFIG.percentScalingHealth) {

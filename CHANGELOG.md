@@ -1,3 +1,7 @@
+walkers 7.2.1
+================
+- add a config option to manually adapt the player health / cache it
+
 walkers 7.2.0
 ================
 - fix the Permanent flight bug/Incompatibility with Essential Commands (by FugLong)

@@ -168,6 +168,8 @@ public class WalkersConfig implements Config {
     public boolean show_variants_menu_guide = true;
     @Comment("emit particles on morph")
     public boolean emit_particles = true;
+    @Comment("The health that a normal player should have (e.g. 20). Set to -1 to use a cached one or if you don't know what this option does")
+    public float player_health = -1;
 
     @Override
     public String getName() {
