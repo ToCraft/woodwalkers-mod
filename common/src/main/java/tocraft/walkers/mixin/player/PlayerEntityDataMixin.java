@@ -48,6 +48,9 @@ public abstract class PlayerEntityDataMixin extends LivingEntity implements Play
     @Nullable
     private LivingEntity walkers$shape = null;
 
+    @Unique
+    private float walkers$normalHealth = -1;
+
     private PlayerEntityDataMixin(EntityType<? extends LivingEntity> type, Level world) {
         super(type, world);
     }
@@ -64,6 +67,9 @@ public abstract class PlayerEntityDataMixin extends LivingEntity implements Play
 
         // Hostility
         walkers$remainingTime = tag.getInt("RemainingHostilityTime");
+
+        // Health
+        walkers$normalHealth = tag.getFloat("walkersHealth");
 
         // Current Walkers
         walkers$readCurrentShape(tag.getCompound("CurrentShape"));
@@ -82,6 +88,9 @@ public abstract class PlayerEntityDataMixin extends LivingEntity implements Play
 
         // Hostility
         tag.putInt("RemainingHostilityTime", walkers$remainingTime);
+
+        // Health
+        tag.putFloat("walkersHealth", walkers$normalHealth);
 
         // Current Walkers
         tag.put("CurrentShape", walkers$writeCurrentShape(new CompoundTag()));
@@ -196,6 +205,8 @@ public abstract class PlayerEntityDataMixin extends LivingEntity implements Play
         // health to reflect shape.
         if (shape != null) {
             if (Walkers.CONFIG.scalingHealth && healthAttribute != null) {
+                this.walkers$normalHealth = player.getMaxHealth();
+
                 // calculate the current health in percentage, used later
                 float currentHealthPercent = player.getHealth() / player.getMaxHealth();
 
@@ -243,7 +254,15 @@ public abstract class PlayerEntityDataMixin extends LivingEntity implements Play
             if (Walkers.CONFIG.scalingHealth && healthAttribute != null) {
                 float currentHealthPercent = player.getHealth() / player.getMaxHealth();
 
-                healthAttribute.setBaseValue(20);
+                float health = Walkers.CONFIG.player_health;
+                if (health < 0) {
+                    if (walkers$normalHealth > 0) {
+                        health = walkers$normalHealth;
+                    } else {
+                        health = 20;
+                    }
+                }
+                healthAttribute.setBaseValue(health);
 
                 // Clear health value if needed
                 if (Walkers.CONFIG.percentScalingHealth) {
@@ -260,14 +279,6 @@ public abstract class PlayerEntityDataMixin extends LivingEntity implements Play
                 }
                 if (armorToughnessAttribute != null) {
                     armorAttribute.setBaseValue(0);
-                }
-            }
-
-            if (Walkers.CONFIG.scalingStepHeight) {
-                AttributeInstance playerStepHeightAttr = player.getAttribute(Attributes.STEP_HEIGHT);
-
-                if (playerStepHeightAttr != null) {
-                    playerStepHeightAttr.setBaseValue(0.6);
                 }
             }
         }
