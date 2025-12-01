@@ -150,6 +150,8 @@ public class WalkersConfig implements Config {
     @Comment("Whether the player blacklist should prevent morphing.")
     @Synchronize
     public boolean blacklistPreventsMorphing = true;
+    @Comment("The health that a normal player should have (e.g. 20). Set to -1 to use a cached one or if you don't know what this option does")
+    public float player_health = -1;
 
     @Override
     public String getName() {
