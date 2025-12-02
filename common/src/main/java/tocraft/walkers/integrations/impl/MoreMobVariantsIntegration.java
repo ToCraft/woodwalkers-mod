@@ -49,7 +49,7 @@ public class MoreMobVariantsIntegration extends AbstractIntegration {
             }
             return variantIds;
         } catch (ReflectiveOperationException e) {
-            Walkers.LOGGER.error("{}: failed to get the mob blacklist for {}: {}", GuardVillagersIntegration.class.getSimpleName(), MODID, e);
+            Walkers.LOGGER.error("{}: failed to get the variants for {}: {}", MoreMobVariantsIntegration.class.getSimpleName(), MODID, e);
         }
 
         return new ArrayList<>();
