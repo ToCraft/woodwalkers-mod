@@ -16,7 +16,8 @@ import tocraft.walkers.api.PlayerShape;
 @Environment(EnvType.CLIENT)
 @Mixin(targets = "net.bettercombat.compatibility.CompatibilityFlags", remap = false)
 public class BetterCombatMixin {
-    @Inject(method = "firstPersonRender", at = @At("RETURN"), cancellable = true)
+    // fix Better Combat first person view in OLD Better Combat versions
+    @Inject(method = "firstPersonRender", at = @At("RETURN"), cancellable = true, require = 0)
     private static void onFirstPersonRenderCall(CallbackInfoReturnable<Boolean> cir) {
         Player player = Minecraft.getInstance().player;
         if (player != null && PlayerShape.getCurrentShape(player) != null) {

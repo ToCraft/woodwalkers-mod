@@ -1,3 +1,7 @@
+walkers 5.8.1
+================
+- temporary fix for Better Combat integration, works best with Better Combat 1.8.x
+
 walkers 5.8.0
 ================
 - add AlexsCaves mobs to flying.json
