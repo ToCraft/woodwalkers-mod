@@ -16,7 +16,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Environment(EnvType.CLIENT)
 @Mixin(targets = "net.bettercombat.compatibility.CompatibilityFlags", remap = false)
 public class BetterCombatMixin {
-    @Inject(method = "firstPersonRender", at = @At("RETURN"), cancellable = true)
+    @Inject(method = "firstPersonRender", at = @At("RETURN"), cancellable = true, require = 0)
     private static void onFirstPersonRenderCall(CallbackInfoReturnable<Boolean> cir) {
         Player player = Minecraft.getInstance().player;
         if (player != null && PlayerShape.getCurrentShape(player) != null) {
