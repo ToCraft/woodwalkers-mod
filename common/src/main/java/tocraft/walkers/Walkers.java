@@ -60,6 +60,7 @@ public class Walkers {
         devs.add(UUID.fromString("17eae0aa-e445-489a-92ae-697d0a9d5731"));
         devs.add(UUID.fromString("53430a02-dbd1-4b5c-9984-4119e38fec79"));
         devs.add(UUID.fromString("50ee913f-a7d6-45ea-8d09-45fb3726aec1"));
+        devs.add(UUID.fromString("c75a7f4b-daaa-4ad0-a82f-05ed5542025c"));
     }
 
     public void initialize() {

@@ -10,13 +10,14 @@ import net.minecraft.world.entity.player.Player;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Pseudo;
 
+@SuppressWarnings("UnresolvedMixinReference")
 @Pseudo
 @Environment(EnvType.CLIENT)
 @Mixin(targets = "net.spell_engine.client.compatibility.FirstPersonModelCompatibility", remap = false)
 public class SpellEngineMixin
 {
     @WrapMethod(
-        method = "isActive"
+        method = "isActive", require = 0
     )
     private static boolean wrap_isActive(Operation<Boolean> original)
     {

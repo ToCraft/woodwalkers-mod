@@ -1,3 +1,7 @@
+walkers 5.8.2
+================
+- fix first person view with Spell Engine mod installed ~by Karashok-Leo
+
 walkers 5.8.1
 ================
 - temporary fix for Better Combat integration, works best with Better Combat 1.8.x
