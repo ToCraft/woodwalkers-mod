@@ -91,7 +91,8 @@
     "client.accessor.RavagerEntityModelAccessor",
     "client.accessor.SpiderEntityModelAccessor",
     "client.accessor.SquidEntityModelAccessor",
-    "integrations.client.BetterCombatMixin"
+    "integrations.client.BetterCombatMixin",
+    "integrations.client.SpellEngineMixin"
   ],
   "injectors": {
     "defaultRequire": 1
