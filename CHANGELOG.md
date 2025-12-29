@@ -1,3 +1,7 @@
+walkers 6.3.3
+================
+- fix snow golem ability
+
 walkers 6.3.2
 ================
 - add a config option to prevent hostile mobs from attacking neutral
