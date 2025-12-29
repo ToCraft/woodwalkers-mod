@@ -1,3 +1,7 @@
+walkers 7.2.2
+================
+- fix snow golem ability
+
 walkers 7.2.1
 ================
 - add a config option to manually adapt the player health / cache it
