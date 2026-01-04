@@ -14,6 +14,7 @@ tasks.withType<ProcessResources> {
 }
 
 dependencies {
+    include(implementation(annotationProcessor("io.github.llamalad7:mixinextras-fabric:${rootProject.properties["mixinextras_version"]}")!!)!!)
     modApi("dev.tocraft:craftedcore-fabric:${parent!!.name}-${rootProject.properties["craftedcore_version"]}") {
         exclude("net.fabricmc.fabric-api")
         exclude("com.terraformersmc")

@@ -1,5 +1,6 @@
 package tocraft.walkers;
 
+import com.llamalad7.mixinextras.MixinExtrasBootstrap;
 import com.mojang.serialization.DataResult;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 //#if MC>1201
@@ -64,6 +65,8 @@ public class Walkers {
     }
 
     public void initialize() {
+        MixinExtrasBootstrap.init();
+
         Integrations.initIntegrations();
 
         TraitRegistry.initialize();

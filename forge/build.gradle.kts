@@ -19,6 +19,9 @@ loom {
 }
 
 dependencies {
+    // mixin extras
+    compileOnly(annotationProcessor("io.github.llamalad7:mixinextras-common:${rootProject.properties["mixinextras_version"]}")!!)
+    implementation(include("io.github.llamalad7:mixinextras-forge:${rootProject.properties["mixinextras_version"]}")!!)
     modApi("dev.tocraft:craftedcore-forge:${parent!!.name}-${rootProject.properties["craftedcore_version"]}") {
         exclude("me.shedaniel.cloth")
     }
