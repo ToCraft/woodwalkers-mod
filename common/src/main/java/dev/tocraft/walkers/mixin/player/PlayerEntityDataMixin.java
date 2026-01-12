@@ -216,12 +216,13 @@ public abstract class PlayerEntityDataMixin extends LivingEntity implements Play
         // health to reflect shape.
         if (shape != null) {
             if (Walkers.CONFIG.scalingHealth && healthAttribute != null) {
-                this.walkers$normalHealth = player.getMaxHealth();
+                this.walkers$normalHealth = (float) healthAttribute.getBaseValue();
 
                 // calculate the current health in percentage, used later
                 float currentHealthPercent = player.getHealth() / player.getMaxHealth();
 
-                healthAttribute.setBaseValue(Math.min(Walkers.CONFIG.maxHealth, shape.getMaxHealth()));
+                AttributeInstance shapeHealthAttribute = shape.getAttribute(Attributes.MAX_HEALTH);
+                healthAttribute.setBaseValue(Math.min(Walkers.CONFIG.maxHealth, shapeHealthAttribute.getBaseValue()));
 
                 // set health
                 if (Walkers.CONFIG.percentScalingHealth) {
