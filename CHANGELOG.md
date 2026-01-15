@@ -1,3 +1,7 @@
+walkers 5.8.3
+================
+- Fix max health changes when updating player shape ~by Karashok-Leo
+
 walkers 5.8.2
 ================
 - fix first person view with Spell Engine mod installed ~by Karashok-Leo
