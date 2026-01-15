@@ -1,6 +1,7 @@
 walkers 7.2.2
 ================
 - fix snow golem ability
+- fix max health changes when updating player shape ~by Karashok-Leo
 
 walkers 7.2.1
 ================
