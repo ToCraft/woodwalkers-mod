@@ -73,7 +73,6 @@ public class AbilityRegistry {
         registerByTag(EntityTypeTags.RAIDERS, new RaidAbility<>());
 
         // Register 'normal' Abilities
-        registerByPredicate(entity -> entity instanceof AbstractHorse && !(entity instanceof Llama), new JumpAbility<>());
         registerByClass(Blaze.class, new ShootFireballAbility<>(Items.BLAZE_POWDER, false));
         // higher explosion radius when charged
         registerByPredicate(entity -> entity instanceof Creeper && !((Creeper) entity).isPowered(), new ExplosionAbility<>());

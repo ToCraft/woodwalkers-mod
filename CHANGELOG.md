@@ -2,6 +2,7 @@ walkers 7.2.3
 ================
 - fix RiderTrait rendering (again)
 - fix BetterCombat first-person compatibility ~by Karashok-Leo
+- remove JumpAbility for horses - they can already jump!
 
 walkers 7.2.2
 ================
