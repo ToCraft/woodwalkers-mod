@@ -1,6 +1,7 @@
 walkers 7.2.3
 ================
 - fix RiderTrait rendering (again)
+- fix BetterCombat first-person compatibility ~by Karashok-Leo
 
 walkers 7.2.2
 ================
