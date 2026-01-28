@@ -17,6 +17,8 @@ import java.util.function.Supplier;
 public class PlayerRenderStateMixin implements ShapeRenderStateProvider {
     @Unique
     private @NotNull Supplier<@Nullable LivingEntity> walkers$shape = () -> null;
+    @Unique
+    private boolean walkers$invisRide = false;
 
     @Unique
     @Override
@@ -28,5 +30,15 @@ public class PlayerRenderStateMixin implements ShapeRenderStateProvider {
     @Override
     public void walkers$setShape(@NotNull Supplier<@Nullable LivingEntity> shape) {
         walkers$shape = shape;
+    }
+
+    @Override
+    public void walkers$setInvisRide(boolean invisRide) {
+        this.walkers$invisRide = invisRide;
+    }
+
+    @Override
+    public boolean walkers$getInvisRide() {
+        return this.walkers$invisRide;
     }
 }

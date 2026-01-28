@@ -1,3 +1,7 @@
+walkers 7.2.3
+================
+- fix RiderTrait rendering (again)
+
 walkers 7.2.2
 ================
 - fix snow golem ability

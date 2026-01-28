@@ -117,7 +117,7 @@ public class WalkersEventHandlers {
                 for (RiderTrait<?> riderTrait : TraitRegistry.get(shape, RiderTrait.ID).stream().map(entry -> (RiderTrait<?>) entry).toList()) {
                     if (riderTrait.isRideable(livingEntity) || (livingEntity instanceof Player rideablePlayer && riderTrait.isRideable(PlayerShape.getCurrentShape(rideablePlayer)))) {
                         player.startRiding(entity);
-                        return InteractionResult.PASS;
+                        return InteractionResult.SUCCESS;
                     }
                 }
             }
@@ -131,6 +131,7 @@ public class WalkersEventHandlers {
             if (entity instanceof Player playerToBeRidden) {
                 if (PlayerShape.getCurrentShape(playerToBeRidden) instanceof AbstractHorse) {
                     player.startRiding(playerToBeRidden, true);
+                    return InteractionResult.SUCCESS;
                 }
             }
             return InteractionResult.PASS;

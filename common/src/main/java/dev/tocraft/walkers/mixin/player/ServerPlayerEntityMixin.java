@@ -41,4 +41,12 @@ public abstract class ServerPlayerEntityMixin extends Player {
             FlightHelper.grantFlightTo(player);
         }
     }
+
+    @Inject(method = "disconnect", at = @At("HEAD"))
+    private void disconnectInject(CallbackInfo ci) {
+        if (this.isPassenger()) {
+            if (this.getVehicle() instanceof Player)
+                this.stopRiding();
+        }
+    }
 }

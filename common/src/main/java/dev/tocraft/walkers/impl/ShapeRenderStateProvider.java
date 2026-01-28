@@ -13,4 +13,8 @@ public interface ShapeRenderStateProvider {
     @Nullable LivingEntity walkers$getShape();
 
     void walkers$setShape(@NotNull Supplier<@Nullable LivingEntity> shape);
+
+    void walkers$setInvisRide(boolean invisRide);
+
+    boolean walkers$getInvisRide();
 }

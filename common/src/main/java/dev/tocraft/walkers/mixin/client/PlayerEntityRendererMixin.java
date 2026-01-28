@@ -57,6 +57,8 @@ public abstract class PlayerEntityRendererMixin extends LivingEntityRenderer<Abs
 
     @Inject(method = "extractRenderState(Lnet/minecraft/client/player/AbstractClientPlayer;Lnet/minecraft/client/renderer/entity/state/PlayerRenderState;F)V", at = @At("RETURN"))
     private void onCreateState(AbstractClientPlayer player, PlayerRenderState state, float f, CallbackInfo ci) {
+        ((ShapeRenderStateProvider) state).walkers$setInvisRide(Minecraft.getInstance().options.getCameraType().isFirstPerson() && player.getVehicle() == Minecraft.getInstance().cameraEntity);
+
         ((ShapeRenderStateProvider) state).walkers$setShape(() -> {
             LivingEntity shape = PlayerShape.getCurrentShape(player);
             if (!Minecraft.getInstance().options.getCameraType().isFirstPerson() || player.getVehicle() != Minecraft.getInstance().cameraEntity) {
@@ -214,6 +216,11 @@ public abstract class PlayerEntityRendererMixin extends LivingEntityRenderer<Abs
 
     @Override
     public void render(PlayerRenderState state, PoseStack matrixStack, MultiBufferSource buffer, int packedLight) {
+        if (((ShapeRenderStateProvider) state).walkers$getInvisRide()) {
+            //FIXME: this feels illegal, prob. forgot shadows
+            return;
+        }
+
         LivingEntity shape = ((ShapeRenderStateProvider) state).walkers$getShape();
 
         // sync player data to shape
