@@ -1,3 +1,7 @@
+walkers 5.8.4
+================
+- Fix BetterCombat first-person compatibility ~by Karashok-Leo
+
 walkers 5.8.3
 ================
 - Fix max health changes when updating player shape ~by Karashok-Leo

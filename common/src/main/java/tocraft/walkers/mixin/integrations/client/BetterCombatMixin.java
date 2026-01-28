@@ -2,7 +2,7 @@ package tocraft.walkers.mixin.integrations.client;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
-import dev.tocraft.walkers.api.PlayerShape;
+import tocraft.walkers.api.PlayerShape;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
