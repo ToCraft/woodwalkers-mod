@@ -1,6 +1,7 @@
 walkers 5.8.5
 ================
 - remove data files for versions before 1.20.1
+- fix max health caching when morphing multiple times
 
 walkers 5.8.4
 ================

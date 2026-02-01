@@ -200,6 +200,7 @@ public abstract class PlayerEntityDataMixin extends LivingEntity implements Play
         AttributeInstance armorAttribute = player.getAttribute(Attributes.ARMOR);
         AttributeInstance armorToughnessAttribute = player.getAttribute(Attributes.ARMOR_TOUGHNESS);
 
+        boolean firstShape = this.walkers$shape == null;
         this.walkers$shape = shape;
 
         // refresh entity hitbox dimensions
@@ -209,7 +210,9 @@ public abstract class PlayerEntityDataMixin extends LivingEntity implements Play
         // health to reflect shape.
         if (shape != null) {
             if (Walkers.CONFIG.scalingHealth && healthAttribute != null) {
-                this.walkers$normalHealth = (float) healthAttribute.getBaseValue();
+                if (firstShape) { // only cache health when in first shape
+                    this.walkers$normalHealth = (float) healthAttribute.getBaseValue();
+                }
 
                 // calculate the current health in percentage, used later
                 float currentHealthPercent = player.getHealth() / player.getMaxHealth();
