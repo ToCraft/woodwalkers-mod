@@ -1,3 +1,7 @@
+walkers 5.8.5
+================
+- remove data files for versions before 1.20.1
+
 walkers 5.8.4
 ================
 - Fix BetterCombat first-person compatibility ~by Karashok-Leo
