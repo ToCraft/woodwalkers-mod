@@ -210,13 +210,16 @@ public abstract class PlayerEntityDataMixin extends LivingEntity implements Play
             l.sendParticles(ParticleTypes.ELECTRIC_SPARK, player.getX(), player.getY() + 1, player.getZ(), 25, .5, 1.0, .5, .5);
         }
 
+        boolean firstShape = this.walkers$shape == null;
         this.walkers$shape = shape;
 
         // shape is valid and scaling health is on; set entity's max health and current
         // health to reflect shape.
         if (shape != null) {
             if (Walkers.CONFIG.scalingHealth && healthAttribute != null) {
-                this.walkers$normalHealth = (float) healthAttribute.getBaseValue();
+                if (firstShape) { // only cache health when in first shape
+                    this.walkers$normalHealth = (float) healthAttribute.getBaseValue();
+                }
 
                 // calculate the current health in percentage, used later
                 float currentHealthPercent = player.getHealth() / player.getMaxHealth();
