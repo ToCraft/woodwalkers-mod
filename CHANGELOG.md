@@ -1,6 +1,7 @@
 walkers 5.8.6
 ================
 - add config option to overwrite the API Level
+- add speed effect to several mobs ~by shinefeline
 
 walkers 5.8.5
 ================

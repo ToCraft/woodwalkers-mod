@@ -1,0 +1,19 @@
+{
+  "entity_types": [
+    "minecraft:cat",
+    "minecraft:ocelot"
+  ],
+  "traits": [
+    {
+      "type": "walkers:mob_effect",
+      "mob_effect": {
+        "id": "minecraft:night_vision",
+        "duration": 100000,
+        "amplifier": 0,
+        "show_particles": false
+      },
+      "show_in_inventory": false,
+      "apply_to_self": true
+    }
+  ]
+}

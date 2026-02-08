@@ -184,6 +184,8 @@ public class TraitRegistry {
         registerByClass(SnowGolem.class, new CantFreezeTrait<>());
         registerByClass(PolarBear.class, new CantFreezeTrait<>());
         registerByClass(Stray.class, new CantFreezeTrait<>());
+        // speed
+        registerByPredicate(entity -> entity.getType() == EntityType.ZOMBIE && entity.isBaby(), new MobEffectTrait<>(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, 20, 1, false, false, false), true));
 
         // handle Integrations
         Integrations.registerTraits();

@@ -1,0 +1,20 @@
+{
+  "entity_types": [
+    "minecraft:cat",
+    "minecraft:ocelot",
+    "minecraft:fox"
+  ],
+  "traits": [
+    {
+      "type": "walkers:mob_effect",
+      "mob_effect": {
+        "id": "minecraft:speed",
+        "duration": 20,
+        "amplifier": 1,
+        "show_particles": false
+      },
+      "show_in_inventory": true,
+      "apply_to_self": true
+    }
+  ]
+}
