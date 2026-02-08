@@ -1,3 +1,7 @@
+walkers 7.2.4
+================
+- add speed effect to several mobs ~by shinefeline
+
 walkers 7.2.3
 ================
 - fix RiderTrait rendering (again)

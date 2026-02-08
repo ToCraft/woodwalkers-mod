@@ -193,6 +193,8 @@ public class TraitRegistry {
         registerByTag(EntityTypeTags.FREEZE_IMMUNE_ENTITY_TYPES, new CantFreezeTrait<>());
         // no damage
         registerByType(EntityType.CREAKING, new InvulnerabilityTrait<>());
+        // speed
+        registerByPredicate(entity -> entity.getType() == EntityType.ZOMBIE && entity.isBaby(), new MobEffectTrait<>(new MobEffectInstance(MobEffects.SPEED, 20, 1, false, false, false), true));
 
         // handle Integrations
         Integrations.registerTraits();
