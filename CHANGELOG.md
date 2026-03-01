@@ -1,3 +1,7 @@
+walkers 6.3.4
+================
+- fixed GeckoLib animation ~by Klyonstar
+
 walkers 6.3.3
 ================
 - fix snow golem ability
