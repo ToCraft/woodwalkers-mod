@@ -1,12 +1,5 @@
 package dev.tocraft.walkers.neoforge;
 
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.player.Player;
-import net.neoforged.fml.common.Mod;
-import net.neoforged.fml.loading.FMLEnvironment;
-import net.neoforged.neoforge.common.NeoForge;
-import net.neoforged.neoforge.common.NeoForgeMod;
-import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import dev.tocraft.walkers.Walkers;
 import dev.tocraft.walkers.WalkersClient;
 import dev.tocraft.walkers.api.PlayerShape;
@@ -14,6 +7,13 @@ import dev.tocraft.walkers.traits.ShapeTrait;
 import dev.tocraft.walkers.traits.TraitRegistry;
 import dev.tocraft.walkers.traits.impl.AquaticTrait;
 import dev.tocraft.walkers.traits.impl.FlyingTrait;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.loading.FMLEnvironment;
+import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.common.NeoForgeMod;
+import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 
 @SuppressWarnings("unused")
 @Mod(Walkers.MODID)

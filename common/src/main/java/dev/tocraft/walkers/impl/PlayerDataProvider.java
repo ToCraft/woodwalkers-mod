@@ -27,4 +27,8 @@ public interface PlayerDataProvider {
     void walkers$setCurrentShape(@Nullable LivingEntity shape);
 
     void walkers$updateShapes(@Nullable LivingEntity shape);
+
+    void walkers$setIsSpecialAnim(boolean inAnimation);
+
+    boolean walkers$getIsSpecialAnim();
 }

@@ -16,22 +16,19 @@ import org.spongepowered.asm.mixin.injection.At;
 @Pseudo
 @Environment(EnvType.CLIENT)
 @Mixin(targets = "net.bettercombat.client.compat.FirstPersonAnimationCompatibility", remap = false)
-public class BetterCombatMixin
-{
+public class BetterCombatMixin {
     @WrapOperation(
-        method = "firstPersonMode",
-        at = @At(
-            value = "FIELD",
-            target = "Lnet/bettercombat/client/compat/FirstPersonAnimationCompatibility;isCameraModPresent:Z",
-            opcode = Opcodes.GETSTATIC
-        ),
-        require = 0
+            method = "firstPersonMode",
+            at = @At(
+                    value = "FIELD",
+                    target = "Lnet/bettercombat/client/compat/FirstPersonAnimationCompatibility;isCameraModPresent:Z",
+                    opcode = Opcodes.GETSTATIC
+            ),
+            require = 0
     )
-    private static boolean onFirstPersonRenderCall(Operation<Boolean> original)
-    {
+    private static boolean onFirstPersonRenderCall(Operation<Boolean> original) {
         Player player = Minecraft.getInstance().player;
-        if (player != null && PlayerShape.getCurrentShape(player) != null)
-        {
+        if (player != null && PlayerShape.getCurrentShape(player) != null) {
             return true;
         }
         return original.call();

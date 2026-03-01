@@ -76,6 +76,7 @@ public class PlayerShape {
         data.putIntArray("uuid", UUIDUtil.uuidToIntArray(changed.getUUID()));
         data.putString("type", shape == null ? "minecraft:empty" : EntityType.getKey(shape.getType()).toString());
         data.put("entity_tag", entityTag);
+        data.putBoolean("special_anim", ((PlayerDataProvider) changed).walkers$getIsSpecialAnim());
         ModernNetworking.sendToPlayer(packetTarget, NetworkHandler.SHAPE_SYNC, data);
     }
 }

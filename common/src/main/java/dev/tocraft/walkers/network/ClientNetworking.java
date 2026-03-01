@@ -49,6 +49,7 @@ public class ClientNetworking implements NetworkHandler {
         final UUID uuid = UUIDUtil.uuidFromIntArray(packetData.getIntArray("uuid").orElseThrow());
         final String id = packetData.getString("type").orElseThrow();
         final CompoundTag entityNbt = packetData.getCompound("entity_tag").orElseThrow();
+        final boolean special_anim = packetData.getBoolean("special_anim").orElse(false);
 
         runOrQueue(context, player -> {
             @Nullable
@@ -56,6 +57,7 @@ public class ClientNetworking implements NetworkHandler {
 
             if (syncTarget != null) {
                 PlayerDataProvider data = (PlayerDataProvider) syncTarget;
+                data.walkers$setIsSpecialAnim(special_anim);
 
                 // set shape to null (no shape) if the entity id is "minecraft:empty"
                 if (id.equals("minecraft:empty")) {

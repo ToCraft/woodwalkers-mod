@@ -5,10 +5,8 @@ import dev.tocraft.walkers.api.model.impl.AbstractHorseEntityUpdater;
 import dev.tocraft.walkers.api.model.impl.ShulkerEntityUpdater;
 import dev.tocraft.walkers.api.model.impl.SquidEntityUpdater;
 import dev.tocraft.walkers.impl.NearbySongAccessor;
-import dev.tocraft.walkers.mixin.accessor.AllayAccessor;
-import dev.tocraft.walkers.mixin.accessor.BatAccessor;
-import dev.tocraft.walkers.mixin.accessor.CreeperEntityAccessor;
-import dev.tocraft.walkers.mixin.accessor.ParrotEntityAccessor;
+import dev.tocraft.walkers.impl.PlayerDataProvider;
+import dev.tocraft.walkers.mixin.accessor.*;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -142,7 +140,7 @@ public class EntityUpdaters {
             strider.setSuffocating(!bl);
         });
 
-        EntityUpdaters.register(EntityType.CAT, (player, cat) -> cat.setInSittingPose(false));
+        EntityUpdaters.register(EntityType.CAT, (player, cat) -> cat.setInSittingPose(((PlayerDataProvider) player).walkers$getIsSpecialAnim()));
 
         EntityUpdaters.register(EntityType.HOGLIN, (player, hoglin) -> {
             hoglin.setImmuneToZombification(player.level().dimensionType().piglinSafe());
@@ -150,10 +148,19 @@ public class EntityUpdaters {
 
         EntityUpdaters.register(EntityType.PIGLIN, (player, piglin) -> {
             piglin.setImmuneToZombification(player.level().dimensionType().piglinSafe());
+            piglin.setDancing(((PlayerDataProvider) player).walkers$getIsSpecialAnim());
         });
 
         EntityUpdaters.register(EntityType.PIGLIN_BRUTE, (player, piglinBrute) -> {
             piglinBrute.setImmuneToZombification(player.level().dimensionType().piglinSafe());
         });
+
+        EntityUpdaters.register(EntityType.PANDA, (player, panda) -> {
+            panda.sit(((PlayerDataProvider) player).walkers$getIsSpecialAnim());
+            ((PandaAccessor) panda).callUpdateSitAmount();
+        });
+
+        EntityUpdaters.register(EntityType.VEX, (player, vex) -> vex.setIsCharging(((PlayerDataProvider) player).walkers$getIsSpecialAnim()));
+
     }
 }

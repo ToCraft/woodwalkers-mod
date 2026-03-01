@@ -1,13 +1,17 @@
 walkers 7.2.5
 ================
+
 - fixed GeckoLib animation ~by Klyonstar
+- added some new animations!
 
 walkers 7.2.4
 ================
+
 - add speed effect to several mobs ~by shinefeline
 
 walkers 7.2.3
 ================
+
 - fix RiderTrait rendering (again)
 - fix BetterCombat first-person compatibility ~by Karashok-Leo
 - remove JumpAbility for horses - they can already jump!
@@ -15,15 +19,18 @@ walkers 7.2.3
 
 walkers 7.2.2
 ================
+
 - fix snow golem ability
 - fix max health changes when updating player shape ~by Karashok-Leo
 
 walkers 7.2.1
 ================
+
 - add a config option to manually adapt the player health / cache it
 
 walkers 7.2.0
 ================
+
 - fix the Permanent flight bug/Incompatibility with Essential Commands (by FugLong)
 - fix concurrent exception with AbilityRegistry
 - support WTHIT and prob. some other WAILA forks, too
@@ -36,12 +43,14 @@ walkers 7.2.0
 
 walkers 7.1.0
 ================
+
 - fix phantoms flying trait
 - add config option to overwrite the API Level
 - fix unlocking messages still displayed with 2nd shape
 
 walkers 7.0
 ================
+
 - port to 1.21.7 & 1.21.8
 - refactor code
 - remove multi-version structure
@@ -52,11 +61,13 @@ walkers 7.0
 
 walkers 6.6
 ================
+
 - fix crash on NeoForge 1.21.5
 - add option to block amor slots
 
 walkers 6.5
 ================
+
 - fix some arm rendering issues
 - add BreezeAbility
 - disable abilities for snow golem by default
@@ -71,6 +82,7 @@ walkers 6.5
 
 walkers 6.4
 ================
+
 - support 1.21.5
 - EoL for versions older then 1.21.5
 - API overhaul for TypeProviders (variants)
@@ -78,18 +90,21 @@ walkers 6.4
 
 walkers 6.3
 ================
+
 - fix render issue with MobHealthBar (and similar mods)
 - FINALLY fixed issue with the data managers
 - improve variant menu for biome based variants
 
 walkers 6.2
 ================
+
 - add option to blacklist traits
 - TEMPORARY fix for data packs
 - blacklist whisperwoods:wisp
 
 walkers 6.1
 ================
+
 - fix Parrots get poison when eating cookies
 - fix maxAmorToughness config option
 - improve hitbox handling, handle scale attribute
@@ -103,6 +118,7 @@ walkers 6.1
 
 walkers 6.0
 ================
+
 - port to 1.21.3
 - many background improvements & code cleanup
 - add turkish by Feitan_Portor

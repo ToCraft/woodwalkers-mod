@@ -1,7 +1,6 @@
 package dev.tocraft.walkers.ability.impl.specific;
 
 import dev.tocraft.walkers.Walkers;
-import dev.tocraft.walkers.ability.ShapeAbility;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
@@ -17,7 +16,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 
-public class EvokerAbility<T extends LivingEntity> extends ShapeAbility<T> {
+public class EvokerAbility<T extends LivingEntity> extends AnimationAbility<T> {
     public static final ResourceLocation ID = Walkers.id("evoker");
 
     @Override
@@ -27,6 +26,8 @@ public class EvokerAbility<T extends LivingEntity> extends ShapeAbility<T> {
 
     @Override
     public void onUse(ServerPlayer player, T shape, ServerLevel world) {
+        super.onUse(player, shape, world);
+
         // spawn vexes while sneaking
         if (player.isCrouching() && world instanceof ServerLevel serverLevel) {
             int i = 0;

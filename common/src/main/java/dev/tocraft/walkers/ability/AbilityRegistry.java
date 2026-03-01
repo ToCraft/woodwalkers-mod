@@ -18,7 +18,6 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.NeutralMob;
 import net.minecraft.world.entity.animal.*;
 import net.minecraft.world.entity.animal.goat.Goat;
-import net.minecraft.world.entity.animal.horse.AbstractHorse;
 import net.minecraft.world.entity.animal.horse.Llama;
 import net.minecraft.world.entity.animal.sheep.Sheep;
 import net.minecraft.world.entity.animal.sniffer.Sniffer;
@@ -28,6 +27,7 @@ import net.minecraft.world.entity.boss.enderdragon.EnderDragon;
 import net.minecraft.world.entity.boss.wither.WitherBoss;
 import net.minecraft.world.entity.monster.*;
 import net.minecraft.world.entity.monster.breeze.Breeze;
+import net.minecraft.world.entity.monster.piglin.Piglin;
 import net.minecraft.world.entity.monster.warden.Warden;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -109,6 +109,11 @@ public class AbilityRegistry {
         poisonedArrows.set(DataComponents.POTION_CONTENTS, new PotionContents(Potions.POISON));
         registerByClass(Bogged.class, new GetItemAbility<>(poisonedArrows));
         registerByClass(Stray.class, new GetItemAbility<>(slownessArrows));
+        // mobs with a special animation
+        registerByClass(Cat.class, new AnimationAbility<>());
+        registerByClass(Panda.class, new AnimationAbility<>());
+        registerByClass(Piglin.class, new AnimationAbility<>());
+        registerByClass(Vex.class, new AnimationAbility<>());
 
         // handle Integrations
         Integrations.registerAbilities();

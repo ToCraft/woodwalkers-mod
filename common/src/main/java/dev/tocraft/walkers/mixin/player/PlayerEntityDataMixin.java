@@ -51,6 +51,8 @@ public abstract class PlayerEntityDataMixin extends LivingEntity implements Play
     @Unique
     @Nullable
     private LivingEntity walkers$shape = null;
+    @Unique
+    private boolean walkers$specialAnimation = false;
 
     @Unique
     private float walkers$normalHealth = -1;
@@ -355,5 +357,15 @@ public abstract class PlayerEntityDataMixin extends LivingEntity implements Play
                     listener -> PlayerShape.sync((ServerPlayer) player, listener.getPlayer())
             );
         }
+    }
+
+    @Override
+    public void walkers$setIsSpecialAnim(boolean specialAnimation) {
+        this.walkers$specialAnimation = specialAnimation;
+    }
+
+    @Override
+    public boolean walkers$getIsSpecialAnim() {
+        return this.walkers$specialAnimation;
     }
 }

@@ -1,5 +1,6 @@
 > [!IMPORTANT]  
-> Due to changes in Mojang's code, this mod **will not support Minecraft 1.21.9 or newer**. If you are a developer with skills in Minecraft modding, you are absolutely welcome to port this mod and create a PR.
+> Due to changes in Mojang's code, this mod **will not support Minecraft 1.21.9 or newer**. If you are a developer with
+> skills in Minecraft modding, you are absolutely welcome to port this mod and create a PR.
 
 ---
 

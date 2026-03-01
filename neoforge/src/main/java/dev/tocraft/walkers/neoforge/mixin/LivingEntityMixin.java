@@ -1,14 +1,14 @@
 package dev.tocraft.walkers.neoforge.mixin;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.player.Player;
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.injection.At;
 import dev.tocraft.walkers.api.PlayerShape;
 import dev.tocraft.walkers.traits.ShapeTrait;
 import dev.tocraft.walkers.traits.TraitRegistry;
 import dev.tocraft.walkers.traits.impl.AquaticTrait;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.injection.At;
 
 @SuppressWarnings("ConstantValue")
 @Mixin(LivingEntity.class)
