@@ -1,3 +1,7 @@
+walkers 7.2.5
+================
+- fixed GeckoLib animation ~by Klyonstar
+
 walkers 7.2.4
 ================
 - add speed effect to several mobs ~by shinefeline
