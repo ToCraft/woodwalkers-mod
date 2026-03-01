@@ -1,3 +1,7 @@
+walkers 5.8.7
+================
+- fixed GeckoLib animation ~by Klyonstar
+
 walkers 5.8.6
 ================
 - add config option to overwrite the API Level

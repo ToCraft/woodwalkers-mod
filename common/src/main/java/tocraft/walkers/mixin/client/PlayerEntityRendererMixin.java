@@ -101,7 +101,19 @@ public abstract class PlayerEntityRendererMixin extends LivingEntityRenderer<Abs
             ((LivingEntityAccessor) shape).setSwimAmount(((LivingEntityAccessor) player).getSwimAmount());
             ((LivingEntityAccessor) shape).setSwimAmountO(((LivingEntityAccessor) player).getSwimAmountO());
             shape.setOnGround(CEntity.isOnGround(player));
-            shape.setDeltaMovement(player.getDeltaMovement());
+
+            // fixes GeckoLib animation, "manually" calculates the delta movement
+            float x = (float) ((player.getX() - player.xOld) / 1.62F);
+            float y = (float) ((player.getY() - player.yOld) / 1.62F);
+            float z = (float) ((player.getZ() - player.zOld) / 1.62F);
+            Vec3 deltaMov = new Vec3(x, y, z);
+
+            if (player != Minecraft.getInstance().cameraEntity) {
+                shape.setDeltaMovement(deltaMov);
+            } else {
+                shape.setDeltaMovement(player.getDeltaMovement());
+            }
+
             shape.setInvisible(player.isInvisibleTo(Minecraft.getInstance().player));
 
             ((EntityAccessor) shape).setVehicle(player.getVehicle());
