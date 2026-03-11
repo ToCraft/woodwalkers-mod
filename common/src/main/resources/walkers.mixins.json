@@ -35,6 +35,7 @@
     "VillagerHostilesSensorMixin",
     "WitchMixin",
     "WolfEntityMixin",
+    "ZoglinMixin",
     "accessor.AbstractHorseAccessor",
     //#if MC>1182
     "accessor.AllayAccessor",
