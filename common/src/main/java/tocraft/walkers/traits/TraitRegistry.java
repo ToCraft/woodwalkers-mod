@@ -134,6 +134,7 @@ public class TraitRegistry {
         registerByClass(Wolf.class, (FearedTrait<Wolf>) FearedTrait.ofFearfulClass(AbstractSkeleton.class));
         registerByPredicate(entity -> entity instanceof Ocelot || entity instanceof Cat, FearedTrait.ofFearfulClass(Creeper.class));
         registerByClass(Ocelot.class, (FearedTrait<Ocelot>) FearedTrait.ofFearfulClass(Chicken.class));
+        registerByType(EntityType.ZOMBIFIED_PIGLIN, (FearedTrait<ZombifiedPiglin>) FearedTrait.ofFearfulType(EntityType.PIGLIN));
         // climb blocks
         registerByClass(Spider.class, new ClimbBlocksTrait<>());
         registerByClass(Spider.class, new ClimbBlocksTrait<>(List.of(Blocks.COBWEB), new ArrayList<>()));
