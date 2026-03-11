@@ -1,3 +1,9 @@
+walkers 7.2.6
+================
+
+- piglins run from zombified piglins
+- zoglins ignore zoglins
+
 walkers 7.2.5
 ================
 
