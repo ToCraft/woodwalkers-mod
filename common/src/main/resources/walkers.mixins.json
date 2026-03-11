@@ -37,6 +37,7 @@
     "WitchMixin",
     "WitherEntityMixin",
     "WolfEntityMixin",
+    "ZoglinMixin",
     "accessor.AbstractHorseAccessor",
     "accessor.AllayAccessor",
     "accessor.AxolotlEntityAccessor",

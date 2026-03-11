@@ -1,3 +1,8 @@
+walkers 6.3.5
+================
+- piglins run from zombified piglins
+- zoglins ignore zoglins
+
 walkers 6.3.4
 ================
 - fixed GeckoLib animation ~by Klyonstar
