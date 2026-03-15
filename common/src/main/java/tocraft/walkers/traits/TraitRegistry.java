@@ -177,9 +177,11 @@ public class TraitRegistry {
         //#if MC>=1205
         registerByClass(WitherBoss.class, new ImmunityTrait<>(MobEffects.WITHER.value()));
         registerByClass(WitherSkeleton.class, new ImmunityTrait<>(MobEffects.WITHER.value()));
+        registerByClass(Spider.class, new ImmunityTrait<>(MobEffects.POISON.value()));
         //#else
         //$$ registerByClass(WitherBoss.class, new ImmunityTrait<>(MobEffects.WITHER));
         //$$ registerByClass(WitherSkeleton.class, new ImmunityTrait<>(MobEffects.WITHER));
+        //$$ registerByClass(Spider.class, new ImmunityTrait<>(MobEffects.POISON));
         //#endif
         // can't freeze
         registerByClass(SnowGolem.class, new CantFreezeTrait<>());

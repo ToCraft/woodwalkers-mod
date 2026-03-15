@@ -1,3 +1,8 @@
+walkers 5.8.9
+================
+
+- make spiders immune to poison
+
 walkers 5.8.8
 ================
 - piglins run from zombified piglins
