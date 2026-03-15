@@ -1,3 +1,8 @@
+walkers 7.2.7
+================
+
+- make spiders immune to poison
+
 walkers 7.2.6
 ================
 
