@@ -2,6 +2,7 @@ walkers 7.2.7
 ================
 
 - make spiders immune to poison
+- blaze, magma cube, strider, hoglin & piglin get double damage from powdered snow
 
 walkers 7.2.6
 ================
