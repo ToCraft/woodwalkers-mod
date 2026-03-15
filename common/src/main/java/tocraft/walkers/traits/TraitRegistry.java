@@ -180,6 +180,7 @@ public class TraitRegistry {
         // immunity
         registerByClass(WitherBoss.class, new ImmunityTrait<>(MobEffects.WITHER.value()));
         registerByClass(WitherSkeleton.class, new ImmunityTrait<>(MobEffects.WITHER.value()));
+        registerByClass(Spider.class, new ImmunityTrait<>(MobEffects.POISON.value()));
         // can't freeze
         registerByClass(SnowGolem.class, new CantFreezeTrait<>());
         registerByClass(PolarBear.class, new CantFreezeTrait<>());
