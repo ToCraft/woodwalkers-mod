@@ -62,7 +62,7 @@ public abstract class LivingEntityMixin extends Entity implements NearbySongAcce
         super(type, world);
     }
 
-    @ModifyArg(method = "aiStep", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;hurt(Lnet/minecraft/world/damagesource/DamageSource;F)Z", ordinal = 0), index = 2)
+    @ModifyArg(method = "aiStep", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;hurt(Lnet/minecraft/world/damagesource/DamageSource;F)Z", ordinal = 0), index = 1)
     private float morePowderedSnowDamage(float amount) {
         if ((LivingEntity) (Object) this instanceof Player player) {
             LivingEntity shape = PlayerShape.getCurrentShape(player);

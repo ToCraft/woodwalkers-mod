@@ -1,3 +1,8 @@
+walkers 5.8.10
+================
+
+- fix crash on startup
+
 walkers 5.8.9
 ================
 
