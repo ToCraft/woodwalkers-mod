@@ -1,3 +1,8 @@
+walkers 5.8.11
+================
+
+- fix multi-version not working
+
 walkers 5.8.10
 ================
 
