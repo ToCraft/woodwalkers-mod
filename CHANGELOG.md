@@ -1,6 +1,9 @@
+walkers 6.3.7
+================
+- disable swimming for some humanoid mobs
+
 walkers 6.3.6
 ================
-
 - make spiders immune to poison
 - blaze, magma cube, strider, hoglin & piglin get double damage from powdered snow
 

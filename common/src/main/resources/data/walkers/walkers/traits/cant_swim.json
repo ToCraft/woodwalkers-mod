@@ -1,7 +1,17 @@
 {
   "entity_types": [
     "friendsandfoes:copper_golem",
-    "friendsandfoes:tuff_golem"
+    "friendsandfoes:tuff_golem",
+    "minecraft:drowned",
+    "minecraft:husk",
+    "minecraft:piglin",
+    "minecraft:piglin_brute",
+    "minecraft:skeleton",
+    "minecraft:stray",
+    "minecraft:wither_skeleton",
+    "minecraft:zombie",
+    "minecraft:zombie_villager",
+    "minecraft:zombified_villager"
   ],
   "traits": [
     {
