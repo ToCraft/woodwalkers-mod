@@ -2,30 +2,30 @@ package dev.tocraft.walkers.ability.impl.specific;
 
 import dev.tocraft.walkers.Walkers;
 import dev.tocraft.walkers.ability.ShapeAbility;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.projectile.WitherSkull;
+import net.minecraft.world.entity.projectile.hurtingprojectile.WitherSkull;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.phys.Vec3;
 
 public class WitherAbility<T extends LivingEntity> extends ShapeAbility<T> {
-    public static final ResourceLocation ID = Walkers.id("wither");
+    public static final Identifier ID = Walkers.id("wither");
 
     @Override
-    public ResourceLocation getId() {
+    public Identifier getId() {
         return ID;
     }
 
     @Override
     public void onUse(ServerPlayer player, T shape, ServerLevel world) {
-        world.playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.WITHER_SHOOT, SoundSource.NEUTRAL, 0.5F, 0.4F / (world.random.nextFloat() * 0.4F + 0.8F));
+        world.playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.WITHER_SHOOT, SoundSource.NEUTRAL, 0.5F, 0.4F / (world.getRandom().nextFloat() * 0.4F + 0.8F));
 
-        if (!world.isClientSide) {
+        if (!world.isClientSide()) {
             Vec3 lookDirection = player.getLookAngle();
             WitherSkull skull = new WitherSkull(world, player, new Vec3(lookDirection.x, lookDirection.y, lookDirection.z));
             skull.setPosRaw(player.getX(), player.getY() + 2, player.getZ());

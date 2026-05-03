@@ -10,7 +10,7 @@ import dev.tocraft.walkers.Walkers;
 import dev.tocraft.walkers.api.blacklist.EntityBlacklist;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.tags.TagKey;
 import org.jetbrains.annotations.NotNull;
 
@@ -26,32 +26,32 @@ public class EntityBlacklistDataManager extends SynchronizedJsonReloadListener {
     }
 
     @Override
-    protected void onApply(@NotNull Map<ResourceLocation, JsonElement> map) {
+    protected void onApply(@NotNull Map<Identifier, JsonElement> map) {
         // prevent duplicates and the registration of removed entries
         EntityBlacklist.clearAll();
         EntityBlacklist.registerDefault();
 
-        for (Map.Entry<ResourceLocation, JsonElement> mapEntry : map.entrySet()) {
+        for (Map.Entry<Identifier, JsonElement> mapEntry : map.entrySet()) {
             if (mapEntry.getKey().getPath().equals("blacklist")) {
-                Pair<List<ResourceLocation>, List<ResourceLocation>> someBlacklist = blacklistFromJson(mapEntry.getValue().getAsJsonObject());
-                for (ResourceLocation resourceLocation : someBlacklist.getFirst()) {
+                Pair<List<Identifier>, List<Identifier>> someBlacklist = blacklistFromJson(mapEntry.getValue().getAsJsonObject());
+                for (Identifier resourceLocation : someBlacklist.getFirst()) {
                     if (BuiltInRegistries.ENTITY_TYPE.containsKey(resourceLocation)) {
                         EntityBlacklist.registerByType(BuiltInRegistries.ENTITY_TYPE.get(resourceLocation).orElseThrow().value());
                     }
                 }
-                for (ResourceLocation resourceLocation : someBlacklist.getSecond()) {
+                for (Identifier resourceLocation : someBlacklist.getSecond()) {
                     EntityBlacklist.registerByTag(TagKey.create(Registries.ENTITY_TYPE, resourceLocation));
                 }
             }
         }
     }
 
-    public static final Codec<Pair<List<ResourceLocation>, List<ResourceLocation>>> BLACKLIST_CODEC = RecordCodecBuilder.create((instance) -> instance.group(
-            Codec.list(ResourceLocation.CODEC).optionalFieldOf("entity_types", new ArrayList<>()).forGetter(Pair::getFirst),
-            Codec.list(ResourceLocation.CODEC).optionalFieldOf("entity_tags", new ArrayList<>()).forGetter(Pair::getSecond)
+    public static final Codec<Pair<List<Identifier>, List<Identifier>>> BLACKLIST_CODEC = RecordCodecBuilder.create((instance) -> instance.group(
+            Codec.list(Identifier.CODEC).optionalFieldOf("entity_types", new ArrayList<>()).forGetter(Pair::getFirst),
+            Codec.list(Identifier.CODEC).optionalFieldOf("entity_tags", new ArrayList<>()).forGetter(Pair::getSecond)
     ).apply(instance, instance.stable(Pair::new)));
 
-    protected static Pair<List<ResourceLocation>, List<ResourceLocation>> blacklistFromJson(JsonObject json) {
+    protected static Pair<List<Identifier>, List<Identifier>> blacklistFromJson(JsonObject json) {
         return BLACKLIST_CODEC.parse(JsonOps.INSTANCE, json).getOrThrow(JsonParseException::new);
     }
 }

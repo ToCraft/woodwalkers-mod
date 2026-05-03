@@ -1,24 +1,59 @@
 plugins {
-    id("dev.tocraft.modmaster.neoforge")
+    id("net.neoforged.moddev")
+    `java-library`
 }
 
-tasks.withType<ProcessResources> {
-    @Suppress("UNCHECKED_CAST") val modMeta = parent!!.ext["mod_meta"]!! as Map<String, Any>
+val javaVersion = (property("java") as String).toInt()
 
-    filesMatching("META-INF/mods.toml") {
-        expand(modMeta)
-    }
+java {
+    toolchain.languageVersion = JavaLanguageVersion.of(javaVersion)
+    withSourcesJar()
+}
 
-    filesMatching("META-INF/neoforge.mods.toml") {
-        expand(modMeta)
-    }
+// Resolve common sources from :common subproject
+val commonJava: Configuration by configurations.creating { isCanBeResolved = true }
+val commonResources: Configuration by configurations.creating { isCanBeResolved = true }
+val commonDummy: Configuration by configurations.creating { isCanBeResolved = true }
 
-
-    outputs.upToDateWhen { false }
+neoForge {
+    version = property("neoforge") as String
 }
 
 dependencies {
-    modApi("dev.tocraft:craftedcore-neoforge:${rootProject.properties["craftedcore_version"]}") {
-        exclude("me.shedaniel.cloth")
+    commonJava(project(":common", "commonJava"))
+    commonResources(project(":common", "commonResources"))
+    commonDummy(project(":common", "commonDummy"))
+
+    // Needed to compile common sources that use @Environment(EnvType.CLIENT)
+    compileOnly("net.fabricmc:fabric-loader:${property("fabric_loader")}")
+
+    implementation("dev.tocraft:craftedcore-neoforge:${property("craftedcore_version")}") {
+        exclude(group = "me.shedaniel.cloth")
     }
+}
+
+// Include common sources in this compilation
+tasks.compileJava {
+    source(commonJava)
+    source(commonDummy)
+}
+tasks.javadoc { source(commonJava) }
+
+tasks.processResources {
+    from(commonResources)
+    val mcVersion = project.property("minecraft")
+    val craftedcoreVersion = project.property("craftedcore_version")
+    filesMatching(listOf("META-INF/neoforge.mods.toml", "META-INF/mods.toml")) {
+        expand(mapOf(
+            "version" to project.version,
+            "minecraft_version" to mcVersion,
+            "craftedcore_version" to craftedcoreVersion
+        ))
+    }
+    outputs.upToDateWhen { false }
+}
+
+tasks.named<Jar>("sourcesJar") {
+    from(commonJava)
+    from(commonResources)
 }

@@ -7,7 +7,7 @@ import dev.tocraft.walkers.Walkers;
 import dev.tocraft.walkers.traits.ShapeTrait;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -19,19 +19,19 @@ import java.util.function.Predicate;
 
 @SuppressWarnings("unused")
 public class FearedTrait<E extends LivingEntity> extends ShapeTrait<E> {
-    public static final ResourceLocation ID = Walkers.id("feared");
+    public static final Identifier ID = Walkers.id("feared");
     public static final MapCodec<FearedTrait<?>> CODEC = RecordCodecBuilder.mapCodec((instance) -> instance.group(
-            Codec.list(ResourceLocation.CODEC).optionalFieldOf("fearful", new ArrayList<>()).forGetter(o -> o.fearfulTypes.stream().map(EntityType::getKey).toList()),
-            Codec.list(ResourceLocation.CODEC).optionalFieldOf("fearful_tags", new ArrayList<>()).forGetter(o -> o.fearfulTags.stream().map(TagKey::location).toList())
+            Codec.list(Identifier.CODEC).optionalFieldOf("fearful", new ArrayList<>()).forGetter(o -> o.fearfulTypes.stream().map(EntityType::getKey).toList()),
+            Codec.list(Identifier.CODEC).optionalFieldOf("fearful_tags", new ArrayList<>()).forGetter(o -> o.fearfulTags.stream().map(TagKey::location).toList())
     ).apply(instance, instance.stable((preyLocations, preyTagLocations) -> {
         List<EntityType<?>> fearfulTypes = new ArrayList<>();
         List<TagKey<EntityType<?>>> fearfulTags = new ArrayList<>();
-        for (ResourceLocation resourceLocation : preyLocations) {
+        for (Identifier resourceLocation : preyLocations) {
             if (BuiltInRegistries.ENTITY_TYPE.containsKey(resourceLocation)) {
                 fearfulTypes.add(BuiltInRegistries.ENTITY_TYPE.get(resourceLocation).orElseThrow().value());
             }
         }
-        for (ResourceLocation preyTagLocation : preyTagLocations) {
+        for (Identifier preyTagLocation : preyTagLocations) {
             fearfulTags.add(TagKey.create(Registries.ENTITY_TYPE, preyTagLocation));
         }
         return new FearedTrait<>(new ArrayList<>(), fearfulTypes, new ArrayList<>(), fearfulTags);
@@ -79,7 +79,7 @@ public class FearedTrait<E extends LivingEntity> extends ShapeTrait<E> {
             if (fearfulClass.isInstance(entity)) return true;
         }
         for (TagKey<EntityType<?>> fearfulTag : fearfulTags) {
-            if (entity.getType().is(fearfulTag)) return true;
+            if (entity.getType().builtInRegistryHolder().is(fearfulTag)) return true;
         }
         for (Predicate<LivingEntity> fearfulPredicate : fearfulPredicates) {
             if (fearfulPredicate.test(entity)) return true;
@@ -92,7 +92,7 @@ public class FearedTrait<E extends LivingEntity> extends ShapeTrait<E> {
     }
 
     @Override
-    public ResourceLocation getId() {
+    public Identifier getId() {
         return ID;
     }
 

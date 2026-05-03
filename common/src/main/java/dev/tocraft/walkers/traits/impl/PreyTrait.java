@@ -7,7 +7,7 @@ import dev.tocraft.walkers.Walkers;
 import dev.tocraft.walkers.traits.ShapeTrait;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -19,19 +19,19 @@ import java.util.function.Predicate;
 
 @SuppressWarnings("unused")
 public class PreyTrait<E extends LivingEntity> extends ShapeTrait<E> {
-    public static final ResourceLocation ID = Walkers.id("prey");
+    public static final Identifier ID = Walkers.id("prey");
     public static final MapCodec<PreyTrait<?>> CODEC = RecordCodecBuilder.mapCodec((instance) -> instance.group(
-            Codec.list(ResourceLocation.CODEC).optionalFieldOf("hunter", new ArrayList<>()).forGetter(o -> o.hunterTypes.stream().map(BuiltInRegistries.ENTITY_TYPE::getKey).toList()),
-            Codec.list(ResourceLocation.CODEC).optionalFieldOf("hunter_tags", new ArrayList<>()).forGetter(o -> o.hunterTags.stream().map(TagKey::location).toList())
+            Codec.list(Identifier.CODEC).optionalFieldOf("hunter", new ArrayList<>()).forGetter(o -> o.hunterTypes.stream().map(BuiltInRegistries.ENTITY_TYPE::getKey).toList()),
+            Codec.list(Identifier.CODEC).optionalFieldOf("hunter_tags", new ArrayList<>()).forGetter(o -> o.hunterTags.stream().map(TagKey::location).toList())
     ).apply(instance, instance.stable((hunterLocations, hunterTagLocations) -> {
                 List<EntityType<?>> hunterTypes = new ArrayList<>();
                 List<TagKey<EntityType<?>>> hunterTags = new ArrayList<>();
-                for (ResourceLocation resourceLocation : hunterLocations) {
+                for (Identifier resourceLocation : hunterLocations) {
                     if (BuiltInRegistries.ENTITY_TYPE.containsKey(resourceLocation)) {
                         hunterTypes.add(BuiltInRegistries.ENTITY_TYPE.get(resourceLocation).orElseThrow().value());
                     }
                 }
-                for (ResourceLocation hunterTagLocation : hunterTagLocations) {
+                for (Identifier hunterTagLocation : hunterTagLocations) {
                     hunterTags.add(TagKey.create(Registries.ENTITY_TYPE, hunterTagLocation));
                 }
                 return new PreyTrait<>(new ArrayList<>(), hunterTypes, new ArrayList<>(), hunterTags);
@@ -83,7 +83,7 @@ public class PreyTrait<E extends LivingEntity> extends ShapeTrait<E> {
             if (hunterClass.isInstance(entity)) return true;
         }
         for (TagKey<EntityType<?>> hunterTag : hunterTags) {
-            if (entity.getType().is(hunterTag)) return true;
+            if (entity.getType().builtInRegistryHolder().is(hunterTag)) return true;
         }
         for (Predicate<LivingEntity> hunterPredicate : hunterPredicates) {
             if (hunterPredicate.test(entity)) return true;
@@ -100,7 +100,7 @@ public class PreyTrait<E extends LivingEntity> extends ShapeTrait<E> {
     }
 
     @Override
-    public ResourceLocation getId() {
+    public Identifier getId() {
         return ID;
     }
 

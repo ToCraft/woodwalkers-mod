@@ -18,7 +18,7 @@ public class PiglinSensorMixin {
     @Inject(method = "doTick", at = @At("RETURN"))
     private void runFromZombifiedShapes(ServerLevel level, LivingEntity entity, CallbackInfo ci) {
         for (LivingEntity livingEntity : entity.getBrain().getMemory(MemoryModuleType.NEAREST_VISIBLE_LIVING_ENTITIES).orElse(NearestVisibleLivingEntities.empty()).findAll(livingEntity -> true)) {
-            if (livingEntity instanceof Player player && PlayerShape.getCurrentShape(player) != null && PiglinAi.isZombified(PlayerShape.getCurrentShape(player).getType())) {
+            if (livingEntity instanceof Player player && PlayerShape.getCurrentShape(player) != null && PiglinAi.isZombified(PlayerShape.getCurrentShape(player))) {
                 entity.getBrain().setMemory(MemoryModuleType.NEAREST_VISIBLE_ZOMBIFIED, player);
             }
         }

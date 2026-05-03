@@ -7,8 +7,8 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.monster.ZombieVillager;
-import net.minecraft.world.entity.npc.VillagerType;
+import net.minecraft.world.entity.monster.zombie.ZombieVillager;
+import net.minecraft.world.entity.npc.villager.VillagerType;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
@@ -51,6 +51,6 @@ public class ZombieVillagerTypeProvider extends TypeProvider<ZombieVillager> {
 
     @Override
     public Component modifyText(@NotNull ZombieVillager entity, MutableComponent text) {
-        return Component.literal(formatTypePrefix(entity.getVillagerData().profession().unwrapKey().map(k -> k.location().getPath() + " ").orElse(""))).append(text);
+        return Component.literal(formatTypePrefix(entity.getVillagerData().profession().unwrapKey().map(k -> k.identifier().getPath() + " ").orElse(""))).append(text);
     }
 }

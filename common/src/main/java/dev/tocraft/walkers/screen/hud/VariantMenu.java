@@ -11,11 +11,11 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntityType;
@@ -23,8 +23,6 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.storage.TagValueOutput;
 import org.jetbrains.annotations.ApiStatus;
-import org.joml.Quaternionf;
-import org.joml.Vector3f;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -41,14 +39,15 @@ public class VariantMenu implements RenderEvents.HUDRendering {
         renderSpecialEntities.clear();
     }
 
-    public void render(GuiGraphics guiGraphics, DeltaTracker delta) {
+    @Override
+    public void extractRenderState(GuiGraphicsExtractor guiGraphics, DeltaTracker delta) {
         Minecraft minecraft = Minecraft.getInstance();
         if (!minecraft.options.hideGui && WalkersClient.isRenderingVariantsMenu && Walkers.CONFIG.unlockEveryVariant && minecraft.screen == null) {
             Level level = minecraft.level;
             if (level != null && minecraft.player != null) {
                 ShapeType<?> currentShapeType = ShapeType.from(PlayerShape.getCurrentShape(minecraft.player));
                 if (currentShapeType != null) {
-                    boolean hasSpecialVariant = Walkers.hasSpecialShape(minecraft.player.getUUID()) && EntityType.getKey(currentShapeType.getEntityType()).equals(ResourceLocation.parse("minecraft:wolf"));
+                    boolean hasSpecialVariant = Walkers.hasSpecialShape(minecraft.player.getUUID()) && EntityType.getKey(currentShapeType.getEntityType()).equals(Identifier.parse("minecraft:wolf"));
 
                     int currVariant = currentShapeType.getVariantData();
 
@@ -100,7 +99,7 @@ public class VariantMenu implements RenderEvents.HUDRendering {
                             int l = topPos - 30;
                             int m = leftPos + 20;
                             int n = topPos + 30;
-                            InventoryScreen.renderEntityInInventory(guiGraphics, k, l, m, n, (int) (25 / (Math.max(entity.getBbHeight(), entity.getBbWidth()))), new Vector3f(), new Quaternionf().rotationXYZ(0.43633232F, (float) Math.PI, (float) Math.PI), null, entity);
+                            InventoryScreen.extractEntityInInventoryFollowsMouse(guiGraphics, k, l, m, n, (int) (25 / (Math.max(entity.getBbHeight(), entity.getBbWidth()))), (k + m) / 2f, (l + n) / 2f, delta.getGameTimeDeltaPartialTick(true), entity);
                         }
                     } else {
                         LivingEntity entity = renderEntities.computeIfAbsent(currentShapeType, type -> type.create(level, minecraft.player));
@@ -111,7 +110,7 @@ public class VariantMenu implements RenderEvents.HUDRendering {
                             int l = topPos - 30;
                             int m = leftPos + 20;
                             int n = topPos + 30;
-                            InventoryScreen.renderEntityInInventory(guiGraphics, k, l, m, n, (int) (25 / (Math.max(entity.getBbHeight(), entity.getBbWidth()))), new Vector3f(), new Quaternionf().rotationXYZ(0.43633232F, (float) Math.PI, (float) Math.PI), null, entity);
+                            InventoryScreen.extractEntityInInventoryFollowsMouse(guiGraphics, k, l, m, n, (int) (25 / (Math.max(entity.getBbHeight(), entity.getBbWidth()))), (k + m) / 2f, (l + n) / 2f, delta.getGameTimeDeltaPartialTick(true), entity);
                         }
                     }
                     // render focus

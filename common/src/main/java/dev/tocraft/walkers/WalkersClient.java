@@ -17,6 +17,7 @@ import dev.tocraft.walkers.screen.hud.VariantMenu;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.KeyMapping;
+import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.ApiStatus;
 import org.lwjgl.glfw.GLFW;
 
@@ -26,10 +27,11 @@ public class WalkersClient {
     @ApiStatus.Internal
     public static int variantOffset = 0;
 
-    public static final KeyMapping UNLOCK_KEY = new KeyMapping("key.walkers_unlock", InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_U, "key.categories.walkers");
-    public static final KeyMapping TRANSFORM_KEY = new KeyMapping("key.walkers", InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_G, "key.categories.walkers");
-    public static final KeyMapping ABILITY_KEY = new KeyMapping("key.walkers_ability", InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_R, "key.categories.walkers");
-    public static final KeyMapping VARIANTS_MENU_KEY = new KeyMapping("key.walkers_variants", InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_V, "key.categories.walkers");
+    public static final KeyMapping.Category WALKERS_CATEGORY = KeyMapping.Category.register(Identifier.fromNamespaceAndPath("walkers", "key_categories"));
+    public static final KeyMapping UNLOCK_KEY = new KeyMapping("key.walkers_unlock", InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_U, WALKERS_CATEGORY);
+    public static final KeyMapping TRANSFORM_KEY = new KeyMapping("key.walkers", InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_G, WALKERS_CATEGORY);
+    public static final KeyMapping ABILITY_KEY = new KeyMapping("key.walkers_ability", InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_R, WALKERS_CATEGORY);
+    public static final KeyMapping VARIANTS_MENU_KEY = new KeyMapping("key.walkers_variants", InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_V, WALKERS_CATEGORY);
 
 
     public void initialize() {

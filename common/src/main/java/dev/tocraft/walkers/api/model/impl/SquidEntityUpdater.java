@@ -5,7 +5,7 @@ import dev.tocraft.walkers.mixin.accessor.SquidEntityAccessor;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.util.Mth;
-import net.minecraft.world.entity.animal.Squid;
+import net.minecraft.world.entity.animal.squid.Squid;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;

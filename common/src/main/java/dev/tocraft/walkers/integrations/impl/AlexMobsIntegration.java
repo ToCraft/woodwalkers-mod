@@ -6,7 +6,7 @@ import dev.tocraft.walkers.traits.impl.FearedTrait;
 import dev.tocraft.walkers.traits.impl.PreyTrait;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
@@ -37,7 +37,7 @@ public class AlexMobsIntegration extends AbstractIntegration {
         registerAlexMobsTargetTagTrait("sunbird_scorch", 3, 5);
         registerAlexMobsTargetTagTrait("tiger", 4, 220);
         registerAlexMobsTargetTagTrait("warped_toad", 4, 50);
-        TraitRegistry.registerByPredicate(entity -> (entity instanceof Enemy && !(entity instanceof Creeper) && !(entity.getType().getCategory().name().contains("water") && entity.isInWater()) && !entity.getType().is(getTag("bunfungus_ignores"))), new PreyTrait<>(List.of(), List.of(getType("bunfungus")), List.of(), List.of(), 3, 5));
+        TraitRegistry.registerByPredicate(entity -> (entity instanceof Enemy && !(entity instanceof Creeper) && !(entity.getType().getCategory().name().contains("water") && entity.isInWater()) && !entity.getType().builtInRegistryHolder().is(getTag("bunfungus_ignores"))), new PreyTrait<>(List.of(), List.of(getType("bunfungus")), List.of(), List.of(), 3, 5));
         // FearedTrait
         registerAlexMobsFearTagTrait("mimic_octopus");
         registerAlexMobsFearTagTrait("skunk");
@@ -52,10 +52,10 @@ public class AlexMobsIntegration extends AbstractIntegration {
     }
 
     private static EntityType<Mob> getType(String entityId) {
-        return (EntityType<Mob>) BuiltInRegistries.ENTITY_TYPE.get(ResourceLocation.fromNamespaceAndPath(MODID, entityId)).orElseThrow().value();
+        return (EntityType<Mob>) BuiltInRegistries.ENTITY_TYPE.get(Identifier.fromNamespaceAndPath(MODID, entityId)).orElseThrow().value();
     }
 
     private static TagKey<EntityType<?>> getTag(String tagId) {
-        return TagKey.create(Registries.ENTITY_TYPE, ResourceLocation.fromNamespaceAndPath(MODID, tagId));
+        return TagKey.create(Registries.ENTITY_TYPE, Identifier.fromNamespaceAndPath(MODID, tagId));
     }
 }

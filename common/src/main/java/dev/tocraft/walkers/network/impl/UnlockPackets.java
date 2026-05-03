@@ -12,7 +12,7 @@ import dev.tocraft.walkers.network.ClientNetworking;
 import dev.tocraft.walkers.network.NetworkHandler;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -51,12 +51,12 @@ public class UnlockPackets {
 
             boolean validType = nbt.getBoolean("valid_type").orElse(false);
             if (validType) {
-                ResourceLocation typeId = ResourceLocation.parse(nbt.getString("type_id").orElseThrow());
+                Identifier typeId = Identifier.parse(nbt.getString("type_id").orElseThrow());
                 EntityType<? extends LivingEntity> entityType = (EntityType<? extends LivingEntity>) BuiltInRegistries.ENTITY_TYPE.get(typeId).orElseThrow().value();
 
                 int variant = nbt.getInt("variant").orElse(-1);
 
-                context.getPlayer().getServer().execute(() -> {
+                ((net.minecraft.server.level.ServerLevel) context.getPlayer().level()).getServer().execute(() -> {
                     @Nullable
                     ShapeType<? extends LivingEntity> type = ShapeType.from(entityType, variant);
                     if (type != null && !EntityBlacklist.isBlacklisted(type.getEntityType()) && (Walkers.CONFIG.unlockOverridesCurrentShape || ((PlayerDataProvider) context.getPlayer()).walkers$get2ndShape() == null)) {
@@ -72,7 +72,7 @@ public class UnlockPackets {
                 });
             } else {
                 // Swap back to player if server allows it
-                context.getPlayer().getServer().execute(() -> PlayerShape.updateShapes((ServerPlayer) context.getPlayer(), null));
+                ((net.minecraft.server.level.ServerLevel) context.getPlayer().level()).getServer().execute(() -> PlayerShape.updateShapes((ServerPlayer) context.getPlayer(), null));
             }
 
             // Refresh player dimensions

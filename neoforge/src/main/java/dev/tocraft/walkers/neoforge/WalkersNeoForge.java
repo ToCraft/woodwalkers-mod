@@ -12,7 +12,7 @@ import net.minecraft.world.entity.player.Player;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.neoforge.common.NeoForge;
-import net.neoforged.neoforge.common.NeoForgeMod;
+import net.minecraft.tags.FluidTags;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 
 @SuppressWarnings("unused")
@@ -21,7 +21,7 @@ public class WalkersNeoForge {
     public WalkersNeoForge() {
         new Walkers().initialize();
 
-        if (FMLEnvironment.dist.isClient()) {
+        if (FMLEnvironment.getDist().isClient()) {
             new WalkersClient().initialize();
         }
 
@@ -34,7 +34,7 @@ public class WalkersNeoForge {
         if (!player.onGround()) {
             if (TraitRegistry.has(PlayerShape.getCurrentShape(player), FlyingTrait.ID)) {
                 event.setNewSpeed(event.getNewSpeed() * 5);
-            } else if (player.isEyeInFluidType(NeoForgeMod.WATER_TYPE.value())) {
+            } else if (player.isEyeInFluid(FluidTags.WATER)) {
                 for (ShapeTrait<LivingEntity> aquaticTrait : TraitRegistry.get(PlayerShape.getCurrentShape(player), AquaticTrait.ID)) {
                     if (((AquaticTrait<LivingEntity>) aquaticTrait).isAquatic) {
                         event.setNewSpeed(event.getNewSpeed() * 5);
@@ -44,7 +44,7 @@ public class WalkersNeoForge {
             }
         }
 
-        if (player.isEyeInFluidType(NeoForgeMod.WATER_TYPE.value())) {
+        if (player.isEyeInFluid(FluidTags.WATER)) {
             for (ShapeTrait<LivingEntity> aquaticTrait : TraitRegistry.get(PlayerShape.getCurrentShape(player), AquaticTrait.ID)) {
                 if (((AquaticTrait<LivingEntity>) aquaticTrait).isAquatic) {
                     event.setNewSpeed(event.getNewSpeed() * 5);

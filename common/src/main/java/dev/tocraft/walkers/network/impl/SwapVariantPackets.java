@@ -11,7 +11,7 @@ import dev.tocraft.walkers.api.variant.TypeProviderRegistry;
 import dev.tocraft.walkers.network.ClientNetworking;
 import dev.tocraft.walkers.network.NetworkHandler;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntitySpawnReason;
@@ -29,7 +29,7 @@ public class SwapVariantPackets {
                     }
 
                     int variantID = packet.getInt("variant_id").orElse(-1);
-                    context.getPlayer().getServer().execute(() -> {
+                    ((net.minecraft.server.level.ServerLevel) context.getPlayer().level()).getServer().execute(() -> {
                         if (Walkers.CONFIG.unlockEveryVariant) {
                             ShapeType<?> currentShapeType = ShapeType.from(PlayerShape.getCurrentShape(context.getPlayer()));
 
@@ -37,7 +37,7 @@ public class SwapVariantPackets {
                             int range = typeProvider != null ? typeProvider.size(context.getPlayer().level()) : -1;
 
                             // switch to special shape
-                            if (Walkers.hasSpecialShape(context.getPlayer().getUUID()) && EntityType.getKey(currentShapeType.getEntityType()).equals(ResourceLocation.parse("minecraft:wolf")) && variantID == range) {
+                            if (Walkers.hasSpecialShape(context.getPlayer().getUUID()) && EntityType.getKey(currentShapeType.getEntityType()).equals(Identifier.parse("minecraft:wolf")) && variantID == range) {
                                 Entity created;
                                 CompoundTag nbt = new CompoundTag();
 

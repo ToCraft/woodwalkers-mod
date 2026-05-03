@@ -13,17 +13,19 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityDimensions;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
-import net.minecraft.world.entity.animal.horse.Horse;
+import net.minecraft.world.entity.animal.equine.Horse;
 import net.minecraft.world.entity.monster.Blaze;
 import net.minecraft.world.entity.monster.MagmaCube;
 import net.minecraft.world.entity.monster.Strider;
@@ -50,7 +52,7 @@ import java.util.List;
 public abstract class LivingEntityMixin extends Entity implements NearbySongAccessor {
     @Shadow
     @Final
-    private static ResourceLocation SPRINTING_MODIFIER_ID;
+    private static Identifier SPRINTING_MODIFIER_ID;
 
     protected LivingEntityMixin(EntityType<?> type, Level world) {
         super(type, world);
@@ -312,6 +314,18 @@ public abstract class LivingEntityMixin extends Entity implements NearbySongAcce
     private final static AttributeModifier walkers$HORSE_SPRINT_MODIFIER = new AttributeModifier(SPRINTING_MODIFIER_ID, 0.5, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL);
 
     @SuppressWarnings("ConstantValue")
+    @Inject(method = "getDefaultDimensions", at = @At("HEAD"), cancellable = true)
+    private void getDimensions(Pose pose, CallbackInfoReturnable<EntityDimensions> cir) {
+        if ((Object) this instanceof Player player) {
+            LivingEntity entity = PlayerShape.getCurrentShape(player);
+            if (entity != null) {
+                if (pose != Pose.CROUCHING || !TraitRegistry.has(entity, HumanoidTrait.ID)) {
+                    cir.setReturnValue(entity.getDimensions(pose));
+                }
+            }
+        }
+    }
+
     @ModifyArg(
             method = "setSprinting",
             at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/ai/attributes/AttributeInstance;addTransientModifier(Lnet/minecraft/world/entity/ai/attributes/AttributeModifier;)V"),

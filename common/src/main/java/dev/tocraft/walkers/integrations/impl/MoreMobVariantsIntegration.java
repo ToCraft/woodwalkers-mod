@@ -7,7 +7,7 @@ import dev.tocraft.walkers.integrations.AbstractIntegration;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -41,14 +41,14 @@ public class MoreMobVariantsIntegration extends AbstractIntegration {
     }
 
     @SuppressWarnings("unchecked")
-    private static List<ResourceLocation> getVariants(EntityType<?> type) {
+    private static List<Identifier> getVariants(EntityType<?> type) {
         try {
             Class<?> variantsClass = Class.forName("com.github.nyuppo.config.Variants");
             Method getVariants = variantsClass.getDeclaredMethod("getVariants", EntityType.class);
             List<Object> variants = (List<Object>) getVariants.invoke(null, type);
-            List<ResourceLocation> variantIds = new ArrayList<>();
+            List<Identifier> variantIds = new ArrayList<>();
             for (Object variant : variants) {
-                ResourceLocation id = (ResourceLocation) variant.getClass().getDeclaredMethod("getIdentifier").invoke(variant);
+                Identifier id = (Identifier) variant.getClass().getDeclaredMethod("getIdentifier").invoke(variant);
                 variantIds.add(id);
             }
             return variantIds;
@@ -69,7 +69,7 @@ public class MoreMobVariantsIntegration extends AbstractIntegration {
 
         @Override
         public int getVariantData(L entity) {
-            List<ResourceLocation> variants = getVariants(type);
+            List<Identifier> variants = getVariants(type);
             TagValueOutput out = TagValueOutput.createWithContext(Walkers.PROBLEM_REPORTER, entity.level().registryAccess());
             entity.saveWithoutId(out);
             CompoundTag nbt = out.buildResult();
@@ -77,7 +77,7 @@ public class MoreMobVariantsIntegration extends AbstractIntegration {
             if (str.isEmpty()) {
                 return getFallbackData();
             }
-            ResourceLocation id = ResourceLocation.parse(str.get());
+            Identifier id = Identifier.parse(str.get());
             return variants.indexOf(id);
         }
 
@@ -86,7 +86,7 @@ public class MoreMobVariantsIntegration extends AbstractIntegration {
         public L create(EntityType<L> type, Level world, @NotNull Player player, int data) {
             CompoundTag nbt = new CompoundTag();
             nbt.putString("id", EntityType.getKey(type).toString());
-            ResourceLocation variantId = getVariants(type).get(data);
+            Identifier variantId = getVariants(type).get(data);
             nbt.putString("VariantID", variantId.toString());
             return (L) EntityType.loadEntityRecursive(nbt, world, EntitySpawnReason.LOAD, entity -> entity);
         }
@@ -103,7 +103,7 @@ public class MoreMobVariantsIntegration extends AbstractIntegration {
 
         @Override
         public @NotNull Component modifyText(@NotNull L entity, MutableComponent text) {
-            List<ResourceLocation> variants = getVariants(type);
+            List<Identifier> variants = getVariants(type);
             TagValueOutput out = TagValueOutput.createWithContext(Walkers.PROBLEM_REPORTER, entity.level().registryAccess());
             entity.saveWithoutId(out);
             CompoundTag nbt = out.buildResult();

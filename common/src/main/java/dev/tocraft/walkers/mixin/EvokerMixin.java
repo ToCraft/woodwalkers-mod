@@ -3,7 +3,7 @@ package dev.tocraft.walkers.mixin;
 import dev.tocraft.walkers.impl.PlayerDataProvider;
 import dev.tocraft.walkers.impl.ShapeDataProvider;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.monster.SpellcasterIllager;
+import net.minecraft.world.entity.monster.illager.SpellcasterIllager;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;

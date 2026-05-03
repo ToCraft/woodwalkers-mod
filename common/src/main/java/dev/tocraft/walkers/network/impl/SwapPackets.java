@@ -19,10 +19,10 @@ public class SwapPackets {
     @SuppressWarnings({"unchecked", "ConstantConditions"})
     public static void registerWalkersRequestPacketHandler() {
         ModernNetworking.registerReceiver(ModernNetworking.Side.C2S, NetworkHandler.SHAPE_REQUEST,
-                (context, packet) -> context.getPlayer().getServer().execute(() -> {
+                (context, packet) -> ((net.minecraft.server.level.ServerLevel) context.getPlayer().level()).getServer().execute(() -> {
                     // check if player is blacklisted
                     if (Walkers.isPlayerBlacklisted(context.getPlayer().getUUID()) && Walkers.CONFIG.blacklistPreventsMorphing) {
-                        context.getPlayer().displayClientMessage(Component.translatable("walkers.player_blacklisted"), true);
+                        context.getPlayer().sendOverlayMessage(Component.translatable("walkers.player_blacklisted"));
                         return;
                     }
 

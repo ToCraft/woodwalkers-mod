@@ -7,7 +7,7 @@ import dev.tocraft.walkers.Walkers;
 import dev.tocraft.walkers.traits.ShapeTrait;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -19,20 +19,20 @@ import java.util.List;
 
 @SuppressWarnings("unused")
 public class CantInteractTrait<E extends LivingEntity> extends ShapeTrait<E> {
-    public static final ResourceLocation ID = Walkers.id("cant_interact");
+    public static final Identifier ID = Walkers.id("cant_interact");
     public static final MapCodec<CantInteractTrait<?>> CODEC = RecordCodecBuilder.mapCodec((instance) -> instance.group(
             Codec.BOOL.optionalFieldOf("can_only_interact_with_listed", false).forGetter(o -> o.canOnlyInteractWithListed),
-            Codec.list(ResourceLocation.CODEC).optionalFieldOf("types", new ArrayList<>()).forGetter(o -> o.types.stream().map(EntityType::getKey).toList()),
-            Codec.list(ResourceLocation.CODEC).optionalFieldOf("tags", new ArrayList<>()).forGetter(o -> o.tags.stream().map(TagKey::location).toList())
+            Codec.list(Identifier.CODEC).optionalFieldOf("types", new ArrayList<>()).forGetter(o -> o.types.stream().map(EntityType::getKey).toList()),
+            Codec.list(Identifier.CODEC).optionalFieldOf("tags", new ArrayList<>()).forGetter(o -> o.tags.stream().map(TagKey::location).toList())
     ).apply(instance, instance.stable((canOnlyInteractWithListed, typeIds, tagIds) -> {
         List<EntityType<?>> reinforcements = new ArrayList<>();
         List<TagKey<EntityType<?>>> reinforcementTags = new ArrayList<>();
-        for (ResourceLocation resourceLocation : typeIds) {
+        for (Identifier resourceLocation : typeIds) {
             if (BuiltInRegistries.ENTITY_TYPE.containsKey(resourceLocation)) {
                 reinforcements.add(BuiltInRegistries.ENTITY_TYPE.get(resourceLocation).orElseThrow().value());
             }
         }
-        for (ResourceLocation resourceLocation : tagIds) {
+        for (Identifier resourceLocation : tagIds) {
             reinforcementTags.add(TagKey.create(Registries.ENTITY_TYPE, resourceLocation));
         }
         return new CantInteractTrait<>(canOnlyInteractWithListed, reinforcements, reinforcementTags);
@@ -83,7 +83,7 @@ public class CantInteractTrait<E extends LivingEntity> extends ShapeTrait<E> {
         }
 
         for (TagKey<EntityType<?>> tag : tags) {
-            if (entity.getType().is(tag)) {
+            if (entity.getType().builtInRegistryHolder().is(tag)) {
                 bool = true;
                 break;
             }
@@ -93,7 +93,7 @@ public class CantInteractTrait<E extends LivingEntity> extends ShapeTrait<E> {
     }
 
     @Override
-    public ResourceLocation getId() {
+    public Identifier getId() {
         return ID;
     }
 

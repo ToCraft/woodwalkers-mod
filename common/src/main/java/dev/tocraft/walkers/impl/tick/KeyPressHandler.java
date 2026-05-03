@@ -40,7 +40,7 @@ public class KeyPressHandler implements ClientTickEvents.Client {
                 if (ApiLevel.getCurrentLevel().canMorph) {
                     SwapPackets.sendSwapRequest();
                 } else {
-                    client.player.displayClientMessage(Component.translatable("walkers.feature_not_available"), true);
+                    client.player.sendOverlayMessage(Component.translatable("walkers.feature_not_available"));
                 }
             }
 
@@ -53,7 +53,7 @@ public class KeyPressHandler implements ClientTickEvents.Client {
                             SwapVariantPackets.sendSwapRequest(shapeType.getVariantData() + WalkersClient.variantOffset);
                             VariantMenu.clearEntities();
                         } else if (Walkers.CONFIG.show_variants_menu_guide) {
-                            client.player.displayClientMessage(Component.translatable("walkers.variants_menu_guide", WalkersClient.VARIANTS_MENU_KEY.getTranslatedKeyMessage()), true);
+                            client.player.sendOverlayMessage(Component.translatable("walkers.variants_menu_guide", WalkersClient.VARIANTS_MENU_KEY.getTranslatedKeyMessage()));
                             Walkers.CONFIG.show_variants_menu_guide = false;
                             if (client.isSingleplayer()) {
                                 Walkers.CONFIG.save();
@@ -63,7 +63,7 @@ public class KeyPressHandler implements ClientTickEvents.Client {
                         WalkersClient.isRenderingVariantsMenu = !WalkersClient.isRenderingVariantsMenu;
                     }
                 } else {
-                    client.player.displayClientMessage(Component.translatable("walkers.feature_not_available"), true);
+                    client.player.sendOverlayMessage(Component.translatable("walkers.feature_not_available"));
                 }
             }
 
@@ -75,7 +75,7 @@ public class KeyPressHandler implements ClientTickEvents.Client {
                 if (ApiLevel.getCurrentLevel().canUnlock) {
                     handleUnlockKey(client);
                 } else {
-                    client.player.displayClientMessage(Component.translatable("walkers.feature_not_available"), true);
+                    client.player.sendOverlayMessage(Component.translatable("walkers.feature_not_available"));
                 }
             } else if (currentTimer != Walkers.CONFIG.unlockTimer) currentTimer = Walkers.CONFIG.unlockTimer;
         }
@@ -96,7 +96,7 @@ public class KeyPressHandler implements ClientTickEvents.Client {
     private void handleUnlockKey(@NotNull Minecraft client) {
         // check if player is blacklisted
         if (Walkers.isPlayerBlacklisted(client.player.getUUID()) && Walkers.CONFIG.blacklistPreventsUnlocking) {
-            client.player.displayClientMessage(Component.translatable("walkers.player_blacklisted"), true);
+            client.player.sendOverlayMessage(Component.translatable("walkers.player_blacklisted"));
             return;
         }
 
@@ -109,17 +109,17 @@ public class KeyPressHandler implements ClientTickEvents.Client {
                 if (type != null) {
                     // Ensures, the mob isn't on the blacklist
                     if (EntityBlacklist.isBlacklisted(type.getEntityType()))
-                        client.player.displayClientMessage(Component.translatable("walkers.unlock_entity_blacklisted"), true);
+                        client.player.sendOverlayMessage(Component.translatable("walkers.unlock_entity_blacklisted"));
                     else {
                         if (currentTimer <= 0) {
                             // unlock shape
                             UnlockPackets.sendUnlockRequest(type);
                             // send unlock message
                             Component name = Component.translatable(type.getEntityType().getDescriptionId());
-                            client.player.displayClientMessage(Component.translatable("walkers.unlock_entity", name), true);
+                            client.player.sendOverlayMessage(Component.translatable("walkers.unlock_entity", name));
                             currentTimer = Walkers.CONFIG.unlockTimer;
                         } else {
-                            client.player.displayClientMessage(Component.translatable("walkers.unlock_progress"), true);
+                            client.player.sendOverlayMessage(Component.translatable("walkers.unlock_progress"));
                             currentTimer -= 1;
                         }
                     }

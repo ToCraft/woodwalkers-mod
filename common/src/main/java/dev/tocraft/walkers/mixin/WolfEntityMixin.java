@@ -5,7 +5,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.TamableAnimal;
@@ -26,11 +26,11 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(Wolf.class)
 public abstract class WolfEntityMixin extends TamableAnimal {
     @Unique
-    private static final ResourceLocation walkers$SPECIAL_WILD = Walkers.id("textures/entity/wolf/special_wild.png");
+    private static final Identifier walkers$SPECIAL_WILD = Walkers.id("textures/entity/wolf/special_wild.png");
     @Unique
-    private static final ResourceLocation walkers$SPECIAL_TAMED = Walkers.id("textures/entity/wolf/special_tame.png");
+    private static final Identifier walkers$SPECIAL_TAMED = Walkers.id("textures/entity/wolf/special_tame.png");
     @Unique
-    private static final ResourceLocation walkers$SPECIAL_ANGRY = Walkers.id("textures/entity/wolf/special_angry.png");
+    private static final Identifier walkers$SPECIAL_ANGRY = Walkers.id("textures/entity/wolf/special_angry.png");
 
 
     private WolfEntityMixin(EntityType<? extends TamableAnimal> entityType, Level world) {
@@ -72,7 +72,7 @@ public abstract class WolfEntityMixin extends TamableAnimal {
     }
 
     @Inject(method = "getTexture", at = @At("HEAD"), cancellable = true)
-    private void setSpecialTexture(CallbackInfoReturnable<ResourceLocation> cir) {
+    private void setSpecialTexture(CallbackInfoReturnable<Identifier> cir) {
         TagValueOutput out = TagValueOutput.createWithContext(Walkers.PROBLEM_REPORTER, level().registryAccess());
         this.saveWithoutId(out);
         CompoundTag nbt = out.buildResult();

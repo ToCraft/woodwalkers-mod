@@ -9,7 +9,7 @@ import dev.tocraft.walkers.integrations.AbstractIntegration;
 import dev.tocraft.walkers.integrations.Integrations;
 import dev.tocraft.walkers.traits.impl.*;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.tags.EntityTypeTags;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.tags.TagKey;
@@ -22,13 +22,34 @@ import net.minecraft.world.entity.ambient.Bat;
 import net.minecraft.world.entity.animal.*;
 import net.minecraft.world.entity.animal.allay.Allay;
 import net.minecraft.world.entity.animal.axolotl.Axolotl;
-import net.minecraft.world.entity.animal.horse.AbstractHorse;
+import net.minecraft.world.entity.animal.bee.Bee;
+import net.minecraft.world.entity.animal.chicken.Chicken;
+import net.minecraft.world.entity.animal.dolphin.Dolphin;
+import net.minecraft.world.entity.animal.equine.AbstractHorse;
+import net.minecraft.world.entity.animal.feline.Cat;
+import net.minecraft.world.entity.animal.feline.Ocelot;
+import net.minecraft.world.entity.animal.fox.Fox;
+import net.minecraft.world.entity.animal.golem.IronGolem;
+import net.minecraft.world.entity.animal.golem.SnowGolem;
+import net.minecraft.world.entity.animal.happyghast.HappyGhast;
+import net.minecraft.world.entity.animal.parrot.Parrot;
+import net.minecraft.world.entity.animal.polarbear.PolarBear;
+import net.minecraft.world.entity.animal.rabbit.Rabbit;
 import net.minecraft.world.entity.animal.sheep.Sheep;
+import net.minecraft.world.entity.animal.turtle.Turtle;
 import net.minecraft.world.entity.animal.wolf.Wolf;
 import net.minecraft.world.entity.boss.enderdragon.EnderDragon;
 import net.minecraft.world.entity.boss.wither.WitherBoss;
 import net.minecraft.world.entity.monster.*;
-import net.minecraft.world.entity.npc.Villager;
+import net.minecraft.world.entity.monster.illager.Evoker;
+import net.minecraft.world.entity.monster.zombie.ZombifiedPiglin;
+import net.minecraft.world.entity.monster.skeleton.AbstractSkeleton;
+import net.minecraft.world.entity.monster.skeleton.Skeleton;
+import net.minecraft.world.entity.monster.skeleton.Stray;
+import net.minecraft.world.entity.monster.skeleton.WitherSkeleton;
+import net.minecraft.world.entity.monster.spider.Spider;
+import net.minecraft.world.entity.monster.zombie.Zombie;
+import net.minecraft.world.entity.npc.villager.Villager;
 import net.minecraft.world.entity.raid.Raider;
 import net.minecraft.world.level.block.Blocks;
 import org.jetbrains.annotations.ApiStatus;
@@ -47,8 +68,8 @@ public class TraitRegistry {
     private static final Map<EntityType<? extends LivingEntity>, List<ShapeTrait<?>>> traitsByEntityTypes = new ConcurrentHashMap<>();
     private static final Map<TagKey<EntityType<?>>, List<ShapeTrait<?>>> traitsByEntityTags = new ConcurrentHashMap<>();
     private static final Map<Class<? extends LivingEntity>, List<ShapeTrait<?>>> traitsByEntityClasses = new ConcurrentHashMap<>();
-    private static final Map<ResourceLocation, MapCodec<? extends ShapeTrait<?>>> traitCodecById = new HashMap<>();
-    private static final Map<MapCodec<? extends ShapeTrait<?>>, ResourceLocation> traitIdByCodec = new IdentityHashMap<>();
+    private static final Map<Identifier, MapCodec<? extends ShapeTrait<?>>> traitCodecById = new HashMap<>();
+    private static final Map<MapCodec<? extends ShapeTrait<?>>, Identifier> traitIdByCodec = new IdentityHashMap<>();
 
     @ApiStatus.Internal
     public static void initialize() {
@@ -219,7 +240,7 @@ public class TraitRegistry {
                 }
             }
             for (Map.Entry<TagKey<EntityType<?>>, List<ShapeTrait<?>>> entry : traitsByEntityTags.entrySet()) {
-                if (shape.getType().is(entry.getKey())) {
+                if (shape.getType().builtInRegistryHolder().is(entry.getKey())) {
                     traits.addAll(entry.getValue().stream().map(trait -> (ShapeTrait<L>) trait).toList());
                 }
             }
@@ -238,7 +259,7 @@ public class TraitRegistry {
     /**
      * @return a list of every available trait for the specified entity
      */
-    public static synchronized <L extends LivingEntity> @NotNull List<ShapeTrait<L>> get(L shape, ResourceLocation traitId) {
+    public static synchronized <L extends LivingEntity> @NotNull List<ShapeTrait<L>> get(L shape, Identifier traitId) {
         List<ShapeTrait<L>> traits = getAll(shape);
         List<ShapeTrait<L>> filteredTraits = new ArrayList<>();
         for (ShapeTrait<L> trait : traits) {
@@ -250,7 +271,7 @@ public class TraitRegistry {
     }
 
     @ApiStatus.Experimental
-    public static synchronized @NotNull Map<ShapeTrait<?>, Predicate<LivingEntity>> getAllRegisteredById(ResourceLocation traitId) {
+    public static synchronized @NotNull Map<ShapeTrait<?>, Predicate<LivingEntity>> getAllRegisteredById(Identifier traitId) {
         Map<ShapeTrait<?>, Predicate<LivingEntity>> traits = new HashMap<>();
         for (Map.Entry<EntityType<? extends LivingEntity>, List<ShapeTrait<?>>> traitList : traitsByEntityTypes.entrySet()) {
             for (ShapeTrait<?> trait : traitList.getValue()) {
@@ -269,7 +290,7 @@ public class TraitRegistry {
         for (Map.Entry<TagKey<EntityType<?>>, List<ShapeTrait<?>>> traitList : traitsByEntityTags.entrySet()) {
             for (ShapeTrait<?> trait : traitList.getValue()) {
                 if (trait.getId() == traitId) {
-                    traits.put(trait, entity -> entity.getType().is(traitList.getKey()) && notBlacklisted(entity.getType(), traitId));
+                    traits.put(trait, entity -> entity.getType().builtInRegistryHolder().is(traitList.getKey()) && notBlacklisted(entity.getType(), traitId));
                 }
             }
         }
@@ -368,24 +389,24 @@ public class TraitRegistry {
         traitsByPredicates.put(entityPredicate, traits);
     }
 
-    public static void registerCodec(ResourceLocation traitId, MapCodec<? extends ShapeTrait<?>> traitCodec) {
+    public static void registerCodec(Identifier traitId, MapCodec<? extends ShapeTrait<?>> traitCodec) {
         traitCodecById.put(traitId, traitCodec);
         traitIdByCodec.put(traitCodec, traitId);
     }
 
     @Nullable
     @ApiStatus.Internal
-    public static MapCodec<? extends ShapeTrait<?>> getTraitCodec(ResourceLocation traitId) {
+    public static MapCodec<? extends ShapeTrait<?>> getTraitCodec(Identifier traitId) {
         return traitCodecById.get(traitId);
     }
 
     @Nullable
     @ApiStatus.Internal
-    public static ResourceLocation getTraitId(MapCodec<? extends ShapeTrait<?>> traitCodec) {
+    public static Identifier getTraitId(MapCodec<? extends ShapeTrait<?>> traitCodec) {
         return traitIdByCodec.get(traitCodec);
     }
 
-    public static <L extends LivingEntity> boolean has(L shape, ResourceLocation traitId) {
+    public static <L extends LivingEntity> boolean has(L shape, Identifier traitId) {
         if (shape != null) {
             List<ShapeTrait<?>> list = traitsByEntityTypes.get(shape.getType());
             if (list != null && list.stream().anyMatch(trait -> trait.getId() == traitId)) {
@@ -397,7 +418,7 @@ public class TraitRegistry {
                 }
             }
             for (Map.Entry<TagKey<EntityType<?>>, List<ShapeTrait<?>>> entry : traitsByEntityTags.entrySet()) {
-                if (shape.getType().is(entry.getKey()) && entry.getValue().stream().anyMatch(trait -> trait.getId() == traitId)) {
+                if (shape.getType().builtInRegistryHolder().is(entry.getKey()) && entry.getValue().stream().anyMatch(trait -> trait.getId() == traitId)) {
                     return notBlacklisted(shape.getType(), traitId);
                 }
             }
@@ -411,7 +432,7 @@ public class TraitRegistry {
     }
 
     @ApiStatus.Internal
-    private static boolean notBlacklisted(EntityType<?> type, @NotNull ResourceLocation traitId) {
+    private static boolean notBlacklisted(EntityType<?> type, @NotNull Identifier traitId) {
         return notBlacklisted(EntityType.getKey(type).toString(), traitId.toString());
     }
 
@@ -443,7 +464,7 @@ public class TraitRegistry {
 
     @ApiStatus.Internal
     public static Codec<ShapeTrait<?>> getTraitCodec() {
-        Codec<MapCodec<? extends ShapeTrait<?>>> codec = ResourceLocation.CODEC.flatXmap(
+        Codec<MapCodec<? extends ShapeTrait<?>>> codec = Identifier.CODEC.flatXmap(
                 resourceLocation -> Optional.ofNullable(TraitRegistry.getTraitCodec(resourceLocation))
                         .map(DataResult::success)
                         .orElseGet(() -> DataResult.error(() -> "Unknown shape trait: " + resourceLocation)),

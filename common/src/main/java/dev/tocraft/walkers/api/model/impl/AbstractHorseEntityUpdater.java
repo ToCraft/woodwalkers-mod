@@ -4,7 +4,7 @@ import dev.tocraft.walkers.api.model.EntityUpdater;
 import dev.tocraft.walkers.mixin.accessor.AbstractHorseAccessor;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.world.entity.animal.horse.AbstractHorse;
+import net.minecraft.world.entity.animal.equine.AbstractHorse;
 import net.minecraft.world.entity.player.Player;
 
 @Environment(EnvType.CLIENT)

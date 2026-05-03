@@ -24,7 +24,7 @@ import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import net.minecraft.advancements.AdvancementHolder;
 import net.minecraft.advancements.AdvancementProgress;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.ProblemReporter;
 import net.minecraft.world.entity.LivingEntity;
@@ -111,8 +111,8 @@ public class Walkers {
         });
     }
 
-    public static @NotNull ResourceLocation id(String name) {
-        return ResourceLocation.fromNamespaceAndPath(MODID, name);
+    public static @NotNull Identifier id(String name) {
+        return Identifier.fromNamespaceAndPath(MODID, name);
     }
 
     public static boolean hasFlyingPermissions(@NotNull ServerPlayer player) {
@@ -135,7 +135,7 @@ public class Walkers {
 
                 boolean hasPermission = true;
                 for (String requiredAdvancement : requiredAdvancements) {
-                    AdvancementHolder advancement = Optional.ofNullable(player.getServer()).flatMap(s -> Optional.of(s.getAdvancements())).map(a -> a.get(ResourceLocation.parse(requiredAdvancement))).orElse(null);
+                    AdvancementHolder advancement = Optional.ofNullable(player.level() instanceof net.minecraft.server.level.ServerLevel sl ? sl.getServer() : null).flatMap(s -> Optional.of(s.getAdvancements())).map(a -> a.get(Identifier.parse(requiredAdvancement))).orElse(null);
                     if (advancement != null) {
                         AdvancementProgress progress = player.getAdvancements().getOrStartProgress(advancement);
 

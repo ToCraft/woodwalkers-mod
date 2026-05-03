@@ -9,7 +9,7 @@ import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PlayerRideableJumping;
-import net.minecraft.world.entity.animal.horse.AbstractHorse;
+import net.minecraft.world.entity.animal.equine.AbstractHorse;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
@@ -49,7 +49,6 @@ public abstract class LocalPlayerMixin extends Player {
                 double d = ((LivingEntityAccessor) shape).callGetJumpPower(playerJumpPendingScale);
                 Vec3 vec3 = this.getDeltaMovement();
                 this.setDeltaMovement(vec3.x, d, vec3.z);
-                this.hasImpulse = true;
             }
         }
     }

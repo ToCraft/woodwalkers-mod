@@ -53,7 +53,7 @@ public abstract class PlayerSonicBoomMixin extends LivingEntity implements Sonic
 
     @Inject(method = "tick", at = @At("HEAD"))
     private void tickSonicBoom(CallbackInfo ci) {
-        if (!this.level().isClientSide) {
+        if (!this.level().isClientSide()) {
             shape$ability_wardenBoomDelay = Math.max(-1, shape$ability_wardenBoomDelay - 1);
             if (shape$ability_wardenBoomDelay == 0) {
 

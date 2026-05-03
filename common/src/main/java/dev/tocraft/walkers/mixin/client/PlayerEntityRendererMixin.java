@@ -18,21 +18,23 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.HumanoidModel;
-import net.minecraft.client.model.PlayerModel;
 import net.minecraft.client.model.geom.ModelPart;
+import net.minecraft.client.model.player.PlayerModel;
 import net.minecraft.client.player.AbstractClientPlayer;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
-import net.minecraft.client.renderer.entity.player.PlayerRenderer;
+import net.minecraft.client.renderer.entity.player.AvatarRenderer;
 import net.minecraft.client.renderer.entity.state.*;
+import net.minecraft.client.renderer.rendertype.RenderTypes;
+import net.minecraft.client.renderer.state.level.CameraRenderState;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.Tuple;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.Avatar;
 import net.minecraft.world.entity.monster.Phantom;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec3;
@@ -49,19 +51,21 @@ import java.util.Objects;
 
 @SuppressWarnings({"rawtypes", "unchecked"})
 @Environment(EnvType.CLIENT)
-@Mixin(value = PlayerRenderer.class, priority = 1001)
-public abstract class PlayerEntityRendererMixin extends LivingEntityRenderer<AbstractClientPlayer, PlayerRenderState, PlayerModel> {
+@Mixin(value = AvatarRenderer.class, priority = 1001)
+public abstract class PlayerEntityRendererMixin extends LivingEntityRenderer<AbstractClientPlayer, AvatarRenderState, PlayerModel> {
     private PlayerEntityRendererMixin(EntityRendererProvider.Context ctx, PlayerModel model, float shadowRadius) {
         super(ctx, model, shadowRadius);
     }
 
-    @Inject(method = "extractRenderState(Lnet/minecraft/client/player/AbstractClientPlayer;Lnet/minecraft/client/renderer/entity/state/PlayerRenderState;F)V", at = @At("RETURN"))
-    private void onCreateState(AbstractClientPlayer player, PlayerRenderState state, float f, CallbackInfo ci) {
-        ((ShapeRenderStateProvider) state).walkers$setInvisRide(Minecraft.getInstance().options.getCameraType().isFirstPerson() && player.getVehicle() == Minecraft.getInstance().cameraEntity);
+    @Inject(method = "extractRenderState(Lnet/minecraft/world/entity/Avatar;Lnet/minecraft/client/renderer/entity/state/AvatarRenderState;F)V", at = @At("RETURN"))
+    private void onCreateState(Avatar avatar, AvatarRenderState state, float f, CallbackInfo ci) {
+        if (!(avatar instanceof AbstractClientPlayer player)) return;
+
+        ((ShapeRenderStateProvider) state).walkers$setInvisRide(Minecraft.getInstance().options.getCameraType().isFirstPerson() && player.getVehicle() == Minecraft.getInstance().getCameraEntity());
 
         ((ShapeRenderStateProvider) state).walkers$setShape(() -> {
             LivingEntity shape = PlayerShape.getCurrentShape(player);
-            if (!Minecraft.getInstance().options.getCameraType().isFirstPerson() || player.getVehicle() != Minecraft.getInstance().cameraEntity) {
+            if (!Minecraft.getInstance().options.getCameraType().isFirstPerson() || player.getVehicle() != Minecraft.getInstance().getCameraEntity()) {
                 if (shape != null) {
                     walkers$updateShapeAttributes(player, shape);
                 }
@@ -72,13 +76,14 @@ public abstract class PlayerEntityRendererMixin extends LivingEntityRenderer<Abs
     }
 
     @Unique
-    private void walkers$updateShapeAttributes(@NotNull PlayerRenderState player, @NotNull EntityRenderState shape) {
+    private void walkers$updateShapeAttributes(@NotNull AvatarRenderState player, @NotNull EntityRenderState shape) {
         shape.y = player.y;
         shape.x = player.x;
         shape.z = player.z;
         shape.ageInTicks = player.ageInTicks;
         shape.passengerOffset = player.passengerOffset;
         shape.leashStates = player.leashStates;
+        shape.lightCoords = player.lightCoords;
 
         if (shape instanceof LivingEntityRenderState livingState) {
             livingState.pose = player.pose;
@@ -108,8 +113,8 @@ public abstract class PlayerEntityRendererMixin extends LivingEntityRenderer<Abs
 
             // fix wither heads
             else if (shape instanceof WitherRenderState witherState) {
-                witherState.xHeadRots = new float[]{player.xRot, player.xRot};
-                witherState.yHeadRots = new float[]{player.bodyRot + player.yRot, player.bodyRot + player.yRot};
+                java.util.Arrays.fill(witherState.xHeadRots, player.xRot);
+                java.util.Arrays.fill(witherState.yHeadRots, player.bodyRot + player.yRot);
             }
         }
     }
@@ -139,7 +144,7 @@ public abstract class PlayerEntityRendererMixin extends LivingEntityRenderer<Abs
         float z = (float) ((player.getZ() - player.zOld) / 1.62F);
         Vec3 deltaMov = new Vec3(x, y, z);
 
-        if (player != Minecraft.getInstance().cameraEntity) {
+        if (player != Minecraft.getInstance().getCameraEntity()) {
             shape.setDeltaMovement(deltaMov);
         } else {
             shape.setDeltaMovement(player.getDeltaMovement());
@@ -227,7 +232,7 @@ public abstract class PlayerEntityRendererMixin extends LivingEntityRenderer<Abs
     }
 
     @Override
-    public void render(PlayerRenderState state, PoseStack matrixStack, MultiBufferSource buffer, int packedLight) {
+    public void submit(AvatarRenderState state, PoseStack matrixStack, SubmitNodeCollector buffer, CameraRenderState camera) {
         if (((ShapeRenderStateProvider) state).walkers$getInvisRide()) {
             //FIXME: this feels illegal, prob. forgot shadows
             return;
@@ -240,21 +245,21 @@ public abstract class PlayerEntityRendererMixin extends LivingEntityRenderer<Abs
             if (!state.isInvisibleToPlayer && !state.isInvisible) {
                 EntityRenderer<LivingEntity, EntityRenderState> shapeRenderer = (EntityRenderer<LivingEntity, EntityRenderState>) Minecraft.getInstance().getEntityRenderDispatcher().getRenderer(shape);
 
-                EntityRenderState shapeState = shapeRenderer.createRenderState(shape, packedLight);
+                EntityRenderState shapeState = shapeRenderer.createRenderState(shape, 1.0f);
                 walkers$updateShapeAttributes(state, shapeState);
 
-                shapeRenderer.render(shapeState, matrixStack, buffer, packedLight);
+                shapeRenderer.submit(shapeState, matrixStack, buffer, camera);
 
             }
 
             return;
         }
-        super.render(state, matrixStack, buffer, packedLight);
+        super.submit(state, matrixStack, buffer, camera);
 
     }
 
-    @Inject(method = "getRenderOffset(Lnet/minecraft/client/renderer/entity/state/PlayerRenderState;)Lnet/minecraft/world/phys/Vec3;", at = @At("HEAD"), cancellable = true)
-    private void modifyPositionOffset(PlayerRenderState state, CallbackInfoReturnable<Vec3> cir) {
+    @Inject(method = "getRenderOffset(Lnet/minecraft/client/renderer/entity/state/AvatarRenderState;)Lnet/minecraft/world/phys/Vec3;", at = @At("HEAD"), cancellable = true)
+    private void modifyPositionOffset(AvatarRenderState state, CallbackInfoReturnable<Vec3> cir) {
         LivingEntity shape = ((ShapeRenderStateProvider) state).walkers$getShape();
         if (shape != null) {
             if (shape instanceof TamableAnimal) {
@@ -264,8 +269,8 @@ public abstract class PlayerEntityRendererMixin extends LivingEntityRenderer<Abs
     }
 
     @Inject(method = "renderHand", at = @At("HEAD"), cancellable = true)
-    private void onRenderArm(PoseStack matrices, MultiBufferSource vertexConsumers, int light, ResourceLocation resourceLocation, ModelPart arm, boolean bl, CallbackInfo ci) {
-        if (Minecraft.getInstance().cameraEntity instanceof Player player) {
+    private void onRenderArm(PoseStack matrices, SubmitNodeCollector vertexConsumers, int light, Identifier resourceLocation, ModelPart arm, boolean bl, CallbackInfo ci) {
+        if (Minecraft.getInstance().getCameraEntity() instanceof Player player) {
             LivingEntity shape = PlayerShape.getCurrentShape(player);
 
             // sync player data to shape
@@ -273,8 +278,9 @@ public abstract class PlayerEntityRendererMixin extends LivingEntityRenderer<Abs
                 EntityRenderer<LivingEntity, ?> renderer = (EntityRenderer<LivingEntity, ?>) Minecraft.getInstance().getEntityRenderDispatcher().getRenderer(shape);
 
                 if (renderer instanceof LivingEntityRenderer livingRenderer) {
-                    LivingEntityRenderState shapeState = ((LivingEntityRenderer<LivingEntity, ?, ?>) livingRenderer).createRenderState(shape, light);
-                    ResourceLocation texture = livingRenderer.getTextureLocation(shapeState);
+                    LivingEntityRenderState shapeState = ((LivingEntityRenderer<LivingEntity, LivingEntityRenderState, ?>) livingRenderer).createRenderState(shape, 1.0f);
+                    shapeState.lightCoords = light;
+                    Identifier texture = livingRenderer.getTextureLocation(shapeState);
                     EntityModel model = livingRenderer.getModel();
 
                     // re-assign arm & sleeve models
@@ -299,13 +305,12 @@ public abstract class PlayerEntityRendererMixin extends LivingEntityRenderer<Abs
                         }
                     }
 
-                    model.setupAnim(renderer.createRenderState(shape, light));
-
+                    model.setupAnim(renderer.createRenderState(shape, 1.0f));
 
                     // render
                     if (arm != null) {
                         arm.xRot = 0.0F;
-                        arm.render(matrices, vertexConsumers.getBuffer(RenderType.entityTranslucent(texture)), light, OverlayTexture.NO_OVERLAY);
+                        vertexConsumers.submitModelPart(arm, matrices, RenderTypes.entityTranslucent(texture), light, OverlayTexture.NO_OVERLAY, null);
                     }
 
                     ci.cancel();

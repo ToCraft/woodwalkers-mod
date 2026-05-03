@@ -18,7 +18,7 @@ public class AxolotlAttackablesSensorMixin {
     private void onIsHuntTarget(LivingEntity attacker, LivingEntity target, CallbackInfoReturnable<Boolean> cir) {
         if (target instanceof Player player && !cir.getReturnValue()) {
             if (PlayerShape.getCurrentShape(player) != null)
-                cir.setReturnValue(!attacker.getBrain().hasMemoryValue(MemoryModuleType.HAS_HUNTING_COOLDOWN) && PlayerShape.getCurrentShape(player).getType().is(EntityTypeTags.AXOLOTL_HUNT_TARGETS));
+                cir.setReturnValue(!attacker.getBrain().hasMemoryValue(MemoryModuleType.HAS_HUNTING_COOLDOWN) && PlayerShape.getCurrentShape(player).getType().builtInRegistryHolder().is(EntityTypeTags.AXOLOTL_HUNT_TARGETS));
         }
     }
 }

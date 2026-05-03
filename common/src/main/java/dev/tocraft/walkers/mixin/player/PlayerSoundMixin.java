@@ -45,7 +45,7 @@ public abstract class PlayerSoundMixin extends LivingEntityMixin {
     private void tickAmbientSounds(CallbackInfo ci) {
         LivingEntity shape = PlayerShape.getCurrentShape((Player) (Object) this);
 
-        if (!this.level().isClientSide && Walkers.CONFIG.playAmbientSounds && shape instanceof Mob mobShape) {
+        if (!this.level().isClientSide() && Walkers.CONFIG.playAmbientSounds && shape instanceof Mob mobShape) {
 
             if (this.isAlive() && this.random.nextInt(1000) < this.shape_ambientSoundChance++) {
                 // reset sound delay
