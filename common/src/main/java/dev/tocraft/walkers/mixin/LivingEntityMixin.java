@@ -314,7 +314,7 @@ public abstract class LivingEntityMixin extends Entity implements NearbySongAcce
     private final static AttributeModifier walkers$HORSE_SPRINT_MODIFIER = new AttributeModifier(SPRINTING_MODIFIER_ID, 0.5, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL);
 
     @SuppressWarnings("ConstantValue")
-    @Inject(method = "getDefaultDimensions", at = @At("HEAD"), cancellable = true)
+    @Inject(method = "getDefaultDimensions", at = @At("HEAD"), cancellable = true, require = 0)
     private void getDimensions(Pose pose, CallbackInfoReturnable<EntityDimensions> cir) {
         if ((Object) this instanceof Player player) {
             LivingEntity entity = PlayerShape.getCurrentShape(player);

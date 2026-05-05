@@ -3,6 +3,10 @@ plugins {
     `java-library`
 }
 
+base {
+    archivesName = "${property("archives_base_name")}-neoforge"
+}
+
 val javaVersion = (property("java") as String).toInt()
 
 java {

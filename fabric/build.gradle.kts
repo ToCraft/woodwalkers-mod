@@ -3,6 +3,10 @@ plugins {
     `java-library`
 }
 
+base {
+    archivesName = "${property("archives_base_name")}-fabric"
+}
+
 val javaVersion = (property("java") as String).toInt()
 
 java {

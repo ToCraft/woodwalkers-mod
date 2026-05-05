@@ -2,31 +2,54 @@ name: Release
 
 on:
   push:
-    paths:
-      - '**.gradle'
-      - '**.gradle.kts'
-      - '**.properties'
-      - '**/src/**'
-    branches:
-      - "main"
-      - "master"
-      - "1.**"
-  workflow_dispatch:
+    branches: [main]
 
 permissions:
   contents: write
-  actions: write
 
 jobs:
-  build:
+  release:
     runs-on: ubuntu-latest
-    if: |
-      !contains(github.event.head_commit.message, '[ci skip]')
     steps:
-      - uses: ToCraft/modmaster-release-action@v1.1
+      - uses: actions/checkout@v4
         with:
-          java-version: '22'
-          maven-pass: ${{ secrets.MAVEN_PASS }}
-          curseforge-token: ${{ secrets.CURSEFORGE_TOKEN }}
-          modrinth-token: ${{ secrets.MODRINTH_TOKEN }}
-          webhook: ${{ secrets.DISCORD_WEB_HOOK }}
+          fetch-depth: 0
+
+      - name: Read version
+        id: version
+        run: echo "version=$(grep '^mod_version=' gradle.properties | cut -d= -f2)" >> $GITHUB_OUTPUT
+
+      - name: Check if tag exists
+        id: tag
+        run: |
+          if git ls-remote --tags origin "refs/tags/v${{ steps.version.outputs.version }}" | grep -q .; then
+            echo "exists=true" >> $GITHUB_OUTPUT
+          else
+            echo "exists=false" >> $GITHUB_OUTPUT
+          fi
+
+      - uses: actions/setup-java@v4
+        if: steps.tag.outputs.exists == 'false'
+        with:
+          java-version: '25'
+          distribution: 'temurin'
+
+      - uses: gradle/actions/setup-gradle@v4
+        if: steps.tag.outputs.exists == 'false'
+
+      - name: Build
+        if: steps.tag.outputs.exists == 'false'
+        run: ./gradlew :fabric:build :neoforge:build
+
+      - name: Create GitHub Release
+        if: steps.tag.outputs.exists == 'false'
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v${{ steps.version.outputs.version }}
+          name: v${{ steps.version.outputs.version }}
+          generate_release_notes: true
+          files: |
+            fabric/build/libs/*.jar
+            !fabric/build/libs/*-sources.jar
+            neoforge/build/libs/*.jar
+            !neoforge/build/libs/*-sources.jar
