@@ -1,23 +1,6 @@
 plugins {
-    id("net.fabricmc.fabric-loom")
-    `java-library`
+    id("dev.tocraft.modmaster.fabric")
 }
-
-base {
-    archivesName = "${property("archives_base_name")}-fabric"
-}
-
-val javaVersion = (property("java") as String).toInt()
-
-java {
-    toolchain.languageVersion = JavaLanguageVersion.of(javaVersion)
-    withSourcesJar()
-}
-
-// Resolve common sources from :common subproject
-val commonJava: Configuration by configurations.creating { isCanBeResolved = true }
-val commonResources: Configuration by configurations.creating { isCanBeResolved = true }
-val commonDummy: Configuration by configurations.creating { isCanBeResolved = true }
 
 dependencies {
     minecraft("com.mojang:minecraft:${property("minecraft")}")
@@ -26,7 +9,9 @@ dependencies {
 
     commonJava(project(":common", "commonJava"))
     commonResources(project(":common", "commonResources"))
-    commonDummy(project(":common", "commonDummy"))
+
+    // MixinExtras bundled with the mod
+    include(implementation(annotationProcessor("io.github.llamalad7:mixinextras-fabric:${property("mixinextras_version")}")!!)!!)
 
     implementation("dev.tocraft:craftedcore-fabric:${property("craftedcore_version")}") {
         exclude(group = "net.fabricmc.fabric-api")
@@ -34,15 +19,8 @@ dependencies {
     }
 }
 
-// Include common sources in this compilation
-tasks.compileJava {
-    source(commonJava)
-    source(commonDummy)
-}
-tasks.javadoc { source(commonJava) }
-
 tasks.processResources {
-    from(commonResources)
+    from("commonResources")
     val mcVersion = project.property("minecraft")
     val craftedcoreVersion = project.property("craftedcore_version")
     filesMatching("fabric.mod.json") {
@@ -53,9 +31,4 @@ tasks.processResources {
         ))
     }
     outputs.upToDateWhen { false }
-}
-
-tasks.named<Jar>("sourcesJar") {
-    from(commonJava)
-    from(commonResources)
 }
