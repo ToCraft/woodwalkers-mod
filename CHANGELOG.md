@@ -1,3 +1,8 @@
+walkers 8.0
+================
+
+- disable swimming for some humanoid mobs
+
 walkers 7.2.7
 ================
 
