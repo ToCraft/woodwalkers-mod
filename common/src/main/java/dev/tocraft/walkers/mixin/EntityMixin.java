@@ -1,5 +1,7 @@
 package dev.tocraft.walkers.mixin;
 
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import dev.tocraft.walkers.api.PlayerShape;
 import dev.tocraft.walkers.traits.TraitRegistry;
 import dev.tocraft.walkers.traits.impl.NoPhysicsTrait;
@@ -12,7 +14,6 @@ import net.minecraft.world.entity.player.Player;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
@@ -69,15 +70,15 @@ public abstract class EntityMixin {
     }
 
     @SuppressWarnings("rawtypes")
-    @Redirect(
+    @WrapOperation(
             method = "startRiding(Lnet/minecraft/world/entity/Entity;ZZ)Z",
             at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/EntityType;canSerialize()Z")
     )
-    private boolean allowRidingPlayers(EntityType instance) {
+    private boolean allowRidingPlayers(EntityType instance, Operation<Boolean> original) {
         if (instance == EntityType.PLAYER) {
             return true;
         } else {
-            return instance.canSerialize();
+            return original.call(instance);
         }
     }
 }
