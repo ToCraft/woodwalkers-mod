@@ -19,10 +19,8 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityDimensions;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.animal.equine.Horse;
@@ -47,7 +45,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.List;
 
-@SuppressWarnings({"unused"})
+@SuppressWarnings({"unused", "ConstantValue"})
 @Mixin(LivingEntity.class)
 public abstract class LivingEntityMixin extends Entity implements NearbySongAccessor {
     @Shadow
@@ -312,19 +310,6 @@ public abstract class LivingEntityMixin extends Entity implements NearbySongAcce
 
     @Unique
     private final static AttributeModifier walkers$HORSE_SPRINT_MODIFIER = new AttributeModifier(SPRINTING_MODIFIER_ID, 0.5, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL);
-
-    @SuppressWarnings("ConstantValue")
-    @Inject(method = "getDefaultDimensions", at = @At("HEAD"), cancellable = true, require = 0)
-    private void getDimensions(Pose pose, CallbackInfoReturnable<EntityDimensions> cir) {
-        if ((Object) this instanceof Player player) {
-            LivingEntity entity = PlayerShape.getCurrentShape(player);
-            if (entity != null) {
-                if (pose != Pose.CROUCHING || !TraitRegistry.has(entity, HumanoidTrait.ID)) {
-                    cir.setReturnValue(entity.getDimensions(pose));
-                }
-            }
-        }
-    }
 
     @ModifyArg(
             method = "setSprinting",
