@@ -63,18 +63,99 @@ public abstract class PlayerEntityRendererMixin extends LivingEntityRenderer<Abs
 
         ((ShapeRenderStateProvider) state).walkers$setInvisRide(Minecraft.getInstance().options.getCameraType().isFirstPerson() && player.getVehicle() == Minecraft.getInstance().getCameraEntity());
 
-        ((ShapeRenderStateProvider) state).walkers$setShape(() -> {
-            LivingEntity shape = PlayerShape.getCurrentShape(player);
-            if (!Minecraft.getInstance().options.getCameraType().isFirstPerson() || player.getVehicle() != Minecraft.getInstance().getCameraEntity()) {
-                if (shape != null) {
+        LivingEntity shape = PlayerShape.getCurrentShape(player);
+        if (!Minecraft.getInstance().options.getCameraType().isFirstPerson() || player.getVehicle() != Minecraft.getInstance().getCameraEntity()) {
+            if (shape != null) {
+                ((ShapeRenderStateProvider) state).walkers$setShapeIsTameable(shape instanceof TamableAnimal);
+                ((ShapeRenderStateProvider) state).walkers$setShapeRenderer(() -> {
                     walkers$updateShapeAttributes(player, shape);
-                }
-                return shape;
+                    return (EntityRenderer<@NotNull LivingEntity, @NotNull EntityRenderState>) Minecraft.getInstance().getEntityRenderDispatcher().getRenderer(shape);
+                });
+                ((ShapeRenderStateProvider) state).walkers$setShapeRenderState(() -> {
+                    EntityRenderer<@NotNull LivingEntity, @NotNull EntityRenderState> shapeRenderer = ((ShapeRenderStateProvider) state).walkers$getShapeRenderer();
+                    if (shapeRenderer != null) {
+                        EntityRenderState shapeState = shapeRenderer.createRenderState(shape, 1.0f);
+                        walkers$updateShapeAttributes(state, shapeState);
+                        return shapeState;
+                    }
+                    return null;
+                });
             }
-            return null;
-        });
+        }
     }
 
+    // Entity-level sync — only things with no render state equivalent,
+    // must run before createRenderState() so they are captured into the state
+    @Unique
+    private void walkers$updateShapeAttributes(@NotNull AbstractClientPlayer player, @NotNull LivingEntity shape) {
+        // GeckoLib delta movement — no render state equivalent
+        if (player != Minecraft.getInstance().getCameraEntity()) {
+            float x = (float) ((player.getX() - player.xOld) / 1.62F);
+            float y = (float) ((player.getY() - player.yOld) / 1.62F);
+            float z = (float) ((player.getZ() - player.zOld) / 1.62F);
+            shape.setDeltaMovement(new Vec3(x, y, z));
+        } else {
+            shape.setDeltaMovement(player.getDeltaMovement());
+        }
+
+        // No render state equivalents
+        shape.setOnGround(player.onGround());
+        ((EntityAccessor) shape).setVehicle(player.getVehicle());
+        ((EntityAccessor) shape).setPassengers(ImmutableList.copyOf(player.getPassengers()));
+        ((EntityAccessor) shape).setTouchingWater(player.isInWater());
+
+        // Phantom pitch inversion — must be set before createRenderState captures xRot
+        if (shape instanceof Phantom) {
+            shape.setXRot(-player.getXRot());
+            shape.xRotO = -player.xRotO;
+        } else {
+            shape.setXRot(player.getXRot());
+            shape.xRotO = player.xRotO;
+        }
+
+        // Item slots — captured by createRenderState per entity type
+        if (Walkers.CONFIG.shapesEquipItems) {
+            shape.setItemSlot(EquipmentSlot.MAINHAND, player.getItemBySlot(EquipmentSlot.MAINHAND));
+            shape.setItemSlot(EquipmentSlot.OFFHAND, player.getItemBySlot(EquipmentSlot.OFFHAND));
+        }
+        if (Walkers.CONFIG.shapesEquipArmor) {
+            shape.setItemSlot(EquipmentSlot.HEAD, player.getItemBySlot(EquipmentSlot.HEAD));
+            shape.setItemSlot(EquipmentSlot.CHEST, player.getItemBySlot(EquipmentSlot.CHEST));
+            shape.setItemSlot(EquipmentSlot.LEGS, player.getItemBySlot(EquipmentSlot.LEGS));
+            shape.setItemSlot(EquipmentSlot.FEET, player.getItemBySlot(EquipmentSlot.FEET));
+        }
+
+        if (shape instanceof Mob mob) {
+            mob.setAggressive(player.isUsingItem());
+        }
+
+        // Must be set before callUpdatingUsingItem captures it
+        shape.setPose(player.getPose());
+        shape.startUsingItem(player.getUsedItemHand() == null ? InteractionHand.MAIN_HAND : player.getUsedItemHand());
+        ((LivingEntityAccessor) shape).callSetLivingEntityFlag(1, player.isUsingItem());
+        shape.getTicksUsingItem();
+        ((LivingEntityAccessor) shape).callUpdatingUsingItem();
+
+        // Invisibility — captured by createRenderState
+        if (Minecraft.getInstance().player != null) {
+            shape.setInvisible(player.isInvisibleTo(Minecraft.getInstance().player));
+        }
+
+        // Entity-specific updaters — must run before createRenderState
+        EntityUpdater<LivingEntity> entityUpdater = EntityUpdaters.getUpdater((EntityType<LivingEntity>) shape.getType());
+        if (entityUpdater != null) {
+            entityUpdater.update(player, shape);
+        }
+
+        // Only render nametags if the server option is true and the entity being
+        // rendered is NOT this player/client
+        if (player != Minecraft.getInstance().player && walkers$showName(player)) {
+            shape.setCustomName(player.getCustomName());
+        }
+    }
+
+    // Render-state-level sync — runs after createRenderState, fills in what
+    // createRenderState doesn't capture or gets wrong for our use case
     @Unique
     private void walkers$updateShapeAttributes(@NotNull AvatarRenderState player, @NotNull EntityRenderState shape) {
         shape.y = player.y;
@@ -96,6 +177,8 @@ public abstract class PlayerEntityRendererMixin extends LivingEntityRenderer<Abs
             livingState.isInWater = player.isInWater;
             livingState.scale = player.scale;
             livingState.isFullyFrozen = player.isFullyFrozen;
+            livingState.deathTime = player.deathTime; // FIX: https://github.com/Draylar/identity/issues/424
+
             if (livingState instanceof ArmedEntityRenderState armedState) {
                 armedState.mainArm = player.mainArm;
             }
@@ -109,103 +192,9 @@ public abstract class PlayerEntityRendererMixin extends LivingEntityRenderer<Abs
                 humanoidShape.isCrouching = player.isCrouching;
                 humanoidShape.ticksUsingItem = player.ticksUsingItem;
                 humanoidShape.isUsingItem = player.isUsingItem;
-            }
-
-            // fix wither heads
-            else if (shape instanceof WitherRenderState witherState) {
+            } else if (shape instanceof WitherRenderState witherState) {
                 java.util.Arrays.fill(witherState.xHeadRots, player.xRot);
                 java.util.Arrays.fill(witherState.yHeadRots, player.bodyRot + player.yRot);
-            }
-        }
-    }
-
-    @Unique
-    private void walkers$updateShapeAttributes(@NotNull AbstractClientPlayer player, @NotNull LivingEntity shape) {
-        ((LimbAnimatorAccessor) shape.walkAnimation).setPrevSpeed(((LimbAnimatorAccessor) player.walkAnimation).getPrevSpeed());
-        shape.walkAnimation.setSpeed(player.walkAnimation.speed());
-        ((LimbAnimatorAccessor) shape.walkAnimation).setPos(player.walkAnimation.position());
-        shape.swinging = player.swinging;
-        shape.swingTime = player.swingTime;
-        shape.oAttackAnim = player.oAttackAnim;
-        shape.attackAnim = player.attackAnim;
-        shape.yBodyRot = player.yBodyRot;
-        shape.yBodyRotO = player.yBodyRotO;
-        shape.yHeadRot = player.yHeadRot;
-        shape.yHeadRotO = player.yHeadRotO;
-        shape.tickCount = player.tickCount;
-        shape.swingingArm = player.swingingArm;
-        ((LivingEntityAccessor) shape).setSwimAmount(((LivingEntityAccessor) player).getSwimAmount());
-        ((LivingEntityAccessor) shape).setSwimAmountO(((LivingEntityAccessor) player).getSwimAmountO());
-        shape.setOnGround(player.onGround());
-
-        // fixes GeckoLib animation, "manually" calculates the delta movement
-        float x = (float) ((player.getX() - player.xOld) / 1.62F);
-        float y = (float) ((player.getY() - player.yOld) / 1.62F);
-        float z = (float) ((player.getZ() - player.zOld) / 1.62F);
-        Vec3 deltaMov = new Vec3(x, y, z);
-
-        if (player != Minecraft.getInstance().getCameraEntity()) {
-            shape.setDeltaMovement(deltaMov);
-        } else {
-            shape.setDeltaMovement(player.getDeltaMovement());
-        }
-
-        if (Minecraft.getInstance().player != null) {
-            shape.setInvisible(player.isInvisibleTo(Minecraft.getInstance().player));
-        }
-
-        ((EntityAccessor) shape).setVehicle(player.getVehicle());
-        ((EntityAccessor) shape).setPassengers(ImmutableList.copyOf(player.getPassengers()));
-        ((EntityAccessor) shape).setTouchingWater(player.isInWater());
-
-        // phantoms' pitch is inverse for whatever reason
-        if (shape instanceof Phantom) {
-            shape.setXRot(-player.getXRot());
-            shape.xRotO = -player.xRotO;
-        } else {
-            shape.setXRot(player.getXRot());
-            shape.xRotO = player.xRotO;
-        }
-
-        // equip held items on shape
-        if (Walkers.CONFIG.shapesEquipItems) {
-            shape.setItemSlot(EquipmentSlot.MAINHAND, player.getItemBySlot(EquipmentSlot.MAINHAND));
-            shape.setItemSlot(EquipmentSlot.OFFHAND, player.getItemBySlot(EquipmentSlot.OFFHAND));
-        }
-
-        // equip armor items on shape
-        if (Walkers.CONFIG.shapesEquipArmor) {
-            shape.setItemSlot(EquipmentSlot.HEAD, player.getItemBySlot(EquipmentSlot.HEAD));
-            shape.setItemSlot(EquipmentSlot.CHEST, player.getItemBySlot(EquipmentSlot.CHEST));
-            shape.setItemSlot(EquipmentSlot.LEGS, player.getItemBySlot(EquipmentSlot.LEGS));
-            shape.setItemSlot(EquipmentSlot.FEET, player.getItemBySlot(EquipmentSlot.FEET));
-        }
-
-        if (shape instanceof Mob) {
-            ((Mob) shape).setAggressive(player.isUsingItem());
-        }
-
-        // Assign pose
-        shape.setPose(player.getPose());
-
-        // set active hand after configuring held items
-        shape.startUsingItem(player.getUsedItemHand() == null ? InteractionHand.MAIN_HAND : player.getUsedItemHand());
-        ((LivingEntityAccessor) shape).callSetLivingEntityFlag(1, player.isUsingItem());
-        shape.getTicksUsingItem();
-        ((LivingEntityAccessor) shape).callUpdatingUsingItem();
-        shape.hurtTime = player.hurtTime; // FIX: https://github.com/Draylar/identity/issues/424
-
-        // update shape specific properties
-        EntityUpdater<LivingEntity> entityUpdater = EntityUpdaters.getUpdater((EntityType<LivingEntity>) shape.getType());
-        if (entityUpdater != null) {
-            entityUpdater.update(player, shape);
-        }
-
-        // Only render nametags if the server option is true and the entity being
-        // rendered is NOT this player/client
-        if (player != Minecraft.getInstance().player) {
-            if (walkers$showName(player)) {
-                shape.setCustomName(player.getCustomName());
             }
         }
     }
@@ -232,39 +221,33 @@ public abstract class PlayerEntityRendererMixin extends LivingEntityRenderer<Abs
     }
 
     @Override
-    public void submit(AvatarRenderState state, PoseStack matrixStack, SubmitNodeCollector buffer, CameraRenderState camera) {
+    public void submit(AvatarRenderState state, @NotNull PoseStack matrixStack, @NotNull SubmitNodeCollector buffer, CameraRenderState camera) {
         if (((ShapeRenderStateProvider) state).walkers$getInvisRide()) {
-            //FIXME: this feels illegal, prob. forgot shadows
             return;
         }
-
-        LivingEntity shape = ((ShapeRenderStateProvider) state).walkers$getShape();
 
         // sync player data to shape
-        if (shape != null && !state.isSpectator) {
+        if (!state.isSpectator) {
             if (!state.isInvisibleToPlayer && !state.isInvisible) {
-                EntityRenderer<LivingEntity, EntityRenderState> shapeRenderer = (EntityRenderer<LivingEntity, EntityRenderState>) Minecraft.getInstance().getEntityRenderDispatcher().getRenderer(shape);
-
-                EntityRenderState shapeState = shapeRenderer.createRenderState(shape, 1.0f);
-                walkers$updateShapeAttributes(state, shapeState);
-
-                shapeRenderer.submit(shapeState, matrixStack, buffer, camera);
-
+                EntityRenderer<@NotNull LivingEntity, @NotNull EntityRenderState> shapeRenderer = ((ShapeRenderStateProvider) state).walkers$getShapeRenderer();
+                if (shapeRenderer != null) {
+                    EntityRenderState shapeRenderState = ((ShapeRenderStateProvider) state).walkers$getShapeRenderState();
+                    if (shapeRenderState != null) {
+                        shapeRenderer.submit(shapeRenderState, matrixStack, buffer, camera);
+                        return;
+                    }
+                }
             }
 
-            return;
         }
+        // render as normal
         super.submit(state, matrixStack, buffer, camera);
-
     }
 
     @Inject(method = "getRenderOffset(Lnet/minecraft/client/renderer/entity/state/AvatarRenderState;)Lnet/minecraft/world/phys/Vec3;", at = @At("HEAD"), cancellable = true)
     private void modifyPositionOffset(AvatarRenderState state, CallbackInfoReturnable<Vec3> cir) {
-        LivingEntity shape = ((ShapeRenderStateProvider) state).walkers$getShape();
-        if (shape != null) {
-            if (shape instanceof TamableAnimal) {
-                cir.setReturnValue(super.getRenderOffset(state));
-            }
+        if (((ShapeRenderStateProvider) state).walkers$getShapeRenderState() != null && ((ShapeRenderStateProvider) state).walkers$shapeIsTameable()) {
+            cir.setReturnValue(super.getRenderOffset(state));
         }
     }
 
