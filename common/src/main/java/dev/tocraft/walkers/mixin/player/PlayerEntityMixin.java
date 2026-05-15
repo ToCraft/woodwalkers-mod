@@ -125,6 +125,16 @@ public abstract class PlayerEntityMixin extends LivingEntityMixin {
         }
     }
 
+    // enforce constant flying
+    @Inject(method = "tick", at = @At("HEAD"))
+    private void tickVex(CallbackInfo ci) {
+        LivingEntity shape = PlayerShape.getCurrentShape((Player) (Object) this);
+
+        if (TraitRegistry.has(shape, NoPhysicsTrait.ID) && TraitRegistry.has(shape, FlyingTrait.ID) && !((Player) (Object) this).getAbilities().flying) {
+            ((Player) (Object) this).getAbilities().flying = true;
+        }
+    }
+
     @Inject(method = "tick", at = @At("HEAD"))
     private void tickFire(CallbackInfo ci) {
         Player player = (Player) (Object) this;

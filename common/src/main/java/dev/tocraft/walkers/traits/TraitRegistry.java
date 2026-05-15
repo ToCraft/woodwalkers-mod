@@ -179,6 +179,7 @@ public class TraitRegistry {
         // aquatic
         registerByPredicate(entity -> entity.getType().getCategory().getName().contains("water") && entity.canBreatheUnderwater(), new AquaticTrait<>());
         registerByPredicate(entity -> entity.getType().getCategory().getName().contains("water") != entity.canBreatheUnderwater(), new AquaticTrait<>(true, true));
+        registerByClass(Vex.class, new AquaticTrait<>(true, true));
         // dolphin don't like sun
         registerByClass(Dolphin.class, new AquaticTrait<>());
         // walk on powder snow
