@@ -141,12 +141,6 @@ public abstract class PlayerEntityRendererMixin extends LivingEntityRenderer<Abs
             shape.setInvisible(player.isInvisibleTo(Minecraft.getInstance().player));
         }
 
-        // Entity-specific updaters — must run before createRenderState
-        EntityUpdater<LivingEntity> entityUpdater = EntityUpdaters.getUpdater((EntityType<LivingEntity>) shape.getType());
-        if (entityUpdater != null) {
-            entityUpdater.update(player, shape);
-        }
-
         // Only render nametags if the server option is true and the entity being
         // rendered is NOT this player/client
         if (player != Minecraft.getInstance().player && walkers$showName(player)) {

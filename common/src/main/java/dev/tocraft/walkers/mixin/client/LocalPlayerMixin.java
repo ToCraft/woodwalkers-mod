@@ -2,11 +2,14 @@ package dev.tocraft.walkers.mixin.client;
 
 import com.mojang.authlib.GameProfile;
 import dev.tocraft.walkers.api.PlayerShape;
+import dev.tocraft.walkers.api.model.EntityUpdater;
+import dev.tocraft.walkers.api.model.EntityUpdaters;
 import dev.tocraft.walkers.mixin.accessor.LivingEntityAccessor;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.util.Mth;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PlayerRideableJumping;
 import net.minecraft.world.entity.animal.equine.AbstractHorse;
@@ -26,6 +29,18 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public abstract class LocalPlayerMixin extends Player {
     public LocalPlayerMixin(Level level, GameProfile gameProfile) {
         super(level, gameProfile);
+    }
+
+    @Inject(method = "aiStep", at = @At("RETURN"))
+    private void fixEntityAnimations(CallbackInfo ci) {
+        LocalPlayer player = (LocalPlayer) (Player) this;
+        LivingEntity shape = PlayerShape.getCurrentShape(player);
+        if (shape != null) {
+            EntityUpdater<LivingEntity> entityUpdater = EntityUpdaters.getUpdater((EntityType<LivingEntity>) shape.getType());
+            if (entityUpdater != null) {
+                entityUpdater.update(player, shape);
+            }
+        }
     }
 
     @Inject(method = "jumpableVehicle", at = @At("RETURN"), cancellable = true)
