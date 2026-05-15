@@ -43,7 +43,7 @@ public abstract class ActiveTargetGoalMixin extends TrackTargetGoalMixin {
                 if (!hasHostility) {
                     // prey should ignore hunter
                     for (FearedTrait<?> fearedTrait : TraitRegistry.get(shape, FearedTrait.ID).stream().map(entry -> (FearedTrait<?>) entry).toList()) {
-                        if (fearedTrait.isFeared(mob)) {
+                        if (fearedTrait.isFearful(mob)) {
                             this.stop();
                             ci.cancel();
                         }
@@ -96,7 +96,7 @@ public abstract class ActiveTargetGoalMixin extends TrackTargetGoalMixin {
                 if (!hasHostility) {
                     // prey should ignore hunter
                     for (FearedTrait<?> fearedTrait : TraitRegistry.get(shape, FearedTrait.ID).stream().map(entry -> (FearedTrait<?>) entry).toList()) {
-                        if (fearedTrait.isFeared(mob)) {
+                        if (fearedTrait.isFearful(mob)) {
                             cir.setReturnValue(false);
                             return;
                         }

@@ -73,7 +73,7 @@ public class FearedTrait<E extends LivingEntity> extends ShapeTrait<E> {
         this.priority = priority;
     }
 
-    public boolean isFeared(LivingEntity entity) {
+    public boolean isFearful(LivingEntity entity) {
         if (fearfulTypes.contains(entity.getType())) return true;
         for (Class<? extends LivingEntity> fearfulClass : fearfulClasses) {
             if (fearfulClass.isInstance(entity)) return true;

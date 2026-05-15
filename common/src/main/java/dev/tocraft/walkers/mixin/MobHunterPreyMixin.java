@@ -55,7 +55,7 @@ public class MobHunterPreyMixin {
             for (Map.Entry<ShapeTrait<?>, Predicate<LivingEntity>> trait : TraitRegistry.getAllRegisteredById(FearedTrait.ID).entrySet()) {
                 FearedTrait<?> fearedTrait = (FearedTrait<?>) trait.getKey();
 
-                if (fearedTrait.isFeared(mob)) {
+                if (fearedTrait.isFearful(mob)) {
                     goalSelector.addGoal(fearedTrait.getPriority(), new AvoidEntityGoal<>(mob, Player.class, player -> {
                         LivingEntity shape = PlayerShape.getCurrentShape((Player) player);
                         return shape != null && trait.getValue().test(shape);

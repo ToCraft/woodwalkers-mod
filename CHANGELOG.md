@@ -8,6 +8,7 @@ walkers 8.0
 - fix CantSwim Trait
 - fix speed for many animations
 - fix wings flap for phantom
+- add **visual effect for Feared Trait**
 
 walkers 7.2.7
 ================
