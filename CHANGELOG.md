@@ -6,6 +6,8 @@ walkers 8.0
 - fix flying for Vex
 - fix the "There are Monsters Nearby" bed rule for disguised players
 - fix CantSwim Trait
+- fix speed for many animations
+- fix wings flap for phantom
 
 walkers 7.2.7
 ================

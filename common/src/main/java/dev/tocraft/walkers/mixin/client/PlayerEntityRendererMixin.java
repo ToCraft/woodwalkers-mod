@@ -165,7 +165,12 @@ public abstract class PlayerEntityRendererMixin extends LivingEntityRenderer<Abs
             livingState.walkAnimationPos = player.walkAnimationPos;
             livingState.walkAnimationSpeed = player.walkAnimationSpeed;
             livingState.bodyRot = player.bodyRot;
-            livingState.xRot = player.xRot;
+            if (livingState instanceof PhantomRenderState phantom) {
+                phantom.xRot = -player.xRot;
+                phantom.flapTime = player.id * 3 + player.ageInTicks; // fix phantom flapping
+            } else {
+                livingState.xRot = player.xRot;
+            }
             livingState.yRot = player.yRot;
             livingState.wornHeadAnimationPos = player.wornHeadAnimationPos;
             livingState.isInWater = player.isInWater;
