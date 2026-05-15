@@ -239,7 +239,7 @@ public class TraitRegistry {
                     traits.addAll(entry.getValue().stream().map(trait -> (ShapeTrait<L>) trait).toList());
                 }
             }
-            for (Map.Entry<TagKey<EntityType<?>>, List<ShapeTrait<?>>> entry : traitsByEntityTags.entrySet()) {
+            for (Map.Entry<TagKey<@NotNull EntityType<?>>, List<ShapeTrait<?>>> entry : traitsByEntityTags.entrySet()) {
                 if (shape.getType().builtInRegistryHolder().is(entry.getKey())) {
                     traits.addAll(entry.getValue().stream().map(trait -> (ShapeTrait<L>) trait).toList());
                 }

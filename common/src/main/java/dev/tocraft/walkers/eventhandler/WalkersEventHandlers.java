@@ -23,6 +23,8 @@ import net.minecraft.world.entity.npc.villager.Villager;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.ServerLevelAccessor;
 
+import java.util.Optional;
+
 @SuppressWarnings("resource")
 public class WalkersEventHandlers {
 
@@ -47,16 +49,16 @@ public class WalkersEventHandlers {
 
         PlayerEvents.ALLOW_SLEEP_TIME.register((player, sleepingPos, vanillaResult) -> {
             if (TraitRegistry.has(PlayerShape.getCurrentShape(player), NocturnalTrait.ID)) {
-                return !player.level().dimensionType().hasFixedTime() && player.level().getSkyDarken() < 4 ? InteractionResult.SUCCESS : InteractionResult.FAIL;
+                return player.level().isBrightOutside() ? InteractionResult.SUCCESS : InteractionResult.FAIL;
             }
             return InteractionResult.PASS;
         });
 
-        PlayerEvents.SLEEP_FINISHED_TIME.register((level, newTime) -> {
-            if (!level.dimensionType().hasFixedTime() && level.getSkyDarken() < 4 && !level.getPlayers(player -> player.isSleeping() && TraitRegistry.has(PlayerShape.getCurrentShape(player), NocturnalTrait.ID)).isEmpty()) {
-                return newTime + level.getDefaultClockTime() % 24000L > 12000L ? 13000 : -11000;
+        PlayerEvents.SLEEP_FINISHED_TIME.register((level, currentTime, timeAdjustment) -> {
+            if (level.isBrightOutside() && !level.getPlayers(player -> player.isSleeping() && TraitRegistry.has(PlayerShape.getCurrentShape(player), NocturnalTrait.ID)).isEmpty()) {
+                return Optional.of(13000L);
             } else {
-                return newTime;
+                return Optional.empty();
             }
         });
 

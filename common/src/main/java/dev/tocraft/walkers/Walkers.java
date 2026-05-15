@@ -38,7 +38,6 @@ import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @SuppressWarnings({"resource"})
@@ -46,7 +45,7 @@ public class Walkers {
     public static ProblemReporter PROBLEM_REPORTER = new ProblemReporter() {
         @Contract(pure = true)
         @Override
-        public @NotNull ProblemReporter forChild(PathElement pathElement) {
+        public @NotNull ProblemReporter forChild(@NotNull PathElement pathElement) {
             return this;
         }
 
@@ -135,7 +134,7 @@ public class Walkers {
 
                 boolean hasPermission = true;
                 for (String requiredAdvancement : requiredAdvancements) {
-                    AdvancementHolder advancement = Optional.ofNullable(player.level() instanceof net.minecraft.server.level.ServerLevel sl ? sl.getServer() : null).flatMap(s -> Optional.of(s.getAdvancements())).map(a -> a.get(Identifier.parse(requiredAdvancement))).orElse(null);
+                    AdvancementHolder advancement = player.level().getServer().getAdvancements().get(Identifier.parse(requiredAdvancement));
                     if (advancement != null) {
                         AdvancementProgress progress = player.getAdvancements().getOrStartProgress(advancement);
 
