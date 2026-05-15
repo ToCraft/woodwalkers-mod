@@ -41,7 +41,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-@SuppressWarnings({"resource"})
 public class Walkers {
     public static ProblemReporter PROBLEM_REPORTER = new ProblemReporter() {
         @Contract(pure = true)

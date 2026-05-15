@@ -18,8 +18,7 @@ public class PlayerSwimmingMixin {
     @Inject(
             method = "jumpInLiquid", at = @At("HEAD"), cancellable = true)
     private void onGolemSwimUp(TagKey<Fluid> fluid, CallbackInfo ci) {
-        LivingEntity thisEntity = (LivingEntity) (Object) this;
-        if (thisEntity instanceof Player player) {
+        if ((Object) this instanceof Player player) {
             LivingEntity shape = PlayerShape.getCurrentShape(player);
 
             if (TraitRegistry.has(shape, CantSwimTrait.ID)) {

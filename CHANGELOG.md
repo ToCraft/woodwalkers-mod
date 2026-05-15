@@ -5,6 +5,7 @@ walkers 8.0
 - **port to 26.1.2** ~thanks to tgboyles
 - fix flying for Vex
 - fix the "There are Monsters Nearby" bed rule for disguised players
+- fix CantSwim Trait
 
 walkers 7.2.7
 ================

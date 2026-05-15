@@ -4,12 +4,16 @@ import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import dev.tocraft.walkers.api.PlayerShape;
 import dev.tocraft.walkers.traits.TraitRegistry;
+import dev.tocraft.walkers.traits.impl.CantSwimTrait;
 import dev.tocraft.walkers.traits.impl.NoPhysicsTrait;
 import net.minecraft.network.protocol.game.ClientboundSetPassengersPacket;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.monster.piglin.AbstractPiglin;
+import net.minecraft.world.entity.monster.skeleton.AbstractSkeleton;
+import net.minecraft.world.entity.monster.zombie.Zombie;
 import net.minecraft.world.entity.player.Player;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -79,6 +83,17 @@ public abstract class EntityMixin {
             return true;
         } else {
             return original.call(instance);
+        }
+    }
+
+    @Inject(method = "isSwimming", at = @At("HEAD"), cancellable = true)
+    private void noSwimming(CallbackInfoReturnable<Boolean> cir) {
+        if ((Object) this instanceof Player player) {
+            LivingEntity shape = PlayerShape.getCurrentShape(player);
+
+            if (TraitRegistry.has(shape, CantSwimTrait.ID) || shape instanceof Zombie || shape instanceof AbstractSkeleton || shape instanceof AbstractPiglin) {
+                cir.setReturnValue(false);
+            }
         }
     }
 }
