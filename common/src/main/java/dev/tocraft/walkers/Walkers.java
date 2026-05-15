@@ -28,6 +28,7 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.ProblemReporter;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.animal.FlyingAnimal;
 import net.minecraft.world.level.GameType;
 import org.jetbrains.annotations.ApiStatus;
@@ -54,6 +55,7 @@ public class Walkers {
             Walkers.LOGGER.error(problem.description());
         }
     };
+    public static final AttributeModifier WAYPOINT_TRANSMIT_MODIFIER = new AttributeModifier(Walkers.id("waypoint_transmit_disguised"), -1.0F, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL);;
 
     @ApiStatus.Internal
     public static final Logger LOGGER = LoggerFactory.getLogger(Walkers.class);

@@ -170,6 +170,8 @@ public class WalkersConfig implements Config {
     public boolean emit_particles = true;
     @Comment("The health that a normal player should have (e.g. 20). Set to -1 to use a cached one or if you don't know what this option does")
     public float player_health = -1;
+    @Comment("Whether disguised players are shown on the Locator Bar")
+    public boolean show_on_locator_bar = false;
 
     @Override
     public String getName() {

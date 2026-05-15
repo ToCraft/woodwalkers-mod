@@ -3,7 +3,7 @@ plugins {
 }
 
 dependencies {
-    implementation("net.fabricmc.fabric-api:fabric-api:${property("fabric")}")
+    runtimeOnly("net.fabricmc.fabric-api:fabric-api:${property("fabric")}")
 
     // MixinExtras bundled with the mod
     include(implementation(annotationProcessor("io.github.llamalad7:mixinextras-fabric:${property("mixinextras_version")}")!!)!!)
