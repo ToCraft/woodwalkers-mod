@@ -3,7 +3,7 @@ package dev.tocraft.walkers.ability.impl.specific;
 import dev.tocraft.walkers.Walkers;
 import dev.tocraft.walkers.ability.ShapeAbility;
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
@@ -18,10 +18,10 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 
 public class GuardianAbility<T extends Guardian> extends ShapeAbility<T> {
-    public static final ResourceLocation ID = Walkers.id("guardian");
+    public static final Identifier ID = Walkers.id("guardian");
 
     @Override
-    public ResourceLocation getId() {
+    public Identifier getId() {
         return ID;
     }
 

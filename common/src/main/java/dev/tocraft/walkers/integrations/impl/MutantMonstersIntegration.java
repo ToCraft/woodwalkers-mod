@@ -11,7 +11,7 @@ import dev.tocraft.walkers.traits.impl.BurnInDaylightTrait;
 import dev.tocraft.walkers.traits.impl.ClimbBlocksTrait;
 import dev.tocraft.walkers.traits.impl.TemperatureTrait;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
@@ -19,13 +19,13 @@ import net.minecraft.world.entity.Mob;
 @SuppressWarnings("unchecked")
 public class MutantMonstersIntegration extends AbstractIntegration {
     public static final String MODID = "mutantmonsters";
-    private static final ResourceLocation CREEPER_MINION = ResourceLocation.fromNamespaceAndPath(MODID, "creeper_minion");
-    private static final ResourceLocation MUTANT_CREEPER = ResourceLocation.fromNamespaceAndPath(MODID, "mutant_creeper");
-    private static final ResourceLocation MUTANT_ENDERMAN = ResourceLocation.fromNamespaceAndPath(MODID, "mutant_enderman");
-    private static final ResourceLocation MUTANT_SKELETON = ResourceLocation.fromNamespaceAndPath(MODID, "mutant_skeleton");
-    private static final ResourceLocation MUTANT_SNOW_GOLEM = ResourceLocation.fromNamespaceAndPath(MODID, "mutant_snow_golem");
-    private static final ResourceLocation MUTANT_ZOMBIE = ResourceLocation.fromNamespaceAndPath(MODID, "mutant_zombie");
-    private static final ResourceLocation SPIDER_PIG = ResourceLocation.fromNamespaceAndPath(MODID, "spider_pig");
+    private static final Identifier CREEPER_MINION = Identifier.fromNamespaceAndPath(MODID, "creeper_minion");
+    private static final Identifier MUTANT_CREEPER = Identifier.fromNamespaceAndPath(MODID, "mutant_creeper");
+    private static final Identifier MUTANT_ENDERMAN = Identifier.fromNamespaceAndPath(MODID, "mutant_enderman");
+    private static final Identifier MUTANT_SKELETON = Identifier.fromNamespaceAndPath(MODID, "mutant_skeleton");
+    private static final Identifier MUTANT_SNOW_GOLEM = Identifier.fromNamespaceAndPath(MODID, "mutant_snow_golem");
+    private static final Identifier MUTANT_ZOMBIE = Identifier.fromNamespaceAndPath(MODID, "mutant_zombie");
+    private static final Identifier SPIDER_PIG = Identifier.fromNamespaceAndPath(MODID, "spider_pig");
 
 
     @Override
@@ -45,7 +45,7 @@ public class MutantMonstersIntegration extends AbstractIntegration {
         AbilityRegistry.registerByType(getType(SPIDER_PIG), new JumpAbility<>());
     }
 
-    private static EntityType<? extends Mob> getType(ResourceLocation id) {
+    private static EntityType<? extends Mob> getType(Identifier id) {
         return (EntityType<? extends Mob>) BuiltInRegistries.ENTITY_TYPE.get(id).orElseThrow().value();
     }
 }

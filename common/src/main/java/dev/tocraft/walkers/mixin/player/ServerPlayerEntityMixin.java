@@ -1,12 +1,19 @@
 package dev.tocraft.walkers.mixin.player;
 
+import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
 import com.mojang.authlib.GameProfile;
 import dev.tocraft.walkers.Walkers;
 import dev.tocraft.walkers.api.FlightHelper;
+import dev.tocraft.walkers.api.PlayerShape;
 import dev.tocraft.walkers.api.PlayerShapeChanger;
+import dev.tocraft.walkers.traits.TraitRegistry;
+import dev.tocraft.walkers.traits.impl.AttackForHealthTrait;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.food.FoodData;
 import net.minecraft.world.level.Level;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -48,5 +55,11 @@ public abstract class ServerPlayerEntityMixin extends Player {
             if (this.getVehicle() instanceof Player)
                 this.stopRiding();
         }
+    }
+
+    @WrapWithCondition(method = "doTick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/food/FoodData;tick(Lnet/minecraft/server/level/ServerPlayer;)V"))
+    private boolean preventFoodDataTick(FoodData instance, ServerPlayer player) {
+        LivingEntity shape = PlayerShape.getCurrentShape(player);
+        return player.hasEffect(MobEffects.SATURATION) || !TraitRegistry.has(shape, AttackForHealthTrait.ID);
     }
 }

@@ -14,7 +14,7 @@ public class WardenTickHandler implements WalkersTickHandler<Warden> {
 
     @Override
     public void tick(Player player, Warden entity) {
-        if (!player.level().isClientSide) {
+        if (!player.level().isClientSide()) {
             if (player.tickCount % 20 == 0) {
 
                 // Blind the Warden Walkers player.

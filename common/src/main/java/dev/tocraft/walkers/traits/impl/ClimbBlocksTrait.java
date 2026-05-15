@@ -8,9 +8,9 @@ import dev.tocraft.walkers.Walkers;
 import dev.tocraft.walkers.traits.ShapeTrait;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -21,20 +21,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ClimbBlocksTrait<E extends LivingEntity> extends ShapeTrait<E> {
-    public static final ResourceLocation ID = Walkers.id("climb_blocks");
+    public static final Identifier ID = Walkers.id("climb_blocks");
     public static final MapCodec<ClimbBlocksTrait<?>> CODEC = RecordCodecBuilder.mapCodec((instance) -> instance.group(
             Codec.BOOL.optionalFieldOf("horizontal_collision", true).forGetter(o -> o.horizontalCollision),
-            Codec.list(ResourceLocation.CODEC).optionalFieldOf("valid_blocks", new ArrayList<>()).forGetter(o -> o.validBlocks.stream().map(BuiltInRegistries.BLOCK::getKey).toList()),
-            Codec.list(ResourceLocation.CODEC).optionalFieldOf("invalid_blocks", new ArrayList<>()).forGetter(o -> o.invalidBlocks.stream().map(BuiltInRegistries.BLOCK::getKey).toList())
+            Codec.list(Identifier.CODEC).optionalFieldOf("valid_blocks", new ArrayList<>()).forGetter(o -> o.validBlocks.stream().map(BuiltInRegistries.BLOCK::getKey).toList()),
+            Codec.list(Identifier.CODEC).optionalFieldOf("invalid_blocks", new ArrayList<>()).forGetter(o -> o.invalidBlocks.stream().map(BuiltInRegistries.BLOCK::getKey).toList())
     ).apply(instance, instance.stable((horizontalCollision, validBlocksLocation, invalidBlocksLocation) -> {
         List<Block> validBlocks = new ArrayList<>();
-        for (ResourceLocation resourceLocation : validBlocksLocation) {
+        for (Identifier resourceLocation : validBlocksLocation) {
             if (BuiltInRegistries.BLOCK.containsKey(resourceLocation)) {
                 validBlocks.add(BuiltInRegistries.BLOCK.get(resourceLocation).orElseThrow().value());
             }
         }
         List<Block> invalidBlocks = new ArrayList<>();
-        for (ResourceLocation resourceLocation : invalidBlocksLocation) {
+        for (Identifier resourceLocation : invalidBlocksLocation) {
             if (BuiltInRegistries.BLOCK.containsKey(resourceLocation)) {
                 validBlocks.add(BuiltInRegistries.BLOCK.get(resourceLocation).orElseThrow().value());
             }
@@ -66,7 +66,7 @@ public class ClimbBlocksTrait<E extends LivingEntity> extends ShapeTrait<E> {
     }
 
     @Override
-    public ResourceLocation getId() {
+    public Identifier getId() {
         return ID;
     }
 
@@ -77,9 +77,9 @@ public class ClimbBlocksTrait<E extends LivingEntity> extends ShapeTrait<E> {
 
     @Environment(EnvType.CLIENT)
     @Override
-    public boolean renderIcon(RenderPipeline pipeline, @NotNull GuiGraphics graphics, int x, int y, int width, int height) {
+    public boolean renderIcon(RenderPipeline pipeline, @NotNull GuiGraphicsExtractor graphics, int x, int y, int width, int height) {
         ItemStack stack = new ItemStack(Items.VINE);
-        graphics.renderItem(stack, x, y);
+        graphics.item(stack, x, y);
         return true;
     }
 }

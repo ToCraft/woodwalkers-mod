@@ -61,7 +61,7 @@ public class AbilityOverlayRenderer {
                         }
 
                         ItemStack stack = new ItemStack(icon);
-                        graphics.renderItem(stack, (int) (width * .95f), (int) (height * .92f));
+                        graphics.item(stack, (int) (width * .95f), (int) (height * .92f));
 
                         if (cooldownScale != 1) {
                             graphics.disableScissor();

@@ -9,10 +9,10 @@ import dev.tocraft.walkers.traits.ShapeTrait;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.Gui;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
 import org.jetbrains.annotations.NotNull;
@@ -20,9 +20,9 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Optional;
 
 public class MobEffectTrait<E extends LivingEntity> extends ShapeTrait<E> {
-    public static final ResourceLocation ID = Walkers.id("mob_effect");
+    public static final Identifier ID = Walkers.id("mob_effect");
     public static final MapCodec<MobEffectInstance> MOB_EFFECT_INSTANCE_CODEC = RecordCodecBuilder.mapCodec((instance) -> instance.group(
-            ResourceLocation.CODEC.fieldOf("id").forGetter(o -> BuiltInRegistries.MOB_EFFECT.getKey(o.getEffect().value())),
+            Identifier.CODEC.fieldOf("id").forGetter(o -> BuiltInRegistries.MOB_EFFECT.getKey(o.getEffect().value())),
             Codec.INT.fieldOf("duration").forGetter(MobEffectInstance::getDuration),
             Codec.INT.fieldOf("amplifier").forGetter(MobEffectInstance::getAmplifier),
             Codec.BOOL.optionalFieldOf("ambient", false).forGetter(MobEffectInstance::isAmbient),
@@ -71,7 +71,7 @@ public class MobEffectTrait<E extends LivingEntity> extends ShapeTrait<E> {
     }
 
     @Override
-    public ResourceLocation getId() {
+    public Identifier getId() {
         return ID;
     }
 
@@ -88,7 +88,7 @@ public class MobEffectTrait<E extends LivingEntity> extends ShapeTrait<E> {
 
     @Environment(EnvType.CLIENT)
     @Override
-    public boolean renderIcon(RenderPipeline pipeline, @NotNull GuiGraphics graphics, int x, int y, int width, int height) {
+    public boolean renderIcon(RenderPipeline pipeline, @NotNull GuiGraphicsExtractor graphics, int x, int y, int width, int height) {
         graphics.blitSprite(RenderPipelines.GUI_TEXTURED, Gui.getMobEffectSprite(mobEffectInstance.getEffect()), x, y, width, height);
         return true;
     }

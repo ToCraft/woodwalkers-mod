@@ -6,7 +6,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.tocraft.walkers.Walkers;
 import dev.tocraft.walkers.ability.GenericShapeAbility;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.LivingEntity;
@@ -20,9 +20,9 @@ public class GetItemAbility<T extends LivingEntity> extends GenericShapeAbility<
         this.itemStack = itemStack;
     }
 
-    public static final ResourceLocation ID = Walkers.id("get_item");
+    public static final Identifier ID = Walkers.id("get_item");
     public static final MapCodec<GetItemAbility<?>> CODEC = RecordCodecBuilder.mapCodec((instance) -> instance.group(
-            ResourceLocation.CODEC.fieldOf("item").forGetter(o -> BuiltInRegistries.ITEM.getKey(o.itemStack.getItem())),
+            Identifier.CODEC.fieldOf("item").forGetter(o -> BuiltInRegistries.ITEM.getKey(o.itemStack.getItem())),
             Codec.INT.optionalFieldOf("amount", 1).forGetter(o -> o.itemStack.getCount())
     ).apply(instance, instance.stable((item, amount) -> new GetItemAbility<>(new ItemStack(BuiltInRegistries.ITEM.get(item).orElseThrow().value(), amount)))));
 
@@ -42,7 +42,7 @@ public class GetItemAbility<T extends LivingEntity> extends GenericShapeAbility<
     }
 
     @Override
-    public ResourceLocation getId() {
+    public Identifier getId() {
         return ID;
     }
 

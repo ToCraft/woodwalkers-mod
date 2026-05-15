@@ -6,7 +6,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.tocraft.walkers.Walkers;
 import dev.tocraft.walkers.ability.GenericShapeAbility;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
@@ -15,9 +15,9 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.monster.Blaze;
 import net.minecraft.world.entity.monster.Ghast;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.projectile.Fireball;
-import net.minecraft.world.entity.projectile.LargeFireball;
-import net.minecraft.world.entity.projectile.SmallFireball;
+import net.minecraft.world.entity.projectile.hurtingprojectile.Fireball;
+import net.minecraft.world.entity.projectile.hurtingprojectile.LargeFireball;
+import net.minecraft.world.entity.projectile.hurtingprojectile.SmallFireball;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
@@ -27,9 +27,9 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Optional;
 
 public class ShootFireballAbility<T extends LivingEntity> extends GenericShapeAbility<T> {
-    public static final ResourceLocation ID = Walkers.id("shoot_fireball");
+    public static final Identifier ID = Walkers.id("shoot_fireball");
     public static final MapCodec<ShootFireballAbility<?>> CODEC = RecordCodecBuilder.mapCodec((instance) -> instance.group(
-            ResourceLocation.CODEC.optionalFieldOf("icon").forGetter(o -> {
+            Identifier.CODEC.optionalFieldOf("icon").forGetter(o -> {
                 if (o.icon == Items.FIRE_CHARGE) return Optional.empty();
                 else
                     return Optional.of(BuiltInRegistries.ITEM.getKey(o.icon));
@@ -55,12 +55,12 @@ public class ShootFireballAbility<T extends LivingEntity> extends GenericShapeAb
         Fireball fireball = getFireball(player, world);
         world.addFreshEntity(fireball);
         if (shape instanceof Blaze) {
-            world.playSound(null, player, SoundEvents.BLAZE_SHOOT, SoundSource.HOSTILE, 2.0F, (world.random.nextFloat() - world.random.nextFloat()) * 0.2F + 1.0F);
+            world.playSound(null, player, SoundEvents.BLAZE_SHOOT, SoundSource.HOSTILE, 2.0F, (world.getRandom().nextFloat() - world.getRandom().nextFloat()) * 0.2F + 1.0F);
         } else if (shape instanceof Ghast) {
-            world.playSound(null, player, SoundEvents.GHAST_SHOOT, SoundSource.HOSTILE, 10.0F, (world.random.nextFloat() - world.random.nextFloat()) * 0.2F + 1.0F);
-            world.playSound(null, player, SoundEvents.GHAST_WARN, SoundSource.HOSTILE, 10.0F, (world.random.nextFloat() - world.random.nextFloat()) * 0.2F + 1.0F);
+            world.playSound(null, player, SoundEvents.GHAST_SHOOT, SoundSource.HOSTILE, 10.0F, (world.getRandom().nextFloat() - world.getRandom().nextFloat()) * 0.2F + 1.0F);
+            world.playSound(null, player, SoundEvents.GHAST_WARN, SoundSource.HOSTILE, 10.0F, (world.getRandom().nextFloat() - world.getRandom().nextFloat()) * 0.2F + 1.0F);
         } else {
-            world.playSound(null, player, SoundEvents.FIRECHARGE_USE, SoundSource.HOSTILE, 2.0F, (world.random.nextFloat() - world.random.nextFloat()) * 0.2F + 1.0F);
+            world.playSound(null, player, SoundEvents.FIRECHARGE_USE, SoundSource.HOSTILE, 2.0F, (world.getRandom().nextFloat() - world.getRandom().nextFloat()) * 0.2F + 1.0F);
         }
     }
 
@@ -91,7 +91,7 @@ public class ShootFireballAbility<T extends LivingEntity> extends GenericShapeAb
     }
 
     @Override
-    public ResourceLocation getId() {
+    public Identifier getId() {
         return ID;
     }
 

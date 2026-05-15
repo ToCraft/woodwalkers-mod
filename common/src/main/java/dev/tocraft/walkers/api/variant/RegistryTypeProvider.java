@@ -9,7 +9,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -26,7 +26,7 @@ import java.util.Optional;
 
 public class RegistryTypeProvider<T extends LivingEntity, V> extends TypeProvider<T> {
     public static final Codec<RegistryTypeProvider<?, ?>> CODEC = RecordCodecBuilder.create((instance) -> instance.group(
-            ResourceLocation.CODEC.fieldOf("registry").forGetter(o -> o.registry.location()),
+            Identifier.CODEC.fieldOf("registry").forGetter(o -> o.registry.identifier()),
             Codec.INT.optionalFieldOf("fallback", 0).forGetter(RegistryTypeProvider::getFallbackData)
     ).apply(instance, instance.stable((r, f) -> new RegistryTypeProvider<>(ResourceKey.createRegistryKey(r), f))));
 
@@ -78,7 +78,7 @@ public class RegistryTypeProvider<T extends LivingEntity, V> extends TypeProvide
 
     @Override
     public Component modifyText(@NotNull T entity, MutableComponent text) {
-        Optional<MutableComponent> variant = getVariant(entity).flatMap(Holder::unwrapKey).map(key -> Component.literal(formatTypePrefix(key.location().getPath() + " ")));
+        Optional<MutableComponent> variant = getVariant(entity).flatMap(Holder::unwrapKey).map(key -> Component.literal(formatTypePrefix(key.identifier().getPath() + " ")));
 
         return variant.map(c -> c.append(text)).orElse(text);
     }

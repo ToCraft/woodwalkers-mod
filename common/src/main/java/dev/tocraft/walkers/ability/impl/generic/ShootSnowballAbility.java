@@ -4,26 +4,26 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.tocraft.walkers.Walkers;
 import dev.tocraft.walkers.ability.GenericShapeAbility;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.Projectile;
-import net.minecraft.world.entity.projectile.Snowball;
+import net.minecraft.world.entity.projectile.throwableitemprojectile.Snowball;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import org.jetbrains.annotations.NotNull;
 
 public class ShootSnowballAbility<T extends LivingEntity> extends GenericShapeAbility<T> {
-    public static final ResourceLocation ID = Walkers.id("shoot_snowball");
+    public static final Identifier ID = Walkers.id("shoot_snowball");
     public static final MapCodec<ShootSnowballAbility<?>> CODEC = RecordCodecBuilder.mapCodec((instance) -> instance.stable(new ShootSnowballAbility<>()));
 
     @Override
     public void onUse(@NotNull ServerPlayer player, T shape, @NotNull ServerLevel world) {
-        world.playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.SNOWBALL_THROW, SoundSource.NEUTRAL, 0.5F, 0.4F / (world.random.nextFloat() * 0.4F + 0.8F));
+        world.playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.SNOWBALL_THROW, SoundSource.NEUTRAL, 0.5F, 0.4F / (world.getRandom().nextFloat() * 0.4F + 0.8F));
 
         Projectile.spawnProjectileFromRotation(Snowball::new, world, new ItemStack(Items.SNOWBALL), player, 0.0F, 1.5F, 1.0F);
     }
@@ -39,7 +39,7 @@ public class ShootSnowballAbility<T extends LivingEntity> extends GenericShapeAb
     }
 
     @Override
-    public ResourceLocation getId() {
+    public Identifier getId() {
         return ID;
     }
 

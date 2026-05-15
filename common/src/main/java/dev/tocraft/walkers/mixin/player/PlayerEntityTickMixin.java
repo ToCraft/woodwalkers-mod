@@ -24,8 +24,8 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.targeting.TargetingConditions;
-import net.minecraft.world.entity.animal.Dolphin;
-import net.minecraft.world.entity.animal.Pufferfish;
+import net.minecraft.world.entity.animal.dolphin.Dolphin;
+import net.minecraft.world.entity.animal.fish.Pufferfish;
 import net.minecraft.world.entity.animal.sheep.Sheep;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
@@ -68,7 +68,7 @@ public abstract class PlayerEntityTickMixin extends LivingEntity {
         }
 
         // Update misc. server-side entity properties for the player.
-        if (!this.level().isClientSide) {
+        if (!this.level().isClientSide()) {
             PlayerDataProvider data = (PlayerDataProvider) this;
             data.walkers$setRemainingHostilityTime(Math.max(0, data.walkers$getRemainingHostilityTime() - 1));
 
@@ -89,7 +89,7 @@ public abstract class PlayerEntityTickMixin extends LivingEntity {
 
     @Inject(method = "tick", at = @At("HEAD"))
     private void pufferfishServerTick(CallbackInfo info) {
-        if (!this.level().isClientSide && this.isAlive()) {
+        if (!this.level().isClientSide() && this.isAlive()) {
             LivingEntity shape = PlayerShape.getCurrentShape((Player) (Object) this);
             if (shape instanceof Pufferfish pufferfishShape) {
                 if (((PufferfishAccessor) pufferfishShape).getInflateCounter() > 0) {
@@ -119,7 +119,7 @@ public abstract class PlayerEntityTickMixin extends LivingEntity {
 
     @Inject(method = "tick", at = @At("HEAD"))
     private void dolphinServerTick(CallbackInfo info) {
-        if (!this.level().isClientSide && this.isAlive()) {
+        if (!this.level().isClientSide() && this.isAlive()) {
             Player player = (Player) (Object) this;
             LivingEntity shape = PlayerShape.getCurrentShape(player);
             if (shape instanceof Dolphin) {
@@ -133,7 +133,7 @@ public abstract class PlayerEntityTickMixin extends LivingEntity {
 
     @Inject(method = "tick", at = @At("HEAD"))
     private void applyMobEffectTrait(CallbackInfo info) {
-        if (!this.level().isClientSide && this.isAlive()) {
+        if (!this.level().isClientSide() && this.isAlive()) {
             Player player = (Player) (Object) this;
             LivingEntity shape = PlayerShape.getCurrentShape(player);
             if (TraitRegistry.has(shape, MobEffectTrait.ID)) {
@@ -191,7 +191,7 @@ public abstract class PlayerEntityTickMixin extends LivingEntity {
         if (walkers$IS_TALL_GRASS == null)
             walkers$IS_TALL_GRASS = BlockStatePredicate.forBlock(Blocks.TALL_GRASS);
 
-        if (!this.level().isClientSide && this.isAlive()) {
+        if (!this.level().isClientSide() && this.isAlive()) {
             ServerPlayer serverPlayer = (ServerPlayer) (Object) this;
             LivingEntity shape = PlayerShape.getCurrentShape(serverPlayer);
             if (shape != null && AbilityRegistry.get(shape) instanceof GrassEaterAbility<?> grassEaterAbility) {

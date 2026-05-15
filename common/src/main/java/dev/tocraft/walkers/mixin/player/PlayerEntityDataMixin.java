@@ -12,6 +12,7 @@ import dev.tocraft.walkers.traits.impl.RiderTrait;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
@@ -19,8 +20,9 @@ import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.animal.horse.AbstractHorse;
+import net.minecraft.world.entity.animal.equine.AbstractHorse;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.storage.ValueInput;
@@ -33,12 +35,15 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import java.awt.*;
+import java.util.Objects;
 import java.util.Optional;
+
+import static dev.tocraft.walkers.Walkers.WAYPOINT_TRANSMIT_MODIFIER;
 
 @SuppressWarnings("UnreachableCode")
 @Mixin(Player.class)
 public abstract class PlayerEntityDataMixin extends LivingEntity implements PlayerDataProvider {
-
     @Unique
     private static final String ABILITY_COOLDOWN_KEY = "AbilityCooldown";
     @Unique
@@ -206,10 +211,10 @@ public abstract class PlayerEntityDataMixin extends LivingEntity implements Play
         AttributeInstance armorToughnessAttribute = player.getAttribute(Attributes.ARMOR_TOUGHNESS);
 
         // spawn particles
-        if (Walkers.CONFIG.emit_particles && this.walkers$shape != shape && player.level() instanceof ServerLevel l) {
-            l.sendParticles(ParticleTypes.TOTEM_OF_UNDYING, player.getX(), player.getY() + 1, player.getZ(), 25, .5, 1.0, .5, .5);
-            l.sendParticles(ParticleTypes.PORTAL, player.getX(), player.getY() + 1, player.getZ(), 25, .5, 1.0, .5, .5);
-            l.sendParticles(ParticleTypes.ELECTRIC_SPARK, player.getX(), player.getY() + 1, player.getZ(), 25, .5, 1.0, .5, .5);
+        if (Walkers.CONFIG.emit_particles && !Objects.equals(ShapeType.from(this.walkers$shape), ShapeType.from(shape)) && player.level() instanceof ServerLevel l) {
+            l.sendParticles(ParticleTypes.TOTEM_OF_UNDYING, player.getX(), player.getY() + 1, player.getZ(), 25, .5, 1.0, .5, .75);
+            l.sendParticles(ParticleTypes.PORTAL, player.getX(), player.getY() + 1, player.getZ(), 25, .5, 1.0, .5, .75);
+            l.sendParticles(ParticleTypes.ELECTRIC_SPARK, player.getX(), player.getY() + 1, player.getZ(), 25, .5, 1.0, .5, .7);
         }
 
         boolean firstShape = this.walkers$shape == null;
@@ -218,6 +223,13 @@ public abstract class PlayerEntityDataMixin extends LivingEntity implements Play
         // shape is valid and scaling health is on; set entity's max health and current
         // health to reflect shape.
         if (shape != null) {
+            if (!Walkers.CONFIG.show_on_locator_bar && player instanceof ServerPlayer) {
+                AttributeInstance waypointTransmitRange = this.getAttribute(Attributes.WAYPOINT_TRANSMIT_RANGE);
+                if (waypointTransmitRange != null) {
+                    waypointTransmitRange.addOrReplacePermanentModifier(WAYPOINT_TRANSMIT_MODIFIER);
+                }
+            }
+
             if (Walkers.CONFIG.scalingHealth && healthAttribute != null) {
                 if (firstShape) { // only cache health when in first shape
                     this.walkers$normalHealth = (float) healthAttribute.getBaseValue();
@@ -268,6 +280,11 @@ public abstract class PlayerEntityDataMixin extends LivingEntity implements Play
         // If the shape is null (going back to player), set the player's base health
         // value to 20 (default) to clear old changes.
         if (shape == null) {
+            AttributeInstance waypointTransmitRange = this.getAttribute(Attributes.WAYPOINT_TRANSMIT_RANGE);
+            if (waypointTransmitRange != null) {
+                waypointTransmitRange.removeModifier(WAYPOINT_TRANSMIT_MODIFIER);
+            }
+
             if (Walkers.CONFIG.scalingHealth && healthAttribute != null) {
                 float currentHealthPercent = player.getHealth() / player.getMaxHealth();
 
@@ -347,7 +364,7 @@ public abstract class PlayerEntityDataMixin extends LivingEntity implements Play
         }
 
         // sync with client
-        if (!player.level().isClientSide) {
+        if (!player.level().isClientSide()) {
             PlayerShape.sync((ServerPlayer) player);
 
             Int2ObjectMap<Object> trackers = ((ThreadedAnvilChunkStorageAccessor) ((ServerLevel) player.level())

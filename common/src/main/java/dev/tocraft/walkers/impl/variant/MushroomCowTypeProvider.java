@@ -5,7 +5,7 @@ import dev.tocraft.walkers.mixin.accessor.MushroomCowAccessor;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.animal.MushroomCow;
+import net.minecraft.world.entity.animal.cow.MushroomCow;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;

@@ -4,7 +4,7 @@ import dev.tocraft.walkers.api.variant.TypeProvider;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.animal.Panda;
+import net.minecraft.world.entity.animal.panda.Panda;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;

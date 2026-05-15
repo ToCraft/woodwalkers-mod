@@ -2,7 +2,7 @@ package dev.tocraft.walkers.ability.impl.specific;
 
 import dev.tocraft.walkers.Walkers;
 import dev.tocraft.walkers.ability.ShapeAbility;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
@@ -11,17 +11,17 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.Projectile;
-import net.minecraft.world.entity.projectile.windcharge.WindCharge;
+import net.minecraft.world.entity.projectile.hurtingprojectile.windcharge.WindCharge;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.WindChargeItem;
 
 public class BreezeAbility<T extends LivingEntity> extends ShapeAbility<T> {
-    public static final ResourceLocation ID = Walkers.id("breeze");
+    public static final Identifier ID = Walkers.id("breeze");
 
     @Override
-    public ResourceLocation getId() {
+    public Identifier getId() {
         return ID;
     }
 

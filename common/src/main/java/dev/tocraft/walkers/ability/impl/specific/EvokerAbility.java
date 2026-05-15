@@ -3,7 +3,7 @@ package dev.tocraft.walkers.ability.impl.specific;
 import dev.tocraft.walkers.Walkers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
@@ -17,10 +17,10 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 
 public class EvokerAbility<T extends LivingEntity> extends AnimationAbility<T> {
-    public static final ResourceLocation ID = Walkers.id("evoker");
+    public static final Identifier ID = Walkers.id("evoker");
 
     @Override
-    public ResourceLocation getId() {
+    public Identifier getId() {
         return ID;
     }
 

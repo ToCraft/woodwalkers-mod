@@ -4,7 +4,7 @@ import dev.tocraft.craftedcore.event.client.RenderEvents;
 import dev.tocraft.walkers.api.PlayerShape;
 import dev.tocraft.walkers.traits.TraitRegistry;
 import dev.tocraft.walkers.traits.impl.AttackForHealthTrait;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -17,7 +17,7 @@ public class OverlayEventHandler {
 
     private static class RenderFood implements RenderEvents.OverlayRendering {
         @Override
-        public InteractionResult render(@Nullable GuiGraphics graphics, Player player) {
+        public InteractionResult render(@Nullable GuiGraphicsExtractor graphics, Player player) {
             if (player != null) {
                 LivingEntity shape = PlayerShape.getCurrentShape(player);
 

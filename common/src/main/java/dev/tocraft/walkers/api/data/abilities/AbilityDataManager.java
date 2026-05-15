@@ -15,7 +15,7 @@ import dev.tocraft.walkers.ability.GenericShapeAbility;
 import dev.tocraft.walkers.ability.ShapeAbility;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -34,12 +34,12 @@ public class AbilityDataManager extends SynchronizedJsonReloadListener {
 
     @SuppressWarnings("unchecked")
     @Override
-    protected void onApply(@NotNull Map<ResourceLocation, JsonElement> map) {
+    protected void onApply(@NotNull Map<Identifier, JsonElement> map) {
         // prevent duplicates and the registration of removed entries
         AbilityRegistry.clearAll();
         AbilityRegistry.registerDefault();
 
-        for (Map.Entry<ResourceLocation, JsonElement> mapEntry : map.entrySet()) {
+        for (Map.Entry<Identifier, JsonElement> mapEntry : map.entrySet()) {
             AbilityList abilityList = ABILITY_LIST_CODEC.parse(JsonOps.INSTANCE, mapEntry.getValue().getAsJsonObject()).getOrThrow(msg -> {
                 throw new JsonParseException(msg);
             });
@@ -74,14 +74,14 @@ public class AbilityDataManager extends SynchronizedJsonReloadListener {
 
     public static final Codec<AbilityList> ABILITY_LIST_CODEC = RecordCodecBuilder.create((instance) -> instance.group(
             Codec.STRING.optionalFieldOf("required_mod", "").forGetter(AbilityList::requiredMod),
-            Codec.list(ResourceLocation.CODEC).optionalFieldOf("entity_types", new ArrayList<>()).forGetter(AbilityList::entityTypeKeys),
-            Codec.list(ResourceLocation.CODEC).optionalFieldOf("entity_tags", new ArrayList<>()).forGetter(AbilityList::entityTagKeys),
+            Codec.list(Identifier.CODEC).optionalFieldOf("entity_types", new ArrayList<>()).forGetter(AbilityList::entityTypeKeys),
+            Codec.list(Identifier.CODEC).optionalFieldOf("entity_tags", new ArrayList<>()).forGetter(AbilityList::entityTagKeys),
             AbilityRegistry.getAbilityCodec().fieldOf("ability").forGetter(AbilityList::ability)
     ).apply(instance, instance.stable(AbilityList::new)));
 
     @SuppressWarnings("unused")
-    public record AbilityList(String requiredMod, List<ResourceLocation> entityTypeKeys,
-                              List<ResourceLocation> entityTagKeys,
+    public record AbilityList(String requiredMod, List<Identifier> entityTypeKeys,
+                              List<Identifier> entityTagKeys,
                               GenericShapeAbility<?> ability) {
 
         public AbilityList(@NotNull List<EntityType<?>> entityTypeKeys, @NotNull List<TagKey<EntityType<?>>> entityTagKeys, GenericShapeAbility<?> ability, String requiredMod) {

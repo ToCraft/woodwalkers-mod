@@ -3,7 +3,7 @@ package dev.tocraft.walkers.ability.impl.specific;
 import dev.tocraft.walkers.Walkers;
 import dev.tocraft.walkers.ability.ShapeAbility;
 import dev.tocraft.walkers.mixin.accessor.ShulkerAccessor;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
@@ -16,10 +16,10 @@ import net.minecraft.world.item.Items;
 
 @SuppressWarnings("resource")
 public class ShulkerAbility<T extends Shulker> extends ShapeAbility<T> {
-    public static final ResourceLocation ID = Walkers.id("shulker");
+    public static final Identifier ID = Walkers.id("shulker");
 
     @Override
-    public ResourceLocation getId() {
+    public Identifier getId() {
         return ID;
     }
 

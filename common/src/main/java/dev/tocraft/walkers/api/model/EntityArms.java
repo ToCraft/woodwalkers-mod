@@ -6,6 +6,26 @@ import dev.tocraft.walkers.mixin.client.accessor.*;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.model.*;
+import net.minecraft.client.model.animal.allay.AllayModel;
+import net.minecraft.client.model.animal.camel.CamelModel;
+import net.minecraft.client.model.animal.equine.HorseModel;
+import net.minecraft.client.model.animal.feline.AdultOcelotModel;
+import net.minecraft.client.model.animal.fox.FoxModel;
+import net.minecraft.client.model.animal.golem.IronGolemModel;
+import net.minecraft.client.model.animal.llama.LlamaModel;
+import net.minecraft.client.model.animal.panda.PandaModel;
+import net.minecraft.client.model.animal.pig.PigModel;
+import net.minecraft.client.model.animal.polarbear.PolarBearModel;
+import net.minecraft.client.model.animal.squid.SquidModel;
+import net.minecraft.client.model.animal.wolf.WolfModel;
+import net.minecraft.client.model.monster.blaze.BlazeModel;
+import net.minecraft.client.model.monster.ravager.RavagerModel;
+import net.minecraft.client.model.monster.spider.SpiderModel;
+import net.minecraft.client.model.monster.strider.StriderModel;
+import net.minecraft.client.model.monster.creeper.CreeperModel;
+import net.minecraft.client.model.monster.hoglin.HoglinModel;
+import net.minecraft.client.model.monster.vex.VexModel;
+import net.minecraft.client.model.monster.warden.WardenModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.renderer.entity.state.LivingEntityRenderState;
 import net.minecraft.util.Tuple;
@@ -114,7 +134,7 @@ public class EntityArms {
                     stack.mulPose(Maths.getDegreesQuaternion(Maths.POSITIVE_X(), -25));
                     stack.translate(0, 0, -.25);
                 });
-        register(OcelotModel.class, (ocelot, model) -> ((OcelotEntityModelAccessor) model).getRightFrontLeg());
+        register(AdultOcelotModel.class, (ocelot, model) -> ((OcelotEntityModelAccessor) model).getRightFrontLeg());
         register(SpiderModel.class, (spider, model) -> ((SpiderEntityModelAccessor) model).getRightFrontLeg(),
                 (stack, model) -> {
                     stack.mulPose(Maths.getDegreesQuaternion(Maths.POSITIVE_Y(), -15));

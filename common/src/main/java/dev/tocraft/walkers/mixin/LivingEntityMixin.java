@@ -13,7 +13,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffect;
@@ -23,7 +23,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
-import net.minecraft.world.entity.animal.horse.Horse;
+import net.minecraft.world.entity.animal.equine.Horse;
 import net.minecraft.world.entity.monster.Blaze;
 import net.minecraft.world.entity.monster.MagmaCube;
 import net.minecraft.world.entity.monster.Strider;
@@ -45,12 +45,12 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.List;
 
-@SuppressWarnings({"unused"})
+@SuppressWarnings({"unused", "ConstantValue"})
 @Mixin(LivingEntity.class)
 public abstract class LivingEntityMixin extends Entity implements NearbySongAccessor {
     @Shadow
     @Final
-    private static ResourceLocation SPRINTING_MODIFIER_ID;
+    private static Identifier SPRINTING_MODIFIER_ID;
 
     protected LivingEntityMixin(EntityType<?> type, Level world) {
         super(type, world);
@@ -311,7 +311,6 @@ public abstract class LivingEntityMixin extends Entity implements NearbySongAcce
     @Unique
     private final static AttributeModifier walkers$HORSE_SPRINT_MODIFIER = new AttributeModifier(SPRINTING_MODIFIER_ID, 0.5, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL);
 
-    @SuppressWarnings("ConstantValue")
     @ModifyArg(
             method = "setSprinting",
             at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/ai/attributes/AttributeInstance;addTransientModifier(Lnet/minecraft/world/entity/ai/attributes/AttributeModifier;)V"),

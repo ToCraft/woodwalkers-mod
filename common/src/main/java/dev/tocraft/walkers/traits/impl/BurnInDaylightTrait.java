@@ -9,15 +9,15 @@ import dev.tocraft.walkers.traits.ShapeTrait;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.level.block.Blocks;
 import org.jetbrains.annotations.NotNull;
 
 public class BurnInDaylightTrait<E extends LivingEntity> extends ShapeTrait<E> {
-    public static final ResourceLocation ID = Walkers.id("burn_in_daylight");
+    public static final Identifier ID = Walkers.id("burn_in_daylight");
     public static final MapCodec<BurnInDaylightTrait<?>> CODEC = RecordCodecBuilder.mapCodec((instance) -> instance.group(
             Codec.BOOL.optionalFieldOf("burn_in_moonlight_instead", false).forGetter(o -> o.burnInMoonlightInstead)
     ).apply(instance, instance.stable(BurnInDaylightTrait::new)));
@@ -33,7 +33,7 @@ public class BurnInDaylightTrait<E extends LivingEntity> extends ShapeTrait<E> {
     public final boolean burnInMoonlightInstead;
 
     @Override
-    public ResourceLocation getId() {
+    public Identifier getId() {
         return ID;
     }
 
@@ -44,8 +44,8 @@ public class BurnInDaylightTrait<E extends LivingEntity> extends ShapeTrait<E> {
 
     @Environment(EnvType.CLIENT)
     @Override
-    public boolean renderIcon(RenderPipeline pipeline, @NotNull GuiGraphics graphics, int x, int y, int width, int height) {
-        TextureAtlasSprite sprite = Minecraft.getInstance().getBlockRenderer().getBlockModelShaper().getBlockModel(Blocks.FIRE.defaultBlockState()).particleIcon();
+    public boolean renderIcon(RenderPipeline pipeline, @NotNull GuiGraphicsExtractor graphics, int x, int y, int width, int height) {
+        TextureAtlasSprite sprite = Minecraft.getInstance().getAtlasManager().getAtlasOrThrow(TextureAtlas.LOCATION_BLOCKS).getSprite(Identifier.withDefaultNamespace("block/fire_0"));
         graphics.blitSprite(pipeline, sprite, x, y, width, height);
         return true;
     }

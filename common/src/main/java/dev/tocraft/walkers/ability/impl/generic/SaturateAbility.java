@@ -5,7 +5,7 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.tocraft.walkers.Walkers;
 import dev.tocraft.walkers.ability.GenericShapeAbility;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
@@ -15,7 +15,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 
 public class SaturateAbility<T extends LivingEntity> extends GenericShapeAbility<T> {
-    public static final ResourceLocation ID = Walkers.id("saturate");
+    public static final Identifier ID = Walkers.id("saturate");
     public static final MapCodec<SaturateAbility<?>> CODEC = RecordCodecBuilder.mapCodec((instance) -> instance.group(
             Codec.INT.optionalFieldOf("food_level", 6).forGetter(o -> o.foodLevel),
             Codec.FLOAT.optionalFieldOf("saturation_level", 0.1F).forGetter(o -> o.saturationLevel)
@@ -37,7 +37,7 @@ public class SaturateAbility<T extends LivingEntity> extends GenericShapeAbility
     public void onUse(ServerPlayer player, T shape, ServerLevel world) {
         player.getFoodData().eat(foodLevel, saturationLevel);
 
-        world.playSound(null, player, SoundEvents.SHEEP_STEP, SoundSource.PLAYERS, 1.0F, (world.random.nextFloat() - world.random.nextFloat()) * 0.2F + 1.0F);
+        world.playSound(null, player, SoundEvents.SHEEP_STEP, SoundSource.PLAYERS, 1.0F, (world.getRandom().nextFloat() - world.getRandom().nextFloat()) * 0.2F + 1.0F);
     }
 
     @Override
@@ -51,7 +51,7 @@ public class SaturateAbility<T extends LivingEntity> extends GenericShapeAbility
     }
 
     @Override
-    public ResourceLocation getId() {
+    public Identifier getId() {
         return ID;
     }
 

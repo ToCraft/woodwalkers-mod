@@ -24,10 +24,11 @@ import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import net.minecraft.advancements.AdvancementHolder;
 import net.minecraft.advancements.AdvancementProgress;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.ProblemReporter;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.animal.FlyingAnimal;
 import net.minecraft.world.level.GameType;
 import org.jetbrains.annotations.ApiStatus;
@@ -38,7 +39,6 @@ import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @SuppressWarnings({"resource"})
@@ -46,7 +46,7 @@ public class Walkers {
     public static ProblemReporter PROBLEM_REPORTER = new ProblemReporter() {
         @Contract(pure = true)
         @Override
-        public @NotNull ProblemReporter forChild(PathElement pathElement) {
+        public @NotNull ProblemReporter forChild(@NotNull PathElement pathElement) {
             return this;
         }
 
@@ -55,6 +55,7 @@ public class Walkers {
             Walkers.LOGGER.error(problem.description());
         }
     };
+    public static final AttributeModifier WAYPOINT_TRANSMIT_MODIFIER = new AttributeModifier(Walkers.id("waypoint_transmit_disguised"), -1.0F, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL);;
 
     @ApiStatus.Internal
     public static final Logger LOGGER = LoggerFactory.getLogger(Walkers.class);
@@ -111,8 +112,8 @@ public class Walkers {
         });
     }
 
-    public static @NotNull ResourceLocation id(String name) {
-        return ResourceLocation.fromNamespaceAndPath(MODID, name);
+    public static @NotNull Identifier id(String name) {
+        return Identifier.fromNamespaceAndPath(MODID, name);
     }
 
     public static boolean hasFlyingPermissions(@NotNull ServerPlayer player) {
@@ -135,7 +136,7 @@ public class Walkers {
 
                 boolean hasPermission = true;
                 for (String requiredAdvancement : requiredAdvancements) {
-                    AdvancementHolder advancement = Optional.ofNullable(player.getServer()).flatMap(s -> Optional.of(s.getAdvancements())).map(a -> a.get(ResourceLocation.parse(requiredAdvancement))).orElse(null);
+                    AdvancementHolder advancement = player.level().getServer().getAdvancements().get(Identifier.parse(requiredAdvancement));
                     if (advancement != null) {
                         AdvancementProgress progress = player.getAdvancements().getOrStartProgress(advancement);
 

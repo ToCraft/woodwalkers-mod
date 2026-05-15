@@ -5,7 +5,7 @@ import dev.tocraft.walkers.integrations.AbstractIntegration;
 import dev.tocraft.walkers.mixin.accessor.EntityAccessor;
 import dev.tocraft.walkers.traits.TraitRegistry;
 import dev.tocraft.walkers.traits.impl.PreyTrait;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.monster.Enemy;
 import org.jetbrains.annotations.Nullable;
@@ -16,7 +16,7 @@ import java.util.List;
 
 public class GuardVillagersIntegration extends AbstractIntegration {
     public static final String MODID = "guardvillagers";
-    public static final ResourceLocation GUARD_VILLAGER_TYPE = ResourceLocation.fromNamespaceAndPath(MODID, "guard");
+    public static final Identifier GUARD_VILLAGER_TYPE = Identifier.fromNamespaceAndPath(MODID, "guard");
 
     @Override
     public void registerTraits() {

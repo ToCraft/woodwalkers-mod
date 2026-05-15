@@ -10,7 +10,7 @@ import net.minecraft.commands.arguments.ResourceArgument;
 import net.minecraft.commands.synchronization.SuggestionProviders;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
 
 public class EntityBlacklistCommands {
@@ -20,14 +20,14 @@ public class EntityBlacklistCommands {
         LiteralCommandNode<CommandSourceStack> addToList = Commands.literal("add")
                 .then(Commands.argument("entity", ResourceArgument.resource(ctx, Registries.ENTITY_TYPE)).suggests(SuggestionProviders.cast(SuggestionProviders.SUMMONABLE_ENTITIES))
                         .executes(context -> {
-                            addToList(context.getSource(), ResourceArgument.getSummonableEntityType(context, "entity").key().location());
+                            addToList(context.getSource(), ResourceArgument.getSummonableEntityType(context, "entity").key().identifier());
                             return 1;
                         }))
                 .build();
         LiteralCommandNode<CommandSourceStack> removeFromList = Commands.literal("remove")
                 .then(Commands.argument("entity", ResourceArgument.resource(ctx, Registries.ENTITY_TYPE)).suggests(SuggestionProviders.cast(SuggestionProviders.SUMMONABLE_ENTITIES))
                         .executes(context -> {
-                            removeFromList(context.getSource(), ResourceArgument.getSummonableEntityType(context, "entity").key().location());
+                            removeFromList(context.getSource(), ResourceArgument.getSummonableEntityType(context, "entity").key().identifier());
                             return 1;
                         }))
                 .build();
@@ -101,7 +101,7 @@ public class EntityBlacklistCommands {
         return 1;
     }
 
-    private static void addToList(CommandSourceStack source, ResourceLocation type) {
+    private static void addToList(CommandSourceStack source, Identifier type) {
         Walkers.CONFIG.entityBlacklist.add(type.toString());
         Walkers.CONFIG.save();
 
@@ -112,7 +112,7 @@ public class EntityBlacklistCommands {
         source.sendSuccess(() -> Component.translatable("walkers.entityBlacklist.add", type.toString()), false);
     }
 
-    private static void removeFromList(CommandSourceStack source, ResourceLocation type) {
+    private static void removeFromList(CommandSourceStack source, Identifier type) {
         Walkers.CONFIG.entityBlacklist.remove(type.toString());
         Walkers.CONFIG.save();
 

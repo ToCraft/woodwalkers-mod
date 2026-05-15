@@ -3,18 +3,18 @@ package dev.tocraft.walkers.ability.impl.specific;
 import dev.tocraft.walkers.Walkers;
 import dev.tocraft.walkers.ability.ShapeAbility;
 import dev.tocraft.walkers.mixin.accessor.PufferfishAccessor;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.entity.animal.Pufferfish;
+import net.minecraft.world.entity.animal.fish.Pufferfish;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 
 public class PufferfishAbility<T extends Pufferfish> extends ShapeAbility<T> {
-    public static final ResourceLocation ID = Walkers.id("pufferfish");
+    public static final Identifier ID = Walkers.id("pufferfish");
 
     @Override
-    public ResourceLocation getId() {
+    public Identifier getId() {
         return ID;
     }
 

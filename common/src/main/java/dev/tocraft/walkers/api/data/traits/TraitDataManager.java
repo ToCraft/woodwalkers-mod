@@ -11,7 +11,7 @@ import dev.tocraft.walkers.traits.ShapeTrait;
 import dev.tocraft.walkers.traits.TraitRegistry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -30,12 +30,12 @@ public class TraitDataManager extends SynchronizedJsonReloadListener {
 
     @SuppressWarnings("unchecked")
     @Override
-    protected void onApply(@NotNull Map<ResourceLocation, JsonElement> map) {
+    protected void onApply(@NotNull Map<Identifier, JsonElement> map) {
         // prevent duplicates and the registration of removed entries
         TraitRegistry.clearAll();
         TraitRegistry.registerDefault();
 
-        for (Map.Entry<ResourceLocation, JsonElement> mapEntry : map.entrySet()) {
+        for (Map.Entry<Identifier, JsonElement> mapEntry : map.entrySet()) {
             TraitList traitList = traitListFromJson(mapEntry.getValue().getAsJsonObject());
 
             if (!traitList.isEmpty()) {
@@ -66,7 +66,7 @@ public class TraitDataManager extends SynchronizedJsonReloadListener {
         Walkers.LOGGER.info("{}: {} registered for {}", TraitDataManager.class.getSimpleName(), traitList.stream().map(trait -> trait.getClass().getSimpleName()).toArray(String[]::new), key);
     }
 
-    public static final Codec<TraitList> TRAIT_LIST_CODEC = RecordCodecBuilder.create((instance) -> instance.group(Codec.STRING.optionalFieldOf("required_mod", "").forGetter(TraitList::requiredMod), Codec.list(ResourceLocation.CODEC).optionalFieldOf("entity_types", new ArrayList<>()).forGetter(TraitList::entityTypeKeys), Codec.list(ResourceLocation.CODEC).optionalFieldOf("entity_tags", new ArrayList<>()).forGetter(TraitList::entityTagKeys), Codec.list(TraitRegistry.getTraitCodec()).fieldOf("traits").forGetter(TraitList::traitList)).apply(instance, instance.stable(TraitList::new)));
+    public static final Codec<TraitList> TRAIT_LIST_CODEC = RecordCodecBuilder.create((instance) -> instance.group(Codec.STRING.optionalFieldOf("required_mod", "").forGetter(TraitList::requiredMod), Codec.list(Identifier.CODEC).optionalFieldOf("entity_types", new ArrayList<>()).forGetter(TraitList::entityTypeKeys), Codec.list(Identifier.CODEC).optionalFieldOf("entity_tags", new ArrayList<>()).forGetter(TraitList::entityTagKeys), Codec.list(TraitRegistry.getTraitCodec()).fieldOf("traits").forGetter(TraitList::traitList)).apply(instance, instance.stable(TraitList::new)));
 
     protected TraitList traitListFromJson(JsonObject json) {
         return TRAIT_LIST_CODEC.parse(JsonOps.INSTANCE, json).getOrThrow(msg -> {
@@ -75,8 +75,8 @@ public class TraitDataManager extends SynchronizedJsonReloadListener {
     }
 
     @SuppressWarnings("unused")
-    public record TraitList(String requiredMod, List<ResourceLocation> entityTypeKeys,
-                            List<ResourceLocation> entityTagKeys, List<ShapeTrait<?>> traitList) {
+    public record TraitList(String requiredMod, List<Identifier> entityTypeKeys,
+                            List<Identifier> entityTagKeys, List<ShapeTrait<?>> traitList) {
 
         public TraitList(@NotNull List<EntityType<?>> entityTypeKeys, @NotNull List<TagKey<EntityType<?>>> entityTagKeys, List<ShapeTrait<?>> traitList, String requiredMod) {
             this(requiredMod, entityTypeKeys.stream().map(EntityType::getKey).toList(), entityTagKeys.stream().map(TagKey::location).toList(), traitList);

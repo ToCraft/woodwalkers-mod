@@ -4,7 +4,7 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.tocraft.walkers.Walkers;
 import dev.tocraft.walkers.ability.GenericShapeAbility;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
@@ -14,11 +14,11 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 
 public class ClearEffectsAbility<T extends LivingEntity> extends GenericShapeAbility<T> {
-    public static final ResourceLocation ID = Walkers.id("clear_effects");
+    public static final Identifier ID = Walkers.id("clear_effects");
     public static final MapCodec<ClearEffectsAbility<?>> CODEC = RecordCodecBuilder.mapCodec((instance) -> instance.stable(new ClearEffectsAbility<>()));
 
     @Override
-    public ResourceLocation getId() {
+    public Identifier getId() {
         return ID;
     }
 

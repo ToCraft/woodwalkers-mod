@@ -5,7 +5,7 @@ import dev.tocraft.walkers.api.blacklist.EntityBlacklist;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntityType;
@@ -78,7 +78,7 @@ public class ShapeType<T extends LivingEntity> {
         if (str.isEmpty()) {
             return null;
         }
-        ResourceLocation id = ResourceLocation.parse(str.get());
+        Identifier id = Identifier.parse(str.get());
         if (!BuiltInRegistries.ENTITY_TYPE.containsKey(id)) {
             return null;
         }
@@ -92,7 +92,7 @@ public class ShapeType<T extends LivingEntity> {
         if (str.isEmpty()) {
             return null;
         }
-        ResourceLocation id = ResourceLocation.parse(str.get());
+        Identifier id = Identifier.parse(str.get());
         if (!BuiltInRegistries.ENTITY_TYPE.containsKey(id)) {
             return null;
         }

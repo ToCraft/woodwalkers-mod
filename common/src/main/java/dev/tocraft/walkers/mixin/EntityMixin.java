@@ -45,14 +45,14 @@ public abstract class EntityMixin {
 
     @Inject(method = "removePassenger", at = @At("TAIL"))
     private void removePlayerVehicle(Entity passenger, CallbackInfo ci) {
-        if ((Object) this instanceof ServerPlayer vehicle && !vehicle.level().isClientSide) {
+        if ((Object) this instanceof ServerPlayer vehicle && !vehicle.level().isClientSide()) {
             vehicle.connection.send(new ClientboundSetPassengersPacket(vehicle));
         }
     }
 
     @Inject(method = "addPassenger", at = @At("TAIL"))
     private void addPlayerVehicle(Entity passenger, CallbackInfo ci) {
-        if ((Object) this instanceof ServerPlayer vehicle && !vehicle.level().isClientSide) {
+        if ((Object) this instanceof ServerPlayer vehicle && !vehicle.level().isClientSide()) {
             vehicle.connection.send(new ClientboundSetPassengersPacket(vehicle));
         }
     }
@@ -71,7 +71,7 @@ public abstract class EntityMixin {
 
     @SuppressWarnings("rawtypes")
     @WrapOperation(
-            method = "startRiding(Lnet/minecraft/world/entity/Entity;Z)Z",
+            method = "startRiding(Lnet/minecraft/world/entity/Entity;ZZ)Z",
             at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/EntityType;canSerialize()Z")
     )
     private boolean allowRidingPlayers(EntityType instance, Operation<Boolean> original) {

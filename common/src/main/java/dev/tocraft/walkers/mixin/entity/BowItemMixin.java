@@ -2,7 +2,7 @@ package dev.tocraft.walkers.mixin.entity;
 
 import dev.tocraft.walkers.api.PlayerShape;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.monster.WitherSkeleton;
+import net.minecraft.world.entity.monster.skeleton.WitherSkeleton;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.BowItem;

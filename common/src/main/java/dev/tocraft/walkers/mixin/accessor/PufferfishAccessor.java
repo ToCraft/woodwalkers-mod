@@ -1,6 +1,6 @@
 package dev.tocraft.walkers.mixin.accessor;
 
-import net.minecraft.world.entity.animal.Pufferfish;
+import net.minecraft.world.entity.animal.fish.Pufferfish;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Accessor;
 

@@ -1,6 +1,6 @@
 package dev.tocraft.walkers.mixin.accessor;
 
-import net.minecraft.world.entity.animal.horse.Llama;
+import net.minecraft.world.entity.animal.equine.Llama;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Invoker;
 

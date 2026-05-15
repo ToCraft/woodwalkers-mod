@@ -7,7 +7,7 @@ import dev.tocraft.walkers.Walkers;
 import dev.tocraft.walkers.traits.ShapeTrait;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -21,19 +21,19 @@ import java.util.stream.Stream;
 
 @SuppressWarnings("unused")
 public class RiderTrait<E extends LivingEntity> extends ShapeTrait<E> {
-    public static final ResourceLocation ID = Walkers.id("rider");
+    public static final Identifier ID = Walkers.id("rider");
     public static final MapCodec<RiderTrait<?>> CODEC = RecordCodecBuilder.mapCodec((instance) -> instance.group(
-            Codec.list(ResourceLocation.CODEC).optionalFieldOf("rideable", new ArrayList<>()).forGetter(o -> o.rideableTypes.stream().map(BuiltInRegistries.ENTITY_TYPE::getKey).toList()),
-            Codec.list(ResourceLocation.CODEC).optionalFieldOf("rideable_tags", new ArrayList<>()).forGetter(o -> o.rideableTags.stream().map(TagKey::location).toList())
+            Codec.list(Identifier.CODEC).optionalFieldOf("rideable", new ArrayList<>()).forGetter(o -> o.rideableTypes.stream().map(BuiltInRegistries.ENTITY_TYPE::getKey).toList()),
+            Codec.list(Identifier.CODEC).optionalFieldOf("rideable_tags", new ArrayList<>()).forGetter(o -> o.rideableTags.stream().map(TagKey::location).toList())
     ).apply(instance, instance.stable((rideableTypeIds, rideableTagIds) -> {
         List<EntityType<?>> rideableTypes = new ArrayList<>();
         List<TagKey<EntityType<?>>> rideableTags = new ArrayList<>();
-        for (ResourceLocation rideableTypeId : rideableTypeIds) {
+        for (Identifier rideableTypeId : rideableTypeIds) {
             if (BuiltInRegistries.ENTITY_TYPE.containsKey(rideableTypeId)) {
                 rideableTypes.add(BuiltInRegistries.ENTITY_TYPE.get(rideableTypeId).orElseThrow().value());
             }
         }
-        for (ResourceLocation rideableTagId : rideableTagIds) {
+        for (Identifier rideableTagId : rideableTagIds) {
             rideableTags.add(TagKey.create(Registries.ENTITY_TYPE, rideableTagId));
         }
         return new RiderTrait<>(new ArrayList<>(), rideableTypes, new ArrayList<>(), rideableTags);
@@ -73,7 +73,7 @@ public class RiderTrait<E extends LivingEntity> extends ShapeTrait<E> {
             if (rideableClass.isInstance(entity)) return true;
         }
         for (TagKey<EntityType<?>> rideableTag : rideableTags) {
-            if (entity.getType().is(rideableTag)) return true;
+            if (entity.getType().builtInRegistryHolder().is(rideableTag)) return true;
         }
         for (Predicate<LivingEntity> rideablePredicate : rideablePredicates) {
             if (rideablePredicate.test(entity)) return true;
@@ -82,7 +82,7 @@ public class RiderTrait<E extends LivingEntity> extends ShapeTrait<E> {
     }
 
     @Override
-    public ResourceLocation getId() {
+    public Identifier getId() {
         return ID;
     }
 

@@ -4,7 +4,7 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.tocraft.walkers.Walkers;
 import dev.tocraft.walkers.ability.ShapeAbility;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
@@ -17,13 +17,13 @@ import java.util.Map;
 import java.util.UUID;
 
 public class GrassEaterAbility<T extends LivingEntity> extends ShapeAbility<T> {
-    public static final ResourceLocation ID = Walkers.id("eat_grass");
+    public static final Identifier ID = Walkers.id("eat_grass");
     public static final MapCodec<GrassEaterAbility<?>> CODEC = RecordCodecBuilder.mapCodec((instance) -> instance.stable(new GrassEaterAbility<>()));
 
     public final Map<UUID, Integer> eatTick = new HashMap<>();
 
     @Override
-    public ResourceLocation getId() {
+    public Identifier getId() {
         return ID;
     }
 

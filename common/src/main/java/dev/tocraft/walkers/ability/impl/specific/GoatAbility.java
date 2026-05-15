@@ -3,7 +3,7 @@ package dev.tocraft.walkers.ability.impl.specific;
 import dev.tocraft.walkers.Walkers;
 import dev.tocraft.walkers.ability.ShapeAbility;
 import net.minecraft.network.protocol.game.ClientboundSetEntityMotionPacket;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
@@ -20,10 +20,10 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Optional;
 
 public class GoatAbility<T extends Goat> extends ShapeAbility<T> {
-    public static final ResourceLocation ID = Walkers.id("goat");
+    public static final Identifier ID = Walkers.id("goat");
 
     @Override
-    public ResourceLocation getId() {
+    public Identifier getId() {
         return ID;
     }
 

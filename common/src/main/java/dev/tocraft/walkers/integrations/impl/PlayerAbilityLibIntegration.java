@@ -3,7 +3,7 @@ package dev.tocraft.walkers.integrations.impl;
 import dev.tocraft.walkers.Walkers;
 import dev.tocraft.walkers.api.FlightHelper;
 import dev.tocraft.walkers.integrations.AbstractIntegration;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -33,10 +33,10 @@ public class PlayerAbilityLibIntegration extends AbstractIntegration {
     }
 
     @Nullable
-    private Object getAbilitySource(ResourceLocation id) {
+    private Object getAbilitySource(Identifier id) {
         try {
             Class<?> palClass = Class.forName("io.github.ladysnake.pal.Pal");
-            Method getAbilitySource = palClass.getDeclaredMethod("getAbilitySource", ResourceLocation.class);
+            Method getAbilitySource = palClass.getDeclaredMethod("getAbilitySource", Identifier.class);
             return getAbilitySource.invoke(null, id);
         } catch (ClassNotFoundException | IllegalAccessException | InvocationTargetException |
                  NoSuchMethodException e) {

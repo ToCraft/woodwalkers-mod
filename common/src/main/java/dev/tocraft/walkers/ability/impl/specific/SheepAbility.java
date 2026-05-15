@@ -1,7 +1,7 @@
 package dev.tocraft.walkers.ability.impl.specific;
 
 import dev.tocraft.walkers.Walkers;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.animal.sheep.Sheep;
@@ -11,10 +11,10 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.ShearsItem;
 
 public class SheepAbility<T extends Sheep> extends GrassEaterAbility<T> {
-    public static final ResourceLocation ID = Walkers.id("sheep");
+    public static final Identifier ID = Walkers.id("sheep");
 
     @Override
-    public ResourceLocation getId() {
+    public Identifier getId() {
         return ID;
     }
 

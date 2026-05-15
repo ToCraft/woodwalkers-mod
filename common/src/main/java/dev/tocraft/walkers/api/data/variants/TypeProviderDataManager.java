@@ -13,7 +13,7 @@ import dev.tocraft.walkers.api.variant.RegistryTypeProvider;
 import dev.tocraft.walkers.api.variant.TypeProvider;
 import dev.tocraft.walkers.api.variant.TypeProviderRegistry;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import org.jetbrains.annotations.NotNull;
@@ -30,12 +30,12 @@ public class TypeProviderDataManager extends SynchronizedJsonReloadListener {
 
     @SuppressWarnings("unchecked")
     @Override
-    protected void onApply(@NotNull Map<ResourceLocation, JsonElement> map) {
+    protected void onApply(@NotNull Map<Identifier, JsonElement> map) {
         // prevent duplicates and the registration of removed entries
         TypeProviderRegistry.clearAll();
         TypeProviderRegistry.registerDefault();
 
-        for (Map.Entry<ResourceLocation, JsonElement> mapEntry : map.entrySet()) {
+        for (Map.Entry<Identifier, JsonElement> mapEntry : map.entrySet()) {
             TypeProviderEntry typeProviderEntry = typeProviderFromJson(mapEntry.getValue().getAsJsonObject());
 
             // Register Variants
@@ -51,7 +51,7 @@ public class TypeProviderDataManager extends SynchronizedJsonReloadListener {
      * String is an exception while loading. Can be ignored for normal use (just use Either.left)
      */
     public static final Codec<TypeProviderEntry> TYPE_PROVIDER_LIST_CODEC = RecordCodecBuilder.create((instance) -> instance.group(
-            ResourceLocation.CODEC.fieldOf("entity_type").forGetter(TypeProviderEntry::entityTypeKey),
+            Identifier.CODEC.fieldOf("entity_type").forGetter(TypeProviderEntry::entityTypeKey),
             Codec.STRING.optionalFieldOf("required_mod", "").forGetter(o -> {
                 String requiredMod = o.requiredMod();
                 if (requiredMod == null) return "";
@@ -65,7 +65,7 @@ public class TypeProviderDataManager extends SynchronizedJsonReloadListener {
     }
 
     @SuppressWarnings("unused")
-    public record TypeProviderEntry(ResourceLocation entityTypeKey,
+    public record TypeProviderEntry(Identifier entityTypeKey,
                                     @Nullable String requiredMod,
                                     Either<NBTTypeProvider<?>, RegistryTypeProvider<?, ?>> providerEither) {
 

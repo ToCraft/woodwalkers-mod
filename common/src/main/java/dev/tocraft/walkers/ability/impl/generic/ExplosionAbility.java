@@ -5,7 +5,7 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.tocraft.walkers.Walkers;
 import dev.tocraft.walkers.ability.GenericShapeAbility;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.LivingEntity;
@@ -14,7 +14,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level.ExplosionInteraction;
 
 public class ExplosionAbility<T extends LivingEntity> extends GenericShapeAbility<T> {
-    public static final ResourceLocation ID = Walkers.id("explosion");
+    public static final Identifier ID = Walkers.id("explosion");
     public static final MapCodec<ExplosionAbility<?>> CODEC = RecordCodecBuilder.mapCodec((instance) -> instance.group(
             Codec.FLOAT.optionalFieldOf("radius", 3.0f).forGetter(o -> o.radius)
     ).apply(instance, instance.stable(ExplosionAbility::new)));
@@ -30,7 +30,7 @@ public class ExplosionAbility<T extends LivingEntity> extends GenericShapeAbilit
     }
 
     @Override
-    public ResourceLocation getId() {
+    public Identifier getId() {
         return ID;
     }
 

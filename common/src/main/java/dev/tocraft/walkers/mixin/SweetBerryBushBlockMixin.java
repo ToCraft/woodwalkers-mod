@@ -5,8 +5,8 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.InsideBlockEffectApplier;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.animal.Bee;
-import net.minecraft.world.entity.animal.Fox;
+import net.minecraft.world.entity.animal.bee.Bee;
+import net.minecraft.world.entity.animal.fox.Fox;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.SweetBerryBushBlock;
@@ -24,7 +24,7 @@ public class SweetBerryBushBlockMixin {
             at = @At(value = "HEAD"),
             cancellable = true
     )
-    private void onDamage(BlockState blockState, Level level, BlockPos blockPos, Entity entity, InsideBlockEffectApplier insideBlockEffectApplier, CallbackInfo ci) {
+    private void onDamage(BlockState blockState, Level level, BlockPos blockPos, Entity entity, InsideBlockEffectApplier insideBlockEffectApplier, boolean bl, CallbackInfo ci) {
         if (entity instanceof Player player) {
             LivingEntity shape = PlayerShape.getCurrentShape(player);
 

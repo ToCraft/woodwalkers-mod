@@ -19,12 +19,12 @@ public abstract class PlayerEntityAttackMixin extends LivingEntity {
         super(entityType, world);
     }
 
-    @Inject(method = "attack", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;skipAttackInteraction(Lnet/minecraft/world/entity/Entity;)Z"), cancellable = true)
+    @Inject(method = "attack", at = @At("HEAD"), cancellable = true)
     private void shapeAttack(Entity target, CallbackInfo ci) {
         LivingEntity shape = PlayerShape.getCurrentShape((Player) (Object) this);
 
         if (shape != null && level() instanceof ServerLevel serverLevel) {
-            if (getMainHandItem().isEmpty()) {
+            if (getMainHandItem().isEmpty() && target.isAttackable() && !target.skipAttackInteraction(this)) {
                 try {
                     shape.doHurtTarget(serverLevel, target);
                     ci.cancel();

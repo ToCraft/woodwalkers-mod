@@ -1,7 +1,9 @@
-walkers 7.2.8
+walkers 8.0
 ================
 
 - disable swimming for some humanoid mobs
+- **port to 26.1.2** ~thanks to tgboyles
+- fix flying for Vex
 
 walkers 7.2.7
 ================

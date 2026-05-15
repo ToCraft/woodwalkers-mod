@@ -1,6 +1,5 @@
 package dev.tocraft.walkers.api.model;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import dev.tocraft.walkers.api.model.impl.AbstractHorseEntityUpdater;
 import dev.tocraft.walkers.api.model.impl.ShulkerEntityUpdater;
 import dev.tocraft.walkers.api.model.impl.SquidEntityUpdater;
@@ -9,17 +8,19 @@ import dev.tocraft.walkers.impl.PlayerDataProvider;
 import dev.tocraft.walkers.mixin.accessor.*;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.state.EntityRenderState;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.util.Mth;
+import net.minecraft.world.attribute.EnvironmentAttributes;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.animal.Parrot;
+import net.minecraft.world.entity.animal.parrot.Parrot;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -33,12 +34,12 @@ import java.util.Map;
  * {@link EntityUpdater} can be used to tell a shape bat to "stop roosting,"
  * which triggers the flight animation. {@link EntityUpdater}s are called once
  * every render tick
- * {@link net.minecraft.client.renderer.entity.EntityRenderer#render(EntityRenderState, PoseStack, MultiBufferSource, int)}
+ * {@link net.minecraft.client.renderer.entity.EntityRenderer#extractRenderState(Entity, EntityRenderState, float)}
  */
+@SuppressWarnings("resource")
 @Environment(EnvType.CLIENT)
 public class EntityUpdaters {
-
-    private static final Map<EntityType<? extends LivingEntity>, EntityUpdater<? extends LivingEntity>> map = new LinkedHashMap<>();
+    private static final Map<EntityType<? extends @NotNull LivingEntity>, EntityUpdater<? extends LivingEntity>> map = new LinkedHashMap<>();
 
     /**
      * Returns a {@link EntityUpdater} if one has been registered for the given
@@ -51,7 +52,7 @@ public class EntityUpdaters {
      * {@link EntityType}, or null if one does not exist
      */
     @SuppressWarnings("unchecked")
-    public static <T extends LivingEntity> EntityUpdater<T> getUpdater(EntityType<T> entityType) {
+    public static <T extends LivingEntity> EntityUpdater<T> getUpdater(EntityType<@NotNull T> entityType) {
         return (EntityUpdater<T>) map.getOrDefault(entityType, null);
     }
 
@@ -68,7 +69,7 @@ public class EntityUpdaters {
      *                      {@link EntityType}
      * @param <T>           passed in {@link EntityType} generic
      */
-    public static <T extends LivingEntity> void register(EntityType<T> type, EntityUpdater<T> entityUpdater) {
+    public static <T extends LivingEntity> void register(EntityType<@NotNull T> type, EntityUpdater<T> entityUpdater) {
         map.put(type, entityUpdater);
     }
 
@@ -142,18 +143,14 @@ public class EntityUpdaters {
 
         EntityUpdaters.register(EntityType.CAT, (player, cat) -> cat.setInSittingPose(((PlayerDataProvider) player).walkers$getIsSpecialAnim()));
 
-        EntityUpdaters.register(EntityType.HOGLIN, (player, hoglin) -> {
-            hoglin.setImmuneToZombification(player.level().dimensionType().piglinSafe());
-        });
+        EntityUpdaters.register(EntityType.HOGLIN, (player, hoglin) -> hoglin.setImmuneToZombification(!player.level().environmentAttributes().getValue(EnvironmentAttributes.PIGLINS_ZOMBIFY, player.position())));
 
         EntityUpdaters.register(EntityType.PIGLIN, (player, piglin) -> {
-            piglin.setImmuneToZombification(player.level().dimensionType().piglinSafe());
+            piglin.setImmuneToZombification(!player.level().environmentAttributes().getValue(EnvironmentAttributes.PIGLINS_ZOMBIFY, player.position()));
             piglin.setDancing(((PlayerDataProvider) player).walkers$getIsSpecialAnim());
         });
 
-        EntityUpdaters.register(EntityType.PIGLIN_BRUTE, (player, piglinBrute) -> {
-            piglinBrute.setImmuneToZombification(player.level().dimensionType().piglinSafe());
-        });
+        EntityUpdaters.register(EntityType.PIGLIN_BRUTE, (player, piglinBrute) -> piglinBrute.setImmuneToZombification(!player.level().environmentAttributes().getValue(EnvironmentAttributes.PIGLINS_ZOMBIFY, player.position())));
 
         EntityUpdaters.register(EntityType.PANDA, (player, panda) -> {
             panda.sit(((PlayerDataProvider) player).walkers$getIsSpecialAnim());

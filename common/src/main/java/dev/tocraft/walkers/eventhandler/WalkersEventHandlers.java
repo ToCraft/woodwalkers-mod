@@ -16,12 +16,14 @@ import net.minecraft.world.entity.ConversionParams;
 import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.animal.horse.AbstractHorse;
+import net.minecraft.world.entity.animal.equine.AbstractHorse;
 import net.minecraft.world.entity.monster.Monster;
-import net.minecraft.world.entity.monster.Zombie;
-import net.minecraft.world.entity.npc.Villager;
+import net.minecraft.world.entity.monster.zombie.Zombie;
+import net.minecraft.world.entity.npc.villager.Villager;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.ServerLevelAccessor;
+
+import java.util.Optional;
 
 @SuppressWarnings("resource")
 public class WalkersEventHandlers {
@@ -47,16 +49,16 @@ public class WalkersEventHandlers {
 
         PlayerEvents.ALLOW_SLEEP_TIME.register((player, sleepingPos, vanillaResult) -> {
             if (TraitRegistry.has(PlayerShape.getCurrentShape(player), NocturnalTrait.ID)) {
-                return !player.level().dimensionType().hasFixedTime() && player.level().getSkyDarken() < 4 ? InteractionResult.SUCCESS : InteractionResult.FAIL;
+                return player.level().isBrightOutside() ? InteractionResult.SUCCESS : InteractionResult.FAIL;
             }
             return InteractionResult.PASS;
         });
 
-        PlayerEvents.SLEEP_FINISHED_TIME.register((level, newTime) -> {
-            if (!level.dimensionType().hasFixedTime() && level.getSkyDarken() < 4 && !level.getPlayers(player -> player.isSleeping() && TraitRegistry.has(PlayerShape.getCurrentShape(player), NocturnalTrait.ID)).isEmpty()) {
-                return newTime + level.getDayTime() % 24000L > 12000L ? 13000 : -11000;
+        PlayerEvents.SLEEP_FINISHED_TIME.register((level, currentTime, timeAdjustment) -> {
+            if (level.isBrightOutside() && !level.getPlayers(player -> player.isSleeping() && TraitRegistry.has(PlayerShape.getCurrentShape(player), NocturnalTrait.ID)).isEmpty()) {
+                return Optional.of(13000L);
             } else {
-                return newTime;
+                return Optional.empty();
             }
         });
 
@@ -98,7 +100,7 @@ public class WalkersEventHandlers {
 
     public static void registerHostilityUpdateHandler() {
         EntityEvents.INTERACT_WITH_PLAYER.register((player, entity, hand) -> {
-            if (!player.level().isClientSide && Walkers.CONFIG.playerCanTriggerHostiles && entity instanceof Monster) {
+            if (!player.level().isClientSide() && Walkers.CONFIG.playerCanTriggerHostiles && entity instanceof Monster) {
                 PlayerHostility.set(player, Walkers.CONFIG.hostilityTime);
             }
 
@@ -130,7 +132,7 @@ public class WalkersEventHandlers {
         EntityEvents.INTERACT_WITH_PLAYER.register((player, entity, hand) -> {
             if (entity instanceof Player playerToBeRidden) {
                 if (PlayerShape.getCurrentShape(playerToBeRidden) instanceof AbstractHorse) {
-                    player.startRiding(playerToBeRidden, true);
+                    player.startRiding(playerToBeRidden, true, false);
                     return InteractionResult.SUCCESS;
                 }
             }
@@ -144,7 +146,7 @@ public class WalkersEventHandlers {
                 if (entity instanceof Villager villager && damageSource.getEntity() instanceof Player player && PlayerShape.getCurrentShape(player) instanceof Zombie) {
                     if (!(player.level().getDifficulty() != Difficulty.HARD && player.getRandom().nextBoolean())) {
                         villager.convertTo(EntityType.ZOMBIE_VILLAGER, ConversionParams.single(villager, false, false), zombieVillager -> {
-                            zombieVillager.finalizeSpawn((ServerLevelAccessor) player.level(), player.level().getCurrentDifficultyAt(zombieVillager.blockPosition()), EntitySpawnReason.CONVERSION, new Zombie.ZombieGroupData(false, true));
+                            zombieVillager.finalizeSpawn((ServerLevelAccessor) player.level(), ((net.minecraft.server.level.ServerLevel) player.level()).getCurrentDifficultyAt(zombieVillager.blockPosition()), EntitySpawnReason.CONVERSION, new Zombie.ZombieGroupData(false, true));
                             zombieVillager.setTradeOffers(villager.getOffers());
                             zombieVillager.setVillagerData(villager.getVillagerData());
                             zombieVillager.setGossips(villager.getGossips().copy());
