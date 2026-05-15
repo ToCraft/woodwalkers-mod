@@ -1,7 +1,6 @@
-> [!NOTE]
-> This is a fork of [ToCraft/woodwalkers-mod](https://github.com/ToCraft/woodwalkers-mod) ported to **Minecraft 26.1.2** (the first Mojang-mapped release). It depends on a matching fork of CraftedCore. See the [Fork Notes](#fork-notes) section for details.
-
----
+[![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/ToCraft/woodwalkers-mod/build.yml?style=for-the-badge)](https://github.com/ToCraft/woodwalkers-mod/actions/workflows/build.yml)
+[![Maven metadata URL](https://img.shields.io/maven-metadata/v?metadataUrl=https%3A%2F%2Fmaven.tocraft.dev%2Fpublic%2Fdev%2Ftocraft%2Fwalkers%2Fmaven-metadata.xml&style=for-the-badge&label=Woodwalkers)](https://maven.tocraft.dev/#/public/dev/tocraft/walkers)
+[![Patreon](https://img.shields.io/badge/Patreon-F96854?style=for-the-badge&logo=patreon&logoColor=white)](https://patreon.com/ToCraft)
 
 # Woodwalkers
 
@@ -63,74 +62,6 @@ visible to Developer and Patreons).
 
 ![](https://raw.githubusercontent.com/ToCraft/woodwalkers-mod/main/assets/dark_dev_wolf_vs_normal_wolf.png)
 
----
-
-## Fork Notes
-
-This fork ports Woodwalkers to **Minecraft 26.1.2**, the first Mojang-mapped (unobfuscated) release. Major changes relative to the upstream mod:
-
-- **MC 26.1.2 API updates**: `ResourceKey.location()` → `.identifier()`, `Level.getDayTime()` → `getDefaultClockTime()`, `getCurrentDifficultyAt` moved to `ServerLevel` only, `startRiding` gained a third boolean parameter.
-- **Permission system**: `CommandSourceStack.hasPermission(int)` removed; replaced with `Commands.hasPermission(Commands.LEVEL_GAMEMASTERS)`.
-- **KeyMapping**: Category constructor now takes `KeyMapping.Category` (registered via `KeyMapping.Category.register(Identifier)`) instead of a plain `String`.
-- **Entity model subpackages**: Several models moved to subdirectories (e.g. `monster.creeper.CreeperModel`, `monster.hoglin.HoglinModel`, `monster.vex.VexModel`).
-- **`AbstractHorse`** moved from `animal.horse` to `animal.equine` package.
-- **`Player.getDefaultDimensions`** override removed; injection moved to `LivingEntity`.
-- **`Player.attack`** refactored — `skipAttackInteraction` call moved to private `cannotAttack(Entity)` helper.
-- **`FoodData.tick`** moved from `Player.tick` to `ServerPlayer.doTick`.
-- **`SweetBerryBushBlock.entityInside`** gained a new `boolean` parameter.
-- **`Zoglin.isTargetable`** removed; target filtering now done in a brain lambda.
-- **`EntityRenderDispatcher.renderShadow`** removed; shadow size adjustment is currently disabled pending a re-implementation.
-- **`AvatarRenderer.extractRenderState`** first parameter changed from `AbstractClientPlayer` to erased generic type `Avatar` (new abstract base class that `Player` now extends).
-- **NeoForge**: `FMLEnvironment.dist` field → `FMLEnvironment.getDist()` method; `isEyeInFluidType` removed, replaced with vanilla `isEyeInFluid(FluidTags.WATER)`.
-
----
-
-## Building from Source
-
-This fork requires a locally-published fork of **CraftedCore**. Both repos must be built in order.
-
-### 1. Build and publish CraftedCore
-
-```bash
-git clone https://github.com/tgboyles/craftedcore.git
-cd craftedcore
-./gradlew publishToMavenLocal
-```
-
-### 2. Build Woodwalkers
-
-```bash
-git clone https://github.com/tgboyles/woodwalkers-mod.git
-cd woodwalkers-mod
-./gradlew build
-```
-
-Built jars are placed in `fabric/build/libs/` and `neoforge/build/libs/`.
-
----
-
-## Running in Development
-
-Make sure you have built and published CraftedCore to your local Maven cache first (see above).
-
-### Launch the Fabric client
-
-```bash
-cd woodwalkers-mod
-./gradlew :fabric:runClient
-```
-
-### Launch the NeoForge client
-
-```bash
-cd woodwalkers-mod
-./gradlew :neoforge:runClient
-```
-
-The first launch will download assets and may take a few minutes.
-
----
-
 ### License
 
-Woodwalkers is licensed under MIT.
+Woodwalkers is licensed under MIT. 
