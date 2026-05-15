@@ -33,6 +33,8 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import java.awt.*;
+import java.util.Objects;
 import java.util.Optional;
 
 @SuppressWarnings("UnreachableCode")
@@ -206,10 +208,10 @@ public abstract class PlayerEntityDataMixin extends LivingEntity implements Play
         AttributeInstance armorToughnessAttribute = player.getAttribute(Attributes.ARMOR_TOUGHNESS);
 
         // spawn particles
-        if (Walkers.CONFIG.emit_particles && this.walkers$shape != shape && player.level() instanceof ServerLevel l) {
-            l.sendParticles(ParticleTypes.TOTEM_OF_UNDYING, player.getX(), player.getY() + 1, player.getZ(), 25, .5, 1.0, .5, .5);
-            l.sendParticles(ParticleTypes.PORTAL, player.getX(), player.getY() + 1, player.getZ(), 25, .5, 1.0, .5, .5);
-            l.sendParticles(ParticleTypes.ELECTRIC_SPARK, player.getX(), player.getY() + 1, player.getZ(), 25, .5, 1.0, .5, .5);
+        if (Walkers.CONFIG.emit_particles && !Objects.equals(ShapeType.from(this.walkers$shape), ShapeType.from(shape)) && player.level() instanceof ServerLevel l) {
+            l.sendParticles(ParticleTypes.TOTEM_OF_UNDYING, player.getX(), player.getY() + 1, player.getZ(), 25, .5, 1.0, .5, .75);
+            l.sendParticles(ParticleTypes.PORTAL, player.getX(), player.getY() + 1, player.getZ(), 25, .5, 1.0, .5, .75);
+            l.sendParticles(ParticleTypes.ELECTRIC_SPARK, player.getX(), player.getY() + 1, player.getZ(), 25, .5, 1.0, .5, .7);
         }
 
         boolean firstShape = this.walkers$shape == null;

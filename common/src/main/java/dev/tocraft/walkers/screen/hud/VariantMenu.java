@@ -12,8 +12,10 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
-import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.client.renderer.RenderPipelines;
+import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
+import net.minecraft.client.renderer.entity.EntityRenderer;
+import net.minecraft.client.renderer.entity.state.EntityRenderState;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
@@ -23,6 +25,9 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.storage.TagValueOutput;
 import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.Nullable;
+import org.joml.Quaternionf;
+import org.joml.Vector3f;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -99,7 +104,7 @@ public class VariantMenu implements RenderEvents.HUDRendering {
                             int l = topPos - 30;
                             int m = leftPos + 20;
                             int n = topPos + 30;
-                            InventoryScreen.extractEntityInInventoryFollowsMouse(guiGraphics, k, l, m, n, (int) (25 / (Math.max(entity.getBbHeight(), entity.getBbWidth()))), (k + m) / 2f, (l + n) / 2f, delta.getGameTimeDeltaPartialTick(true), entity);
+                            renderEntityOnScreen(guiGraphics, k, l, m, n, (int) (25 / (Math.max(entity.getBbHeight(), entity.getBbWidth()))), new Vector3f(), new Quaternionf().rotationXYZ(0.43633232F, (float) Math.PI, (float) Math.PI), null, entity);
                         }
                     } else {
                         LivingEntity entity = renderEntities.computeIfAbsent(currentShapeType, type -> type.create(level, minecraft.player));
@@ -110,7 +115,7 @@ public class VariantMenu implements RenderEvents.HUDRendering {
                             int l = topPos - 30;
                             int m = leftPos + 20;
                             int n = topPos + 30;
-                            InventoryScreen.extractEntityInInventoryFollowsMouse(guiGraphics, k, l, m, n, (int) (25 / (Math.max(entity.getBbHeight(), entity.getBbWidth()))), (k + m) / 2f, (l + n) / 2f, delta.getGameTimeDeltaPartialTick(true), entity);
+                            renderEntityOnScreen(guiGraphics, k, l, m, n, (int) (25 / (Math.max(entity.getBbHeight(), entity.getBbWidth()))), new Vector3f(), new Quaternionf().rotationXYZ(0.43633232F, (float) Math.PI, (float) Math.PI), null, entity);
                         }
                     }
                     // render focus
@@ -118,5 +123,30 @@ public class VariantMenu implements RenderEvents.HUDRendering {
                 }
             }
         }
+    }
+
+    public static void renderEntityOnScreen(
+            GuiGraphicsExtractor guiGraphics,
+            int x1,
+            int y1,
+            int x2,
+            int y2,
+            float scale,
+            Vector3f translation,
+            Quaternionf rotation,
+            @Nullable Quaternionf overrideCameraAngle,
+            LivingEntity entity
+    ) {
+        EntityRenderState entityRenderState = extractRenderState(entity);
+        guiGraphics.entity(entityRenderState, scale, translation, rotation, overrideCameraAngle, x1, y1, x2, y2);
+    }
+
+    private static EntityRenderState extractRenderState(LivingEntity entity) {
+        EntityRenderDispatcher entityRenderDispatcher = Minecraft.getInstance().getEntityRenderDispatcher();
+        EntityRenderer<? super LivingEntity, ?> renderer = entityRenderDispatcher.getRenderer(entity);
+        EntityRenderState renderState = renderer.createRenderState(entity, 1.0F);
+        renderState.shadowPieces.clear();
+        renderState.outlineColor = 0;
+        return renderState;
     }
 }
