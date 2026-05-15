@@ -1,5 +1,6 @@
 package dev.tocraft.walkers.eventhandler;
 
+import com.mojang.datafixers.util.Either;
 import dev.tocraft.craftedcore.event.common.EntityEvents;
 import dev.tocraft.craftedcore.event.common.PlayerEvents;
 import dev.tocraft.walkers.Walkers;
@@ -9,20 +10,21 @@ import dev.tocraft.walkers.api.PlayerShape;
 import dev.tocraft.walkers.traits.ShapeTrait;
 import dev.tocraft.walkers.traits.TraitRegistry;
 import dev.tocraft.walkers.traits.impl.*;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.entity.ConversionParams;
-import net.minecraft.world.entity.EntitySpawnReason;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.animal.equine.AbstractHorse;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.monster.zombie.Zombie;
 import net.minecraft.world.entity.npc.villager.Villager;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.ServerLevelAccessor;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 
+import java.util.List;
 import java.util.Optional;
 
 @SuppressWarnings("resource")
@@ -60,6 +62,25 @@ public class WalkersEventHandlers {
             } else {
                 return Optional.empty();
             }
+        });
+
+        PlayerEvents.ALLOW_MONSTERS_NEARBY.register((player, sleepingPos, vanillaResult) -> {
+            if (!vanillaResult) {
+                LivingEntity shape = PlayerShape.getCurrentShape(player);
+                if (shape != null && shape.getType().getCategory().equals(MobCategory.MONSTER)) { // monsters don't care about other monsters
+                    return InteractionResult.SUCCESS;
+                }
+            } else { // test if there is a player disguised as a monster nearby
+                Vec3 bedCenter = Vec3.atBottomCenterOf(sleepingPos);
+                List<Player> monsterPlayers = player.level().getEntitiesOfClass(Player.class, new AABB(bedCenter.x() - (double)8.0F, bedCenter.y() - (double)5.0F, bedCenter.z() - (double)8.0F, bedCenter.x() + (double)8.0F, bedCenter.y() + (double)5.0F, bedCenter.z() + (double)8.0F), p -> {
+                    LivingEntity shape = PlayerShape.getCurrentShape(p);
+                    return shape != null && shape.getType().getCategory().equals(MobCategory.MONSTER);
+                });
+                if (!monsterPlayers.isEmpty()) {
+                    return InteractionResult.FAIL;
+                }
+            }
+            return InteractionResult.PASS;
         });
 
         PlayerEvents.AWARD_ADVANCEMENT.register((player, advancement, criterionKey) -> {
