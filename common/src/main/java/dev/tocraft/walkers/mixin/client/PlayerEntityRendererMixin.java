@@ -29,11 +29,13 @@ import net.minecraft.client.renderer.state.level.CameraRenderState;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.Tuple;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.Avatar;
+import net.minecraft.world.entity.monster.EnderMan;
 import net.minecraft.world.entity.monster.Phantom;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.scores.Team;
 import org.jetbrains.annotations.NotNull;
@@ -126,11 +128,19 @@ public abstract class PlayerEntityRendererMixin extends LivingEntityRenderer<Abs
         if (shape instanceof Mob mob) {
             mob.setAggressive(player.isUsingItem());
             mob.setNoAi(true);
+            if (mob instanceof EnderMan enderMan) {
+                ItemStack heldStack = player.getMainHandItem();
+
+                if (heldStack.getItem() instanceof BlockItem) {
+                    enderMan.setCarriedBlock(((BlockItem) heldStack.getItem()).getBlock().defaultBlockState());
+                }
+            }
         }
 
         // Must be set before callUpdatingUsingItem captures it
         shape.setPose(player.getPose());
-        shape.startUsingItem(player.getUsedItemHand() == null ? InteractionHand.MAIN_HAND : player.getUsedItemHand());
+        player.getUsedItemHand();
+        shape.startUsingItem(player.getUsedItemHand());
         ((LivingEntityAccessor) shape).callSetLivingEntityFlag(1, player.isUsingItem());
         shape.getTicksUsingItem();
         ((LivingEntityAccessor) shape).callUpdatingUsingItem();

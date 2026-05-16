@@ -18,7 +18,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(AbstractClientPlayer.class)
 public class ClientPlayerMixin {
     @SuppressWarnings("unchecked")
-    @Inject(method = "aiStep", at = @At("RETURN"))
+    @Inject(method = "tick", at = @At("RETURN"))
     private void fixEntityAnimations(CallbackInfo ci) {
         AbstractClientPlayer player = (AbstractClientPlayer) (Object) this;
         LivingEntity shape = PlayerShape.getCurrentShape(player);

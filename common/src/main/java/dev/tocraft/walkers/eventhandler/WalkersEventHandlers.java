@@ -73,8 +73,12 @@ public class WalkersEventHandlers {
             } else { // test if there is a player disguised as a monster nearby
                 Vec3 bedCenter = Vec3.atBottomCenterOf(sleepingPos);
                 List<Player> monsterPlayers = player.level().getEntitiesOfClass(Player.class, new AABB(bedCenter.x() - (double)8.0F, bedCenter.y() - (double)5.0F, bedCenter.z() - (double)8.0F, bedCenter.x() + (double)8.0F, bedCenter.y() + (double)5.0F, bedCenter.z() + (double)8.0F), p -> {
-                    LivingEntity shape = PlayerShape.getCurrentShape(p);
-                    return shape != null && shape.getType().getCategory().equals(MobCategory.MONSTER);
+                    if (p != player) {
+                        LivingEntity shape = PlayerShape.getCurrentShape(p);
+                        return shape != null && shape.getType().getCategory().equals(MobCategory.MONSTER);
+                    } else {
+                        return false;
+                    }
                 });
                 if (!monsterPlayers.isEmpty()) {
                     return InteractionResult.FAIL;

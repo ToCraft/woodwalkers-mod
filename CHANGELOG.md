@@ -9,6 +9,7 @@ walkers 8.0
 - fix speed for many animations
 - fix wings flap for phantom
 - add **visual effect for Feared Trait**
+- fix particles for spectator
 
 walkers 7.2.7
 ================
