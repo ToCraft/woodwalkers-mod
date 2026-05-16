@@ -89,6 +89,7 @@ public class EntityUpdaters {
 
         // register specific entity animation handling
         EntityUpdaters.register(EntityType.BAT, (player, bat) -> {
+            bat.tickCount = player.tickCount;
             bat.setResting(!player.level().getBlockState(player.blockPosition().above()).isAir());
             ((BatAccessor) bat).callSetupAnimationStates();
         });

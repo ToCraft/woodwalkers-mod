@@ -97,6 +97,7 @@ public abstract class PlayerEntityRendererMixin extends LivingEntityRenderer<Abs
 
         // No render state equivalents
         shape.setOnGround(player.onGround());
+        shape.noPhysics = true;
         ((EntityAccessor) shape).setVehicle(player.getVehicle());
         ((EntityAccessor) shape).setPassengers(ImmutableList.copyOf(player.getPassengers()));
         ((EntityAccessor) shape).setTouchingWater(player.isInWater());
@@ -124,6 +125,7 @@ public abstract class PlayerEntityRendererMixin extends LivingEntityRenderer<Abs
 
         if (shape instanceof Mob mob) {
             mob.setAggressive(player.isUsingItem());
+            mob.setNoAi(true);
         }
 
         // Must be set before callUpdatingUsingItem captures it
@@ -168,7 +170,9 @@ public abstract class PlayerEntityRendererMixin extends LivingEntityRenderer<Abs
             } else {
                 livingState.xRot = player.xRot;
             }
-            livingState.yRot = player.yRot;
+            if (!(livingState instanceof BatRenderState)) {
+                livingState.yRot = player.yRot;
+            }
             livingState.wornHeadAnimationPos = player.wornHeadAnimationPos;
             livingState.isInWater = player.isInWater;
             livingState.scale = player.scale;
@@ -230,6 +234,7 @@ public abstract class PlayerEntityRendererMixin extends LivingEntityRenderer<Abs
                     EntityRenderState shapeRenderState = ((ShapeRenderStateProvider) state).walkers$getShapeRenderState();
                     if (shapeRenderState != null) {
                         shapeRenderer.submit(shapeRenderState, matrixStack, buffer, camera);
+                        state.shadowRadius = shapeRenderState.shadowRadius;
                         return;
                     }
                 }

@@ -1,10 +1,7 @@
 package dev.tocraft.walkers.mixin.client;
 
 import com.mojang.authlib.GameProfile;
-import dev.tocraft.walkers.Walkers;
 import dev.tocraft.walkers.api.PlayerShape;
-import dev.tocraft.walkers.api.model.EntityUpdater;
-import dev.tocraft.walkers.api.model.EntityUpdaters;
 import dev.tocraft.walkers.mixin.accessor.LivingEntityAccessor;
 import dev.tocraft.walkers.traits.TraitRegistry;
 import dev.tocraft.walkers.traits.impl.FearedTrait;
@@ -14,7 +11,6 @@ import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
-import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PlayerRideableJumping;
 import net.minecraft.world.entity.animal.equine.AbstractHorse;
@@ -102,19 +98,6 @@ public abstract class LocalPlayerMixin extends Player {
                     );
                     walkers$shapeSoundCooldown = Math.max(20, (int) (60 * (1.0F - intensity)));
                 }
-            }
-        }
-    }
-
-    @SuppressWarnings("unchecked")
-    @Inject(method = "aiStep", at = @At("RETURN"))
-    private void fixEntityAnimations(CallbackInfo ci) {
-        LocalPlayer player = (LocalPlayer) (Player) this;
-        LivingEntity shape = PlayerShape.getCurrentShape(player);
-        if (shape != null) {
-            EntityUpdater<LivingEntity> entityUpdater = EntityUpdaters.getUpdater((EntityType<@NotNull LivingEntity>) shape.getType());
-            if (entityUpdater != null) {
-                entityUpdater.update(player, shape);
             }
         }
     }
