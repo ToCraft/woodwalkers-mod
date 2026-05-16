@@ -2,6 +2,7 @@ walkers 8.1
 ================
 
 - fix key category naming
+- fix server crash
 
 walkers 8.0
 ================

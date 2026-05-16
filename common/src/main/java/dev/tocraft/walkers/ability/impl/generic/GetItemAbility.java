@@ -12,28 +12,41 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.ItemLike;
+
+import java.util.function.Consumer;
 
 public class GetItemAbility<T extends LivingEntity> extends GenericShapeAbility<T> {
-    private final ItemStack itemStack;
+    private final ItemLike item;
+    private final int count;
+    private final Consumer<ItemStack> stackConsumer;
 
-    public GetItemAbility(ItemStack itemStack) {
-        this.itemStack = itemStack;
+    public GetItemAbility(ItemLike item, int count) {
+        this(item, count, _ -> {});
+    }
+
+    public GetItemAbility(ItemLike item, int count, Consumer<ItemStack> stackConsumer) {
+        this.item = item;
+        this.count = count;
+        this.stackConsumer = stackConsumer;
     }
 
     public static final Identifier ID = Walkers.id("get_item");
     public static final MapCodec<GetItemAbility<?>> CODEC = RecordCodecBuilder.mapCodec((instance) -> instance.group(
-            Identifier.CODEC.fieldOf("item").forGetter(o -> BuiltInRegistries.ITEM.getKey(o.itemStack.getItem())),
-            Codec.INT.optionalFieldOf("amount", 1).forGetter(o -> o.itemStack.getCount())
-    ).apply(instance, instance.stable((item, amount) -> new GetItemAbility<>(new ItemStack(BuiltInRegistries.ITEM.get(item).orElseThrow().value(), amount)))));
+            Identifier.CODEC.fieldOf("item").forGetter(o -> BuiltInRegistries.ITEM.getKey(o.item.asItem())),
+            Codec.INT.optionalFieldOf("amount", 1).forGetter(o -> o.count)
+    ).apply(instance, instance.stable((item, amount) -> new GetItemAbility<>(BuiltInRegistries.ITEM.get(item).orElseThrow().value(), amount))));
 
     @Override
     public void onUse(ServerPlayer player, T shape, ServerLevel world) {
-        player.getInventory().add(itemStack);
+        ItemStack stack = new ItemStack(item, count);
+        stackConsumer.accept(stack);
+        player.getInventory().add(stack);
     }
 
     @Override
     public Item getIcon() {
-        return itemStack.getItem();
+        return item.asItem();
     }
 
     @Override

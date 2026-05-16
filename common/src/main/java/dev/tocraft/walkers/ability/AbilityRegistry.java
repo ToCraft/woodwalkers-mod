@@ -43,7 +43,6 @@ import net.minecraft.world.entity.monster.skeleton.Bogged;
 import net.minecraft.world.entity.monster.skeleton.Skeleton;
 import net.minecraft.world.entity.monster.skeleton.Stray;
 import net.minecraft.world.entity.monster.warden.Warden;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.item.alchemy.Potions;
@@ -116,13 +115,9 @@ public class AbilityRegistry {
         registerByClass(Rabbit.class, new RabbitAbility<>());
         registerByClass(Breeze.class, new BreezeAbility<>());
         // get item ability
-        registerByClass(Skeleton.class, new GetItemAbility<>(new ItemStack(Items.ARROW, 4)));
-        ItemStack slownessArrows = new ItemStack(Items.TIPPED_ARROW, 4);
-        ItemStack poisonedArrows = new ItemStack(Items.TIPPED_ARROW, 4);
-        slownessArrows.set(DataComponents.POTION_CONTENTS, new PotionContents(Potions.SLOWNESS));
-        poisonedArrows.set(DataComponents.POTION_CONTENTS, new PotionContents(Potions.POISON));
-        registerByClass(Bogged.class, new GetItemAbility<>(poisonedArrows));
-        registerByClass(Stray.class, new GetItemAbility<>(slownessArrows));
+        registerByClass(Skeleton.class, new GetItemAbility<>(Items.ARROW, 4));
+        registerByClass(Bogged.class, new GetItemAbility<>(Items.TIPPED_ARROW, 4, stack -> stack.set(DataComponents.POTION_CONTENTS, new PotionContents(Potions.POISON))));
+        registerByClass(Stray.class, new GetItemAbility<>(Items.TIPPED_ARROW, 4, stack -> stack.set(DataComponents.POTION_CONTENTS, new PotionContents(Potions.SLOWNESS))));
         // mobs with a special animation
         registerByClass(Cat.class, new AnimationAbility<>());
         registerByClass(Panda.class, new AnimationAbility<>());
