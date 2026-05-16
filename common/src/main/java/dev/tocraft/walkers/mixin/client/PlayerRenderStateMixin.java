@@ -1,5 +1,6 @@
 package dev.tocraft.walkers.mixin.client;
 
+import dev.tocraft.craftedcore.util.MemoizingSupplier;
 import dev.tocraft.walkers.impl.ShapeRenderStateProvider;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -43,7 +44,7 @@ public class PlayerRenderStateMixin implements ShapeRenderStateProvider {
 
     @Override
     public void walkers$setShapeRenderState(@NotNull Supplier<@Nullable EntityRenderState> shapeRenderState) {
-        this.walkers$shapeRenderState = shapeRenderState;
+        this.walkers$shapeRenderState = new MemoizingSupplier<>(shapeRenderState);
     }
 
     @Unique
@@ -55,7 +56,7 @@ public class PlayerRenderStateMixin implements ShapeRenderStateProvider {
     @Unique
     @Override
     public void walkers$setShapeRenderer(@NotNull Supplier<@Nullable EntityRenderer<@NotNull LivingEntity, @NotNull EntityRenderState>> shapeRenderer) {
-        walkers$shapeRenderer = shapeRenderer;
+        walkers$shapeRenderer = new MemoizingSupplier<>(shapeRenderer);
     }
 
     @Override
