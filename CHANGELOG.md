@@ -1,3 +1,8 @@
+walkers 8.1
+================
+
+- fix key category naming
+
 walkers 8.0
 ================
 

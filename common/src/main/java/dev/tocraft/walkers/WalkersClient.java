@@ -27,7 +27,7 @@ public class WalkersClient {
     @ApiStatus.Internal
     public static int variantOffset = 0;
 
-    public static final KeyMapping.Category WALKERS_CATEGORY = KeyMapping.Category.register(Identifier.fromNamespaceAndPath("walkers", "key_categories"));
+    public static final KeyMapping.Category WALKERS_CATEGORY = KeyMapping.Category.register(Identifier.fromNamespaceAndPath("walkers", "category"));
     public static final KeyMapping UNLOCK_KEY = new KeyMapping("key.walkers_unlock", InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_U, WALKERS_CATEGORY);
     public static final KeyMapping TRANSFORM_KEY = new KeyMapping("key.walkers", InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_G, WALKERS_CATEGORY);
     public static final KeyMapping ABILITY_KEY = new KeyMapping("key.walkers_ability", InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_R, WALKERS_CATEGORY);
