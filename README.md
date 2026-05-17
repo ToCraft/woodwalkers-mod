@@ -1,56 +1,71 @@
-[![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/ToCraft/woodwalkers-mod/build.yml?style=for-the-badge)](https://github.com/ToCraft/woodwalkers-mod/actions/workflows/build.yml)
-[![Maven metadata URL](https://img.shields.io/maven-metadata/v?metadataUrl=https%3A%2F%2Fmaven.tocraft.dev%2Fpublic%2Fdev%2Ftocraft%2Fwalkers%2Fmaven-metadata.xml&style=for-the-badge&label=Woodwalkers)](https://maven.tocraft.dev/#/public/dev/tocraft/walkers)
 [![Patreon](https://img.shields.io/badge/Patreon-F96854?style=for-the-badge&logo=patreon&logoColor=white)](https://patreon.com/ToCraft)
 
 # Woodwalkers
 
-*Woodwalkers* is a mod lore-wise based on the book [Woodwalkers](https://www.katja-brandis.de/2016/05/11/woodwalkers/),
-and technically-based on [Identity](https://www.curseforge.com/minecraft/mc-mods/identity).
+*Become your favourite mob — and live as one.*
 
-## Download
+Woodwalkers lets you choose a second shape and transform into it at will. Walk over lava as a Strider, explore caves as a Bat, or terrorize your friends as a Ghast. Nearly every mob comes with unique traits and abilities that make each form feel genuinely different.
 
-[CurseForge](https://curseforge.com/minecraft/mc-mods/woodwalkers)
-
-[Modrinth](https://modrinth.com/mod/woodwalkers)
+Woodwalkers is also the foundation for addon mods like [ReMorphed](https://modrinth.com/mod/remorphed), which extends it with kill-to-unlock progression and a full morph menu.
 
 ---
 
-**Woodwalkers Requires CraftedCore**
+## Features
 
-[CraftedCore (CurseForge)](https://www.curseforge.com/minecraft/mc-mods/crafted-core)
+**Passive Traits** — each mob form changes your stats: health, size, movement, and more match the mob you've become. Your nametag disappears too, so no one can tell you apart from the real thing.
 
-[CraftedCore (Modrinth)](https://modrinth.com/mod/crafted-core)
+**Active Abilities** — forms come with active abilities, not just passive effects. What you can do depends on the mob.
+
+**Deep Configuration** — blacklists for mobs, abilities, and traits. API-level events and hooks let modpack makers and developers control exactly what Woodwalkers does in their environment.
+
+**Broad Compatibility** — supports Fabric, Forge, NeoForge, and Quilt across a wide range of Minecraft versions.
 
 ---
-
-**Become your favourite mob!**
-
-This mod allows you to choose a second shape, you can transform into at any time you want by just pressing a key!
-
-Walk over lava as a strider, discovery the caves as a bat or let your foes base explode as a ghast!
-**Nearly every mob has some nice abilities!**
-
-Even your hearts and your size will be changed to the one of the mob and your nametag will stop rendering, so no one
-could tell which one is the mob and which one is the player! Trick your friends!
-
-![](https://raw.githubusercontent.com/ToCraft/woodwalkers-mod/main/assets/every_mob_is_possible.png)
-
-![](https://raw.githubusercontent.com/ToCraft/woodwalkers-mod/main/assets/use_abilities.png)
-
-![](https://raw.githubusercontent.com/ToCraft/woodwalkers-mod/main/assets/hide_everywhere_dont_die_with_less_lives.png)
 
 ## Getting Started
 
-Search for your favourite mob in your world/on your server. Once you found it, press the UNLOCK_KEY (by default 'U'),
-while looking directly at it. While doing, you should notice the message "You feel it tingle" or something. In case you
-don't see it, reinstall the modpack your check your config. After pressing the key for 100 ticks (5 seconds), you will
-transform into a mob of the same type. Your Unlock progress is complete! ;D
-In case you want to change it again, change the config "unlockOverridesCurrentShape" to true, so you'll be able to
-override it at any time.
+Find the mob you want to become in the world. Look directly at it and hold the **Scan Key** (default: `U`) for 5 seconds. You'll see *"You feel it tingle"* — that's your second shape locked in.
 
-You can switch your shape by pressing the TRANSFORM_KEY (by default 'G'). Choose carefully! This choice is forever! Once
-chosen, you can't change it again! (But still, there's an OP-command and a config-option to reset your second shape
-after death...)
+Press the **Transform Key** (default: `G`) at any time to switch between your player form and your mob form.
+
+> ⚠️ **Your second shape is permanent by default.** Choose carefully. An OP command and a config option exist to reset it on death if you prefer.
+
+
+![Use Abilities](assets/use_abilities.png)
+
+![Hide Everywhere](assets/hide_everywhere_dont_die_with_less_lives.png)
+
+---
+
+## For Modpack Makers & Developers
+
+Woodwalkers exposes a full API with:
+- Passive trait registration
+- Active ability registration
+- Blacklists for mobs, traits, and abilities
+- API-level events to enable/disable parts of the mod per your needs
+
+See the [Wiki](https://github.com/ToCraft/woodwalkers-mod/wiki/Registering-Traits) for full documentation.
+
+---
+
+## Want Kill-to-Unlock and a Morph Menu?
+
+Install **[ReMorphed](https://modrinth.com/mod/remorphed)** — it replaces the scan mechanic with a kill-to-unlock system, adds a full morph menu, and lets you collect unlimited shapes.
+
+---
+
+## Requirements
+
+| Mod | CurseForge | Modrinth |
+|---|---|---|
+| CraftedCore | [Download](https://www.curseforge.com/minecraft/mc-mods/crafted-core) | [Download](https://modrinth.com/mod/crafted-core) |
+
+## Download
+
+[![CurseForge](https://img.shields.io/badge/CurseForge-Download-orange?style=for-the-badge&logo=curseforge)](https://curseforge.com/minecraft/mc-mods/woodwalkers)
+[![Modrinth](https://img.shields.io/badge/Modrinth-Download-green?style=for-the-badge&logo=modrinth)](https://modrinth.com/mod/remorphed)
+
 
 ## How can I support this project?
 
@@ -62,6 +77,11 @@ visible to Developer and Patreons).
 
 ![](https://raw.githubusercontent.com/ToCraft/woodwalkers-mod/main/assets/dark_dev_wolf_vs_normal_wolf.png)
 
-### License
+---
 
-Woodwalkers is licensed under MIT. 
+*Lore-inspired by the novel [Woodwalkers](https://www.katja-brandis.de/2016/05/11/woodwalkers/) by Katja Brandis.*
+
+
+## License
+
+Woodwalkers is licensed under [MIT](https://github.com/ToCraft/woodwalkers-mod/blob/main/LICENSE).
