@@ -2,6 +2,7 @@ walkers 8.2
 ================
 
 - fix glowing effect
+- fix fear effect for morphed players
 
 walkers 8.1
 ================

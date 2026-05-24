@@ -41,62 +41,74 @@ public abstract class LocalPlayerMixin extends Player {
     @Unique private int walkers$shapeSoundCooldown = 0;
 
     @Inject(method = "tick", at = @At("HEAD"))
-    private void intenseShakeNearOcelot(CallbackInfo ci) {
+    private void renderFearEffect(CallbackInfo ci) {
         if (walkers$shapeSoundCooldown > 0) {
             walkers$shapeSoundCooldown--;
         }
 
         LocalPlayer player = (LocalPlayer) (Object) this;
-        LivingEntity shape = PlayerShape.getCurrentShape(player);
+        if (!player.isCreative() && !player.isSpectator()) {
+            LivingEntity shape = PlayerShape.getCurrentShape(player);
 
-        if (shape != null) {
-            double maxRadius = 16.0;
-            AABB area = player.getBoundingBox().inflate(maxRadius);
-            List<LivingEntity> feared = player.level().getEntitiesOfClass(LivingEntity.class, area, entity -> {
-                for (FearedTrait<?> trait : TraitRegistry.get(entity, FearedTrait.ID).stream().map(entry -> (FearedTrait<?>) entry).toList()) {
-                    if (trait.isFearful(shape)) {
-                        return true;
+            if (shape != null) {
+                double maxRadius = 16.0;
+                AABB area = player.getBoundingBox().inflate(maxRadius);
+                List<LivingEntity> feared = player.level().getEntitiesOfClass(LivingEntity.class, area, entity -> {
+                    for (FearedTrait<?> trait : TraitRegistry.get(entity, FearedTrait.ID).stream().map(entry -> (FearedTrait<?>) entry).toList()) {
+                        if (trait.isFearful(shape)) {
+                            return true;
+                        }
                     }
-                }
-                return false;
-            });
-
-            if (!feared.isEmpty()) {
-                double closestDist = maxRadius;
-                for (LivingEntity fear : feared) {
-                    double dist = player.distanceTo(fear);
-                    if (dist < closestDist) {
-                        closestDist = dist;
+                    return false;
+                });
+                // also fear morphed players
+                feared.addAll(player.level().getEntitiesOfClass(Player.class, area, p2 -> {
+                    LivingEntity s2 = PlayerShape.getCurrentShape(p2);
+                    for (FearedTrait<?> trait : TraitRegistry.get(s2, FearedTrait.ID).stream().map(entry -> (FearedTrait<?>) entry).toList()) {
+                        if (trait.isFearful(shape)) {
+                            return true;
+                        }
                     }
-                }
+                    return false;
+                }));
 
-                // Linear proximity factor (1.0 at 0 blocks, 0.0 at maxRadius)
-                double proximity = (maxRadius - closestDist) / maxRadius;
-                float intensity = (float) Math.pow(proximity, 2.5);
-                float maxShake = 8.0F * intensity;
+                if (!feared.isEmpty()) {
+                    double closestDist = maxRadius;
+                    for (LivingEntity fear : feared) {
+                        double dist = player.distanceTo(fear);
+                        if (dist < closestDist) {
+                            closestDist = dist;
+                        }
+                    }
 
-                if (maxShake > 0.1F) {
-                    float shakeX = (walkers$random.nextFloat() - 0.5F) * maxShake;
-                    float shakeY = (walkers$random.nextFloat() - 0.5F) * maxShake;
-                    player.setXRot(player.getXRot() + shakeX);
-                    player.setYRot(player.getYRot() + shakeY);
-                    player.xRotO += shakeX;
-                    player.yRotO += shakeY;
-                }
+                    // Linear proximity factor (1.0 at 0 blocks, 0.0 at maxRadius)
+                    double proximity = (maxRadius - closestDist) / maxRadius;
+                    float intensity = (float) Math.pow(proximity, 2.5);
+                    float maxShake = 8.0F * intensity;
 
-                if (walkers$shapeSoundCooldown == 0 && intensity > 0.15F) {
-                    float volume = intensity * 1.5F;
-                    float pitch = 0.4F + (walkers$random.nextFloat() * 0.2F);
+                    if (maxShake > 0.1F) {
+                        float shakeX = (walkers$random.nextFloat() - 0.5F) * maxShake;
+                        float shakeY = (walkers$random.nextFloat() - 0.5F) * maxShake;
+                        player.setXRot(player.getXRot() + shakeX);
+                        player.setYRot(player.getYRot() + shakeY);
+                        player.xRotO += shakeX;
+                        player.yRotO += shakeY;
+                    }
 
-                    player.level().playSound(
-                            player,
-                            player.getX(), player.getY(), player.getZ(),
-                            SoundEvents.BREEZE_IDLE_GROUND, // creepy wind sound
-                            SoundSource.PLAYERS,
-                            volume,
-                            pitch
-                    );
-                    walkers$shapeSoundCooldown = Math.max(20, (int) (60 * (1.0F - intensity)));
+                    if (walkers$shapeSoundCooldown == 0 && intensity > 0.15F) {
+                        float volume = intensity * 1.5F;
+                        float pitch = 0.4F + (walkers$random.nextFloat() * 0.2F);
+
+                        player.level().playSound(
+                                player,
+                                player.getX(), player.getY(), player.getZ(),
+                                SoundEvents.BREEZE_IDLE_GROUND, // creepy wind sound
+                                SoundSource.PLAYERS,
+                                volume,
+                                pitch
+                        );
+                        walkers$shapeSoundCooldown = Math.max(20, (int) (60 * (1.0F - intensity)));
+                    }
                 }
             }
         }
