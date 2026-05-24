@@ -1,3 +1,8 @@
+walkers 8.2
+================
+
+- fix glowing effect
+
 walkers 8.1
 ================
 

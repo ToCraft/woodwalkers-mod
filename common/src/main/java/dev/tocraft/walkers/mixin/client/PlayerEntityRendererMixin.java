@@ -168,6 +168,7 @@ public abstract class PlayerEntityRendererMixin extends LivingEntityRenderer<Abs
         shape.passengerOffset = player.passengerOffset;
         shape.leashStates = player.leashStates;
         shape.lightCoords = player.lightCoords;
+        shape.outlineColor = player.outlineColor;
 
         if (shape instanceof LivingEntityRenderState livingState) {
             livingState.pose = player.pose;
