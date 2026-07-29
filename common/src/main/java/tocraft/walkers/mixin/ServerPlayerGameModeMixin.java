@@ -29,9 +29,14 @@ public class ServerPlayerGameModeMixin {
 
     @Inject(method = "setGameModeForPlayer", at = @At("RETURN"))
     public void onSetGameModeForPlayerReturn(GameType gameModeForPlayer, GameType previousGameModeForPlayer, CallbackInfo ci) {
-        if (gameModeForPlayer.isSurvival() && Walkers.hasFlyingPermissions(this.player)) {
+        if (!gameModeForPlayer.isSurvival()) {
+            return;
+        }
+        if (Walkers.hasFlyingPermissions(this.player)) {
             FlightHelper.grantFlightTo(this.player);
             this.player.getAbilities().flying = walkers$couldFly;
+        } else {
+            FlightHelper.revokeFlight(this.player);
         }
     }
 }
