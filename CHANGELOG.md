@@ -1,3 +1,8 @@
+walkers 5.8.12
+================
+
+- fix flying issues with PlayerAbilityLib ~by Karashok-Leo
+
 walkers 5.8.11
 ================
 
