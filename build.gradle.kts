@@ -1,5 +1,5 @@
 plugins {
-    id("dev.tocraft.modmaster.root") version ("2.4-SNAPSHOT")
+    id("dev.tocraft.modmaster.root") version ("2.5-SNAPSHOT")
 }
 
 subprojects {
