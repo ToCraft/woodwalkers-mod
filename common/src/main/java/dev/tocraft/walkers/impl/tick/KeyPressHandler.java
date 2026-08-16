@@ -55,7 +55,7 @@ public class KeyPressHandler implements ClientTickEvents.Client {
                         } else if (Walkers.CONFIG.show_variants_menu_guide) {
                             client.player.sendOverlayMessage(Component.translatable("walkers.variants_menu_guide", WalkersClient.VARIANTS_MENU_KEY.getTranslatedKeyMessage()));
                             Walkers.CONFIG.show_variants_menu_guide = false;
-                            if (client.isSingleplayer()) {
+                            if (client.isLocalServer()) {
                                 Walkers.CONFIG.save();
                             }
                         }
@@ -68,7 +68,7 @@ public class KeyPressHandler implements ClientTickEvents.Client {
             }
 
             // disable variants menu when in other menu
-            if (WalkersClient.isRenderingVariantsMenu && (client.options.hideGui || !Walkers.CONFIG.unlockEveryVariant || client.screen != null || PlayerShape.getCurrentShape(client.player) == null))
+            if (WalkersClient.isRenderingVariantsMenu && (client.gui.hud.isHidden() || !Walkers.CONFIG.unlockEveryVariant || client.gui.screen() != null || PlayerShape.getCurrentShape(client.player) == null))
                 WalkersClient.isRenderingVariantsMenu = false;
 
             if (WalkersClient.UNLOCK_KEY.isDown()) {

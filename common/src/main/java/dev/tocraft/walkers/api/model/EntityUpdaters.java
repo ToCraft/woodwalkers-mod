@@ -15,6 +15,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.attribute.EnvironmentAttributes;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.animal.parrot.Parrot;
 import net.minecraft.world.item.BlockItem;
@@ -74,11 +75,11 @@ public class EntityUpdaters {
     }
 
     public static void init() {
-        EntityUpdaters.register(EntityType.HORSE, new AbstractHorseEntityUpdater<>());
-        EntityUpdaters.register(EntityType.DONKEY, new AbstractHorseEntityUpdater<>());
-        EntityUpdaters.register(EntityType.MULE, new AbstractHorseEntityUpdater<>());
+        EntityUpdaters.register(EntityTypes.HORSE, new AbstractHorseEntityUpdater<>());
+        EntityUpdaters.register(EntityTypes.DONKEY, new AbstractHorseEntityUpdater<>());
+        EntityUpdaters.register(EntityTypes.MULE, new AbstractHorseEntityUpdater<>());
 
-        EntityUpdaters.register(EntityType.ALLAY, (player, allay) -> {
+        EntityUpdaters.register(EntityTypes.ALLAY, (player, allay) -> {
             ((AllayAccessor) allay).setHoldingItemAnimationTicks0(((AllayAccessor) allay).getHoldingItemAnimationTicks());
             if (allay.hasItemInHand()) {
                 ((AllayAccessor) allay).setHoldingItemAnimationTicks(Mth.clamp(((AllayAccessor) allay).getHoldingItemAnimationTicks() + 1.0F, 0.0F, 5.0F));
@@ -88,13 +89,13 @@ public class EntityUpdaters {
         });
 
         // register specific entity animation handling
-        EntityUpdaters.register(EntityType.BAT, (player, bat) -> {
+        EntityUpdaters.register(EntityTypes.BAT, (player, bat) -> {
             bat.tickCount = player.tickCount;
             bat.setResting(!player.level().getBlockState(player.blockPosition().above()).isAir());
             ((BatAccessor) bat).callSetupAnimationStates();
         });
 
-        EntityUpdaters.register(EntityType.PARROT, (player, parrot) -> {
+        EntityUpdaters.register(EntityTypes.PARROT, (player, parrot) -> {
             parrot.setRecordPlayingNearby(player.blockPosition(), ((NearbySongAccessor) player).shape_isNearbySongPlaying());
             ((ParrotEntityAccessor) parrot).callCalculateFlapping();
             // imitate sounds
@@ -103,7 +104,7 @@ public class EntityUpdaters {
             }
         });
 
-        EntityUpdaters.register(EntityType.ENDERMAN, (player, enderman) -> {
+        EntityUpdaters.register(EntityTypes.ENDERMAN, (player, enderman) -> {
             ItemStack heldStack = player.getMainHandItem();
 
             if (heldStack.getItem() instanceof BlockItem) {
@@ -116,14 +117,14 @@ public class EntityUpdaters {
         // Creepers normally tick their fuse timer in tick(), but:
         // 1. shapes do not tick
         // 2. The Creeper ability is instant, so we do not need to re-implement ticking
-        EntityUpdaters.register(EntityType.CREEPER, (player, creeper) -> ((CreeperEntityAccessor) creeper).setSwell(0));
+        EntityUpdaters.register(EntityTypes.CREEPER, (player, creeper) -> ((CreeperEntityAccessor) creeper).setSwell(0));
 
-        EntityUpdaters.register(EntityType.SQUID, new SquidEntityUpdater<>());
-        EntityUpdaters.register(EntityType.GLOW_SQUID, new SquidEntityUpdater<>());
+        EntityUpdaters.register(EntityTypes.SQUID, new SquidEntityUpdater<>());
+        EntityUpdaters.register(EntityTypes.GLOW_SQUID, new SquidEntityUpdater<>());
 
-        EntityUpdaters.register(EntityType.SHULKER, new ShulkerEntityUpdater());
+        EntityUpdaters.register(EntityTypes.SHULKER, new ShulkerEntityUpdater());
 
-        EntityUpdaters.register(EntityType.CHICKEN, (player, chicken) -> {
+        EntityUpdaters.register(EntityTypes.CHICKEN, (player, chicken) -> {
             chicken.oFlap = chicken.flap;
             chicken.oFlapSpeed = chicken.flapSpeed;
             chicken.flapSpeed += (player.onGround() ? -1.0F : 4.0F) * 0.3F;
@@ -136,29 +137,29 @@ public class EntityUpdaters {
         });
 
         // make strider shaking and purple when out of lava
-        EntityUpdaters.register(EntityType.STRIDER, (player, strider) -> {
+        EntityUpdaters.register(EntityTypes.STRIDER, (player, strider) -> {
             BlockState blockState = player.level().getBlockState(player.blockPosition());
             boolean bl = blockState.is(BlockTags.STRIDER_WARM_BLOCKS) || player.getFluidHeight(FluidTags.LAVA) > 0.0;
             strider.setSuffocating(!bl);
         });
 
-        EntityUpdaters.register(EntityType.CAT, (player, cat) -> cat.setInSittingPose(((PlayerDataProvider) player).walkers$getIsSpecialAnim()));
+        EntityUpdaters.register(EntityTypes.CAT, (player, cat) -> cat.setInSittingPose(((PlayerDataProvider) player).walkers$getIsSpecialAnim()));
 
-        EntityUpdaters.register(EntityType.HOGLIN, (player, hoglin) -> hoglin.setImmuneToZombification(!player.level().environmentAttributes().getValue(EnvironmentAttributes.PIGLINS_ZOMBIFY, player.position())));
+        EntityUpdaters.register(EntityTypes.HOGLIN, (player, hoglin) -> hoglin.setImmuneToZombification(!player.level().environmentAttributes().getValue(EnvironmentAttributes.PIGLINS_ZOMBIFY, player.position())));
 
-        EntityUpdaters.register(EntityType.PIGLIN, (player, piglin) -> {
+        EntityUpdaters.register(EntityTypes.PIGLIN, (player, piglin) -> {
             piglin.setImmuneToZombification(!player.level().environmentAttributes().getValue(EnvironmentAttributes.PIGLINS_ZOMBIFY, player.position()));
             piglin.setDancing(((PlayerDataProvider) player).walkers$getIsSpecialAnim());
         });
 
-        EntityUpdaters.register(EntityType.PIGLIN_BRUTE, (player, piglinBrute) -> piglinBrute.setImmuneToZombification(!player.level().environmentAttributes().getValue(EnvironmentAttributes.PIGLINS_ZOMBIFY, player.position())));
+        EntityUpdaters.register(EntityTypes.PIGLIN_BRUTE, (player, piglinBrute) -> piglinBrute.setImmuneToZombification(!player.level().environmentAttributes().getValue(EnvironmentAttributes.PIGLINS_ZOMBIFY, player.position())));
 
-        EntityUpdaters.register(EntityType.PANDA, (player, panda) -> {
+        EntityUpdaters.register(EntityTypes.PANDA, (player, panda) -> {
             panda.sit(((PlayerDataProvider) player).walkers$getIsSpecialAnim());
             ((PandaAccessor) panda).callUpdateSitAmount();
         });
 
-        EntityUpdaters.register(EntityType.VEX, (player, vex) -> vex.setIsCharging(((PlayerDataProvider) player).walkers$getIsSpecialAnim()));
+        EntityUpdaters.register(EntityTypes.VEX, (player, vex) -> vex.setIsCharging(((PlayerDataProvider) player).walkers$getIsSpecialAnim()));
 
     }
 }

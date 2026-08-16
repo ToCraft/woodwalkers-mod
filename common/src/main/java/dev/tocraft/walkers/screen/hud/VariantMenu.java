@@ -20,11 +20,14 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.EntitySpawnReason;
+import net.minecraft.world.entity.EntitySpawnRequest;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.inventory.SmithingMenu;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.storage.TagValueOutput;
 import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
@@ -47,7 +50,7 @@ public class VariantMenu implements RenderEvents.HUDRendering {
     @Override
     public void extractRenderState(GuiGraphicsExtractor guiGraphics, DeltaTracker delta) {
         Minecraft minecraft = Minecraft.getInstance();
-        if (!minecraft.options.hideGui && WalkersClient.isRenderingVariantsMenu && Walkers.CONFIG.unlockEveryVariant && minecraft.screen == null) {
+        if (!minecraft.gui.hud.isHidden() && WalkersClient.isRenderingVariantsMenu && Walkers.CONFIG.unlockEveryVariant && minecraft.gui.screen() == null) {
             Level level = minecraft.level;
             if (level != null && minecraft.player != null) {
                 ShapeType<?> currentShapeType = ShapeType.from(PlayerShape.getCurrentShape(minecraft.player));
@@ -89,12 +92,20 @@ public class VariantMenu implements RenderEvents.HUDRendering {
 
                                 nbt.putBoolean("isSpecial", true);
                                 nbt.putString("id", EntityType.getKey(type.getEntityType()).toString());
-                                return (LivingEntity) EntityType.loadEntityRecursive(nbt, level, EntitySpawnReason.LOAD, it -> it);
+                                LivingEntity e = (LivingEntity) EntityType.loadEntityRecursive(nbt, level, new EntitySpawnRequest(EntitySpawnReason.LOAD, false), it -> it);
+                                if (e != null) {
+                                    e.setId(-1);
+                                }
+                                return e;
                             });
                         } else if ((variant > -1 || (hasSpecialVariant && variant == -1)) && (variant < range || variant == currVariant)) {
                             ShapeType<?> thisShapeType = ShapeType.from(currentShapeType.getEntityType(), variant);
                             if (thisShapeType != null) {
-                                entity = renderEntities.computeIfAbsent(thisShapeType, type -> type.create(level, minecraft.player));
+                                entity = renderEntities.computeIfAbsent(thisShapeType, type -> {
+                                    LivingEntity e = type.create(level, minecraft.player);
+                                    e.setId(-1);
+                                    return e;
+                                });
                             }
                         }
                         if (entity != null) {
@@ -126,7 +137,7 @@ public class VariantMenu implements RenderEvents.HUDRendering {
     }
 
     public static void renderEntityOnScreen(
-            GuiGraphicsExtractor guiGraphics,
+            @NotNull GuiGraphicsExtractor guiGraphics,
             int x1,
             int y1,
             int x2,
@@ -141,7 +152,7 @@ public class VariantMenu implements RenderEvents.HUDRendering {
         guiGraphics.entity(entityRenderState, scale, translation, rotation, overrideCameraAngle, x1, y1, x2, y2);
     }
 
-    private static EntityRenderState extractRenderState(LivingEntity entity) {
+    private static @NotNull EntityRenderState extractRenderState(LivingEntity entity) {
         EntityRenderDispatcher entityRenderDispatcher = Minecraft.getInstance().getEntityRenderDispatcher();
         EntityRenderer<? super LivingEntity, ?> renderer = entityRenderDispatcher.getRenderer(entity);
         EntityRenderState renderState = renderer.createRenderState(entity, 1.0F);

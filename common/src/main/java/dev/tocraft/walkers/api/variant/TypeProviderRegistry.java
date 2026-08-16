@@ -6,6 +6,7 @@ import dev.tocraft.walkers.integrations.AbstractIntegration;
 import dev.tocraft.walkers.integrations.Integrations;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.entity.LivingEntity;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
@@ -22,31 +23,31 @@ public class TypeProviderRegistry {
     @ApiStatus.Internal
     public static void registerDefault() {
         // "old" Type Provider
-        register(EntityType.CREEPER, new CreeperTypeProvider());
-        register(EntityType.SHEEP, new SheepTypeProvider());
-        register(EntityType.AXOLOTL, new AxolotlTypeProvider());
-        register(EntityType.PARROT, new ParrotTypeProvider());
-        register(EntityType.FOX, new FoxTypeProvider());
-        register(EntityType.SLIME, new SlimeTypeProvider());
-        register(EntityType.HORSE, new HorseTypeProvider());
-        register(EntityType.LLAMA, new LlamaTypeProvider<>());
-        register(EntityType.TRADER_LLAMA, new LlamaTypeProvider<>());
-        register(EntityType.MAGMA_CUBE, new MagmaCubeTypeProvider());
-        register(EntityType.MOOSHROOM, new MushroomCowTypeProvider());
-        register(EntityType.PANDA, new PandaTypeProvider());
-        register(EntityType.RABBIT, new RabbitTypeProvider());
-        register(EntityType.VILLAGER, new VillagerTypeProvider());
-        register(EntityType.ZOMBIE_VILLAGER, new ZombieVillagerTypeProvider());
-        register(EntityType.TROPICAL_FISH, new TropicalFishTypeProvider());
-        register(EntityType.SHULKER, new ShulkerTypeProvider());
+        register(EntityTypes.CREEPER, new CreeperTypeProvider());
+        register(EntityTypes.SHEEP, new SheepTypeProvider());
+        register(EntityTypes.AXOLOTL, new AxolotlTypeProvider());
+        register(EntityTypes.PARROT, new ParrotTypeProvider());
+        register(EntityTypes.FOX, new FoxTypeProvider());
+        register(EntityTypes.SLIME, new SlimeTypeProvider());
+        register(EntityTypes.HORSE, new HorseTypeProvider());
+        register(EntityTypes.LLAMA, new LlamaTypeProvider<>());
+        register(EntityTypes.TRADER_LLAMA, new LlamaTypeProvider<>());
+        register(EntityTypes.MAGMA_CUBE, new MagmaCubeTypeProvider());
+        register(EntityTypes.MOOSHROOM, new MushroomCowTypeProvider());
+        register(EntityTypes.PANDA, new PandaTypeProvider());
+        register(EntityTypes.RABBIT, new RabbitTypeProvider());
+        register(EntityTypes.VILLAGER, new VillagerTypeProvider());
+        register(EntityTypes.ZOMBIE_VILLAGER, new ZombieVillagerTypeProvider());
+        register(EntityTypes.TROPICAL_FISH, new TropicalFishTypeProvider());
+        register(EntityTypes.SHULKER, new ShulkerTypeProvider());
 
         // Registry Type Provider
-        register(EntityType.CAT, new RegistryTypeProvider<>(Registries.CAT_VARIANT));
-        register(EntityType.CHICKEN, new RegistryTypeProvider<>(Registries.CHICKEN_VARIANT));
-        register(EntityType.COW, new RegistryTypeProvider<>(Registries.COW_VARIANT));
-        register(EntityType.FROG, new RegistryTypeProvider<>(Registries.FROG_VARIANT));
-        register(EntityType.PIG, new RegistryTypeProvider<>(Registries.PIG_VARIANT));
-        register(EntityType.WOLF, new RegistryTypeProvider<>(Registries.WOLF_VARIANT));
+        register(EntityTypes.CAT, new RegistryTypeProvider<>(Registries.CAT_VARIANT));
+        register(EntityTypes.CHICKEN, new RegistryTypeProvider<>(Registries.CHICKEN_VARIANT));
+        register(EntityTypes.COW, new RegistryTypeProvider<>(Registries.COW_VARIANT));
+        register(EntityTypes.FROG, new RegistryTypeProvider<>(Registries.FROG_VARIANT));
+        register(EntityTypes.PIG, new RegistryTypeProvider<>(Registries.PIG_VARIANT));
+        register(EntityTypes.WOLF, new RegistryTypeProvider<>(Registries.WOLF_VARIANT));
 
         // handle Integrations
         Integrations.registerTypeProvider();

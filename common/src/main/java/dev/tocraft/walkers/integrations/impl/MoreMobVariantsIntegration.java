@@ -8,9 +8,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.Identifier;
-import net.minecraft.world.entity.EntitySpawnReason;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.storage.TagValueOutput;
@@ -27,13 +25,13 @@ public class MoreMobVariantsIntegration extends AbstractIntegration {
 
     @Override
     public void registerTypeProvider() {
-        registerMMVTypeProvider(EntityType.CAT);
-        registerMMVTypeProvider(EntityType.CHICKEN);
-        registerMMVTypeProvider(EntityType.COW);
-        registerMMVTypeProvider(EntityType.SKELETON);
-        registerMMVTypeProvider(EntityType.SPIDER);
-        registerMMVTypeProvider(EntityType.WOLF);
-        registerMMVTypeProvider(EntityType.ZOMBIE);
+        registerMMVTypeProvider(EntityTypes.CAT);
+        registerMMVTypeProvider(EntityTypes.CHICKEN);
+        registerMMVTypeProvider(EntityTypes.COW);
+        registerMMVTypeProvider(EntityTypes.SKELETON);
+        registerMMVTypeProvider(EntityTypes.SPIDER);
+        registerMMVTypeProvider(EntityTypes.WOLF);
+        registerMMVTypeProvider(EntityTypes.ZOMBIE);
     }
 
     private static <L extends LivingEntity> void registerMMVTypeProvider(EntityType<L> type) {
@@ -88,7 +86,7 @@ public class MoreMobVariantsIntegration extends AbstractIntegration {
             nbt.putString("id", EntityType.getKey(type).toString());
             Identifier variantId = getVariants(type).get(data);
             nbt.putString("VariantID", variantId.toString());
-            return (L) EntityType.loadEntityRecursive(nbt, world, EntitySpawnReason.LOAD, entity -> entity);
+            return (L) EntityType.loadEntityRecursive(nbt, world, new EntitySpawnRequest(EntitySpawnReason.LOAD, false), entity -> entity);
         }
 
         @Override

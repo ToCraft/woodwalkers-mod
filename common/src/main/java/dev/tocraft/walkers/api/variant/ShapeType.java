@@ -6,10 +6,7 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntitySpawnReason;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.storage.ValueInput;
@@ -130,7 +127,7 @@ public class ShapeType<T extends LivingEntity> {
         if (LIVING_TYPE_CASH.isEmpty()) {
             for (EntityType<?> type : BuiltInRegistries.ENTITY_TYPE) {
                 try {
-                    Entity instance = type.create(world, EntitySpawnReason.LOAD);
+                    Entity instance = type.create(world, new EntitySpawnRequest(EntitySpawnReason.LOAD, false));
                     if (instance instanceof LivingEntity) {
                         LIVING_TYPE_CASH.add((EntityType<? extends LivingEntity>) type);
                     }
@@ -168,7 +165,7 @@ public class ShapeType<T extends LivingEntity> {
             return typeProvider.create(type, world, player, variantData);
         }
 
-        return type.create(world, EntitySpawnReason.LOAD);
+        return type.create(world, new EntitySpawnRequest(EntitySpawnReason.LOAD, false));
     }
 
     public int getVariantData() {

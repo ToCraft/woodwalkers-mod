@@ -9,6 +9,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.gui.Hud;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.effect.MobEffects;
@@ -37,7 +38,7 @@ public class SlowFallingTrait<E extends LivingEntity> extends ShapeTrait<E> {
     @Environment(EnvType.CLIENT)
     @Override
     public boolean renderIcon(RenderPipeline pipeline, @NotNull GuiGraphicsExtractor graphics, int x, int y, int width, int height) {
-        graphics.blitSprite(RenderPipelines.GUI_TEXTURED, Gui.getMobEffectSprite(MobEffects.SLOW_FALLING), x, y, width, height);
+        graphics.blitSprite(RenderPipelines.GUI_TEXTURED, Hud.getMobEffectSprite(MobEffects.SLOW_FALLING), x, y, width, height);
         return true;
     }
 }

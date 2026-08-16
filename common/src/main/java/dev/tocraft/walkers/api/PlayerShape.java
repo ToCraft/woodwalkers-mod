@@ -75,6 +75,7 @@ public class PlayerShape {
         // put entity type ID under the key "id", or "minecraft:empty" if no shape is equipped (or the shape entity type is invalid)
         data.putIntArray("uuid", UUIDUtil.uuidToIntArray(changed.getUUID()));
         data.putString("type", shape == null ? "minecraft:empty" : EntityType.getKey(shape.getType()).toString());
+        data.putInt("num", shape != null ? shape.getId() : -1);
         data.put("entity_tag", entityTag);
         data.putBoolean("special_anim", ((PlayerDataProvider) changed).walkers$getIsSpecialAnim());
         ModernNetworking.sendToPlayer(packetTarget, NetworkHandler.SHAPE_SYNC, data);

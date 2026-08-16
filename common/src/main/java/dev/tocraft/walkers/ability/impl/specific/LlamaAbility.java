@@ -7,6 +7,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.LlamaSpit;
 import net.minecraft.world.item.Item;
@@ -23,7 +24,7 @@ public class LlamaAbility<T extends LivingEntity> extends ShapeAbility<T> {
 
     @Override
     public void onUse(ServerPlayer player, T shape, ServerLevel world) {
-        LlamaSpit spit = new LlamaSpit(EntityType.LLAMA_SPIT, world);
+        LlamaSpit spit = new LlamaSpit(EntityTypes.LLAMA_SPIT, world);
         spit.setOwner(player);
         Vec3 rotation = player.getLookAngle();
         spit.shoot(rotation.x, rotation.y, rotation.z, 1.5F, 10.0F);

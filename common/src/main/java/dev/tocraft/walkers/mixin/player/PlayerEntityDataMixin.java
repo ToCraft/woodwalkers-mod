@@ -14,10 +14,7 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntitySpawnReason;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.animal.equine.AbstractHorse;
@@ -137,7 +134,7 @@ public abstract class PlayerEntityDataMixin extends LivingEntity implements Play
             // ensure entity data exists
             if (entityTag.isPresent()) {
                 if (walkers$shape == null || !type.get().equals(walkers$shape.getType())) {
-                    walkers$shape = (LivingEntity) type.get().create(this.level(), EntitySpawnReason.LOAD);
+                    walkers$shape = (LivingEntity) type.get().create(this.level(), new EntitySpawnRequest(EntitySpawnReason.LOAD, false));
 
                     // refresh player dimensions/hitbox on client
                     this.refreshDimensions();

@@ -5,6 +5,7 @@ import dev.tocraft.walkers.mixin.accessor.LlamaAccessor;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.EntitySpawnReason;
+import net.minecraft.world.entity.EntitySpawnRequest;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.animal.equine.Llama;
 import net.minecraft.world.entity.player.Player;
@@ -20,7 +21,7 @@ public class LlamaTypeProvider<L extends Llama> extends TypeProvider<L> {
 
     @Override
     public L create(EntityType<L> type, Level world, @NotNull Player player, int data) {
-        L llama = type.create(world, EntitySpawnReason.LOAD);
+        L llama = type.create(world, new EntitySpawnRequest(EntitySpawnReason.LOAD, false));
         if (llama != null) {
             ((LlamaAccessor) llama).callSetVariant(L.Variant.byId(data));
         }

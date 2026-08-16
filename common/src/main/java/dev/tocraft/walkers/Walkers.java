@@ -29,7 +29,6 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.ProblemReporter;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
-import net.minecraft.world.entity.animal.FlyingAnimal;
 import net.minecraft.world.level.GameType;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
@@ -126,8 +125,7 @@ public class Walkers {
 
         LivingEntity shape = PlayerShape.getCurrentShape(player);
 
-        if (shape != null && Walkers.CONFIG.enableFlight
-                && (TraitRegistry.has(shape, FlyingTrait.ID) || shape instanceof FlyingAnimal)) {
+        if (Walkers.CONFIG.enableFlight && TraitRegistry.has(shape, FlyingTrait.ID)) {
             List<String> requiredAdvancements = Walkers.CONFIG.advancementsRequiredForFlight;
 
             // requires at least 1 advancement, check if player has them

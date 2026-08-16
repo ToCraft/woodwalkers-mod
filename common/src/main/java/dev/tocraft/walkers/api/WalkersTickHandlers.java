@@ -5,6 +5,7 @@ import dev.tocraft.walkers.impl.tick.shapes.JumpBoostTickHandler;
 import dev.tocraft.walkers.impl.tick.shapes.SnowGolemTickHandler;
 import dev.tocraft.walkers.impl.tick.shapes.WardenTickHandler;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.entity.LivingEntity;
 import org.jetbrains.annotations.ApiStatus;
 
@@ -17,13 +18,13 @@ public class WalkersTickHandlers {
 
     @ApiStatus.Internal
     public static void initialize() {
-        register(EntityType.WARDEN, new WardenTickHandler());
-        register(EntityType.FROG, new FrogTickHandler());
-        register(EntityType.CAMEL, new JumpBoostTickHandler<>(0));
-        register(EntityType.SNOW_GOLEM, new SnowGolemTickHandler());
-        register(EntityType.RABBIT, new JumpBoostTickHandler<>(1));
-        register(EntityType.GOAT, new JumpBoostTickHandler<>(0)); // raise default goat jump high
-        register(EntityType.MAGMA_CUBE, new JumpBoostTickHandler<>(2));
+        register(EntityTypes.WARDEN, new WardenTickHandler());
+        register(EntityTypes.FROG, new FrogTickHandler());
+        register(EntityTypes.CAMEL, new JumpBoostTickHandler<>(0));
+        register(EntityTypes.SNOW_GOLEM, new SnowGolemTickHandler());
+        register(EntityTypes.RABBIT, new JumpBoostTickHandler<>(1));
+        register(EntityTypes.GOAT, new JumpBoostTickHandler<>(0)); // raise default goat jump high
+        register(EntityTypes.MAGMA_CUBE, new JumpBoostTickHandler<>(2));
     }
 
     public static <T extends LivingEntity> void register(EntityType<T> type, WalkersTickHandler<T> handler) {

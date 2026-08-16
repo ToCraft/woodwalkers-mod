@@ -5,7 +5,7 @@ import dev.tocraft.walkers.mixin.accessor.SlimeEntityAccessor;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.monster.MagmaCube;
+import net.minecraft.world.entity.monster.cubemob.MagmaCube;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
@@ -18,7 +18,7 @@ public class MagmaCubeTypeProvider extends TypeProvider<MagmaCube> {
     }
 
     @Override
-    public MagmaCube create(EntityType<MagmaCube> type, Level level, @NotNull Player player, int data) {
+    public MagmaCube create(EntityType<@NotNull MagmaCube> type, Level level, @NotNull Player player, int data) {
         MagmaCube magmaCube = new MagmaCube(type, level);
         ((SlimeEntityAccessor) magmaCube).callSetSize(data + 1, true);
         return magmaCube;

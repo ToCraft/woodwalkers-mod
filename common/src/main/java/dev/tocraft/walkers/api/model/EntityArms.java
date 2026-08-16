@@ -1,5 +1,6 @@
 package dev.tocraft.walkers.api.model;
 
+import com.mojang.datafixers.util.Pair;
 import dev.tocraft.craftedcore.util.Maths;
 import dev.tocraft.walkers.api.model.impl.GenericEntityArm;
 import dev.tocraft.walkers.mixin.client.accessor.*;
@@ -28,8 +29,8 @@ import net.minecraft.client.model.monster.vex.VexModel;
 import net.minecraft.client.model.monster.warden.WardenModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.renderer.entity.state.LivingEntityRenderState;
-import net.minecraft.util.Tuple;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.entity.LivingEntity;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -41,8 +42,8 @@ import java.util.Optional;
 @Environment(EnvType.CLIENT)
 public class EntityArms {
 
-    private static final Map<EntityType<? extends LivingEntity>, Tuple<EntityArmProvider<? extends LivingEntity, ? extends LivingEntityRenderState>, ArmRenderingManipulator<?>>> DIRECT_PROVIDERS = new LinkedHashMap<>();
-    private static final Map<Class<?>, Tuple<ClassArmProvider<?>, ArmRenderingManipulator<?>>> CLASS_PROVIDERS = new LinkedHashMap<>();
+    private static final Map<EntityType<? extends LivingEntity>, Pair<EntityArmProvider<? extends LivingEntity, ? extends LivingEntityRenderState>, ArmRenderingManipulator<?>>> DIRECT_PROVIDERS = new LinkedHashMap<>();
+    private static final Map<Class<?>, Pair<ClassArmProvider<?>, ArmRenderingManipulator<?>>> CLASS_PROVIDERS = new LinkedHashMap<>();
 
     /**
      * non-specific, for easy use
@@ -57,7 +58,7 @@ public class EntityArms {
      */
     public static <T extends LivingEntity, R extends LivingEntityRenderState> void register(EntityType<T> type, EntityArmProvider<T, R> provider,
                                                                                             ArmRenderingManipulator<EntityModel<R>> manipulator) {
-        DIRECT_PROVIDERS.put(type, new Tuple<>(provider, manipulator));
+        DIRECT_PROVIDERS.put(type, new Pair<>(provider, manipulator));
     }
 
     /**
@@ -73,36 +74,36 @@ public class EntityArms {
      */
     public static <T extends EntityModel<?>> void register(Class<T> modelClass, ClassArmProvider<T> provider,
                                                            ArmRenderingManipulator<T> manipulator) {
-        CLASS_PROVIDERS.put(modelClass, new Tuple<>(provider, manipulator));
+        CLASS_PROVIDERS.put(modelClass, new Pair<>(provider, manipulator));
     }
 
     @Nullable
     @SuppressWarnings("unchecked")
-    public static <T extends LivingEntity, R extends LivingEntityRenderState> Tuple<ModelPart, ArmRenderingManipulator<?>> get(@NotNull T entity,
+    public static <T extends LivingEntity, R extends LivingEntityRenderState> Pair<ModelPart, ArmRenderingManipulator<?>> get(@NotNull T entity,
                                                                                                                                EntityModel<R> model) {
         // done to bypass type issues
-        Tuple<EntityArmProvider<? extends LivingEntity, ? extends LivingEntityRenderState>, ArmRenderingManipulator<?>> before = DIRECT_PROVIDERS
+        Pair<EntityArmProvider<? extends LivingEntity, ? extends LivingEntityRenderState>, ArmRenderingManipulator<?>> before = DIRECT_PROVIDERS
                 .get(entity.getType());
 
         // Direct entity type provider was found, return it now
         if (before != null) {
-            Tuple<EntityArmProvider<T, R>, ArmRenderingManipulator<?>> provider = new Tuple<>(
-                    (EntityArmProvider<T, R>) before.getA(), before.getB());
-            return new Tuple<>(provider.getA().getArm(entity, model), provider.getB());
+            Pair<EntityArmProvider<T, R>, ArmRenderingManipulator<?>> provider = new Pair<>(
+                    (EntityArmProvider<T, R>) before.getFirst(), before.getSecond());
+            return new Pair<>(provider.getFirst().getArm(entity, model), provider.getSecond());
         } else {
-            Optional<Tuple<ClassArmProvider<?>, ArmRenderingManipulator<?>>> beforeClassProvider = CLASS_PROVIDERS
+            Optional<Pair<ClassArmProvider<?>, ArmRenderingManipulator<?>>> beforeClassProvider = CLASS_PROVIDERS
                     .entrySet().stream().filter(pair ->
                             pair.getKey().isInstance(model))
                     .findFirst().map(entry ->
-                            new Tuple<>(entry.getValue().getA(), entry.getValue().getB())
+                            new Pair<>(entry.getValue().getFirst(), entry.getValue().getSecond())
                     );
 
             // fall back to class providers
             if (beforeClassProvider.isPresent()) {
-                Tuple<ClassArmProvider<EntityModel<?>>, ArmRenderingManipulator<EntityModel<LivingEntityRenderState>>> classProvider = new Tuple<>(
-                        (ClassArmProvider<EntityModel<?>>) beforeClassProvider.get().getA(),
-                        (ArmRenderingManipulator<EntityModel<LivingEntityRenderState>>) beforeClassProvider.get().getB());
-                return new Tuple<>(classProvider.getA().getArm(entity, model), classProvider.getB());
+                Pair<ClassArmProvider<EntityModel<?>>, ArmRenderingManipulator<EntityModel<LivingEntityRenderState>>> classProvider = new Pair<>(
+                        (ClassArmProvider<EntityModel<?>>) beforeClassProvider.get().getFirst(),
+                        (ArmRenderingManipulator<EntityModel<LivingEntityRenderState>>) beforeClassProvider.get().getSecond());
+                return new Pair<>(classProvider.getFirst().getArm(entity, model), classProvider.getSecond());
             } else {
                 return null;
             }
@@ -193,7 +194,7 @@ public class EntityArms {
                 (quad, model) -> ((QuadrupedEntityModelAccessor) model).getRightFrontLeg());
 
         // types
-        register(EntityType.PILLAGER,
+        register(EntityTypes.PILLAGER,
                 (pillager, model) -> ((IllagerEntityModelAccessor) model).getRightArm(),
                 (stack, model) -> {
                     stack.mulPose(Maths.getDegreesQuaternion(Maths.POSITIVE_X(), -10));

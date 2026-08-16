@@ -11,6 +11,7 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.EntitySpawnReason;
+import net.minecraft.world.entity.EntitySpawnRequest;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -63,7 +64,7 @@ public class RegistryTypeProvider<T extends LivingEntity, V> extends TypeProvide
         getRegistry(level).flatMap(reg -> reg.get(data)).ifPresent(v -> VariantUtils.writeVariant(out, v));
 
         //noinspection unchecked
-        return (T) EntityType.loadEntityRecursive(out.buildResult(), level, EntitySpawnReason.LOAD, entity -> entity);
+        return (T) EntityType.loadEntityRecursive(out.buildResult(), level, new EntitySpawnRequest(EntitySpawnReason.LOAD, false), entity -> entity);
     }
 
     @Override

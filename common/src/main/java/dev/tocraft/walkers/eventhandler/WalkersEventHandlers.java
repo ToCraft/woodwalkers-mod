@@ -170,7 +170,7 @@ public class WalkersEventHandlers {
             if (!entity.level().isClientSide()) {
                 if (entity instanceof Villager villager && damageSource.getEntity() instanceof Player player && PlayerShape.getCurrentShape(player) instanceof Zombie) {
                     if (!(player.level().getDifficulty() != Difficulty.HARD && player.getRandom().nextBoolean())) {
-                        villager.convertTo(EntityType.ZOMBIE_VILLAGER, ConversionParams.single(villager, false, false), zombieVillager -> {
+                        villager.convertTo(EntityTypes.ZOMBIE_VILLAGER, ConversionParams.single(villager, false, false), zombieVillager -> {
                             zombieVillager.finalizeSpawn((ServerLevelAccessor) player.level(), ((net.minecraft.server.level.ServerLevel) player.level()).getCurrentDifficultyAt(zombieVillager.blockPosition()), EntitySpawnReason.CONVERSION, new Zombie.ZombieGroupData(false, true));
                             zombieVillager.setTradeOffers(villager.getOffers());
                             zombieVillager.setVillagerData(villager.getVillagerData());

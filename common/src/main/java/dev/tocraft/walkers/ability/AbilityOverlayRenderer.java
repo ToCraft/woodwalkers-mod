@@ -33,7 +33,7 @@ public class AbilityOverlayRenderer {
                     int currentCooldown = PlayerAbilities.getCooldown(player);
                     int maxCooldown = shapeAbility.getCooldown(shape);
 
-                    if (client.screen instanceof ChatScreen || currentCooldown <= 0) {
+                    if (client.gui.screen() instanceof ChatScreen || currentCooldown <= 0) {
                         return;
                     }
 

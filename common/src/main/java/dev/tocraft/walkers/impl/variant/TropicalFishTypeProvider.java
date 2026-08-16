@@ -5,6 +5,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.EntitySpawnReason;
+import net.minecraft.world.entity.EntitySpawnRequest;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.animal.fish.TropicalFish;
 import net.minecraft.world.entity.player.Player;
@@ -31,7 +32,7 @@ public class TropicalFishTypeProvider extends TypeProvider<TropicalFish> {
 
         CompoundTag compoundTag = tag.copy();
         compoundTag.putString("id", EntityType.getKey(type).toString());
-        return (TropicalFish) EntityType.loadEntityRecursive(compoundTag, world, EntitySpawnReason.LOAD, entity -> entity);
+        return (TropicalFish) EntityType.loadEntityRecursive(compoundTag, world, new EntitySpawnRequest(EntitySpawnReason.LOAD, false), entity -> entity);
     }
 
     @Override

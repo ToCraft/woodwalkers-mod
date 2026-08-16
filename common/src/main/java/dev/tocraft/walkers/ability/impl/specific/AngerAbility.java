@@ -30,7 +30,7 @@ public class AngerAbility<T extends Mob> extends ShapeAbility<T> {
     }
 
     public AngerAbility(SoundEvent notAggressiveSound, SoundEvent aggressionSound) {
-        this(notAggressiveSound, aggressionSound, Items.RED_DYE);
+        this(notAggressiveSound, aggressionSound, Items.DYE.red());
     }
 
     public AngerAbility(SoundEvent notAggressiveSound, SoundEvent aggressionSound, Item icon) {

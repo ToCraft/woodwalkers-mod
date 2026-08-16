@@ -8,6 +8,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.monster.Vex;
 import net.minecraft.world.entity.projectile.EvokerFangs;
@@ -39,7 +40,7 @@ public class EvokerAbility<T extends LivingEntity> extends AnimationAbility<T> {
             }
 
             for (int j = 0; j <= 2; j++) {
-                Vex vex = new Vex(EntityType.VEX, world);
+                Vex vex = new Vex(EntityTypes.VEX, world);
                 vex.setPos(player.position());
                 world.addFreshEntity(vex);
             }

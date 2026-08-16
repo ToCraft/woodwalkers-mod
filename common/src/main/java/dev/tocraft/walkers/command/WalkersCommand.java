@@ -23,10 +23,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntitySpawnReason;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.level.storage.TagValueOutput;
 import org.jetbrains.annotations.Nullable;
 
@@ -185,7 +182,7 @@ public class WalkersCommand {
             CompoundTag copy = nbt.copy();
             copy.putString("id", id.toString());
             ServerLevel serverWorld = source.getLevel();
-            Entity loaded = EntityType.loadEntityRecursive(copy, serverWorld, EntitySpawnReason.LOAD, it -> it);
+            Entity loaded = EntityType.loadEntityRecursive(copy, serverWorld, new EntitySpawnRequest(EntitySpawnReason.LOAD, false), it -> it);
             if (loaded instanceof LivingEntity living) {
                 type = ShapeType.from(living);
                 name = ShapeType.createTooltipText(living);
@@ -212,10 +209,10 @@ public class WalkersCommand {
             CompoundTag copy = nbt.copy();
             copy.putString("id", shape.toString());
             ServerLevel serverWorld = source.getLevel();
-            created = EntityType.loadEntityRecursive(copy, serverWorld, EntitySpawnReason.LOAD, it -> it);
+            created = EntityType.loadEntityRecursive(copy, serverWorld, new EntitySpawnRequest(EntitySpawnReason.LOAD, false), it -> it);
         } else {
             EntityType<?> entity = BuiltInRegistries.ENTITY_TYPE.get(shape).orElseThrow().value();
-            created = entity.create(player.level(), EntitySpawnReason.LOAD);
+            created = entity.create(player.level(), new EntitySpawnRequest(EntitySpawnReason.LOAD, false));
         }
 
         if (created instanceof LivingEntity) {

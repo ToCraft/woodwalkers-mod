@@ -5,7 +5,7 @@ import dev.tocraft.walkers.mixin.accessor.SlimeEntityAccessor;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.monster.Slime;
+import net.minecraft.world.entity.monster.cubemob.Slime;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
@@ -13,12 +13,12 @@ import org.jetbrains.annotations.NotNull;
 public class SlimeTypeProvider extends TypeProvider<Slime> {
 
     @Override
-    public int getVariantData(Slime entity) {
+    public int getVariantData(@NotNull Slime entity) {
         return entity.getSize();
     }
 
     @Override
-    public Slime create(EntityType<Slime> type, Level world, @NotNull Player player, int data) {
+    public Slime create(EntityType<@NotNull Slime> type, Level world, @NotNull Player player, int data) {
         Slime slime = new Slime(type, world);
         ((SlimeEntityAccessor) slime).callSetSize(data + 1, true);
         return slime;

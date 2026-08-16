@@ -10,6 +10,7 @@ import dev.tocraft.walkers.network.impl.UnlockPackets;
 import net.minecraft.core.UUIDUtil;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.EntitySpawnReason;
+import net.minecraft.world.entity.EntitySpawnRequest;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -48,6 +49,7 @@ public class ClientNetworking implements NetworkHandler {
     public static void handleWalkersSyncPacket(ModernNetworking.Context context, CompoundTag packetData) {
         final UUID uuid = UUIDUtil.uuidFromIntArray(packetData.getIntArray("uuid").orElseThrow());
         final String id = packetData.getString("type").orElseThrow();
+        final int num = packetData.getInt("num").orElseThrow();
         final CompoundTag entityNbt = packetData.getCompound("entity_tag").orElseThrow();
         final boolean special_anim = packetData.getBoolean("special_anim").orElse(false);
 
@@ -75,7 +77,7 @@ public class ClientNetworking implements NetworkHandler {
 
                     // ensure entity data exists
                     if (shape == null || !type.get().equals(shape.getType())) {
-                        shape = (LivingEntity) type.get().create(syncTarget.level(), EntitySpawnReason.LOAD);
+                        shape = (LivingEntity) type.get().create(syncTarget.level(), new EntitySpawnRequest(EntitySpawnReason.LOAD, false));
                         data.walkers$setCurrentShape(shape);
 
                         // refresh player dimensions/hitbox on client
@@ -84,6 +86,11 @@ public class ClientNetworking implements NetworkHandler {
 
                     if (shape != null) {
                         shape.load(in);
+                        if (num > -1) {
+                            shape.setId(num);
+                        } else {
+                            throw new IllegalStateException("Entity-ID of the shape is invalid!");
+                        }
                     }
                 }
             }

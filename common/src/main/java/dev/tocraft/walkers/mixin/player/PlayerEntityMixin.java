@@ -27,7 +27,7 @@ import net.minecraft.world.entity.animal.fish.Pufferfish;
 import net.minecraft.world.entity.animal.fox.Fox;
 import net.minecraft.world.entity.animal.golem.IronGolem;
 import net.minecraft.world.entity.monster.Ravager;
-import net.minecraft.world.entity.monster.Slime;
+import net.minecraft.world.entity.monster.cubemob.AbstractCubeMob;
 import net.minecraft.world.entity.monster.spider.Spider;
 import net.minecraft.world.entity.monster.skeleton.WitherSkeleton;
 import net.minecraft.world.entity.monster.warden.Warden;
@@ -271,7 +271,7 @@ public abstract class PlayerEntityMixin extends LivingEntityMixin {
     @Inject(method = "touch", at = @At("HEAD"))
     private void onTouch(Entity entity, CallbackInfo ci) {
         Player ownPlayer = (Player) (Object) this;
-        if (!this.level().isClientSide() && ownPlayer.isAlive() && PlayerShape.getCurrentShape(ownPlayer) instanceof Slime slimeShape && (entity instanceof Player targetPlayer && !(PlayerShape.getCurrentShape(targetPlayer) instanceof Slime))) {
+        if (!this.level().isClientSide() && ownPlayer.isAlive() && PlayerShape.getCurrentShape(ownPlayer) instanceof AbstractCubeMob slimeShape && (entity instanceof Player targetPlayer && !(PlayerShape.getCurrentShape(targetPlayer) instanceof AbstractCubeMob))) {
             int i = slimeShape.getSize();
             boolean wasHurt = targetPlayer.hurtServer((ServerLevel) level(), ownPlayer.damageSources().mobAttack(ownPlayer), (float) ownPlayer.getAttributeValue(Attributes.ATTACK_DAMAGE));
             if (this.distanceToSqr(targetPlayer) < 0.6 * (double) i * 0.6 * (double) i && ownPlayer.hasLineOfSight(targetPlayer) && wasHurt) {

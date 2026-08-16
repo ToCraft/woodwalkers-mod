@@ -16,6 +16,7 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.entity.ambient.Bat;
@@ -119,7 +120,6 @@ public class TraitRegistry {
         registerByClass(Bee.class, new FlyingTrait<>());
         registerByClass(Blaze.class, new FlyingTrait<>());
         registerByClass(EnderDragon.class, new FlyingTrait<>());
-        registerByPredicate(entity -> entity instanceof FlyingAnimal, new FlyingTrait<>());
         registerByClass(Parrot.class, new FlyingTrait<>());
         registerByClass(Vex.class, new FlyingTrait<>());
         registerByClass(WitherBoss.class, new FlyingTrait<>());
@@ -164,7 +164,7 @@ public class TraitRegistry {
         registerByPredicate(entity -> entity instanceof Ocelot || entity instanceof Cat, FearedTrait.ofFearfulClass(Creeper.class));
         registerByClass(Ocelot.class, (FearedTrait<Ocelot>) FearedTrait.ofFearfulClass(Chicken.class));
         registerByClass(Axolotl.class, (FearedTrait<Axolotl>) FearedTrait.ofFearfulTag(EntityTypeTags.AXOLOTL_HUNT_TARGETS));
-        registerByType(EntityType.ZOMBIFIED_PIGLIN, (FearedTrait<ZombifiedPiglin>) FearedTrait.ofFearfulType(EntityType.PIGLIN));
+        registerByType(EntityTypes.ZOMBIFIED_PIGLIN, (FearedTrait<ZombifiedPiglin>) FearedTrait.ofFearfulType(EntityTypes.PIGLIN));
         // climb blocks
         registerByClass(Spider.class, new ClimbBlocksTrait<>());
         registerByClass(Spider.class, new ClimbBlocksTrait<>(List.of(Blocks.COBWEB), new ArrayList<>()));
@@ -216,9 +216,9 @@ public class TraitRegistry {
         registerByClass(WitherBoss.class, new CantFreezeTrait<>());
         registerByTag(EntityTypeTags.FREEZE_IMMUNE_ENTITY_TYPES, new CantFreezeTrait<>());
         // no damage
-        registerByType(EntityType.CREAKING, new InvulnerabilityTrait<>());
+        registerByType(EntityTypes.CREAKING, new InvulnerabilityTrait<>());
         // speed
-        registerByPredicate(entity -> entity.getType() == EntityType.ZOMBIE && entity.isBaby(), new MobEffectTrait<>(new MobEffectInstance(MobEffects.SPEED, 20, 1, false, false, false), true));
+        registerByPredicate(entity -> entity.getType() == EntityTypes.ZOMBIE && entity.isBaby(), new MobEffectTrait<>(new MobEffectInstance(MobEffects.SPEED, 20, 1, false, false, false), true));
 
         // handle Integrations
         Integrations.registerTraits();

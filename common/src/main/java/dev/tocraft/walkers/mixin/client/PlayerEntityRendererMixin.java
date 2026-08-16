@@ -2,6 +2,7 @@ package dev.tocraft.walkers.mixin.client;
 
 import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.datafixers.util.Pair;
 import dev.tocraft.craftedcore.util.Maths;
 import dev.tocraft.walkers.Walkers;
 import dev.tocraft.walkers.api.PlayerShape;
@@ -28,7 +29,6 @@ import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.client.renderer.state.level.CameraRenderState;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.Identifier;
-import net.minecraft.util.Tuple;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.Avatar;
 import net.minecraft.world.entity.monster.EnderMan;
@@ -288,14 +288,14 @@ public abstract class PlayerEntityRendererMixin extends LivingEntityRenderer<Abs
                             arm = ((HumanoidModel<?>) model).leftArm;
                         }
                     } else {
-                        Tuple<ModelPart, ArmRenderingManipulator<EntityModel<EntityRenderState>>> pair = EntityArms.get(shape, model);
+                        Pair<ModelPart, ArmRenderingManipulator<EntityModel<EntityRenderState>>> pair = EntityArms.get(shape, model);
                         if (pair != null) {
-                            arm = pair.getA();
+                            arm = pair.getFirst();
                             // mirror matrices with player is left-handed
                             if (player.getMainArm() == HumanoidArm.LEFT) {
                                 matrices.mulPose(Maths.getDegreesQuaternion(Maths.POSITIVE_Y(), 180));
                             }
-                            pair.getB().run(matrices, model);
+                            pair.getSecond().run(matrices, model);
                             matrices.translate(0, -.35, .5);
                         }
                     }
