@@ -1,3 +1,8 @@
+walkers 8.3.1
+================
+
+- fix crash upon opening the variant menu
+
 walkers 8.3
 ================
 

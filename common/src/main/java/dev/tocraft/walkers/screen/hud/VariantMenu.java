@@ -103,7 +103,9 @@ public class VariantMenu implements RenderEvents.HUDRendering {
                             if (thisShapeType != null) {
                                 entity = renderEntities.computeIfAbsent(thisShapeType, type -> {
                                     LivingEntity e = type.create(level, minecraft.player);
-                                    e.setId(-1);
+                                    if (e != null) {
+                                        e.setId(-1);
+                                    }
                                     return e;
                                 });
                             }
@@ -118,7 +120,13 @@ public class VariantMenu implements RenderEvents.HUDRendering {
                             renderEntityOnScreen(guiGraphics, k, l, m, n, (int) (25 / (Math.max(entity.getBbHeight(), entity.getBbWidth()))), new Vector3f(), new Quaternionf().rotationXYZ(0.43633232F, (float) Math.PI, (float) Math.PI), null, entity);
                         }
                     } else {
-                        LivingEntity entity = renderEntities.computeIfAbsent(currentShapeType, type -> type.create(level, minecraft.player));
+                        LivingEntity entity = renderEntities.computeIfAbsent(currentShapeType, type -> {
+                            LivingEntity e = type.create(level, minecraft.player);
+                            if (e != null) {
+                                e.setId(-1);
+                            }
+                            return e;
+                        });
                         if (entity != null) {
                             int leftPos = (int) ((float) x * 3 + (float) x / 2);
                             int topPos = (int) ((float) y * .75f);
