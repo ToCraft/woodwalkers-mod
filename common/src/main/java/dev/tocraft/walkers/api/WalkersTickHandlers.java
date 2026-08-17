@@ -1,13 +1,11 @@
 package dev.tocraft.walkers.api;
 
-import dev.tocraft.walkers.impl.tick.shapes.FrogTickHandler;
-import dev.tocraft.walkers.impl.tick.shapes.JumpBoostTickHandler;
-import dev.tocraft.walkers.impl.tick.shapes.SnowGolemTickHandler;
-import dev.tocraft.walkers.impl.tick.shapes.WardenTickHandler;
+import dev.tocraft.walkers.impl.tick.shapes.*;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.entity.LivingEntity;
 import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -27,7 +25,7 @@ public class WalkersTickHandlers {
         register(EntityTypes.MAGMA_CUBE, new JumpBoostTickHandler<>(2));
     }
 
-    public static <T extends LivingEntity> void register(EntityType<T> type, WalkersTickHandler<T> handler) {
+    public static <T extends LivingEntity> void register(EntityType<@NotNull T> type, WalkersTickHandler<T> handler) {
         HANDLERS.put(type, handler);
     }
 

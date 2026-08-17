@@ -21,6 +21,7 @@ import net.minecraft.world.entity.animal.parrot.Parrot;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.LinkedHashMap;
@@ -161,5 +162,11 @@ public class EntityUpdaters {
 
         EntityUpdaters.register(EntityTypes.VEX, (player, vex) -> vex.setIsCharging(((PlayerDataProvider) player).walkers$getIsSpecialAnim()));
 
+        EntityUpdaters.register(EntityTypes.ENDER_DRAGON, (player, dragon) -> {
+            Vec3 movement = player.getDeltaMovement();
+            float flapSpeed = 0.2F / ((float)Math.max(movement.horizontalDistance(), 0.2) * 10.0F + 1.0F);
+            flapSpeed *= (float)Math.pow(2.0F, movement.y);
+            dragon.flapTime += flapSpeed;
+        });
     }
 }

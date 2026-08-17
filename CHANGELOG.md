@@ -2,6 +2,7 @@ walkers 8.3.1
 ================
 
 - fix crash upon opening the variant menu
+- fix ender dragon flap animation
 
 walkers 8.3
 ================

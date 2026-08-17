@@ -57,7 +57,7 @@ public abstract class PlayerEntityTickMixin extends LivingEntity {
 
     @SuppressWarnings({"unchecked", "rawtypes", "ConstantConditions"})
     @Inject(method = "tick", at = @At("HEAD"))
-    private void serverTick(CallbackInfo info) {
+    private void playerTick(CallbackInfo info) {
         // Tick WalkersTickHandlers on the client & server.
         @Nullable LivingEntity shape = PlayerShape.getCurrentShape((Player) (Object) this);
         if (shape != null) {
