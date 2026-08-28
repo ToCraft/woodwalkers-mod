@@ -133,11 +133,13 @@ public class PlayerBlacklistCommands {
     }
 
     private static void addToList(CommandSourceStack source, UUID uuid) {
-        Walkers.CONFIG.playerUUIDBlacklist.add(uuid);
-        Walkers.CONFIG.save();
+        if (!Walkers.CONFIG.playerUUIDBlacklist.contains(uuid)) {
+            Walkers.CONFIG.playerUUIDBlacklist.add(uuid);
+            Walkers.CONFIG.save();
 
-        for (ServerPlayer player : source.getServer().getPlayerList().getPlayers()) {
-            Walkers.CONFIG.sendToPlayer(player);
+            for (ServerPlayer player : source.getServer().getPlayerList().getPlayers()) {
+                Walkers.CONFIG.sendToPlayer(player);
+            }
         }
 
         ServerPlayer player = source.getServer().getPlayerList().getPlayer(uuid);
@@ -146,7 +148,7 @@ public class PlayerBlacklistCommands {
     }
 
     private static void removeFromList(CommandSourceStack source, UUID uuid) {
-        Walkers.CONFIG.playerUUIDBlacklist.remove(uuid);
+        Walkers.CONFIG.playerUUIDBlacklist.removeIf(uuid::equals);
         Walkers.CONFIG.save();
 
         for (ServerPlayer player : source.getServer().getPlayerList().getPlayers()) {
