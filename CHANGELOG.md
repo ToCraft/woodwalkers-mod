@@ -1,3 +1,7 @@
+walkers 6.3.8
+================
+- fix player blacklist being added to repeatedly ~by Vazgen005
+
 walkers 6.3.7
 ================
 - disable swimming for some humanoid mobs
