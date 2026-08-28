@@ -1,3 +1,8 @@
+walkers 8.3.2
+================
+
+- fix player blacklist being added to repeatedly ~by Vazgen005
+
 walkers 8.3.1
 ================
 
