@@ -1,29 +1,29 @@
 package dev.tocraft.walkers.mixin;
 
-import dev.tocraft.walkers.Walkers;
-import dev.tocraft.walkers.api.PlayerHostility;
-import dev.tocraft.walkers.api.PlayerShape;
-import dev.tocraft.walkers.integrations.Integrations;
-import dev.tocraft.walkers.traits.TraitRegistry;
-import dev.tocraft.walkers.traits.impl.FearedTrait;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.EntityTypes;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.MobCategory;
-import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
-import net.minecraft.world.entity.animal.polarbear.PolarBear;
-import net.minecraft.world.entity.boss.wither.WitherBoss;
-import net.minecraft.world.entity.monster.EnderMan;
-import net.minecraft.world.entity.monster.Enemy;
-import net.minecraft.world.entity.monster.skeleton.WitherSkeleton;
-import net.minecraft.world.entity.monster.piglin.AbstractPiglin;
-import net.minecraft.world.entity.player.Player;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+
+import dev.tocraft.walkers.Walkers;
+import dev.tocraft.walkers.api.PlayerHostility;
+import dev.tocraft.walkers.api.PlayerShape;
+import dev.tocraft.walkers.integrations.Integrations;
+import dev.tocraft.walkers.traits.TraitRegistry;
+import dev.tocraft.walkers.traits.impl.FearedTrait;
+import net.minecraft.world.entity.EntityTypes;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.MobCategory;
+import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
+import net.minecraft.world.entity.animal.polarbear.PolarBear;
+import net.minecraft.world.entity.boss.wither.WitherBoss;
+import net.minecraft.world.entity.monster.Enderman;
+import net.minecraft.world.entity.monster.Enemy;
+import net.minecraft.world.entity.monster.piglin.AbstractPiglin;
+import net.minecraft.world.entity.monster.skeleton.WitherSkeleton;
+import net.minecraft.world.entity.player.Player;
 
 @Mixin(NearestAttackableTargetGoal.class)
 public abstract class ActiveTargetGoalMixin extends TrackTargetGoalMixin {
@@ -66,7 +66,7 @@ public abstract class ActiveTargetGoalMixin extends TrackTargetGoalMixin {
                     // mobs
                     else if (!(this.mob instanceof WitherBoss) && (shape instanceof Enemy || Walkers.CONFIG.hostilesIgnoreNotHostileShapedPlayer)) {
                         // endermen should attack endermites
-                        if (this.mob instanceof EnderMan && shape.getType().equals(EntityTypes.ENDERMITE)) {
+                        if (this.mob instanceof Enderman && shape.getType().equals(EntityTypes.ENDERMITE)) {
                             return;
                         }
 

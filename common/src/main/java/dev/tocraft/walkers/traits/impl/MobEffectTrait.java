@@ -1,9 +1,14 @@
 package dev.tocraft.walkers.traits.impl;
 
-import com.mojang.blaze3d.pipeline.RenderPipeline;
+import java.util.Optional;
+
+import org.jetbrains.annotations.NotNull;
+
+import com.mojang.renderpearl.api.pipeline.RenderPipeline;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+
 import dev.tocraft.walkers.Walkers;
 import dev.tocraft.walkers.traits.ShapeTrait;
 import net.fabricmc.api.EnvType;
@@ -15,9 +20,6 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
-import org.jetbrains.annotations.NotNull;
-
-import java.util.Optional;
 
 public class MobEffectTrait<E extends LivingEntity> extends ShapeTrait<E> {
     public static final Identifier ID = Walkers.id("mob_effect");

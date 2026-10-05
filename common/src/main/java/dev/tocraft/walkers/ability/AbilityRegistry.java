@@ -91,7 +91,7 @@ public class AbilityRegistry {
         registerByPredicate(entity -> entity instanceof Creeper && !((Creeper) entity).isPowered(), new ExplosionAbility<>());
         registerByPredicate(entity -> entity instanceof Creeper && ((Creeper) entity).isPowered(), new ExplosionAbility<>(6));
         registerByClass(EnderDragon.class, new ShootDragonFireball<>());
-        registerByClass(EnderMan.class, new TeleportationAbility<>());
+        registerByClass(Enderman.class, new TeleportationAbility<>());
         registerByClass(Ghast.class, new ShootFireballAbility<>(Items.FIRE_CHARGE, true));
         registerByClass(SnowGolem.class, new ShootSnowballAbility<>());
         registerByClass(WitherBoss.class, new WitherAbility<>());

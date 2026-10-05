@@ -31,7 +31,7 @@ import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.Avatar;
-import net.minecraft.world.entity.monster.EnderMan;
+import net.minecraft.world.entity.monster.Enderman;
 import net.minecraft.world.entity.monster.Phantom;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
@@ -128,7 +128,7 @@ public abstract class PlayerEntityRendererMixin extends LivingEntityRenderer<Abs
         if (shape instanceof Mob mob) {
             mob.setAggressive(player.isUsingItem());
             mob.setNoAi(true);
-            if (mob instanceof EnderMan enderMan) {
+            if (mob instanceof Enderman enderMan) {
                 ItemStack heldStack = player.getMainHandItem();
 
                 if (heldStack.getItem() instanceof BlockItem) {
