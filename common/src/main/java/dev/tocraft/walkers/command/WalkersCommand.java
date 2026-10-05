@@ -72,7 +72,7 @@ public class WalkersCommand {
                                     for (ServerPlayer player : EntityArgument.getPlayers(context, "players")) {
                                         change2ndShape(context.getSource(),
                                                 player,
-                                                ResourceArgument.getEntityType(context, "shape").key().identifier(),
+                                                ResourceArgument.getResource(context, "shape", Registries.ENTITY_TYPE).key().identifier(),
                                                 null);
                                     }
                                     return 1;
@@ -82,7 +82,7 @@ public class WalkersCommand {
                                             for (ServerPlayer player : EntityArgument.getPlayers(context, "players")) {
                                                 change2ndShape(context.getSource(),
                                                         player,
-                                                        ResourceArgument.getEntityType(context, "shape").key().identifier(),
+                                                        ResourceArgument.getResource(context, "shape", Registries.ENTITY_TYPE).key().identifier(),
                                                         nbt);
                                             }
                                             return 1;
@@ -113,7 +113,7 @@ public class WalkersCommand {
                                     for (ServerPlayer player : EntityArgument.getPlayers(context, "players")) {
                                         switchShape(context.getSource(),
                                                 player,
-                                                ResourceArgument.getEntityType(context, "shape").key().identifier(),
+                                                ResourceArgument.getResource(context, "shape", Registries.ENTITY_TYPE).key().identifier(),
                                                 null);
                                     }
                                     return 1;
@@ -122,7 +122,7 @@ public class WalkersCommand {
                                     for (ServerPlayer player : EntityArgument.getPlayers(context, "players")) {
                                         switchShape(context.getSource(),
                                                 player,
-                                                ResourceArgument.getEntityType(context, "shape").key().identifier(),
+                                                ResourceArgument.getResource(context, "shape", Registries.ENTITY_TYPE).key().identifier(),
                                                 nbt);
                                     }
                                     return 1;

@@ -165,7 +165,7 @@ public abstract class PlayerEntityMixin extends LivingEntityMixin {
                                 // damage stack instead of burning player
                                 itemStack.setDamageValue(itemStack.getDamageValue() + player.getRandom().nextInt(2));
                                 if (itemStack.getDamageValue() >= itemStack.getMaxDamage()) {
-                                    player.onEquippedItemBroken(itemStack.getItem(), EquipmentSlot.HEAD);
+                                    player.onEquippedItemBroken(itemStack, EquipmentSlot.HEAD);
                                     player.setItemSlot(EquipmentSlot.HEAD, ItemStack.EMPTY);
                                 }
                             }
@@ -240,7 +240,7 @@ public abstract class PlayerEntityMixin extends LivingEntityMixin {
                 shape.setJumping(((LivingEntityAccessor) player).isJumping());
                 shape.setSprinting(player.isSprinting());
                 shape.setArrowCount(player.getArrowCount());
-                shape.setInvulnerable(true);
+                shape.setPermanentlyInvulnerable(true);
                 shape.setNoGravity(true);
                 shape.setSwimming(player.isSwimming());
                 shape.startUsingItem(player.getUsedItemHand());

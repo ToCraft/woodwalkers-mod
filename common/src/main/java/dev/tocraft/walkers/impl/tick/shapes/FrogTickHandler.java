@@ -38,7 +38,7 @@ public class FrogTickHandler implements WalkersTickHandler<Frog> {
             }
 
             // Tongue
-            if (player.swinging) {
+            if (player.isSwinging()) {
                 frog.tongueAnimationState.startIfStopped(player.tickCount);
             } else {
                 frog.tongueAnimationState.stop();

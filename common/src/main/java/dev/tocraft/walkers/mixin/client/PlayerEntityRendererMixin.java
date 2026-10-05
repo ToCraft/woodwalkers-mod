@@ -28,6 +28,7 @@ import net.minecraft.client.renderer.entity.state.*;
 import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.client.renderer.state.level.CameraRenderState;
 import net.minecraft.client.renderer.texture.OverlayTexture;
+import com.mojang.math.Axis;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.Avatar;
@@ -192,13 +193,13 @@ public abstract class PlayerEntityRendererMixin extends LivingEntityRenderer<Abs
 
             if (livingState instanceof ArmedEntityRenderState armedState) {
                 armedState.mainArm = player.mainArm;
+                armedState.swingAnimation = player.swingAnimation;
+                armedState.currentSwing = player.currentSwing;
             }
 
             if (shape instanceof HumanoidRenderState humanoidShape) {
                 humanoidShape.swimAmount = player.swimAmount;
                 humanoidShape.isVisuallySwimming = player.isVisuallySwimming;
-                humanoidShape.attackArm = player.attackArm;
-                humanoidShape.attackTime = player.attackTime;
                 humanoidShape.speedValue = player.speedValue;
                 humanoidShape.isCrouching = player.isCrouching;
                 humanoidShape.ticksUsingItem = player.ticksUsingItem;
@@ -293,7 +294,7 @@ public abstract class PlayerEntityRendererMixin extends LivingEntityRenderer<Abs
                             arm = pair.getFirst();
                             // mirror matrices with player is left-handed
                             if (player.getMainArm() == HumanoidArm.LEFT) {
-                                matrices.mulPose(Maths.getDegreesQuaternion(Maths.POSITIVE_Y(), 180));
+                                matrices.rotateDegrees(Axis.YP, 180);
                             }
                             pair.getSecond().run(matrices, model);
                             matrices.translate(0, -.35, .5);
