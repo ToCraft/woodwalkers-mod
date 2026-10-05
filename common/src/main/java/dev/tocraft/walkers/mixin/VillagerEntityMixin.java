@@ -3,9 +3,12 @@ package dev.tocraft.walkers.mixin;
 import dev.tocraft.walkers.api.PlayerShape;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.npc.villager.AbstractVillager;
 import net.minecraft.world.entity.npc.villager.Villager;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -13,10 +16,10 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(Villager.class)
-public abstract class VillagerEntityMixin {
-
-    @Shadow
-    protected abstract void stopTrading();
+public abstract class VillagerEntityMixin extends AbstractVillager {
+    protected VillagerEntityMixin(EntityType<? extends AbstractVillager> type, Level level) {
+        super(type, level);
+    }
 
     @Inject(method = "mobInteract", at = @At("HEAD"), cancellable = true)
     private void onInteract(Player player, InteractionHand hand, CallbackInfoReturnable<InteractionResult> cir) {
